@@ -4,8 +4,11 @@
 #' Add the full citation and any data package url to this header information
 #'
 #' @param dataDir a character that specifies the filename of where the data should be downloaded.
-#' @param format a string flat to return the orgial format or the long format.
+#' @param format a string flat to return the original format or the long format.
 #' @param verbose a boolean that prints out the stage of the file
+#'
+#' @importFrom readr read_csv
+#' @importFrom tibble tribble
 #'
 #' @return a list of data frames.
 #'
@@ -16,7 +19,12 @@ readTemplate <- function(dataDir,
   
   # Download datasets
   # this could be read in from annotations
-  downloadUrl.df <- dplyr::tribble(~url, ~base_filename)
+  # downloadUrl.df <- tibble::tribble(~url, ~base_filename)
+  
+  # Test
+  downloadUrl.df <- tibble::tribble(~url, ~base_filename, 
+                                    "url1", "test_data_table1.csv", 
+                                    "url2", "test_data_table2.csv")
   
   if(verbose) message('Starting download... ')
   for(rowIndex in 1:nrow(downloadUrl.df)){
@@ -33,8 +41,15 @@ readTemplate <- function(dataDir,
   
   ans.ls <- list()
   
+  # TODO we assume destfiles are csvs, if not change line below to only read in data tables
+  ans.ls$data <- lapply(file.path(dataDir, downloadUrl.df$base_filename), read_csv)
+  names(ans.ls$data) = sub(".csv", "", downloadUrl.df$base_filename)
+  
   # Generate annotations from metadata or script their creation
-  ans.ls$annotation <- SoilDRaH::templateAnnotations
+  # ans.ls$annotations <- SoilDRaH::templateAnnotations
+  
+  #Test
+  ans.ls$annotations <- read_csv(file.path(dataDir, "test_annotations.csv"))
   
   if(verbose) message('done.')
   
@@ -46,7 +61,8 @@ readTemplate <- function(dataDir,
   # Move into a set of id-of_variable-is_type-with_entry long tables
   if(verbose) message('Transforming data... ')
   
-  ans$longtable <- plyr::ldply(.data = data.ls, .fun = function(x) {
+  # Pivot data into long format and merge with annotation information
+  ans.ls$longtable <- plyr::ldply(.data = ans.ls$data, .fun = function(x) {
     
     #check if row_number column already exists
     if("row_number" %in% colnames(x)) {
@@ -70,7 +86,7 @@ readTemplate <- function(dataDir,
   }, .id = "table_id") %>%
     
     #join long table with annotations
-    full_join(ans$annotation, 
+    full_join(ans.ls$annotations, 
               by = join_by(table_id, column_id),
               suffix = c('.data', ''),
               relationship = "many-to-many") %>%
