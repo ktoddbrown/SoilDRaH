@@ -7,8 +7,11 @@
 #' @param format a string flat to return the original format or the long format.
 #' @param verbose a boolean that prints out the stage of the file
 #'
-#' @importFrom readr read_csv
+#' @importFrom readr read_csv col_character cols
 #' @importFrom tibble tribble
+#' @importFrom plyr ldply
+#' @importFrom dplyr mutate pivot_longer full_join if_else select
+#' 
 #'
 #' @return a list of data frames.
 #'
@@ -42,14 +45,16 @@ readTemplate <- function(dataDir,
   ans.ls <- list()
   
   # TODO we assume destfiles are csvs, if not change line below to only read in data tables
-  ans.ls$data <- lapply(file.path(dataDir, downloadUrl.df$base_filename), read_csv)
-  names(ans.ls$data) = sub(".csv", "", downloadUrl.df$base_filename)
+  ans.ls$original_data <- lapply(file.path(dataDir, downloadUrl.df$base_filename), 
+                                 FUN = read_csv, col_type = readr::cols(.default = readr::col_character()))
+  names(ans.ls$original_data) = sub(".csv", "", downloadUrl.df$base_filename)
   
   # Generate annotations from metadata or script their creation
   # ans.ls$annotations <- SoilDRaH::templateAnnotations
   
   #Test
-  ans.ls$annotations <- read_csv(file.path(dataDir, "test_annotations.csv"))
+  ans.ls$annotations <- readr::read_csv(file.path(dataDir, "test_annotations.csv"),
+                                 col_type = readr::cols(.default = readr::col_character()))
   
   if(verbose) message('done.')
   
@@ -62,7 +67,7 @@ readTemplate <- function(dataDir,
   if(verbose) message('Transforming data... ')
   
   # Pivot data into long format and merge with annotation information
-  ans.ls$longtable <- plyr::ldply(.data = ans.ls$data, .fun = function(x) {
+  ans.ls$longtable <- plyr::ldply(.data = ans.ls$original_data, .fun = function(x) {
     
     #check if row_number column already exists
     if("row_number" %in% colnames(x)) {
@@ -71,33 +76,26 @@ readTemplate <- function(dataDir,
     
     temp <- x %>%
       
-      #convert all columns to character type
-      mutate(across(.cols = everything(), .fns = as.character)) %>%
-      
       #give each row a number as unique identifier
-      ungroup() %>%
-      mutate(row_number = 1:n()) %>%
+      dplyr::mutate(row_number = 1:n()) %>%
       
       #pivot table longer
-      pivot_longer(cols = -c(row_number), names_to = 'column_id',
+      dplyr::pivot_longer(cols = -c(row_number), names_to = 'column_id',
                    values_to = 'with_entry', values_drop_na = TRUE)
     
     return(temp)
   }, .id = "table_id") %>%
     
     #join long table with annotations
-    full_join(ans.ls$annotations, 
+    dplyr::full_join(ans.ls$annotations, 
               by = join_by(table_id, column_id),
               suffix = c('.data', ''),
               relationship = "many-to-many") %>%
     
     #replace value placeholders in with_entry column with values from data
-    mutate(
-      with_entry = if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
-    select(-with_entry.data) %>%
-    
-    #remove rows with no row number
-    drop_na(row_number)
+    dplyr::mutate(
+      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+    dplyr::select(-with_entry.data)
   
   if(verbose) message('done.')
   return(ans.ls)

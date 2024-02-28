@@ -1,11 +1,13 @@
-﻿table_id,column_id,of_variable,is_type,with_entry
-test_data_table1,col1,col1,description,var1
-test_data_table1,col1,col1,identifier,--
-test_data_table1,col2,col2,description,var2
-test_data_table1,col2,col2,unit,cm
-test_data_table1,col2,col2,value,--
-test_data_table2,col1,col1,description,var1
-test_data_table2,co1,col1,identifier,--
-test_data_table2,col2b,col2,description,var2
-test_data_table2,col2b,col2,unit,cm
-test_data_table2,col2b,col2,value,--
+table_id,column_id,of_variable,is_type,with_entry
+test_data_table1,sample_id,sample_id,description,var1
+test_data_table1,sample_id,sample_id,identifier,--
+test_data_table1,bd,bulk_density,description,var2
+test_data_table1,bd,bulk_density,unit,g cm-3
+test_data_table1,bd,bulk_density,method,fine-earth air-dried
+test_data_table1,bd,bulk_density,value,--
+test_data_table2,sample_name,sample_id,description,var1
+test_data_table2,sample_name,sample_id,identifier,--
+test_data_table2,bulk_density,bulk_density,description,var2
+test_data_table2,bulk_density,bulk_density,unit,g cm-3
+test_data_table2,bulk_density,bulk_density,method,whole soil air-dried
+test_data_table2,bulk_density,bulk_density,value,--
