@@ -3,7 +3,7 @@ test_data_table1,sample_id,sample_id,description,var1
 test_data_table1,sample_id,sample_id,identifier,--
 test_data_table1,bd,bulk_density,description,var2
 test_data_table1,bd,bulk_density,unit,g cm-3
-test_data_table1,bd,bulk_density,method,fine-earth air-dried
+test_data_table1,bd,bulk_density,method,fine earth air-dried
 test_data_table1,bd,bulk_density,value,--
 test_data_table2,sample_name,sample_id,description,var1
 test_data_table2,sample_name,sample_id,identifier,--

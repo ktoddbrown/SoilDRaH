@@ -10,7 +10,8 @@
 #' @importFrom readr read_csv col_character cols
 #' @importFrom tibble tribble
 #' @importFrom plyr ldply
-#' @importFrom dplyr mutate pivot_longer full_join if_else select
+#' @importFrom dplyr mutate full_join if_else select
+#' @importFrom tidyr pivot_longer
 #' 
 #'
 #' @return a list of data frames.
@@ -80,7 +81,7 @@ readTemplate <- function(dataDir,
       dplyr::mutate(row_number = 1:n()) %>%
       
       #pivot table longer
-      dplyr::pivot_longer(cols = -c(row_number), names_to = 'column_id',
+      tidyr::pivot_longer(cols = -c(row_number), names_to = 'column_id',
                    values_to = 'with_entry', values_drop_na = TRUE)
     
     return(temp)
