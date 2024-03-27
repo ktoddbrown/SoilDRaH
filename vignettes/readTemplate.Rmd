@@ -1,0 +1,230 @@
+---
+title: "Basic readTemplate example"
+author: "Ursa Pillay, Kathe Todd-Brown"
+date: "March 2024"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{readTemplate Function}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Merging datasets and their metadata (annotation) requires three steps:  
+
+  1) download and read in the data and annotations,  
+  2) pivot and bind the data and annotations into a long format, and  
+  3) pivot and curate the new data.  
+
+This document will walk you throug the process with the simplest case as a first example.
+This is over built for this simple example but has proved extendable to more complicated cases.
+
+The first two of these steps (download, read, pivot, and bind) should be coded for each dataset in their `readX` function. `R/readTemplate.R` is provided as a template, and you will need to modify this for your dataset as well as create a data annotation table.
+
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables and pivots
+#library(tidyr)
+
+#locate the data
+dataDir <- '../data/test'
+```
+
+# Download and read
+
+To set up this example, we create a dataframe containing the download urls and associated files.  
+Loop through the dataframe to download each data table locally.
+
+```{r}
+
+#locate the data that we are downloading and where we want it locally
+downloadUrl.df <- tibble::tribble(~url, ~base_filename, 
+                                    "url1", "test_data_table1.csv", 
+                                    "url2", "test_data_table2.csv")
+
+
+#loop through each url
+for(rowIndex in 1:nrow(downloadUrl.df)){
+  
+  #if file does not exist yet
+  if(!file.exists(file.path(dataDir, 
+                            downloadUrl.df$base_filename[rowIndex]))){
+    
+    #download file from url into destination file
+    utils::download.file(url = downloadUrl.df$url[rowIndex], 
+                         destfile = file.path(dataDir, 
+                                              downloadUrl.df$base_filename[rowIndex]))
+  }
+}
+
+
+```
+
+```{r}
+
+knitr::kable(downloadUrl.df)
+
+```
+
+Read in each downloaded data table (assuming they are csv files) as tibbles in a list with names that reflect the csv file name.
+
+```{r, echo=TRUE}
+
+#associate the tibble names with the files
+file.ls <- setNames(object = file.path(dataDir, downloadUrl.df$base_filename),
+                   sub(".csv", "", downloadUrl.df$base_filename))
+
+#read each csv in as a dataframe and put those dataframes into a list
+ans.ls <- list(original_data = 
+                 lapply(file.ls, FUN = read_csv, 
+                        #set all columns to character data type
+                        col_type = readr::cols(.default = readr::col_character())))
+
+```
+
+```{r}
+
+knitr::kable(ans.ls$original_data)
+
+```
+
+Read in annotation table as a dataframe. 
+This often needs to be manually created either from the provided metadata of the download files or associated publications.
+
+This table should have 5 columns:  
+1) `table_id`: A table identifier that reflects the base name of the downloaded data table file  
+2) `column_id`: A column name/identifier that reflects the column of the table the information is associated with  
+3) `of_variable`: A name of the variable that column is associated with. This may be the column name but if multiple columns contain information about the same variable then they should share the same name  
+4) `is_type`: What kind of information is either in the entry column or data table itself. This is often one of: {`value`, `unit`, `method`, `description`, `identifer`} but could also include `standard_deviation`, `sample_size`, or something similar  
+5) `with_entry`: A column that is either `--` indicating that the data type for the variable is in the table that is being annotated, otherwise the column is populated with the information described in `of_variable` and `is_type`  
+
+```{r, echo=TRUE}
+
+#read in test annotations
+ans.ls$annotations <- readr::read_csv(file.path(dataDir, "test_annotations.csv"),
+                                      
+                                      #set columns to character data type
+                                      col_type = readr::cols(.default = readr::col_character()))
+
+```
+
+```{r}
+
+knitr::kable(ans.ls$annotations)
+
+```
+
+# Shoestring the data
+
+Before merging the data with the annotations we first need to make all the data tables long tables with the following tuple: `table_id`, `row_number`, `column_id`, `with_entry`.
+This echoes the format of the data annotations and will allow us to join the two tables together.
+
+To do this, use an `plyr::ldply` function to transform the original data tables in the list and return a single tibble.
+Inside this transformation, give the rows a unique index to identify each observation.
+Then pivot the data longer preserving this row number to allow us to group the data on the original rows.
+Finally, set the `table_id` column to the table name preserved in the list names to differentiate each table of the original data.
+
+```{r echo=TRUE}
+
+#for each of the items (tibbles) in the original data list
+ans.ls$longtable <- plyr::ldply(.data = ans.ls$original_data, .fun = function(x) {
+    
+    #check if row_number column already exists and give an intelligent warning
+    if("row_number" %in% colnames(x)){
+      warning("Replacing row_number with row order and using as a unique identifier.")
+    }
+    
+    #take one of the original data tables (x)
+    temp <- x %>%
+      
+      #give each row a number as unique identifier
+      dplyr::mutate(row_number = 1:n()) %>%
+      
+      #put the column names into 'column_id' and the associated values into 'with_entry',
+      #...keeping the row_number as a third column
+      tidyr::pivot_longer(cols = -c(row_number), names_to = 'column_id',
+                   values_to = 'with_entry', values_drop_na = TRUE)
+    
+    #return the long data table
+    return(temp)
+    
+  #set table_id column to names of list items
+  }, .id = "table_id")
+
+```
+
+```{r}
+
+knitr::kable(ans.ls$longtable)
+
+```
+
+Join the table with the annotations, matching the rows by `table id` and `column id`.
+Replace the `--` values with those in the data table. The resulting table now has a combination of the annotated information and the observation values. Note that each row in the original dataset will now have multiple rows describing the observation.
+
+```{r, echo=TRUE}
+
+ans.ls$longtable <- ans.ls$longtable %>%
+    
+    #join long table with annotations by table and column ids
+    dplyr::full_join(ans.ls$annotations, 
+              by = join_by(table_id, column_id),
+              suffix = c('.data', ''),
+              relationship = "many-to-many") %>%
+    
+    #replace value placeholders in with_entry column with values from data
+    dplyr::mutate(
+      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
+                                  with_entry.data, with_entry)) %>%
+    dplyr::select(-with_entry.data)
+
+```
+
+```{r}
+
+knitr::kable(ans.ls$longtable)
+
+```
+
+## readTemplate
+
+The above is reflected in the `R/readTemplate.R` function
+
+```{r echo=FALSE}
+cat(paste0(readLines('../R/readTemplate.R'), collapse = '\n'))
+```
+
+# Pivot and curate
+
+This final step will be unique for each data product you generate and depend on the purpose of your file data set.
+Presented here is a fairly generic hybrid data format where we preserve the value-unit-method of the bulk density values and associated identifiers.
+
+```{r}
+
+final.df <- ans.ls$longtable %>%
+  #remove the original column names because we are using a combination of variables and types
+  select(-column_id) %>%
+  #combine the variable and type entries for new column names and populate them with the values from the entry
+  tidyr::pivot_wider(names_from = c('of_variable', 'is_type'), 
+                    names_sep = '.',
+                     values_from = 'with_entry') %>%
+  #rename and trim everything to make sense
+  select(table_id, sample_id = 'sample_id.identifier',
+         bulk_density = 'bulk_density.value', bulk_density.method, bulk_density.unit)
+
+#we can create a new annotation file here
+final_annotation.df <- tribble(~table_id, ~column_id, ~of_variable, ~is_type, ~with_entry,
+                              'final.df', 'table_id', 'orginal_table', 'identifier', '--',
+                              'final.df', 'sample_id', 'orginal_sample', 'identifier', '--',
+                              'final.df', 'bulk_density', 'bulk_density', 'value', '--',
+                              'final.df', 'bulk_density.method', 'bulk_density', 'method', '--',
+                              'final.df', 'bulk_density.unit', 'bulk_density', 'unit', '--',)
+```
+
+```{r}
+knitr::kable(final.df)
+knitr::kable(final_annotation.df)
+```
