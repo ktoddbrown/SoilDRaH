@@ -1,7 +1,7 @@
 ---
 title: "Basic readTemplate example"
-author: "Ursa Pillay"
-date: "`r Sys.Date()`"
+author: "Ursa Pillay, Kathe Todd-Brown"
+date: "March 2024"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{readTemplate Function}
@@ -10,9 +10,13 @@ vignette: >
 ---
 
 Merging datasets and their metadata (annotation) requires three steps:  
-1) download and read in the data and annotations,  
-2) pivot and bind the data and annotations into a long format, and  
-3) pivot and curate the new data.  
+
+  1) download and read in the data and annotations,  
+  2) pivot and bind the data and annotations into a long format, and  
+  3) pivot and curate the new data.  
+
+This document will walk you throug the process with the simplest case as a first example.
+This is over built for this simple example but has proved extendable to more complicated cases.
 
 The first two of these steps (download, read, pivot, and bind) should be coded for each dataset in their `readX` function. `R/readTemplate.R` is provided as a template, and you will need to modify this for your dataset as well as create a data annotation table.
 
@@ -73,7 +77,7 @@ Read in each downloaded data table (assuming they are csv files) as tibbles in a
 file.ls <- setNames(object = file.path(dataDir, downloadUrl.df$base_filename),
                    sub(".csv", "", downloadUrl.df$base_filename))
 
-#read each csv in as a dataframe
+#read each csv in as a dataframe and put those dataframes into a list
 ans.ls <- list(original_data = 
                  lapply(file.ls, FUN = read_csv, 
                         #set all columns to character data type
@@ -87,7 +91,8 @@ knitr::kable(ans.ls$original_data)
 
 ```
 
-Read in annotation table as a dataframe. This needs to be manually created either from the provided metadata of the download files or associated publications.
+Read in annotation table as a dataframe. 
+This often needs to be manually created either from the provided metadata of the download files or associated publications.
 
 This table should have 5 columns:  
 1) `table_id`: A table identifier that reflects the base name of the downloaded data table file  
@@ -184,9 +189,9 @@ knitr::kable(ans.ls$longtable)
 
 ```
 
-# readTemplate
+## readTemplate
 
-The above is summarized in the `R/readTemplate.R` function
+The above is reflected in the `R/readTemplate.R` function
 
 ```{r echo=FALSE}
 cat(paste0(readLines('../R/readTemplate.R'), collapse = '\n'))
