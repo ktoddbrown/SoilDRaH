@@ -1,0 +1,17 @@
+Package: SoilDRaH
+Title: 'Soil Data Rescule and Harmonization'
+Version: 2024.01.01
+Authors@R: 
+    person("Katherine", "Todd-Brown", , "ktoddbrown@ufl.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-3109-8130"))
+Description: 'Harmonize soil data sets by manual annotations for soil related data files and provides scripts download the associated data and integrate them with other datasets.'
+License: MIT + file LICENSE
+Encoding: UTF-8
+Config/Needs/website: rmarkdown
+RoxygenNote: 7.2.3
+Imports: 
+    dplyr,
+    magrittr,
+    pangaear,
+    plyr
+LazyData: true

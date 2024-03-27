@@ -3,14 +3,14 @@
 Soil Data Rescue and Harmonization:
 
 ``` mermaid
-sequenceDiagram
-  participant annotation
-  participant read
-  participant shoestring
-  participant curate
-  annotation->>read
-  read->>shoestring
-  shoestring->>curate
+sequenceDiagram;
+  participant annotation;
+  participant read;
+  participant shoestring;
+  participant curate;
+  annotation->>read;
+  read->>shoestring;
+  shoestring->>curate;
 ```
 
 Helper scripts
