@@ -1,0 +1,73 @@
+---
+title: "FIA Data"
+author: "Ursa Pillay, Kathe Todd-Brown"
+date: "April 2024"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{readTemplate Function}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables and pivots
+library(tidyr)
+library(ggplot2)
+source("../R/readFIA.R", local = knitr::knit_global())
+
+#locate the data locally
+dataDir <- '~/Desktop/datasets/fia'
+```
+
+```{r, warning=FALSE}
+setwd("..")
+fia.ls <- readFIA(dataDir, verbose = FALSE)
+fia_long.df <- fia.ls$longtable
+```
+
+```{r}
+fia.df <- filter(fia_long.df, is_type == 'identifier' | is_type == 'value') %>% 
+  #use select instead
+  subset(select = -c(column_id, is_type)) %>%
+  pivot_wider(names_from = 'of_variable', values_from = 'with_entry')
+```
+
+```{r}
+fia.df <- fia.df %>% 
+  #try regex instead of numbers
+     mutate_at(c(5, 9:22, 32:50), as.numeric)
+summary(fia.df %>% select(where(is.numeric)))
+
+#cast categorical variables as factors
+```
+
+
+```{r, warning=FALSE}
+#use facet wraps, think about how to group related measurements
+ggplot(fia.df, aes(x=Forest_floor_depth_avg)) + geom_histogram() + ggtitle("Forest Floor Depth")
+
+ggplot(fia.df, aes(x=Litter_layer_depth_avg)) + geom_histogram() + ggtitle("Litter Layer Depth")
+
+ggplot(fia.df, aes(x=Oven_dry_weight)) + geom_histogram() + ggtitle("Oven Dry Weight")
+
+ggplot(fia.df, aes(x=Bulk_density)) + geom_histogram() + ggtitle("Bulk Density")
+
+ggplot(fia.df, aes(x=organic_carbon)) + geom_histogram() + ggtitle("Organic Carbon")
+
+ggplot(fia.df, aes(x=carbon_fraction)) + geom_histogram() + ggtitle("Carbon Fraction")
+
+ggplot(fia.df, aes(x=nitrogen_fraction)) + geom_histogram() + ggtitle("Nitrogen Fraction")
+
+ggplot(fia.df, aes(x=inorganic_carbon)) + geom_histogram() + ggtitle("Inorganic Carbon")
+
+ggplot(fia.df, aes(x=ph_h2o)) + geom_histogram() + ggtitle("H2O pH")
+
+ggplot(fia.df, aes(x=inorganic_carbon, y=organic_carbon)) + geom_point()
+ 
+```
+
+
