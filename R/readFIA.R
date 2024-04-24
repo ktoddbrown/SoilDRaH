@@ -37,7 +37,8 @@ readFIA <- function(dataDir,
   ans.ls <- list()
   
   # Read in annotations
-  ans.ls$annotations <- readr::read_csv("data/fia/fia_annotations.csv",
+  # TODO Think about moving the annotation csv into package data reads
+  ans.ls$annotations <- readr::read_csv("data/fia_annotations.csv",
                                         col_type = readr::cols(.default = readr::col_character()))
   
   # Get list of annotated table names
@@ -61,6 +62,7 @@ readFIA <- function(dataDir,
   }
   
   #remove too large table
+  # TODO keep the table but remove rows that do not have soil data
   ans.ls$original_data$ENTIRE_PLOT <- NULL
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
@@ -94,10 +96,13 @@ readFIA <- function(dataDir,
     
     #replace value placeholders in with_entry column with values from data
     dplyr::mutate(
-      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), with_entry.data, with_entry)) %>%
+      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), 
+                                  with_entry.data, with_entry)) %>%
     dplyr::select(-with_entry.data) %>%
   drop_na(row_number)
   
   if(verbose) message('done.')
+  ##TODO Take a look at data size. Maybe ONLY return the log table 
+  ##... and make strings factors where we can.
   return(ans.ls)
 }
