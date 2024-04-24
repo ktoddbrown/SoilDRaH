@@ -3,8 +3,8 @@ test_that("multiplication works", {
 })
 
 badHeaders <- 
-'column_name; table_name; of_variable; is_type; with_entry
- ; ; ; ;'
+'column_name;table_name;of_variable;is_type;with_entry
+;;;;'
 
 test_that('checking bad headers', {
   expect_error(checkAnnotations(badHeaders))

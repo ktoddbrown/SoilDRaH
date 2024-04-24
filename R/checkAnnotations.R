@@ -17,8 +17,10 @@ checkAnnotations <- function(filename){
                      'control_vocabulary',
                      'standard_deviation')
   
-  annotation.df <- read_csv2(filename, 
-                             col_types = cols(.default = col_character()))
+  #assume ';' deliminator to be consistent with how R structures csv in data folders
+  annotation.df <- read_delim(filename, 
+                             col_types = cols(.default = col_character()),
+                             delim = ';')
   
   
   #check minimum names
