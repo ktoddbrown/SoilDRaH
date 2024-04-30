@@ -7,19 +7,28 @@
 #' @param verbose boolean status to print out updates
 #'
 #' @importFrom pangaear pg_search pg_cache
-#' @importFrom plyr dlply ldply
+#' @importFrom plyr dlply ldply 
 #' @importFrom dplyr mutate across reframe
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_extract
 #' @import magrittr
 #' @export
 readCPEAT <- function(dataDir,
-                      format=c('byCore', 'byDataType')[1], 
+                      format=c('original', 'long')[1], 
                       verbose=FALSE){
   
+  ##### find CPEAT datasets 
   
   pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
   pages.df <- pangaear::pg_search(pangaearSearchTerm, count = 500) %>% 
     dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, count = 500, offset = 500)) %>% #the output will contain all columns that appear in any of the inputs
     dplyr::mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi))
+  
+  if(nrow(pages.df) != 876){
+    warning("unexpected number of CPEAT core datasets found; annotations might be incomplete.") # a warning would let you run the rest of the code!
+  }
+  
+  #### Download CPEAT datasets
   
   #Keep the old cache directory so that we can reset it
   oldCache <- pangaear::pg_cache$cache_path_get()
@@ -49,7 +58,11 @@ readCPEAT <- function(dataDir,
                               return(datapackage[[1]])
                             }) 
   
-  if(format == 'byCore'){
+  #### Return the original data without transformation
+  ## TODO- load in annotations and return with the rest of the data
+  ### TODO - replace the arguments for the format with original and long instead of byCore and byDatatype
+  
+  if(format == 'original'){
     return(allData.ls)
   }
   
@@ -57,8 +70,9 @@ readCPEAT <- function(dataDir,
   allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #print(xx$doi)
     if(xx$doi %in% c("10.1594/PANGAEA.934281")){
-      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-    }
+      #names(xx$data)[names(xx$data) == "Age unc [±] (Age AD, calculated, 1 sigma)"] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)' # refer to the actual variable name instead of the number to index
+    } # the issue we are running into if we replace the position index for the column with the actual variable name, these column names are duplicates in the original data! 
     
     if(xx$doi %in% c("10.1594/PANGAEA.934343")){
       names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
@@ -110,7 +124,8 @@ readCPEAT <- function(dataDir,
     
     
     if(length(names(xx$data)) > length(unique(names(xx$data)))){
-      print(names(xx$data))
+      print(names(xx$data)) ## todo - consider throwing a warning that the names are not unique
+      warning("Duplicate column names detected")
     }
     return(dplyr::mutate(.data = xx$data, across(.cols = everything(),  as.character)))
   }) 
@@ -255,7 +270,7 @@ readCPEAT <- function(dataDir,
   allStudy.df <- allStudy.df %>%
     mutate(across(c(ELEVATION, `ELEVATION.START`, `ELEVATION.END`,
                     Recovery, Penetration,
-                    size), ~str_extract(.x, '\\d+')))
+                    size), ~stringr::str_extract(.x, '\\d+')))
   
   allParameters.df <- allParameters.df %>%
     mutate(core_id = doi)

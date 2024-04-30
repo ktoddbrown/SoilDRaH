@@ -56,11 +56,32 @@ CPEAT_longtable <- CPEAT$longtable %>%
                                   with_entry.data, with_entry)) %>%
   select(-with_entry.data)
 
+# now let us look at the core table
+CPEAT.dataAnnotation_core <- read_sheet("https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing", 
+                                   sheet = "CPEAT_August2023", 
+                                   range = "CPEAT_August2023!A:F",
+                                   col_types = "c") %>% 
+  filter(study_id == 'CPEAT', table_id == "core") 
+
+CPEAT_core <- CPEAT$core %>%
+  mutate(row_number = row_number()) %>% 
+  pivot_longer(cols = -row_number, names_to = 'column_id', values_to = 'with_entry', values_drop_na = TRUE)
+
+CPEAT_core_long <- CPEAT_core %>% 
+  full_join(CPEAT.dataAnnotation_core, 
+              by = join_by(column_id),
+              suffix = c('.data', ''),
+              relationship = "many-to-many") %>% 
+  mutate(
+      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
+                                  with_entry.data, with_entry)) %>%
+  select(-with_entry.data)
 ```
 
 ## Including Plots
 
 ```{r}
+
 
 ```
 
