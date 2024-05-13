@@ -27,48 +27,34 @@ dataAnnotations <- '../data/fia_annotations.csv'
 
 ```{r, warning=FALSE}
 fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE)
-fia_long.df <- fia.ls$longtable
 ```
 
 ```{r}
-fia.df <- filter(fia_long.df, is_type == 'identifier' | is_type == 'value') %>% 
-  #use select instead
-  subset(select = -c(column_id, is_type)) %>%
-  pivot_wider(names_from = 'of_variable', values_from = 'with_entry')
+soil_carbon.df <- fia.ls$longtable %>%
+  filter(is_type == 'identifier' | 
+           of_variable %in% c('Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+                              'Layer_type',
+                              'Oven_dry_weight', 'Bulk_density',
+                              'organic_carbon', 'carbon_fraction',
+                              'inorganic_carbon')) %>%
+  mutate(column_name = sprintf('%s.%s', of_variable, is_type),
+         row_id = sprintf('%s.%s', table_id, row_number)) %>%
+  select(row_id, column_name, with_entry) %>%
+  pivot_wider(names_from = 'column_name', values_from = 'with_entry') %>%
+  select(-row_id) %>%
+  pivot_longer(cols = ! ends_with('identifier'), values_drop_na = TRUE) %>%
+  pivot_wider()
+
+#TODO Track down the layer type values and filter for only soil
 ```
+
+- [] histogram for each numerical variable
+- [] lat/lon map for locations
 
 ```{r}
-fia.df <- fia.df %>% 
-  #try regex instead of numbers
-     mutate_at(c(5, 9:22, 32:50), as.numeric)
-summary(fia.df %>% select(where(is.numeric)))
-
-#cast categorical variables as factors
+ggplot(soil_carbon.df %>%
+         mutate(organic_carbon = as.numeric(organic_carbon.value),
+                bulk_density = as.numeric(Bulk_density.value))) +
+  geom_point(aes(x=bulk_density, y = organic_carbon), alpha = 0.1) +
+  scale_x_log10() 
 ```
-
-
-```{r, warning=FALSE}
-#use facet wraps, think about how to group related measurements
-ggplot(fia.df, aes(x=Forest_floor_depth_avg)) + geom_histogram() + ggtitle("Forest Floor Depth")
-
-ggplot(fia.df, aes(x=Litter_layer_depth_avg)) + geom_histogram() + ggtitle("Litter Layer Depth")
-
-ggplot(fia.df, aes(x=Oven_dry_weight)) + geom_histogram() + ggtitle("Oven Dry Weight")
-
-ggplot(fia.df, aes(x=Bulk_density)) + geom_histogram() + ggtitle("Bulk Density")
-
-ggplot(fia.df, aes(x=organic_carbon)) + geom_histogram() + ggtitle("Organic Carbon")
-
-ggplot(fia.df, aes(x=carbon_fraction)) + geom_histogram() + ggtitle("Carbon Fraction")
-
-ggplot(fia.df, aes(x=nitrogen_fraction)) + geom_histogram() + ggtitle("Nitrogen Fraction")
-
-ggplot(fia.df, aes(x=inorganic_carbon)) + geom_histogram() + ggtitle("Inorganic Carbon")
-
-ggplot(fia.df, aes(x=ph_h2o)) + geom_histogram() + ggtitle("H2O pH")
-
-ggplot(fia.df, aes(x=inorganic_carbon, y=organic_carbon)) + geom_point()
- 
-```
-
-
