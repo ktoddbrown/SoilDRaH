@@ -54,10 +54,11 @@ readFIA <- function(dataDir,
   # Read in the original files
   if(verbose) message('Starting data read... ')
   
-  # Read in csvs if annotated
+  # Read in csv's if annotated
   ans.ls$original_data <- lapply(file.path(dataDir, 
                                            'CSV_FIADB_ENTIRE', paste(tables, ".csv", sep = "")), 
-                                 FUN = readr::read_csv, col_type = readr::cols(.default = readr::col_character()))
+                                 FUN = readr::read_csv, 
+                                 col_type = readr::cols(.default = readr::col_character()))
   names(ans.ls$original_data) <- tables
   
   
@@ -68,9 +69,11 @@ readFIA <- function(dataDir,
     return(ans.ls)
   }
   
-  #remove too large table
-  # TODO keep the table but remove rows that do not have soil data
-  ans.ls$original_data$ENTIRE_PLOT <- NULL
+  #Trim down the ENTIRE_PLOT to only include the soil sample locations
+  #...do this to keep the size of the file down
+  ans.ls$original_data$ENTIRE_PLOT <- ans.ls$original_data$ENTIRE_PLOT %>%
+    semi_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC,
+              by = join_by(STATECD, COUNTYCD, PLOT))
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
   if(verbose) message('Transforming data... ')
@@ -94,22 +97,24 @@ readFIA <- function(dataDir,
     
     return(temp)
   }, .id = "table_id") %>%
-    
     #join long table with annotations
     dplyr::full_join(ans.ls$annotations, 
                      by = join_by(table_id, column_id),
                      suffix = c('.data', ''),
-                     relationship = "many-to-many") %>%
-    
+                     multiple = "all")%>%
     #replace value placeholders in with_entry column with values from data
     dplyr::mutate(
       with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), 
                                   with_entry.data, with_entry)) %>%
     dplyr::select(-with_entry.data) %>%
-  drop_na(row_number)
+    #without factors and integer casts: 406Mb
+    #with casts: 299 Mb
+    mutate(table_id = as.factor(table_id),
+          column_id = as.factor(column_id),
+          is_type = as.factor(is_type),
+          row_number = as.integer(row_number))
   
   if(verbose) message('done.')
-  ##TODO Take a look at data size. Maybe ONLY return the log table 
-  ##... and make strings factors where we can.
+  
   return(ans.ls)
 }
