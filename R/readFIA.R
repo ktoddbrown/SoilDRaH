@@ -20,6 +20,7 @@ readFIA <- function(dataDir,
                     format = c('orginal', 'long')[1],
                     verbose = TRUE){
   
+  if(verbose) message('This function takes around 1Gb of memory, please be aware this may swamp your machine.')
   
   # Download entire FIA database
   downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
