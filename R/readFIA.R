@@ -2,6 +2,7 @@
 #' 
 #'
 #' @param dataDir a string that specifies the filepath of where the data should be downloaded.
+#' @param annotationFilename a string that specifies where the data annotations are
 #' @param format a string flat to return the original format or the long format.
 #' @param verbose a boolean that prints out the stage of the file
 #'
@@ -15,8 +16,9 @@
 #' @return a list of data frames.
 
 readFIA <- function(dataDir,
-                         format = c('orginal', 'long')[1],
-                         verbose = TRUE){
+                    annotationFilename,
+                    format = c('orginal', 'long')[1],
+                    verbose = TRUE){
   
   
   # Download entire FIA database
@@ -24,32 +26,37 @@ readFIA <- function(dataDir,
   filename <- "CSV_FIADB_ENTIRE.zip"
   
   if(!file.exists(file.path(dataDir, filename))){
+    if(verbose) message('Database not found, downloading...')
     utils::download.file(url = downloadUrl, 
                          destfile = file.path(dataDir, 
                                               filename))
+    if(verbose) message('Download done.')
   }
   
   # Unzip zip file
-  utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
-  
+  if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
+    if(verbose) message('Unzipping file...')
+    utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
+    if(verbose) message('Unzipping done.')
+  }
   
   # Create return list
   ans.ls <- list()
   
   # Read in annotations
-  # TODO Think about moving the annotation csv into package data reads
-  ans.ls$annotations <- readr::read_csv("data/fia_annotations.csv",
+  if(verbose) message('Loading annotations.')
+  ans.ls$annotations <- readr::read_csv(annotationFilename,
                                         col_type = readr::cols(.default = readr::col_character()))
   
   # Get list of annotated table names
   tables <- unique(ans.ls$annotations$table_id)
   
-  
   # Read in the original files
   if(verbose) message('Starting data read... ')
   
   # Read in csvs if annotated
-  ans.ls$original_data <- lapply(file.path(dataDir, paste(tables, ".csv", sep = "")), 
+  ans.ls$original_data <- lapply(file.path(dataDir, 
+                                           'CSV_FIADB_ENTIRE', paste(tables, ".csv", sep = "")), 
                                  FUN = readr::read_csv, col_type = readr::cols(.default = readr::col_character()))
   names(ans.ls$original_data) <- tables
   

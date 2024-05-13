@@ -21,11 +21,12 @@ source("../R/readFIA.R", local = knitr::knit_global())
 
 #locate the data locally
 dataDir <- '~/Desktop/datasets/fia'
+dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/FS_FIA'
+dataAnnotations <- '../data/fia_annotations.csv'
 ```
 
 ```{r, warning=FALSE}
-setwd("..")
-fia.ls <- readFIA(dataDir, verbose = FALSE)
+fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE)
 fia_long.df <- fia.ls$longtable
 ```
 
