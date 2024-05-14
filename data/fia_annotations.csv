@@ -1,4 +1,4 @@
-﻿table_id,column_id,of_variable,is_type,with_entry
+table_id,column_id,of_variable,is_type,with_entry
 ENTIRE_SOILS_SAMPLE_LOC,CN,Soil_visit,description,A unique sequence number used to identify a soils sample location.
 ENTIRE_SOILS_SAMPLE_LOC,CN,Soil_visit,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,Plot_visit,description,Foreign key linking the soils lab record to the P2 plot record.
@@ -11,8 +11,8 @@ ENTIRE_SOILS_SAMPLE_LOC,COUNTYCD,County,description,"The identification number f
 ENTIRE_SOILS_SAMPLE_LOC,COUNTYCD,County,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
 ENTIRE_SOILS_SAMPLE_LOC,PLOT,Plot,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,SMPLNNBR,Sample_number,description,The number corresponding to the subplot where the sample was collected. SMPLNNBR equals the subplot number.
-ENTIRE_SOILS_SAMPLE_LOC,SMPLNNBR,Sample_number,control_vocabulary,TBD
+ENTIRE_SOILS_SAMPLE_LOC,SMPLNNBR,Sample_number,description,The number corresponding to the subplot where the sample was collected. SMPLNNBR equals the subplot number (SUBP).
+ENTIRE_SOILS_SAMPLE_LOC,SMPLNNBR,Sample_number,control_vocabulary, "2;3;4"
 ENTIRE_SOILS_SAMPLE_LOC,MEASYEAR,Measure_year,description,The year in which the plot was completed. MEASYEAR may differ from INVYR.
 ENTIRE_SOILS_SAMPLE_LOC,MEASYEAR,Measure_year,value,--
 ENTIRE_SOILS_SAMPLE_LOC,FORFLTHK,Forest_floor_depth_avg,description,The average forest floor thickness for the subplot measured from the top of the litter layer to the boundary between the forest floor and mineral soil.
@@ -57,86 +57,89 @@ ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,method,"The thickness 
 ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,value,--
 ENTIRE_SOILS_SAMPLE_LOC,CONDID,Condition,description,Condition
 ENTIRE_SOILS_SAMPLE_LOC,CONDID,Condition,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,description,Visit number
-ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,control_vocabulary,TBD
+ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,description,The number of the soil sampling location at which the soil sample was collected. Values are 1 - 9 (see diagram in FIADB User Guide P3).
+ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,control_vocabulary,"9;7;5;3;12;4;6;8"
 ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR1,Soil_texture_layer1,description,A code indicating the soil texture of the 0-4 inch layer estimated in the field
 ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR1,Soil_texture_layer1,method,determination by feel in the field
-ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR1,Soil_texture_layer1,control_vocabulary,TBD
+ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR1,Soil_texture_layer1,control_vocabulary,"0|Organic;1:Loamy;2|Clayey;3|Sandy;4|Coarse sand;9|Not measured - make plot notes"
 ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR2,Soil_texture_layer2,description,A code indicating the soil texture of the 4-8 inch layer estimated in the field
 ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR2,Soil_texture_layer2,method,determination by feel in the field
-ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR2,Soil_texture_layer2,control_vocabulary,TBD
+ENTIRE_SOILS_SAMPLE_LOC,TXTRLYR2,Soil_texture_layer2,control_vocabulary,"0|Organic;1:Loamy;2|Clayey;3|Sandy;4|Coarse sand;9|Not measured - make plot notes"
 ENTIRE_SOILS_SAMPLE_LOC,DPTHSBSL,Depth_to_restricted_layer,description,"Indicates the median depth of five location within the soil sampling area (center, north, east, south, and west edges) to a restrictive layer"
 ENTIRE_SOILS_SAMPLE_LOC,DPTHSBSL,Depth_to_restricted_layer,unit,tenths of inches
 ENTIRE_SOILS_SAMPLE_LOC,DPTHSBSL,Depth_to_restricted_layer,value,--
-ENTIRE_SOILS_SAMPLE_LOC,SOILS_STATCD,Soil_stat,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,SOILS_STATCD,Soil_stat,control_vocabulary,TBD
+ENTIRE_SOILS_SAMPLE_LOC,SOILS_STATCD,Soil_stat,value,--
+ENTIRE_SOILS_SAMPLE_LOC,SOILS_STATCD,Soil_stat,description,"A code indicating whether or not a forest floor or mineral soil sample was collected at the soil sampling location. For both forest floor and mineral samples, it is the condition of the soil sampling sites in the annular plot that determines whether soil samples are collected. Samples are collected if, and only if, the soil sampling site is in a forested condition (regardless of the condition class of the subplot). For example, in cases where the subplot has at least one forested condition class and the soil sampling site is not in a forested condition class, soil samples are not collected. Similarly, in cases where the soil sampling site is in a forested condition class and the subplot does not have at least one forested condition class, soil samples are collected."
+ENTIRE_SOILS_SAMPLE_LOC,SOILS_STATCD,Soil_stat,control_vocabulary,"1|Sampled.;2|Not sampled: nonforest.;3|Forest condition not sampled: too rocky to sample.;4|Forest condition not sampled: water or boggy.;5|Forest condition not sampled: access denied.;6|Forest condition not sampled: too dangerous to sample.;7|Forest condition not sampled: obstruction in sampling area.;8|Forest condition not sampled: broken or lost equipment.;9|Forest condition not sampled: other - enter reason in plot notes.;11|Forest condition sampled: forest that has not been identified as a condition on the plot."
 ENTIRE_SOILS_SAMPLE_LOC,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files
-ENTIRE_SOILS_SAMPLE_LOC,CREATED_BY,Data_collection_person,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,CREATED_DATE,Data_collection_time,description,The date on which the record was created. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_SAMPLE_LOC,CREATED_DATE,Data_collection_time,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,CREATED_DATE,Record_collection_time,description,"The date on which the record was created. Date will be in the form DD-MON-YYYY."
+ENTIRE_SOILS_SAMPLE_LOC,CREATED_DATE,Record_collection_time,value,--
 ENTIRE_SOILS_SAMPLE_LOC,CREATED_IN_INSTANCE,Data_collection_instance,description,"The database instance in which the record was created. Each computer system has a unique database instance code, and this attribute stores that information to determine on which computer the record was created."
-ENTIRE_SOILS_SAMPLE_LOC,CREATED_IN_INSTANCE,Data_collection_instance,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,CREATED_IN_INSTANCE,Data_collection_instance,value,--
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_BY,Data_modification_person,description,The employee who modified the record. This field will be null if the data have not been modified since initial creation. This attribute is intentionally left blank in download files.
-ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_BY,Data_modification_person,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_BY,Data_modification_person,value,--
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_DATE,Data_modification_time,description,The date on which the record was last modified. This field will be null if the data have not been modified since initial creation. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_DATE,Data_modification_time,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was created. This field will be null if the data have not been modified since initial creation.
-ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
-ENTIRE_SOILS_LAB,CN,Soil_lab,description,A unique sequence number used to identify a soils sample location.
-ENTIRE_SOILS_LAB,CN,Soil_lab,identifier,--
-ENTIRE_SOILS_LAB,PLT_CN,Plot_visit,description,Foreign key linking the soils lab record to the P2 plot record.
-ENTIRE_SOILS_LAB,PLT_CN,Plot_visit,identifier,
+ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
+ENTIRE_SOILS_LAB,CN,Soil_lab_id,description,A unique sequence number used to identify a soils sample location.
+ENTIRE_SOILS_LAB,CN,Soil_lab_id,identifier,--
+ENTIRE_SOILS_LAB,PLT_CN,Plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
+ENTIRE_SOILS_LAB,PLT_CN,Plot_visit_id,identifier,--
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_LAB,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SOILS_LAB,STATECD,State,identifier,--
+ENTIRE_SOILS_LAB,STATECD,State,value,--
 ENTIRE_SOILS_LAB,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used."
 ENTIRE_SOILS_LAB,COUNTYCD,County,identifier,--
+ENTIRE_SOILS_LAB,COUNTYCD,County,value,--
 ENTIRE_SOILS_LAB,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
 ENTIRE_SOILS_LAB,PLOT,Plot,identifier,--
-ENTIRE_SOILS_LAB,SMPLNNBR,Sample_number,description,The number corresponding to the subplot where the sample was collected. SMPLNNBR equals the subplot number.
-ENTIRE_SOILS_LAB,SMPLNNBR,Sample_number,control_vocabulary,TBD
+ENTIRE_SOILS_LAB,SMPLNNBR,Sample_number,description,The number corresponding to the subplot where the sample was collected. SMPLNNBR equals the subplot number (SUBP)..
+ENTIRE_SOILS_LAB,SMPLNNBR,Sample_number,control_vocabulary, '2;3;4'
 ENTIRE_SOILS_LAB,MEASYEAR,Measure_year,description,The year in which the plot was completed. MEASYEAR may differ from INVYR.
 ENTIRE_SOILS_LAB,MEASYEAR,Measure_year,value,--
-ENTIRE_SOILS_LAB,VSTNBR,Visit_number,description,The number of the soil sampling location at which the soil sample was collected. Values are 1 - 9.
-ENTIRE_SOILS_LAB,VSTNBR,Visit_number,control_vocabulary,TBD
+ENTIRE_SOILS_LAB,VSTNBR,Visit_number,description,The number of the soil sampling location at which the soil sample was collected. Values are 1 - 9 (see diagram in FIADB User Guide P3).
+ENTIRE_SOILS_LAB,VSTNBR,Visit_number,control_vocabulary,"9;7;5;3;12;4;6;8"
 ENTIRE_SOILS_LAB,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files
-ENTIRE_SOILS_LAB,CREATED_BY,Data_collection_person,identifier,--
 ENTIRE_SOILS_LAB,CREATED_DATE,Data_collection_time,description,The date on which the record was created. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_LAB,CREATED_DATE,Data_collection_time,identifier,--
+ENTIRE_SOILS_LAB,CREATED_DATE,Data_collection_time,value,--
+ENTIRE_SOILS_LAB,CREATED_DATE,Data_collection_time,unit, DD-MON-YYYY
 ENTIRE_SOILS_LAB,CREATED_IN_INSTANCE,Data_collection_instance,description,"The database instance in which the record was created. Each computer system has a unique database instance code, and this attribute stores that information to determine on which computer the record was created."
-ENTIRE_SOILS_LAB,CREATED_IN_INSTANCE,Data_collection_instance,identifier,--
+ENTIRE_SOILS_LAB,CREATED_IN_INSTANCE,Data_collection_instance,value,--
 ENTIRE_SOILS_LAB,MODIFIED_BY,Data_modification_person,description,The employee who modified the record. This field will be null if the data have not been modified since initial creation. This attribute is intentionally left blank in download files.
-ENTIRE_SOILS_LAB,MODIFIED_BY,Data_modification_person,identifier,--
+ENTIRE_SOILS_LAB,MODIFIED_BY,Data_modification_person,value,--
 ENTIRE_SOILS_LAB,MODIFIED_DATE,Data_modification_time,description,The date on which the record was last modified. This field will be null if the data have not been modified since initial creation. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_LAB,MODIFIED_DATE,Data_modification_time,identifier,--
+ENTIRE_SOILS_LAB,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_LAB,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was created. This field will be null if the data have not been modified since initial creation.
 ENTIRE_SOILS_LAB,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
 ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,description,Indicates the soil layer type (code).
-ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,control_vocabulary,TBD
+ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,control_vocabulary, "FF_TOTAL|Total forest floor: litter + humus (duff).;L_ORG|Organic soil litter layer.;MIN_1|0-4 inch mineral soil layer.;MIN_2|4-8 inch mineral soil layer.;ORG_1|0-4 inch organic soil layer.;ORG_2|4-8 inch organic soil layer."
 ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,description,A code indicating the type of soil sampler used.
-ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,method,--
-ENTIRE_SOILS_LAB,QASTATCD,Quality_assurance _status,description,A code indicating the type of plot data collected.
-ENTIRE_SOILS_LAB,QASTATCD,Quality_assurance _status,control_vocabulary,TBD
+ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,value,--
+ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,control_vocabulary,"SF|Sample frame.;BD|Bulk density sampler.;O|Other."
+ENTIRE_SOILS_LAB,QASTATCD,Quality_assurance_status,description,A code indicating the type of plot data collected.
+ENTIRE_SOILS_LAB,QASTATCD,Quality_assurance_status,control_vocabulary,"1|Standard production plot.;2|Cold check.;3|Reference plot (off-grid).;4|Training/practice (off-grid).;5|Botched plot file (disregard during data processing).;6|Blind check.;7|Production plot (hot check)."
 ENTIRE_SOILS_LAB,SAMPLE_DATE,Sample_date,description,Indicates the date of soil measurements and sampling.
-ENTIRE_SOILS_LAB,SAMPLE_DATE,Sample_date,identifier,--
+ENTIRE_SOILS_LAB,SAMPLE_DATE,Sample_date,value,--
 ENTIRE_SOILS_LAB,LAB_ID,Laboratory,description,Indicates the laboratory where the analyses were done.
-ENTIRE_SOILS_LAB,LAB_ID,Laboratory,control_vocabulary,TBD
+ENTIRE_SOILS_LAB,LAB_ID,Laboratory,value,--
 ENTIRE_SOILS_LAB,SAMPLE_ID,Sample,description,"Internal lab sample identification number used to identify samples, match to plot identifier data, and track samples."
-ENTIRE_SOILS_LAB,SAMPLE_ID,Sample,identifier,--
+ENTIRE_SOILS_LAB,SAMPLE_ID,Sample,value,--
 ENTIRE_SOILS_LAB,FIELD_MOIST_SOIL_WT,Field_moist_weight,description,The weight of the soil sample as received from the field in grams.
 ENTIRE_SOILS_LAB,FIELD_MOIST_SOIL_WT,Field_moist_weight,unit,grams
 ENTIRE_SOILS_LAB,FIELD_MOIST_SOIL_WT,Field_moist_weight,method,gravimetric
 ENTIRE_SOILS_LAB,FIELD_MOIST_SOIL_WT,Field_moist_weight,value,--
 ENTIRE_SOILS_LAB,AIR_DRY_SOIL_WT,Air_dry_weight,description,The weight of the soil sample after air-drying at ambient temperature in grams.
 ENTIRE_SOILS_LAB,AIR_DRY_SOIL_WT,Air_dry_weight,unit,grams
-ENTIRE_SOILS_LAB,AIR_DRY_SOIL_WT,Air_dry_weight,method,gravimetric - air-dried to a constant weight
+ENTIRE_SOILS_LAB,AIR_DRY_SOIL_WT,Air_dry_weight,method,"gravimetric - air-dried to a constant weight"
 ENTIRE_SOILS_LAB,AIR_DRY_SOIL_WT,Air_dry_weight,value,--
 ENTIRE_SOILS_LAB,OVEN_DRY_SOIL_WT,Oven_dry_weight,description,The calculated weight of the soil sample based on an oven-dried subsample in grams.
 ENTIRE_SOILS_LAB,OVEN_DRY_SOIL_WT,Oven_dry_weight,unit,grams
-ENTIRE_SOILS_LAB,OVEN_DRY_SOIL_WT,Oven_dry_weight,method,gravimetric - oven-dried subsample at 105° C for 24 hours
+ENTIRE_SOILS_LAB,OVEN_DRY_SOIL_WT,Oven_dry_weight,method,"gravimetric - oven-dried subsample at 105° C for 24 hours"
 ENTIRE_SOILS_LAB,OVEN_DRY_SOIL_WT,Oven_dry_weight,value,--
-ENTIRE_SOILS_LAB,FIELD_MOIST_WATER_CONTENT_PCT,Field_moist_water_content,description,The field-moist to air-dry water content in percent: field-moist sample weight / air-dry sample weight - 1
+ENTIRE_SOILS_LAB,FIELD_MOIST_WATER_CONTENT_PCT,Field_moist_water_content,description,"The field-moist to air-dry water content in percent: field-moist sample weight / air-dry sample weight - 1"
 ENTIRE_SOILS_LAB,FIELD_MOIST_WATER_CONTENT_PCT,Field_moist_water_content,unit,percent by weight
 ENTIRE_SOILS_LAB,FIELD_MOIST_WATER_CONTENT_PCT,Field_moist_water_content,method,Calculated from field-moist soil weight and air-dried soil weight
 ENTIRE_SOILS_LAB,FIELD_MOIST_WATER_CONTENT_PCT,Field_moist_water_content,value,--
@@ -248,57 +251,65 @@ ENTIRE_SOILS_EROSION,CN,soil_erosion,description,A unique sequence number used t
 ENTIRE_SOILS_EROSION,CN,soil_erosion,identifier,--
 ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,description,Foreign key linking the soils erosion record to the P2 plot record.
 ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,identifier,--
+ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,foreign_key,--
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,identifier,--
+ENTIRE_SOILS_EROSION,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_EROSION,STATECD,State,description,"Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_EROSION,STATECD,State,identifier,--
+ENTIRE_SOILS_EROSION,STATECD,State,value,--
 ENTIRE_SOILS_EROSION,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_EROSION,COUNTYCD,County,identifier,--
+ENTIRE_SOILS_EROSION,STATECD,State,value,--
 ENTIRE_SOILS_EROSION,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
 ENTIRE_SOILS_EROSION,PLOT,Plot,identifier,--
 ENTIRE_SOILS_EROSION,SUBP,Subplot,description,The number assigned to the subplot where soils data were collected.
 ENTIRE_SOILS_EROSION,SUBP,Subplot,identifier,--
-ENTIRE_SOILS_EROSION,SUBP,Subplot,control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,SUBP,Subplot,value,--
+ENTIRE_SOILS_EROSION,SUBP,Subplot,control_vocabulary,"1|Center subplot.;2|North subplot.;3|Southeast subplot.;4|Southwest subplot."
 ENTIRE_SOILS_EROSION,MEASYEAR,Measure_year,description,The year in which the plot was completed. MEASYEAR may differ from INVYR.
 ENTIRE_SOILS_EROSION,MEASYEAR,Measure_year,value,--
 ENTIRE_SOILS_EROSION,SOILSPCT,Soils_percent (percent bare soil),description,"Indicates the percentage of the subplot that is covered by bare soil (mineral or organic). Fine gravel [0.08-0.20 inch (2-5 mm)] is considered part of the bare soil. However, large rocks protruding through the soil (e.g., bedrock outcrops) are not included in this category because these are not erodible surfaces. For the soil indicator, cryptobiotic crusts are not considered bare soil."
 ENTIRE_SOILS_EROSION,SOILSPCT,Soils_percent (percent bare soil),value,--
-ENTIRE_SOILS_EROSION,SOILSPCT,Soils_percent (percent bare soil),control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,SOILSPCT,Soils_percent (percent bare soil),control_vocabulary,"00|Absent;01|Trace;05|1 to 5 %;10|6-10 %;15|11-15 %;20|16-20 %;25|21-25 %;30|26-30 %;35|31-35 %;40|36-40 %;45|41-45 %;50|46-50 %;55|51-55 %;60|56-60 %;65|61-65 %;70|66-70 %;75|71-75 %;80|76-80 %;85|81-85 %;90|86-90 %;95|91-95 %;99|96-100 %"
 ENTIRE_SOILS_EROSION,COMPCPCT,Compact_percent (percent compacted area),description,Indicates the percentage of the subplot that exhibits evidence of compaction. Soil compaction is assessed relative to the conditions of adjacent undisturbed soil. Improved roads are not included in the evaluation.
 ENTIRE_SOILS_EROSION,COMPCPCT,Compact_percent (percent compacted area),value,--
-ENTIRE_SOILS_EROSION,COMPCPCT,Compact_percent (percent compacted area),control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,COMPCPCT,Compact_percent (percent compacted area),control_vocabulary,"00|Absent;01|Trace;05|1 to 5 %;10|6-10 %;15|11-15 %;20|16-20 %;25|21-25 %;30|26-30 %;35|31-35 %;40|36-40 %;45|41-45 %;50|46-50 %;55|51-55 %;60|56-60 %;65|61-65 %;70|66-70 %;75|71-75 %;80|76-80 %;85|81-85 %;90|86-90 %;95|91-95 %;99|96-100 %"
 ENTIRE_SOILS_EROSION,TYPRTDCD,Type_rutted_trail_code,description,A code indicating the type of compaction that is a rutted trail. Ruts must be at least 2 inches deep into mineral soil or 6 inches deep from the undisturbed forest litter surface.
 ENTIRE_SOILS_EROSION,TYPRTDCD,Type_rutted_trail_code,value,--
-ENTIRE_SOILS_EROSION,TYPRTDCD,Type_rutted_trail_code,control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,TYPRTDCD,Type_rutted_trail_code,control_vocabulary,"1|Present.;0|Not present."
 ENTIRE_SOILS_EROSION,TYPCMPCD,Type_compacted_trail_code,description,"A code indicating the type of compaction that is a compacted trail (usually the result of many passes of heavy machinery, vehicles, or large animals)."
 ENTIRE_SOILS_EROSION,TYPCMPCD,Type_compacted_trail_code,value,--
-ENTIRE_SOILS_EROSION,TYPCMPCD,Type_compacted_trail_code,control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,TYPCMPCD,Type_compacted_trail_code,control_vocabulary,"1|Present.;0|Not present."
 ENTIRE_SOILS_EROSION,TYPAREACD,Type_compacted_area_code,description,"A code indicating the type of compaction that is a compacted area. Examples include the junction areas of skid trails, landing areas, work areas, animal bedding areas, heavily grazed areas, etc."
 ENTIRE_SOILS_EROSION,TYPAREACD,Type_compacted_area_code,value,--
-ENTIRE_SOILS_EROSION,TYPAREACD,Type_compacted_area_code,control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,TYPAREACD,Type_compacted_area_code,control_vocabulary,"1|Present.;0|Not present."
 ENTIRE_SOILS_EROSION,TYPOTHRCD,Type_other_code,description,A code indicating the type of compaction that is some other form. An explanation must be entered in the plot notes.
 ENTIRE_SOILS_EROSION,TYPOTHRCD,Type_other_code,value,--
-ENTIRE_SOILS_EROSION,TYPOTHRCD,Type_other_code,control_vocabulary,TBD
+ENTIRE_SOILS_EROSION,TYPOTHRCD,Type_other_code,control_vocabulary,"1|Present.;0|Not present."
 ENTIRE_SOILS_EROSION,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files.
-ENTIRE_SOILS_EROSION,CREATED_BY,Data_collection_person,identifier,--
 ENTIRE_SOILS_EROSION,CREATED_DATE,Data_collection_time,description,The date on which the record was created. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_EROSION,CREATED_DATE,Data_collection_time,identifier,--
+ENTIRE_SOILS_EROSION,CREATED_DATE,Data_collection_time,value,--
 ENTIRE_SOILS_EROSION,CREATED_IN_INSTANCE,Data_collection_instance,description,"The database instance in which the record was created. Each computer system has a unique database instance code, and this attribute stores that information to determine on which computer the record was created."
-ENTIRE_SOILS_EROSION,CREATED_IN_INSTANCE,Data_collection_instance,identifier,--
+ENTIRE_SOILS_EROSION,CREATED_IN_INSTANCE,Data_collection_instance,value,--
 ENTIRE_SOILS_EROSION,MODIFIED_BY,Data_modification_person,description,The employee who modified the record. This field will be null if the data have not been modified since initial creation. This attribute is intentionally left blank in download files.
-ENTIRE_SOILS_EROSION,MODIFIED_BY,Data_modification_person,identifier,--
+ENTIRE_SOILS_EROSION,MODIFIED_BY,Data_modification_person,value,--
 ENTIRE_SOILS_EROSION,MODIFIED_DATE,Data_modification_time,description,The date on which the record was last modified. This field will be null if the data have not been modified since initial creation. Date will be in the form DD-MON-YYYY.
-ENTIRE_SOILS_EROSION,MODIFIED_DATE,Data_modification_time,identifier,--
+ENTIRE_SOILS_EROSION,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was modified. This field will be null if the data have not been modified since initial creation.
-ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
+ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
 ENTIRE_SOILS_VISIT,CN,soil_visit,description,A unique sequence number used to identify a soils visit record.
 ENTIRE_SOILS_VISIT,CN,soil_visit,identifier,--
 ENTIRE_SOILS_VISIT,PLT_CN,plot_visit,description,Foreign key linking the soils visit record to the P2 plot record.
 ENTIRE_SOILS_VISIT,PLT_CN,plot_visit,identifier,--
+ENTIRE_SOILS_VISIT,INVYR,Inventory_year,foreign_key,--
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,identifier,--
+ENTIRE_SOILS_VISIT,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_VISIT,STATECD,State,description,"Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_VISIT,STATECD,State,identifier,--
+ENTIRE_SOILS_VISIT,STATECD,State,value,--
+ENTIRE_SOILS_VISIT,STATECD,State,control_vocabular,TBD
 ENTIRE_SOILS_VISIT,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_VISIT,COUNTYCD,County,identifier,--
 ENTIRE_SOILS_VISIT,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
