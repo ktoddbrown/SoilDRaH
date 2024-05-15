@@ -9,6 +9,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+The FIADB
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+
+
 ```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
 
 library(readr) # read in the csv tables
@@ -30,11 +36,20 @@ fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE)
 ```
 
 ```{r}
+fia.ls$annotations %>%
+  filter(is_type == 'description') %>%
+  select(table_id, column_id, description = with_entry) %>%
+  knitr::kable()
+```
+
+```{r}
 soil_carbon.df <- fia.ls$longtable %>%
   filter(is_type == 'identifier' | 
-           of_variable %in% c('Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+           of_variable %in% c('Longtitude', 'Latitude', 'State',
+                              #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
                               'Layer_type',
-                              'Oven_dry_weight', 'Bulk_density',
+                              'Bulk_density',
+                              'coarse_fraction',
                               'organic_carbon', 'carbon_fraction',
                               'inorganic_carbon')) %>%
   mutate(column_name = sprintf('%s.%s', of_variable, is_type),
@@ -43,18 +58,22 @@ soil_carbon.df <- fia.ls$longtable %>%
   pivot_wider(names_from = 'column_name', values_from = 'with_entry') %>%
   select(-row_id) %>%
   pivot_longer(cols = ! ends_with('identifier'), values_drop_na = TRUE) %>%
-  pivot_wider()
+  pivot_wider() %>%
+  filter(!is.na(Layer_type.value)) %>% #only keep observations that have soil information
+  mutate(across(.cols = all_of('Longtitude.value', 'Latitude.value',
+                               'Bulk_density.value',
+                              'organic_carbon.value', 'carbon_fraction.value',
+                              'inorganic_carbon.value'), as.numeric))
 
-#TODO Track down the layer type values and filter for only soil
+lapply(soil_carbon.df, FUN = function(xx){sum(!is.na(xx))})
 ```
 
 - [] histogram for each numerical variable
 - [] lat/lon map for locations
 
 ```{r}
-ggplot(soil_carbon.df %>%
-         mutate(organic_carbon = as.numeric(organic_carbon.value),
-                bulk_density = as.numeric(Bulk_density.value))) +
-  geom_point(aes(x=bulk_density, y = organic_carbon), alpha = 0.1) +
-  scale_x_log10() 
+
+ggplot(soil_carbon.df) +
+  geom_point(aes(x=Bulk_density.value, y = organic_carbon.value), alpha = 0.1) +
+  facet_wrap(~Layer_type.value, scales='free')
 ```

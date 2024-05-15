@@ -74,7 +74,7 @@ readFIA <- function(dataDir,
   #...do this to keep the size of the file down
   ans.ls$original_data$ENTIRE_PLOT <- ans.ls$original_data$ENTIRE_PLOT %>%
     semi_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC,
-              by = join_by(STATECD, COUNTYCD, PLOT))
+              by = join_by(STATECD, COUNTYCD, CN == PLT_CN))
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
   if(verbose) message('Transforming data... ')
@@ -114,6 +114,9 @@ readFIA <- function(dataDir,
           column_id = as.factor(column_id),
           is_type = as.factor(is_type),
           row_number = as.integer(row_number))
+  
+  if(verbose) message('Removing orginal data.')
+  ans.ls$original_data <- NULL
   
   if(verbose) message('done.')
   
