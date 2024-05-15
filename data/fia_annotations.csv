@@ -416,7 +416,7 @@ ENTIRE_PLOT,REMPER,Remeasurement_period,value,--
 ENTIRE_PLOT,KINDCD,Sample_kind_code,description,A code indicating the type of plot installation. Database users may also want to examine DESIGNCD to obtain additional information about the kind of plot being selected.
 ENTIRE_PLOT,KINDCD,Sample_kind_code,value,--
 ENTIRE_PLOT,KINDCD,Sample_kind_code,control_vocabulary,"0|Periodic inventory plot.;1|Initial installation of a national design plot or resampling of a national design plot that was coded as nonsampled (PLOT_STATUS_CD = 3) at the previous visit.;2|Remeasurement of previously installed national design plot.;3|Replacement of previously installed national design plot.;4|Modeled periodic inventory plot (Northeastern and North Central only)."
-ENTIRE_PLOT,DESIGNCD,Design_code,description,A code indicating the type of plot design used to collect the data.
+ENTIRE_PLOT,DESIGNCD,Design_code,description,A code indicating the type of plot design used to collect the data. Refer to appendix G for a list of codes and descriptions. (FIADB User Guide P2)
 ENTIRE_PLOT,DESIGNCD,Design_code,value,--
 ENTIRE_PLOT,DESIGNCD,Design_code,control_vocabulary,TBD
 ENTIRE_PLOT,RDDISTCD,Horizontal_distance,description,"The straight-line distance from plot center to the nearest improved road, which is a road of any width that is maintained as evidenced by pavement, gravel, grading, ditching, and/or other improvements. May not be populated for some FIA work units when MANUAL <1.0."
@@ -513,29 +513,33 @@ ENTIRE_PLOT,P2VEG_SAMPLING_STATUS_CD,Phase2_veg_sample,control_vocabulary,"0|Plo
 ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,description,"Level of detail (LOD). A code indicating whether data were collected for vegetation structure growth habits only, or for individual species (that qualify as most abundant) as well. If LOD = 3, then a tree species could be recorded twice, but it would have two different species growth habits."
 ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,value,--
 ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,control_vocabulary,"1|Data collected for vegetation structure only; total aerial canopy cover and canopy cover by layer for tally tree species (all sizes), non-tally tree species (all sizes), shrubs/subshrubs/woody vines, forbs, and graminoids.;2|Vegetation structure data (LOD = 1) plus understory species composition data collected including up to four most abundant species per GROWTH_HABIT_CD per subplot of: seedlings and saplings of any tree species (tally or non-tally) <5 inches d.b.h. (d.r.c. for woodland species), shrubs/subshrubs/woody vines, forbs, and graminoids.;3|Vegetation structure data, understory species composition data (LOD = 2), plus up to four most abundant tree species (tally or non-tally) omega 5 inches d.b.h. (d.r.c for woodland species) per GROWTH_HABIT_CD per subplot."
-ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,description,A code indicating whether the plot is part of the invasive plant sample included in the inventory.
+ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,description,"A code indicating whether the plot is part of the invasive plant sample included in the inventory. Note: For certain FIA work units (SURVEY.RSCD = 22, 26, 27), to obtain a list of all plots in the sample, include codes 1 and 2 (to limit conditions to only accessible forest land, specify COND.COND_STATUS_CD = 1). Code 1 is used for plot locations that are only eligible for accessible forest land condition sampling. Code 2 is used for a subset of plot locations that are eligible for either forest or nonforest land condition sampling (e.g., National Forest System lands in specified regions)."
 ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,value,--
-ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,control_vocabulary,TBD
+ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,control_vocabulary,"0|Plot is not part of invasive plant sample.;1|Invasive plant data are sampled only on accessible forest land conditions.;2|Invasive plant data are sampled on all accessible land conditions."
 ENTIRE_PLOT,INVASIVE_SPECIMEN_RULE_CD,Invasive_species_sample,description,A code indicating if specimen collection was required.
 ENTIRE_PLOT,INVASIVE_SPECIMEN_RULE_CD,Invasive_species_sample,value,--
-ENTIRE_PLOT,INVASIVE_SPECIMEN_RULE_CD,Invasive_species_sample,control_vocabulary,TBD
-ENTIRE_PLOT,DESIGNCD_P2A,Design_code,description,The plot design for the periodic plots that were remeasured in the annual inventory (DESIGNCD = 1).
+ENTIRE_PLOT,INVASIVE_SPECIMEN_RULE_CD,Invasive_species_sample,control_vocabulary,"0|FIA work unit does not require specimen collection for invasive plants.;1|FIA work unit requires specimen collection for invasive plants."
+ENTIRE_PLOT,DESIGNCD_P2A,Design_code,description,The plot design for the periodic plots that were remeasured in the annual inventory (DESIGNCD = 1). Refer to appendix G for a list of codes and descriptions. (FIADB User Guide P2)
 ENTIRE_PLOT,DESIGNCD_P2A,Design_code,value,--
 ENTIRE_PLOT,DESIGNCD_P2A,Design_code,control_vocabulary,TBD
 ENTIRE_PLOT,MANUAL_DB,Database_version,description,"A number identifying the version of the FIADB to which the data have been standardized. When older data are standardized, they are updated, where appropriate, to adhere to the standards set by the newer version. For example, if an improved growth equation is developed, older data are re-processed and then re-loaded to the database."
 ENTIRE_PLOT,MANUAL_DB,Database_version,value,--
-ENTIRE_PLOT,SUBPANEL,Subpanel,description,"Annual inventory subpanel assignment for the plot for FIA work units using subpaneling. FIA uses a 5-panel system (see P2PANEL), but may further subdivide the 5 panels into subpanels. The following FIA work units subdivide each P2PANEL into 2 subpanels (SUBPANEL = 1 or 2), for a total of 10 subpanels. For these FIA work units, 1 subpanel is usually scheduled for measurement each year: RMRS (SURVEY.RSCD = 22); PNWRS (SURVEY.RSCD = 26, 27); SRS (SURVEY.RSCD = 33, only for Oklahoma where UNITCD 3. Populated for all plots using the National Field Guide protocols (MANUAL 1.0)."
+ENTIRE_PLOT,SUBPANEL,Subpanel,description,"Annual inventory subpanel assignment for the plot for FIA work units using subpaneling. FIA uses a 5-panel system (see P2PANEL), but may further subdivide the 5 panels into subpanels. The following FIA work units subdivide each P2PANEL into 2 subpanels (SUBPANEL = 1 or 2), for a total of 10 subpanels. For these FIA work units, 1 subpanel is usually scheduled for measurement each year: RMRS (SURVEY.RSCD = 22); PNWRS (SURVEY.RSCD = 26, 27); SRS (SURVEY.RSCD = 33, only for Oklahoma where UNITCD omega 3. Populated for all plots using the National Field Guide protocols (MANUAL omega 1.0). [note: omega might be greater than, renders as omega in FIDA User Guide P2]"
 ENTIRE_PLOT,SUBPANEL,Subpanel,value,--
-ENTIRE_PLOT,SUBPANEL,Subpanel,control_vocabulary,TBD
+ENTIRE_PLOT,SUBPANEL,Subpanel,control_vocabulary,"0|Subpaneling not used.;1|Subpanel1.;2|Subpanel2."
 ENTIRE_PLOT,COLOCATED_CD_RMRS,Colocated_code,description,A code indicating whether or not the current annual plot design is co-located with a previous plot design. Only populated by certain FIA work units (SURVEY.RSCD = 22)
 ENTIRE_PLOT,COLOCATED_CD_RMRS,Colocated_code,value,--
-ENTIRE_PLOT,COLOCATED_CD_RMRS,Colocated_code,control_vocabulary,TBD
+ENTIRE_PLOT,COLOCATED_CD_RMRS,Colocated_code,control_vocabulary,"0|No, plot is not co-located with a previous plot design.;1|Yes, plot is co-located with a previous plot design.;2|This code is retired, e.g., no longer used in the field."
 ENTIRE_PLOT,CONDCHNGCD_RMRS,Conditional_class_change,description,A code indicating if there has been any change in the condition class since the previous inventory. Only populated by certain FIA work units (SURVEY.RSCD = 22).
 ENTIRE_PLOT,CONDCHNGCD_RMRS,Conditional_class_change,value,--
-ENTIRE_PLOT,CONDCHNGCD_RMRS,Conditional_class_change,control_vocabulary,TBD
+ENTIRE_PLOT,CONDCHNGCD_RMRS,Conditional_class_change,control_vocabulary,"0|There have been no condition class changes from the previous inventory. Copy condition class defining (mapping) variables from computer-generated printouts included in the plot packet.;1|True change has taken place since the last inventory. At least one condition class defining (mapping) variable has changed on any condition. Include changes in the condition status (COND_STATUS_CD) such as: previous COND_STATUS_CD was accessible forest land, now some portion or all of the condition is not accessible forest land (condition is now nonforest land, noncensus water, census water, denied access, area too hazardous to visit, area that is not in the sample, or not sampled/out of time), or vice versa.; 2|There are no true condition changes. The previous crew mapped or failed to map a condition(s) in obvious error.;3|There are no true condition changes. Change is due to procedural or definition changes."
 ENTIRE_PLOT,FUTFORCD_RMRS,future_potential_code,description,A code indicating if the location requires a prefield examination at the time of the next inventory (10-20 years). Only populated by certain FIA work units (SURVEY.RSCD = 22).
 ENTIRE_PLOT,FUTFORCD_RMRS,future_potential_code,value,--
-ENTIRE_PLOT,FUTFORCD_RMRS,future_potential_code,control_vocabulary,TBD
+ENTIRE_PLOT,FUTFORCD_RMRS,future_potential_code,control_vocabulary,"0|No, there is no chance this plot will meet the forest definition at the next cycle. It meets one or more of the following criteria:
+• Located more than 1⁄2 mile from the nearest forest land, and there are no trees present on or near the location. No disturbance evident (e.g., large fires, clearcut, etc.).
+• Located in a large reservoir.
+• Located in a developed urban area (on a house, building, parking lot),but the plot does not fall in a park, undeveloped yard, etc. that may revert to natural forest.
+• Located on barren rock, sand dunes, etc.;1|Yes, there is some chance that this plot could become forested in the next cycle; there are trees present, or forest land is present within 1⁄2 mile.;2|There are no forest tree species (tree species codes) on the site, but other woody species not currently defined as forest species occupy the site (such as salt cedar, palo verde, ironwood, big sage)."
 ENTIRE_PLOT,MANUAL_NCRS,field_guide_version,description,The version number of the NCRS Field Guide used to describe procedures for collecting data on the plot. Only populated by certain FIA work units (SURVEY.RSCD = 23).
 ENTIRE_PLOT,MANUAL_NCRS,field_guide_version,identifier,--
 ENTIRE_PLOT,MANUAL_NERS,field_guide_version,description,The version number of the NERS Field Guide used to describe procedures for collecting data on the plot. Only populated by certain FIA work units (SURVEY.RSCD = 24).
@@ -548,20 +552,22 @@ ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,description,"A code indicatin
 of year to access a plot. Populated for States in the NERS region (SURVEY.RSCD = 24)
 where MANUAL >=4.0."
 ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,value,--
-ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,control_vocabulary,TBD
+ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,control_vocabulary,"1|Winter;2|Summer;3|Anytime"
 ENTIRE_PLOT,PRECIPITATION,Precipitation,description,"The annual precipitation, in inches, for the location. This attribute may not be populated for all FIA units and/or regions"
 ENTIRE_PLOT,PRECIPITATION,Precipitation,unit,inches
 ENTIRE_PLOT,PRECIPITATION,Precipitation,value,--
 ENTIRE_PLOT,PREV_MICROPLOT_LOC_RMRS,Previous_microplot_location,description,A code indicating the sampling location of the microplot in the previous inventory. Only populated by certain FIA work units (SURVEY.RSCD = 22).
 ENTIRE_PLOT,PREV_MICROPLOT_LOC_RMRS,Previous_microplot_location,value,--
-ENTIRE_PLOT,PREV_MICROPLOT_LOC_RMRS,Previous_microplot_location,control_vocabulary,TBD
+ENTIRE_PLOT,PREV_MICROPLOT_LOC_RMRS,Previous_microplot_location,control_vocabulary,"CENTER|Microplot center located at subplot center.;OFFSET|Microplot center offset from subplot center. For example, microplot center located 12 feet horizontal at 90 degrees from subplot center."
 ENTIRE_PLOT,PREV_PLOT_STATUS_CD_RMRS,Previous_plot_status,description,A code indicating the plot sampling status at the previous inventory visit. Blank (null) values may be present for periodic inventories. Only populated by certain FIA work units (SURVEY.RSCD = 22).
 ENTIRE_PLOT,PREV_PLOT_STATUS_CD_RMRS,Previous_plot_status,value,--
-ENTIRE_PLOT,PREV_PLOT_STATUS_CD_RMRS,Previous_plot_status,control_vocabulary,TBD
-ENTIRE_PLOT,REUSECD1,Recreation_use,description,"code indicating signs of recreation use encountered within the accessible forest land portion of any of the four subplots, based on evidence such as campfire rings, compacted areas (from tents), hiking trails, bullet or shotgun casings, tree stands. Up to three different recreation uses per plot can be recorded (REUSECD1, REUSECD2, and REUSECD3). Only populated by certain FIA work units (SURVEY.RSCD = 26), only in the Pacific Islands."
+ENTIRE_PLOT,PREV_PLOT_STATUS_CD_RMRS,Previous_plot_status,control_vocabulary,"1|Sampled - at least one accessible forest land condition present on plot.;2|Sampled - no accessible forest land condition present on plot.;3|Nonsampled."
+ENTIRE_PLOT,REUSECD1,Recreation_use,description,"Recreation use code 1 (Pacific Islands). A code indicating signs of recreation use encountered within the accessible forest land portion of any of the four subplots, based on evidence such as campfire rings, compacted areas (from tents), hiking trails, bullet or shotgun casings, tree stands. Up to three different recreation uses per plot can be recorded (REUSECD1, REUSECD2, and REUSECD3). Only populated by certain FIA work units (SURVEY.RSCD = 26), only in the Pacific Islands."
 ENTIRE_PLOT,REUSECD1,Recreation_use,value,--
-ENTIRE_PLOT,REUSECD1,Recreation_use,control_vocabulary,TBD
-ENTIRE_PLOT,REUSECD2,Recreation_use,description,"The second recreation use code, if the plot has more than one recreation use. See REUSECD1 for more information."
+ENTIRE_PLOT,REUSECD1,Recreation_use,control_vocabulary,"0|No evidence of recreation use.;1|Motor vehicle (four wheel drive, ATV, motorcycle).;2|Horse riding.;3|Camping.;4|Hiking.;5|Hunting/shooting.;6|Fishing.;7|Boating - physical evidence such as launch sites or docks.;9|Other - recreation use where evidence is present, such as human litter, but purpose is not clear or does not fit into above categories."
+ENTIRE_PLOT,REUSECD2,Recreation_use,description,"Recreation use code 1 (Pacific Islands). The second recreation use code, if the plot has more than one recreation use. See REUSECD1 for more information."
 ENTIRE_PLOT,REUSECD2,Recreation_use,value,--
-ENTIRE_PLOT,REUSECD3,Recreation_use,description,"The third recreation use code, if the plot has more than two recreation uses. See REUSECD1 for more information."
+ENTIRE_PLOT,REUSECD1,Recreation_use,control_vocabulary,"0|No evidence of recreation use.;1|Motor vehicle (four wheel drive, ATV, motorcycle).;2|Horse riding.;3|Camping.;4|Hiking.;5|Hunting/shooting.;6|Fishing.;7|Boating - physical evidence such as launch sites or docks.;9|Other - recreation use where evidence is present, such as human litter, but purpose is not clear or does not fit into above categories."
+ENTIRE_PLOT,REUSECD3,Recreation_use,description,"Recreation use code 1 (Pacific Islands). The third recreation use code, if the plot has more than two recreation uses. See REUSECD1 for more information."
 ENTIRE_PLOT,REUSECD3,Recreation_use,value,--
+ENTIRE_PLOT,REUSECD1,Recreation_use,control_vocabulary,"0|No evidence of recreation use.;1|Motor vehicle (four wheel drive, ATV, motorcycle).;2|Horse riding.;3|Camping.;4|Hiking.;5|Hunting/shooting.;6|Fishing.;7|Boating - physical evidence such as launch sites or docks.;9|Other - recreation use where evidence is present, such as human litter, but purpose is not clear or does not fit into above categories."
