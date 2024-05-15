@@ -1,12 +1,15 @@
 table_id,column_id,of_variable,is_type,with_entry
-ENTIRE_SOILS_SAMPLE_LOC,CN,Soil_visit,description,A unique sequence number used to identify a soils sample location.
-ENTIRE_SOILS_SAMPLE_LOC,CN,Soil_visit,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,Plot_visit,description,Foreign key linking the soils lab record to the P2 plot record.
-ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,Plot_visit,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,CN,sample_loc_id,description,A unique sequence number used to identify a soils sample location.
+ENTIRE_SOILS_SAMPLE_LOC,CN,sample_loc_id,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,foreign_key,--
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,value,--
+ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,control_vocabulary,"1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_SOILS_SAMPLE_LOC,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used."
 ENTIRE_SOILS_SAMPLE_LOC,COUNTYCD,County,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
@@ -82,15 +85,17 @@ ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_DATE,Data_modification_time,description,The dat
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was created. This field will be null if the data have not been modified since initial creation.
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
-ENTIRE_SOILS_LAB,CN,Soil_lab_id,description,A unique sequence number used to identify a soils sample location.
-ENTIRE_SOILS_LAB,CN,Soil_lab_id,identifier,--
-ENTIRE_SOILS_LAB,PLT_CN,Plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
-ENTIRE_SOILS_LAB,PLT_CN,Plot_visit_id,identifier,--
+ENTIRE_SOILS_LAB,CN,soil_lab_id,description,A unique sequence number used to identify a soils sample location.
+ENTIRE_SOILS_LAB,CN,soil_lab_id,identifier,--
+ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
+ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,identifier,--
+ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,foreign_key,--
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_LAB,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SOILS_LAB,STATECD,State,identifier,--
 ENTIRE_SOILS_LAB,STATECD,State,value,--
+ENTIRE_SOILS_LAB,STATECD,State,control_vocabulary,"1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_SOILS_LAB,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used."
 ENTIRE_SOILS_LAB,COUNTYCD,County,identifier,--
 ENTIRE_SOILS_LAB,COUNTYCD,County,value,--
@@ -247,20 +252,20 @@ ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,description,Olsen extractable phosphor
 ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,unit,mg/kg
 ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,method,"Olsen (pH 8.5, 0.5 M NaHCO3) extraction with colorimetric analysis by ascorbic acid method"
 ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,value,--
-ENTIRE_SOILS_EROSION,CN,soil_erosion,description,A unique sequence number used to identify a soils erosion record.
-ENTIRE_SOILS_EROSION,CN,soil_erosion,identifier,--
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,description,Foreign key linking the soils erosion record to the P2 plot record.
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,identifier,--
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit,foreign_key,--
+ENTIRE_SOILS_EROSION,CN,soil_erosion_id,description,A unique sequence number used to identify a soils erosion record.
+ENTIRE_SOILS_EROSION,CN,soil_erosion_id,identifier,--
+ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,description,Foreign key linking the soils erosion record to the P2 plot record.
+ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,identifier,--
+ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,foreign_key,--
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_EROSION,STATECD,State,description,"Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_EROSION,STATECD,State,identifier,--
 ENTIRE_SOILS_EROSION,STATECD,State,value,--
+ENTIRE_SOILS_EROSION,STATECD,State,control_vocabulary, "1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_SOILS_EROSION,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_EROSION,COUNTYCD,County,identifier,--
-ENTIRE_SOILS_EROSION,STATECD,State,value,--
 ENTIRE_SOILS_EROSION,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
 ENTIRE_SOILS_EROSION,PLOT,Plot,identifier,--
 ENTIRE_SOILS_EROSION,SUBP,Subplot,description,The number assigned to the subplot where soils data were collected.
@@ -298,18 +303,18 @@ ENTIRE_SOILS_EROSION,MODIFIED_DATE,Data_modification_time,description,The date o
 ENTIRE_SOILS_EROSION,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was modified. This field will be null if the data have not been modified since initial creation.
 ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
-ENTIRE_SOILS_VISIT,CN,soil_visit,description,A unique sequence number used to identify a soils visit record.
-ENTIRE_SOILS_VISIT,CN,soil_visit,identifier,--
-ENTIRE_SOILS_VISIT,PLT_CN,plot_visit,description,Foreign key linking the soils visit record to the P2 plot record.
-ENTIRE_SOILS_VISIT,PLT_CN,plot_visit,identifier,--
-ENTIRE_SOILS_VISIT,INVYR,Inventory_year,foreign_key,--
+ENTIRE_SOILS_VISIT,CN,soil_visit_id,description,A unique sequence number used to identify a soils visit record.
+ENTIRE_SOILS_VISIT,CN,soil_visit_id,identifier,--
+ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,description,Foreign key linking the soils visit record to the P2 plot record.
+ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,identifier,--
+ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,foreign_key,--
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_VISIT,STATECD,State,description,"Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_VISIT,STATECD,State,identifier,--
 ENTIRE_SOILS_VISIT,STATECD,State,value,--
-ENTIRE_SOILS_VISIT,STATECD,State,control_vocabular,TBD
+ENTIRE_SOILS_VISIT,STATECD,State,control_vocabular,"1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_SOILS_VISIT,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used. Refer to appendix B in the P2 document (The Forest Inventory and Analysis Database: Database Description and User Guide Version 6.0.1 for P2, available at FIA Data and Tools-Documentation [http://www.fia.fs.fed.us/library/database-documentation/])."
 ENTIRE_SOILS_VISIT,COUNTYCD,County,identifier,--
 ENTIRE_SOILS_VISIT,PLOT,Plot,description,"An identifier for a plot. Along with STATECD, INVYR, and COUNTYCD, PLOT may be used to uniquely identify a plot."
@@ -318,9 +323,10 @@ ENTIRE_SOILS_VISIT,MEASDAY,Measure_day,description,The day of the month in which
 ENTIRE_SOILS_VISIT,MEASDAY,Measure_day,value,--
 ENTIRE_SOILS_VISIT,MEASMON,Measure_month,description,The month in which the plot was completed.
 ENTIRE_SOILS_VISIT,MEASMON,Measure_month,value,--
-ENTIRE_SOILS_VISIT,MEASMON,Measure_month,control_vocabulary,TBD
+ENTIRE_SOILS_VISIT,MEASMON,Measure_month,control_vocabulary,"1|January;2|February;3|March;4|April;5|May;6|June;7|July;8|August;9|September;10|October;11|November;12|December"
 ENTIRE_SOILS_VISIT,MEASYEAR,Measure_year,description,The year in which the plot was completed. MEASYEAR may differ from INVYR.
 ENTIRE_SOILS_VISIT,MEASYEAR,Measure_year,value,--
+ENTIRE_SOILS_VISIT,MEASYEAR,Measure_year,unit, calendar year (CE)
 ENTIRE_SOILS_VISIT,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files.
 ENTIRE_SOILS_VISIT,CREATED_BY,Data_collection_person,value,--
 ENTIRE_SOILS_VISIT,CREATED_DATE,Data_collection_time,description,The date on which the record was created. Date will be in the form DD-MON-YYYY.
@@ -335,7 +341,7 @@ ENTIRE_SOILS_VISIT,MODIFIED_IN_INSTANCE,Data_modification_instance,description,T
 ENTIRE_SOILS_VISIT,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
 ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,description,A code indicating the type of plot data collected. Production plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when MANUAL <1.0.
 ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,value,--
-ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,control_vocabulary,TBD
+ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,control_vocabulary,"1|Standard production plot.;2|Cold check.;3|Reference plot (off grid).;4|Training/practice plot (off grid).;5|Botched plot file (disregard during data processing)."
 ENTIRE_SURVEY,CN,Soil_survey,description,A unique sequence number used to identify a survey record.
 ENTIRE_SURVEY,CN,Soil_survey,identifier,--
 ENTIRE_SURVEY,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
@@ -344,6 +350,8 @@ ENTIRE_SURVEY,P3_OZONE_IND,ozone_indicator,description,Phase 3 ozone indicator; 
 ENTIRE_SURVEY,P3_OZONE_IND,ozone_indicator,identifier,--
 ENTIRE_SURVEY,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SURVEY,STATECD,State,identifier,--
+ENTIRE_SURVEY,STATECD,State,value,--
+ENTIRE_SURVEY,STATECD,State,control_vocabulary,"1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_SURVEY,STATEAB,State_abb,description,The 2-character State abbreviation
 ENTIRE_SURVEY,STATEAB,State_abb,identifier,--
 ENTIRE_SURVEY,STATENM,State_name,description,state name
@@ -384,6 +392,8 @@ ENTIRE_PLOT,INVYR,Inventory_year,description,The year that best represents when 
 ENTIRE_PLOT,INVYR,Inventory_year,identifier,--
 ENTIRE_PLOT,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_PLOT,STATECD,State,identifier,--
+ENTIRE_PLOT,STATECD,State,value,--
+ENTIRE_PLOT,STATECD,State,control_vocabulary,"1|Alabama;2|Alaska;4|Arizona;5|Arkansas;6|California;8|Colorado;9|Connecticut;10|Delaware;12|Florida;11|District of Columbia;13|Georgia;15|Hawaii;16|Idaho;17|Illinois;18|Indiana;19|Iowa;20|Kansas;21|Kentucky;22|Louisiana;23|Maine;24|Maryland;25|Massachusetts;26|Michigan;27|Minnesota;28|Mississippi;29|Missouri;30|Montana;31|Nebraska;32|Nevada;33|New Hampshire;34|New Jersey;35|New Mexico;36|New York;37|North Carolina;38|North Dakota;39|Ohio;40|Oklahoma;41|Oregon;42|Pennsylvania;44|Rhode Island;45|South Carolina;46|South Dakota;47|Tennessee;48|Texas;49|Utah;50|Vermont;51|Virginia;53|Washington;54|West Virginia;55|Wisconsin;56|Wyoming;60|American Samoa;64|Federated States of Micronesia;66|Guam;68|Marshall Islands;69|Northern Mariana Islands;70|Palau;72|Puerto Rico;78|US Virgin Islands"
 ENTIRE_PLOT,UNITCD,survey_unit_code,description,"Forest Inventory and Analysis survey unit identification number. Survey units are usually groups of counties within each State. For periodic inventories, survey units may be made up of lands of particular owners."
 ENTIRE_PLOT,UNITCD,survey_unit_code,identifier,--
 ENTIRE_PLOT,COUNTYCD,County,description,"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used."
@@ -393,28 +403,28 @@ ENTIRE_PLOT,PLOT,Plot_number,identifier,--
 ENTIRE_PLOT,PLOT_STATUS_CD,Plot_status_code,description,A code that describes the sampling status of the plot. May not be populated for some FIA work units when MANUAL <1.0.
 ENTIRE_PLOT,PLOT_STATUS_CD,Plot_status_code,identifier,--
 ENTIRE_PLOT,PLOT_NONSAMPLE_REASN_CD,Plot_nonsampled_reason_code,description,A code indicating the reason an entire plot was not sampled.
-ENTIRE_PLOT,PLOT_NONSAMPLE_REASN_CD,Plot_nonsampled_reason_code,control_vocabulary,TBD
+ENTIRE_PLOT,PLOT_NONSAMPLE_REASN_CD,Plot_nonsampled_reason_code,control_vocabulary,"01|Outside U.S. boundary - Entire plot is outside of the U.S. border.;02|Denied access area - Access to the entire plot is denied by the legal owner, or by the owner of the only reasonable route to the plot.;03|Hazardous - Entire plot cannot be accessed because of a hazard or danger, for example cliffs, quarries, strip mines, illegal substance plantations, high water, etc.;05|Lost data - Plot data file was discovered to be corrupt after a panel was completed and submitted for processing.;06|Lost plot - Entire plot cannot be found.;07|Wrong location - Previous plot can be found, but its placement is beyond the tolerance limits for plot location.;08|Skipped visit - Entire plot skipped. Used for plots that are not completed prior to the time a panel is finished and submitted for processing. This code is for office use only.;09|Dropped intensified plot - Intensified plot dropped due to a change in grid density. This code used only by units engaged in intensification. This code is for office use only.;10|Other - Entire plot not sampled due to a reason other than one of the specific reasons already listed.;11|Ocean - Plot falls in ocean water below mean high tide line."
 ENTIRE_PLOT,MEASYEAR,Measure_year,description,The year in which the plot was completed. MEASYEAR may differ from INVYR. May be blank (null) for periodic inventory or when PLOT_STATUS_CD = 3.
 ENTIRE_PLOT,MEASYEAR,Measure_year,value,--
 ENTIRE_PLOT,MEASMON,Measure_month,description,The month in which the plot was completed. May be blank (null) for periodic inventory or when PLOT_STATUS_CD = 3.
 ENTIRE_PLOT,MEASMON,Measure_month,value,--
-ENTIRE_PLOT,MEASMON,Measure_month,control_vocabulary,TBD
+ENTIRE_PLOT,MEASMON,Measure_month,control_vocabulary,"1|January;2|February;3|March;4|April;5|May;6|June;7|July;8|August;9|September;10|October;11|November;12|December"
 ENTIRE_PLOT,MEASDAY,Measure_day,description,The day of the month in which the plot was completed. May be blank (null) for periodic inventory or when PLOT_STATUS_CD = 3.
 ENTIRE_PLOT,MEASDAY,Measure_day,value,--
 ENTIRE_PLOT,REMPER,Remeasurement_period,description,"The number of years between measurements for remeasured plots to the nearest 0.1 year. This attribute is blank (null) for new plots or remeasured plots that are not used for growth, removals, or mortality estimates."
 ENTIRE_PLOT,REMPER,Remeasurement_period,value,--
 ENTIRE_PLOT,KINDCD,Sample_kind_code,description,A code indicating the type of plot installation. Database users may also want to examine DESIGNCD to obtain additional information about the kind of plot being selected.
 ENTIRE_PLOT,KINDCD,Sample_kind_code,value,--
-ENTIRE_PLOT,KINDCD,Sample_kind_code,control_vocabulary,TBD
+ENTIRE_PLOT,KINDCD,Sample_kind_code,control_vocabulary,"0|Periodic inventory plot.;1|Initial installation of a national design plot or resampling of a national design plot that was coded as nonsampled (PLOT_STATUS_CD = 3) at the previous visit.;2|Remeasurement of previously installed national design plot.;3|Replacement of previously installed national design plot.;4|Modeled periodic inventory plot (Northeastern and North Central only)."
 ENTIRE_PLOT,DESIGNCD,Design_code,description,A code indicating the type of plot design used to collect the data.
 ENTIRE_PLOT,DESIGNCD,Design_code,value,--
 ENTIRE_PLOT,DESIGNCD,Design_code,control_vocabulary,TBD
 ENTIRE_PLOT,RDDISTCD,Horizontal_distance,description,"The straight-line distance from plot center to the nearest improved road, which is a road of any width that is maintained as evidenced by pavement, gravel, grading, ditching, and/or other improvements. May not be populated for some FIA work units when MANUAL <1.0."
 ENTIRE_PLOT,RDDISTCD,Horizontal_distance,value,--
-ENTIRE_PLOT,RDDISTCD,Horizontal_distance,control_vocabulary,TBD
+ENTIRE_PLOT,RDDISTCD,Horizontal_distance,control_vocabulary,"1|100 ft or less.;2|101 ft to 300 ft.;3|301 ft to 500 ft.;4|501 ft to 1000 ft.;5|1001 ft to 1/2 mile.;6|1/2 to 1 mile.;7|1 to 3 miles.;8|3 to 5 miles.;9|Greater than 5 miles."
 ENTIRE_PLOT,WATERCD,water_on_plot_code,description,Water body <1 acre in size or a stream <30 feet wide that has the greatest impact on the area within the sampled portions of any of the four subplots. The coding hierarchy is listed in order from large permanent water to temporary water. May not be populated for some FIA work units.
 ENTIRE_PLOT,WATERCD,water_on_plot_code,value,--
-ENTIRE_PLOT,WATERCD,water_on_plot_code,control_vocabulary,TBD
+ENTIRE_PLOT,WATERCD,water_on_plot_code,control_vocabulary,"0|None - no water sources within the sampled condition class(es).;1|Permanent streams or ponds too small to qualify as noncensus water.;2|Permanent water in the form of deep swamps, bogs, marshes without standing trees present and less than 1.0 acre in size, or with standing trees.;3|Ditch/canal - human-made channels used as a means of moving water, e.g., for irrigation or drainage, which are too small to qualify as noncensus water.;4|Temporary streams.;5|Flood zones - evidence of flooding when bodies of water exceed their natural banks.;9|Other temporary water."
 ENTIRE_PLOT,LAT,Latitude,description,"The approximate latitude of the plot in decimal degrees using NAD 83 datum (these Pacific Islands plots use WSG84 datum - SURVEY.RSCD = 26 and SURVEY.STATECD = 60, 64, 66, 68, 69, or 70). Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available."
 ENTIRE_PLOT,LAT,Latitude,unit,decimal degree
 ENTIRE_PLOT,LAT,Latitude,value,--
@@ -426,10 +436,10 @@ ENTIRE_PLOT,ELEV,Elevation,unit,feet
 ENTIRE_PLOT,ELEV,Elevation,value,--
 ENTIRE_PLOT,GROW_TYP_CD,Annual_growth_type,description,"A code indicating how volume growth is estimated. Current annual growth is an estimate of the amount of volume that was added to a tree in the year before the tree was sampled, and is based on the measured diameter increment recorded when the tree was sampled or on a modeled diameter for the previous year. Periodic annual growth is an estimate of the average annual change in volume occurring between two measurements, usually the current inventory and the previous inventory, where the same plot is evaluated twice. Periodic annual growth is the increase in volume between inventories divided by the number of years between each inventory. This attribute is blank (null) if the plot does not contribute to the growth estimate."
 ENTIRE_PLOT,GROW_TYP_CD,Annual_growth_type,value,--
-ENTIRE_PLOT,GROW_TYP_CD,Annual_growth_type,control_vocabulary,TBD
+ENTIRE_PLOT,GROW_TYP_CD,Annual_growth_type,control_vocabulary,"1|Current annual.;2|Periodic annual."
 ENTIRE_PLOT,MORT_TYP_CD,Annual_mortality_type,description,"A code indicating how mortality volume is estimated. Current annual mortality is an estimate of the volume of trees dying in the year before the plot was measured, and is based on the year of death or on a modeled estimate. Periodic annual mortality is an estimate of the average annual volume of trees dying between two measurements, usually the current inventory and previous inventory, where the same plot is evaluated twice. Periodic annual mortality is the loss of volume between inventories divided by the number of years between each inventory. Periodic average annual mortality is the most common type of annual mortality estimated. This attribute is blank (null) if the plot does not contribute to the mortality estimate."
 ENTIRE_PLOT,MORT_TYP_CD,Annual_mortality_type,value,--
-ENTIRE_PLOT,MORT_TYP_CD,Annual_mortality_type,control_vocabulary,TBD
+ENTIRE_PLOT,MORT_TYP_CD,Annual_mortality_type,control_vocabulary,"1|Current annual.;2|Periodic annual."
 ENTIRE_PLOT,P2PANEL,Phase2_panel_number,description,The value for P2PANEL ranges from 1 to 5 for annual inventories and is blank (null) for periodic inventories. A panel is a sample in which the same elements are measured on two or more occasions. FIA divides the plots in each State into 5 panels that can be used to independently sample the population.
 ENTIRE_PLOT,P2PANEL,Phase2_panel_number,value,--
 ENTIRE_PLOT,P3PANEL,Phase3_panel_number,description,"A panel is a sample in which the same elements are measured on two or more occasions. FIA divides the plots in each State into 5 panels that can be used to independently sample the population. The value for P3PANEL ranges from 1 to 5 for those plots where Phase 3 data were collected. If the plot is not a Phase 3 plot, then this attribute is left blank (null)."
@@ -442,12 +452,12 @@ ENTIRE_PLOT,MANUAL,Field_guide_number,description,"Version number of the Field G
 ENTIRE_PLOT,MANUAL,Field_guide_number,identifier,--
 ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,description,This attribute is populated through 2005 for the former North Central work unit (SURVEY.RSCD = 23) and is blank (null) for all other FIA work units.
 ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,value,--
-ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,control_vocabulary,TBD
+ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,control_vocabulary,"0|New/lost.;6|Remeasured.;8|Old location but not remeasured.;20|Skipped.;33|Replacement of lost plot."
 ENTIRE_PLOT,QA_STATUS,Quality_assurance,description,"A code indicating the type of plot data collected. Production
 plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when
 MANUAL <1.0."
 ENTIRE_PLOT,QA_STATUS,Quality_assurance,value,--
-ENTIRE_PLOT,QA_STATUS,Quality_assurance,control_vocabulary,TBD
+ENTIRE_PLOT,QA_STATUS,Quality_assurance,control_vocabulary,"1|Standard production plot.;2|Cold check.;3|Reference plot (off grid).;4|Training/practice plot (off grid).;5|Botched plot file (disregard during data processing)."
 ENTIRE_PLOT,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files
 ENTIRE_PLOT,CREATED_BY,Data_collection_person,identifier,--
 ENTIRE_PLOT,CREATED_DATE,Data_collection_time,description,The date on which the record was created. Date will be in the form DD-MON-YYYY.
@@ -462,7 +472,7 @@ ENTIRE_PLOT,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The data
 ENTIRE_PLOT,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
 ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,description,"A code indicating the location of the microplot center on the subplot. The offset microplot center is located 12 feet due east (90 degrees) of subplot center. The current standard is that the microplot is located in the 'OFFSET' location, but some earlier inventories, including some early panels of the annual inventory, may contain data where the microplot was located at the 'CENTER' location. May not be populated for some FIA work units when MANUAL <1.0."
 ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,value,--
-ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,control_vocabulary,TBD
+ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,control_vocabulary,"OFFSET|The microplot center is offset from the subplot center.;CENTER|The microplot center is at the subplot center."
 ENTIRE_PLOT,DECLINATION,Declination,description,"The azimuth correction used to adjust magnetic north to true north, and is defined as follows:
 DECLINATION = (TRUE NORTH - MAGNETIC NORTH).
 This field is only used in cases where FIA work units are adjusting azimuths to correspond to true north. This field includes a decimal place because the USGS corrections are provided to the nearest half degree. DECLINATION is set to a value of 0.0 for plots that are sampled using magnetic azimuths. Only populated by certain FIA work units (SURVEY.RSCD = 26, 27)."
@@ -471,10 +481,10 @@ ENTIRE_PLOT,EMAP_HEX,EMAP_hexagon,description,"The identifier for the approximat
 ENTIRE_PLOT,EMAP_HEX,EMAP_hexagon,value,--
 ENTIRE_PLOT,SAMP_METHOD_CD,sample_method,description,A code indicating if the plot was observed in the field or remotely sensed in the office.
 ENTIRE_PLOT,SAMP_METHOD_CD,sample_method,value,--
-ENTIRE_PLOT,SAMP_METHOD_CD,sample_method,control_vocabulary,TBD
+ENTIRE_PLOT,SAMP_METHOD_CD,sample_method,control_vocabulary,"1|Field visited, meaning a field crew physically examined the plot and recorded information at least about subplot 1 center condition (see SUBP_EXAMINE_CD below).;2|Remotely sensed, meaning a determination was made using some type of imagery that a field visit was not necessary. When the plot is sampled remotely, the number of subplots examined (SUBP_EXAMINE_CD) usually equals 1."
 ENTIRE_PLOT,SUBP_EXAMINE_CD,subplots_examined,description,"A code indicating the number of subplots examined. By default, PLOT_STATUS_CD = 1 plots have all 4 subplots examined."
 ENTIRE_PLOT,SUBP_EXAMINE_CD,subplots_examined,value,--
-ENTIRE_PLOT,SUBP_EXAMINE_CD,subplots_examined,control_vocabulary,TBD
+ENTIRE_PLOT,SUBP_EXAMINE_CD,subplots_examined,control_vocabulary,"1|Only subplot 1 center condition examined and all other subplots assumed (inferred) to be the same.;4|All four subplots fully described (no assumptions/inferences)."
 ENTIRE_PLOT,MACRO_BREAKPOINT_DIA,Macroplot_breakpoint_diameter,description,"A macroplot breakpoint diameter is the diameter (either d.b.h. or d.r.c.) above which trees are measured on the plot extending from 0.01 to 58.9 feet horizontal distance from the center of each subplot. Examples of different breakpoint diameters used by western FIA work units are 24 inches or 30 inches (Pacific Northwest), or 21 inches (Interior West). Installation of macroplots is core optional and is used to have a larger plot size in order to more adequately sample large trees. If macroplots are not being installed, this item will be left blank (null)."
 ENTIRE_PLOT,MACRO_BREAKPOINT_DIA,Macroplot_breakpoint_diameter,value,--
 ENTIRE_PLOT,INTENSITY,Intensity,description,"A code used to identify Federal base grid annual inventory plots and plots that have been added to intensify a particular sample. Under the Federal base grid, one plot is collected in each theoretical hexagonal polygon, which is slightly more than 5,900 acres in size. Plots with INTENSITY = 1 are part of the Federal base grid. In some instances, States and/or agencies have provided additional support to increase the sampling intensity for an area. Supplemental plots have INTENSITY set to higher numbers depending on the amount of plot intensification chosen for the particular estimation unit. Populated when MANUAL 1.0."
@@ -487,22 +497,22 @@ ENTIRE_PLOT,ECO_UNIT_PNW,Ecological_unit,description,"Plots taken by PNWRS FIA a
 ENTIRE_PLOT,ECO_UNIT_PNW,Ecological_unit,value,--
 ENTIRE_PLOT,TOPO_POSITION_PNW,Topographic_position,description,The topographic position that describes the plot area. Illustrations available in Plot section of the PNWRS field guide located at the web page for PNWRS FIA Field Manuals (https://cms.fs.usda.gov/pnw/page/pnw-fia-field-manuals-0). Adapted from information found in Wilson (1900). Only populated by certain FIA work units (SURVEY.RSCD = 26).
 ENTIRE_PLOT,TOPO_POSITION_PNW,Topographic_position,value,--
-ENTIRE_PLOT,TOPO_POSITION_PNW,Topographic_position,control_vocabulary,TBD
+ENTIRE_PLOT,TOPO_POSITION_PNW,Topographic_position,control_vocabulary,"1|[Topographic position] Ridge top or mountain peak over 130 feet.+[common shape of slope] Flat.;2|Narrow ridge top or mountain peak over 130 feet wide.+Convex.;3|Side hill - upper 1/3.-Convex.;4|Side hill - middle 1/3.+No rounding.;5|Side hill - lower 1/3.+Concave.;6|Canyon bottom less than 660 feet wide.+Concave.;7|Bench, terrace or dry flat.+Flat.;8|Broad alluvial flat over 660 feet wide.+Flat.;9|Swamp or wet flat.+Flat."
 ENTIRE_PLOT,NF_SAMPLING_STATUS_CD,Nonforest_sampling,description,"A code indicating whether or not the plot is part of a nonforest inventory. If NF_SAMPLING_STATUS_CD = 1, then the entire suite of attributes that are measured on forest lands were measured."
 ENTIRE_PLOT,NF_SAMPLING_STATUS_CD,Nonforest_sampling,value,--
-ENTIRE_PLOT,NF_SAMPLING_STATUS_CD,Nonforest_sampling,control_vocabulary,TBD
+ENTIRE_PLOT,NF_SAMPLING_STATUS_CD,Nonforest_sampling,control_vocabulary,"0|Nonforest plots / conditions are not inventoried.;1|Nonforest plots / conditions are inventoried."
 ENTIRE_PLOT,NF_PLOT_STATUS_CD,Nonforest_plot,description,A code describing the sampling status of the nonforest plot.
 ENTIRE_PLOT,NF_PLOT_STATUS_CD,Nonforest_plot,value,--
-ENTIRE_PLOT,NF_PLOT_STATUS_CD,Nonforest_plot,control_vocabulary,TBD
+ENTIRE_PLOT,NF_PLOT_STATUS_CD,Nonforest_plot,control_vocabulary,"1|Sampled - at least one accessible nonforest land condition present on the plot.;2|Sampled - no nonforest land condition present on plot (i.e., plot is either census and/or noncensus water).;3|Nonsampled nonforest."
 ENTIRE_PLOT,NF_PLOT_NONSAMPLE_REASN_CD,Nonsample_reason,description,A code indicating the reason the nonforest plot was not sampled.
 ENTIRE_PLOT,NF_PLOT_NONSAMPLE_REASN_CD,Nonsample_reason,value,--
-ENTIRE_PLOT,NF_PLOT_NONSAMPLE_REASN_CD,Nonsample_reason,control_vocabulary,TBD
+ENTIRE_PLOT,NF_PLOT_NONSAMPLE_REASN_CD,Nonsample_reason,control_vocabulary,"02|Denied access - Access to the entire plot is denied by the legal owner, or by the owner of the only reasonable route to the plot. Because a denied-access plot can become accessible in the future, it remains in the sample and is re-examined at the next occasion to determine if access is available.;03|Hazardous - Entire plot cannot be accessed because of a hazard or danger, for example cliffs, quarries, strip mines, illegal substance plantations, high water, etc. Although most hazards will not change over time, a hazardous plot remains in the sample and is re-examined at the next occasion to determine if the hazard is still present.;08|Skipped visit - Entire plot skipped. Used for plots that are not completed prior to the time a panel is finished and submitted for processing. This code is for office use only.;09|Dropped intensified plot - Intensified plot dropped due to a change in grid density. This code used only by units engaged in intensification. This code is for office use only.;10|Other - Entire plot not sampled due to a reason other than one of the specific reasons already listed."
 ENTIRE_PLOT,P2VEG_SAMPLING_STATUS_CD,Phase2_veg_sample,description,A code indicating whether the plot is part of the P2 (Phase 2) vegetation sample included in the inventory.
 ENTIRE_PLOT,P2VEG_SAMPLING_STATUS_CD,Phase2_veg_sample,value,--
-ENTIRE_PLOT,P2VEG_SAMPLING_STATUS_CD,Phase2_veg_sample,control_vocabulary,TBD
+ENTIRE_PLOT,P2VEG_SAMPLING_STATUS_CD,Phase2_veg_sample,control_vocabulary,"0|Plot is not part of the P2 vegetation sample.;1|P2 vegetation data are sampled only on accessible forest land conditions.;2|P2 vegetation data are sampled on all accessible land conditions."
 ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,description,"Level of detail (LOD). A code indicating whether data were collected for vegetation structure growth habits only, or for individual species (that qualify as most abundant) as well. If LOD = 3, then a tree species could be recorded twice, but it would have two different species growth habits."
 ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,value,--
-ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,control_vocabulary,TBD
+ENTIRE_PLOT,P2VEG_SAMPLING_LEVEL_DETAIL_CD,Phase2_veg_sample,control_vocabulary,"1|Data collected for vegetation structure only; total aerial canopy cover and canopy cover by layer for tally tree species (all sizes), non-tally tree species (all sizes), shrubs/subshrubs/woody vines, forbs, and graminoids.;2|Vegetation structure data (LOD = 1) plus understory species composition data collected including up to four most abundant species per GROWTH_HABIT_CD per subplot of: seedlings and saplings of any tree species (tally or non-tally) <5 inches d.b.h. (d.r.c. for woodland species), shrubs/subshrubs/woody vines, forbs, and graminoids.;3|Vegetation structure data, understory species composition data (LOD = 2), plus up to four most abundant tree species (tally or non-tally) omega 5 inches d.b.h. (d.r.c for woodland species) per GROWTH_HABIT_CD per subplot."
 ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,description,A code indicating whether the plot is part of the invasive plant sample included in the inventory.
 ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,value,--
 ENTIRE_PLOT,INVASIVE_SAMPLING_STATUS_CD,Invasive_species_sample,control_vocabulary,TBD
