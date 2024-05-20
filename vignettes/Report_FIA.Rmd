@@ -1,5 +1,5 @@
 ---
-title: "FIA Data"
+title: "Forest Inventory Analysis Database"
 author: "Ursa Pillay, Kathe Todd-Brown"
 date: "April 2024"
 output: rmarkdown::html_vignette
