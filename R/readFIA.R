@@ -17,10 +17,10 @@
 
 readFIA <- function(dataDir,
                     annotationFilename,
-                    format = c('orginal', 'long')[1],
+                    format = c('original', 'long')[1],
                     verbose = TRUE){
   
-  if(verbose) message('This function takes around 1Gb of memory, please be aware this may swamp your machine.')
+  if(verbose) warning('This function may have a high memory demand.')
   
   # Download entire FIA database
   downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
@@ -66,48 +66,73 @@ readFIA <- function(dataDir,
   if(verbose) message('done.')
   
   
+  
   if(format == 'original'){
     return(ans.ls)
   }
   
+  # Move into a set of id-of_variable-is_type-with_entry long tables
+  if(verbose) message('Transforming data... ')
+  
+  dataEntryAnnotations <- ans.ls$annotations %>%
+    filter(with_entry == '--' | is.na(with_entry)) %>%
+    select(-with_entry)
+  
   #Trim down the ENTIRE_PLOT to only include the soil sample locations
   #...do this to keep the size of the file down
+  warning('Dropping plot information for plots not in the soils sample location table due to size')
   ans.ls$original_data$ENTIRE_PLOT <- ans.ls$original_data$ENTIRE_PLOT %>%
     semi_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC,
               by = join_by(STATECD, COUNTYCD, CN == PLT_CN))
   
-  # Move into a set of id-of_variable-is_type-with_entry long tables
-  if(verbose) message('Transforming data... ')
+  ##Start with lab data, add in sample location, erosion, visit, plot, survey
   
   # Pivot data into long format and merge with annotation information
-  ans.ls$longtable <- plyr::ldply(.data = ans.ls$original_data, .fun = function(x) {
+  ans.ls$longtable <- plyr::ldply(.data = ans.ls$original_data, 
+                                  .fun = function(x) {
     
     #check if row_number column already exists
     if("row_number" %in% colnames(x)) {
       warning("Replacing row_number with row order and using as a unique identifier.")
     }
     
+    #set row numbers
+    
+    #pivot everything
+    
     temp <- x %>%
       
       #give each row a number as unique identifier
-      dplyr::mutate(row_number = 1:n()) %>%
-      
-      #pivot table longer
-      tidyr::pivot_longer(cols = -c(row_number), names_to = 'column_id',
-                          values_to = 'with_entry', values_drop_na = TRUE)
+      dplyr::mutate(row_number = 1:n()) 
     
-    return(temp)
-  }, .id = "table_id") %>%
-    #join long table with annotations
-    dplyr::full_join(ans.ls$annotations, 
+    #pivot table for the entries
+    entries.df <- tidyr::pivot_longer(cols = -c(row_number),
+                                      names_to = 'column_id',
+                                      values_to = 'with_entry', 
+                                      values_drop_na = TRUE)
+    
+     id_cols <- dataEntryAnnotations %>%
+       select(is_type == 'identifier')
+     
+    print(names(x))
+    identifiers.df <- temp %>%
+       select(row_number, one_of)
+    
+    return(entries.df)
+  }, .id = "table_id") #%>%
+    dplyr::full_join(dataEntryAnnotations,
                      by = join_by(table_id, column_id),
-                     suffix = c('.data', ''),
-                     multiple = "all")%>%
-    #replace value placeholders in with_entry column with values from data
-    dplyr::mutate(
-      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), 
-                                  with_entry.data, with_entry)) %>%
-    dplyr::select(-with_entry.data) %>%
+                     relationship = "many-to-many") %>%
+    #join long table with annotations
+    # dplyr::full_join(ans.ls$annotations, 
+    #                  by = join_by(table_id, column_id),
+    #                  suffix = c('.data', ''),
+    #                  multiple = "all")%>%
+    # #replace value placeholders in with_entry column with values from data
+    # dplyr::mutate(
+    #   with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), 
+    #                               with_entry.data, with_entry)) %>%
+    # dplyr::select(-with_entry.data) %>%
     #without factors and integer casts: 406Mb
     #with casts: 299 Mb
     mutate(table_id = as.factor(table_id),

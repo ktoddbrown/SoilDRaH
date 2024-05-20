@@ -9,11 +9,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The FIADB
+The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevent variables.
+
+# What is the FIADB
+
+The version of the US Forest Service's Forest Inventory Analysis Database described here is the public facing version of the Forest Inventory and Analysis program.
+
+> **Forest Inventory and Analysis**
+For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
+
+Taken from [https://www.fs.usda.gov/research/programs/fia](https://www.fs.usda.gov/research/programs/fia) (Accessed 16-May-2024)
+
+Documentation for this database is concentrated in two documents below:
 
   + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
   + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
 
+The annotations table draws heavily on these two documents with augmentation from private communication with Forest Service scientist.
+
+# Data processing
 
 ```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
 
@@ -32,26 +47,163 @@ dataAnnotations <- '../data/fia_annotations.csv'
 ```
 
 ```{r, warning=FALSE}
-fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE)
+fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE, format = 'original')
 ```
+# Tables
+
+There are six tables currently annotated in the FIADB data collection.
+This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
+Below are the descriptions of data columns organized by table.
+
+Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
+
+## Table: `ENTIRE_SURVEY`
 
 ```{r}
-fia.ls$annotations %>%
-  filter(is_type == 'description') %>%
-  select(table_id, column_id, description = with_entry) %>%
-  knitr::kable()
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SURVEY') %>%
+               select(column_id, of_variable, description = with_entry))
 ```
 
+## Table: `ENTIRE_PLOT`
+
 ```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_PLOT') %>%
+               select(column_id, of_variable, description = with_entry))
+```
+
+## Table: `ENTIRE_SOILS_VISIT`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry))
+```
+
+## Table: `ENTIRE_SOILS_SAMPLE_LOC` 
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_SAMPLE_LOC') %>%
+               select(column_id, of_variable, description = with_entry))
+```
+
+## Table: `ENTIRE_SOILS_EROSION`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry))
+```
+
+## Table: `ENTIRE_SOILS_LAB`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry))
+```
+
+# Data processing
+
+```{r eval=FALSE}
+
+# Notes from P2 guide
+# ENTIRE_PLOT::SRV_CN links to ENTIRE_SURVEY::CN
+# Notes from P3 guide
+# ENTIRE_SOILS_VISIT::PLT_CN links to ENTIRE_PLOT:CN
+# ENTIRE_SOILS_EROSION::PLT_CN links to ENTIRE_PLOT:CN
+# ENTIRE_SOILS_SAMPLE_LOC::PLT_CN links to ENTIRE_PLOT:CN
+# ENTIRE_SOILS_LAB::PLT_CN links to ENTIRE_PLOT:CN
+
+#CN is always a row identifier for each table but there is no assurance it is unique across the data set
+#Natural identifiers in each table are:
+# ENTIRE_PLOT => STATECD, INVYR, UNITCD, COUNTYCD, PLOT
+# ENTIRE_SOILS_VISIT => STATECD, INVYR, COUNTYCD, PLOT
+# ENTIRE_SOILS_EROSION => STATECD, INVYR, COUNTYCD, PLOT, SUBP
+# ENTIRE_SOILS_SAMPLE_LOC => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR
+# ENTIRE_SOILS_LAB => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR, LAYER_TYPE
+
+allData <- fia.ls$original_data$ENTIRE_PLOT %>%
+  #rename the plot CN to match the foreign key in other tables
+  mutate(PLT_CN = CN) %>% 
+  #add in the table name to columns
+  rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
+  right_join(fia.ls$original_data$ENTIRE_SOILS_VISIT %>% 
+               #add in the table name to columns
+               rename_with(.cols = !PLT_CN, 
+                           ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
+             by = join_by(PLT_CN)) %>%
+  full_join(fia.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
+              #add in the table name to columns
+              rename_with(.cols = !PLT_CN, 
+                          ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
+            by = join_by(PLT_CN)) %>%
+  full_join(fia.ls$original_data$ENTIRE_SOILS_EROSION %>%
+              #add in the table name to columns
+              rename_with(.cols = !PLT_CN, 
+                          ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
+            by = join_by(PLT_CN),
+            relationship = "many-to-many") %>%
+  full_join(fia.ls$original_data$ENTIRE_SOILS_LAB %>%
+              #add in the table name to columns
+              rename_with(.cols = !PLT_CN, 
+                          ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
+            by = join_by(PLT_CN),
+            relationship = "many-to-many") %>%
+  filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
+  #before pivot => 0.4 Gb
+  #slice_head(n=100) %>%
+  pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
+               values_drop_na = TRUE,
+               names_to = c('column_id', 'table_id'),
+               names_sep = '\\.',
+               names_transform = as.factor,
+               values_to = 'with_entry')
+  #after pivot => 2.1 Gb
+
+#Check the annotations
+#TODO Start here...looks kind of funny
+missingData <- fia.ls$annotations %>%
+  anti_join(allData,
+            by = join_by(table_id, column_id))
+
+missingAnnotations <-  allData %>%
+  select(table_id, column_id) %>%
+  unique() %>%
+  anti_join(fia.ls$annotations,
+            by = join_by(table_id, column_id))
+
+
 soil_carbon.df <- fia.ls$longtable %>%
-  filter(is_type == 'identifier' | 
-           of_variable %in% c('Longtitude', 'Latitude', 'State',
-                              #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
-                              'Layer_type',
-                              'Bulk_density',
-                              'coarse_fraction',
-                              'organic_carbon', 'carbon_fraction',
-                              'inorganic_carbon')) %>%
+  filter(is_type == 'identifier' | (
+    is_type == 'value' &
+           of_variable %in% c(
+             'Inventory_year', #an identifier
+             'Longtitude', 'Latitude', 'State',
+             #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'))) %>%
+  filter(any(is_type == 'value'),
+         .by = table_id) %>%
+  select(-column_id) %>%
+  pivot_wider(names_from = is_type, values_from = with_entry) 
+
+row_to_id <- soil_carbon.df %>%
+  select(table_id, of_variable, )
+
+%>%
   mutate(column_name = sprintf('%s.%s', of_variable, is_type),
          row_id = sprintf('%s.%s', table_id, row_number)) %>%
   select(row_id, column_name, with_entry) %>%
@@ -71,7 +223,7 @@ lapply(soil_carbon.df, FUN = function(xx){sum(!is.na(xx))})
 - [] histogram for each numerical variable
 - [] lat/lon map for locations
 
-```{r}
+```{r eval=FALSE}
 
 ggplot(soil_carbon.df) +
   geom_point(aes(x=Bulk_density.value, y = organic_carbon.value), alpha = 0.1) +
