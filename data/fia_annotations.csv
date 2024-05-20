@@ -6,6 +6,7 @@ ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_id,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,value,--
@@ -92,6 +93,7 @@ ENTIRE_SOILS_LAB,PLT_CN,plot_id,identifier,--
 ENTIRE_SOILS_LAB,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,identifier,--
+ENTIRE_SOILS_LAB,INVYR,Inventory_year,value,--
 ENTIRE_SOILS_LAB,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_SOILS_LAB,STATECD,State,identifier,--
 ENTIRE_SOILS_LAB,STATECD,State,value,--
@@ -121,6 +123,7 @@ ENTIRE_SOILS_LAB,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The
 ENTIRE_SOILS_LAB,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
 ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,description,Indicates the soil layer type (code).
 ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,control_vocabulary, "FF_TOTAL|Total forest floor: litter + humus (duff).;L_ORG|Organic soil litter layer.;MIN_1|0-4 inch mineral soil layer.;MIN_2|4-8 inch mineral soil layer.;ORG_1|0-4 inch organic soil layer.;ORG_2|4-8 inch organic soil layer."
+ENTIRE_SOILS_LAB,LAYER_TYPE,Layer_type,value,--
 ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,description,A code indicating the type of soil sampler used.
 ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,value,--
 ENTIRE_SOILS_LAB,SAMPLER_TYPE,Sampler_type,control_vocabulary,"SF|Sample frame.;BD|Bulk density sampler.;O|Other."
@@ -346,6 +349,7 @@ ENTIRE_SURVEY,CN,Soil_survey,description,A unique sequence number used to identi
 ENTIRE_SURVEY,CN,Soil_survey,identifier,--
 ENTIRE_SURVEY,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SURVEY,INVYR,Inventory_year,identifier,--
+ENTIRE_SURVEY,INVYR,Inventory_year,value,--
 ENTIRE_SURVEY,P3_OZONE_IND,ozone_indicator,description,Phase 3 ozone indicator; A code indicating whether or not the survey is for a P3 ozone inventory.
 ENTIRE_SURVEY,P3_OZONE_IND,ozone_indicator,identifier,--
 ENTIRE_SURVEY,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
@@ -390,6 +394,7 @@ ENTIRE_PLOT,PREV_PLT_CN,previous_plot_sequence_number,description,"Foreign key l
 ENTIRE_PLOT,PREV_PLT_CN,previous_plot_sequence_number,identifier,--
 ENTIRE_PLOT,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_PLOT,INVYR,Inventory_year,identifier,--
+ENTIRE_PLOT,INVYR,Inventory_year,value,--
 ENTIRE_PLOT,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
 ENTIRE_PLOT,STATECD,State,identifier,--
 ENTIRE_PLOT,STATECD,State,value,--
