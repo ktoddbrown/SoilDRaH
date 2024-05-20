@@ -72,78 +72,64 @@ readFIA <- function(dataDir,
   }
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
-  if(verbose) message('Transforming data... ')
+  if(verbose) message('Transforming data to id(table, column, row) - with_entry... ')
+  if(verbose) warning('this results in a >2Gb data object')
   
-  dataEntryAnnotations <- ans.ls$annotations %>%
-    filter(with_entry == '--' | is.na(with_entry)) %>%
-    select(-with_entry)
+  # Notes from P2 guide
+  # ENTIRE_PLOT::SRV_CN links to ENTIRE_SURVEY::CN
+  # Notes from P3 guide
+  # ENTIRE_SOILS_VISIT::PLT_CN links to ENTIRE_PLOT:CN
+  # ENTIRE_SOILS_EROSION::PLT_CN links to ENTIRE_PLOT:CN
+  # ENTIRE_SOILS_SAMPLE_LOC::PLT_CN links to ENTIRE_PLOT:CN
+  # ENTIRE_SOILS_LAB::PLT_CN links to ENTIRE_PLOT:CN
   
-  #Trim down the ENTIRE_PLOT to only include the soil sample locations
-  #...do this to keep the size of the file down
-  warning('Dropping plot information for plots not in the soils sample location table due to size')
-  ans.ls$original_data$ENTIRE_PLOT <- ans.ls$original_data$ENTIRE_PLOT %>%
-    semi_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC,
-              by = join_by(STATECD, COUNTYCD, CN == PLT_CN))
+  #CN is always a row identifier for each table but there is no assurance it is unique across the data set
+  #Natural identifiers in each table are:
+  # ENTIRE_PLOT => STATECD, INVYR, UNITCD, COUNTYCD, PLOT
+  # ENTIRE_SOILS_VISIT => STATECD, INVYR, COUNTYCD, PLOT
+  # ENTIRE_SOILS_EROSION => STATECD, INVYR, COUNTYCD, PLOT, SUBP
+  # ENTIRE_SOILS_SAMPLE_LOC => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR
+  # ENTIRE_SOILS_LAB => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR, LAYER_TYPE
   
-  ##Start with lab data, add in sample location, erosion, visit, plot, survey
-  
-  # Pivot data into long format and merge with annotation information
-  ans.ls$longtable <- plyr::ldply(.data = ans.ls$original_data, 
-                                  .fun = function(x) {
-    
-    #check if row_number column already exists
-    if("row_number" %in% colnames(x)) {
-      warning("Replacing row_number with row order and using as a unique identifier.")
-    }
-    
-    #set row numbers
-    
-    #pivot everything
-    
-    temp <- x %>%
-      
-      #give each row a number as unique identifier
-      dplyr::mutate(row_number = 1:n()) 
-    
-    #pivot table for the entries
-    entries.df <- tidyr::pivot_longer(cols = -c(row_number),
-                                      names_to = 'column_id',
-                                      values_to = 'with_entry', 
-                                      values_drop_na = TRUE)
-    
-     id_cols <- dataEntryAnnotations %>%
-       select(is_type == 'identifier')
-     
-    print(names(x))
-    identifiers.df <- temp %>%
-       select(row_number, one_of)
-    
-    return(entries.df)
-  }, .id = "table_id") #%>%
-    dplyr::full_join(dataEntryAnnotations,
-                     by = join_by(table_id, column_id),
-                     relationship = "many-to-many") %>%
-    #join long table with annotations
-    # dplyr::full_join(ans.ls$annotations, 
-    #                  by = join_by(table_id, column_id),
-    #                  suffix = c('.data', ''),
-    #                  multiple = "all")%>%
-    # #replace value placeholders in with_entry column with values from data
-    # dplyr::mutate(
-    #   with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry), 
-    #                               with_entry.data, with_entry)) %>%
-    # dplyr::select(-with_entry.data) %>%
-    #without factors and integer casts: 406Mb
-    #with casts: 299 Mb
-    mutate(table_id = as.factor(table_id),
-          column_id = as.factor(column_id),
-          is_type = as.factor(is_type),
-          row_number = as.integer(row_number))
-  
-  if(verbose) message('Removing orginal data.')
-  ans.ls$original_data <- NULL
+  allData <- ans.ls$original_data$ENTIRE_PLOT %>%
+    #rename the plot CN to match the foreign key in other tables
+    mutate(PLT_CN = CN) %>% 
+    #add in the table name to columns
+    rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
+    right_join(ans.ls$original_data$ENTIRE_SOILS_VISIT %>% 
+                 #add in the table name to columns
+                 rename_with(.cols = !PLT_CN, 
+                             ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
+               by = join_by(PLT_CN)) %>%
+    full_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
+                #add in the table name to columns
+                rename_with(.cols = !PLT_CN, 
+                            ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
+              by = join_by(PLT_CN)) %>%
+    full_join(ans.ls$original_data$ENTIRE_SOILS_EROSION %>%
+                #add in the table name to columns
+                rename_with(.cols = !PLT_CN, 
+                            ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
+              by = join_by(PLT_CN),
+              relationship = "many-to-many") %>%
+    full_join(ans.ls$original_data$ENTIRE_SOILS_LAB %>%
+                #add in the table name to columns
+                rename_with(.cols = !PLT_CN, 
+                            ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
+              by = join_by(PLT_CN),
+              relationship = "many-to-many") %>%
+    filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
+    #before pivot => 0.4 Gb
+    #slice_head(n=100) %>%
+    pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
+                 values_drop_na = TRUE,
+                 names_to = c('column_id', 'table_id'),
+                 names_sep = '\\.',
+                 names_transform = as.factor,
+                 values_to = 'with_entry')
+  #after pivot => 2.1 Gb
   
   if(verbose) message('done.')
   
-  return(ans.ls)
+  return(list(annotations = ans.ls$annotations, long_data = allData))
 }
