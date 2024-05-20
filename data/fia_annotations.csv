@@ -1,9 +1,9 @@
 table_id,column_id,of_variable,is_type,with_entry
 ENTIRE_SOILS_SAMPLE_LOC,CN,sample_loc_id,description,A unique sequence number used to identify a soils sample location.
 ENTIRE_SOILS_SAMPLE_LOC,CN,sample_loc_id,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
-ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,identifier,--
-ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_visit_id,foreign_key,--
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_id,description,Foreign key linking the soils lab record to the P2 plot record.
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_id,identifier,--
+ENTIRE_SOILS_SAMPLE_LOC,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_SAMPLE_LOC,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
@@ -58,7 +58,7 @@ ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,description,The thickn
 ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,unit,tenths of inches
 ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,method,"The thickness of the litter layer (to the nearest 0.1 inch) at the west location within the sampling frame. The bottom of the litter layer can be distinguished as the boundary where plant parts (such as leaves or needles) are no longer recognizable as such because of decomposition. Another criterion is that the organic layer may contain plant roots, but the litter layer will probably not. At some locations, the depth to the forest floor and the depth of the litter layer will be the same. For locations where bare soil or bedrock material is exposed, 00.0 inches depth is entered."
 ENTIRE_SOILS_SAMPLE_LOC,LTRLRTHKW,Litter_layer_depth_west,value,--
-ENTIRE_SOILS_SAMPLE_LOC,CONDID,Condition,description,Condition
+ENTIRE_SOILS_SAMPLE_LOC,CONDID,Condition,description,"Unique identifying number assigned to each condition on a plot. This attribute is blank (null) if no soils sample was taken (nonsampled). A condition is initially defined by condition class status. Differences in reserved status, owner group, forest type, stand-size class, regeneration status, and stand density further define condition for forest land. Mapped nonforest conditions are also assigned numbers. At the time of the plot establishment, the condition class at plot center (the center of subplot 1) is usually designated as condition class 1. Other condition classes are assigned numbers sequentially at the time each condition class is delineated. On a plot, each sampled condition class must have a unique number that can change at remeasurement to reflect new conditions on the plot."
 ENTIRE_SOILS_SAMPLE_LOC,CONDID,Condition,identifier,--
 ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,description,The number of the soil sampling location at which the soil sample was collected. Values are 1 - 9 (see diagram in FIADB User Guide P3).
 ENTIRE_SOILS_SAMPLE_LOC,VSTNBR,Visit_number,control_vocabulary,"9;7;5;3;12;4;6;8"
@@ -87,9 +87,9 @@ ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,descript
 ENTIRE_SOILS_SAMPLE_LOC,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
 ENTIRE_SOILS_LAB,CN,soil_lab_id,description,A unique sequence number used to identify a soils sample location.
 ENTIRE_SOILS_LAB,CN,soil_lab_id,identifier,--
-ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,description,Foreign key linking the soils lab record to the P2 plot record.
-ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,identifier,--
-ENTIRE_SOILS_LAB,PLT_CN,plot_visit_id,foreign_key,--
+ENTIRE_SOILS_LAB,PLT_CN,plot_id,description,Foreign key linking the soils lab record to the P2 plot record.
+ENTIRE_SOILS_LAB,PLT_CN,plot_id,identifier,--
+ENTIRE_SOILS_LAB,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_LAB,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_LAB,STATECD,State,description,Bureau of the Census Federal Information Processing Standards (FIPS) two-digit code for each State.
@@ -254,9 +254,9 @@ ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,method,"Olsen (pH 8.5, 0.5 M NaHCO3) e
 ENTIRE_SOILS_LAB,OLSEN_P,phosphorus_olsen,value,--
 ENTIRE_SOILS_EROSION,CN,soil_erosion_id,description,A unique sequence number used to identify a soils erosion record.
 ENTIRE_SOILS_EROSION,CN,soil_erosion_id,identifier,--
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,description,Foreign key linking the soils erosion record to the P2 plot record.
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,identifier,--
-ENTIRE_SOILS_EROSION,PLT_CN,plot_visit_id,foreign_key,--
+ENTIRE_SOILS_EROSION,PLT_CN,plot_id,description,Foreign key linking the soils erosion record to the P2 plot record.
+ENTIRE_SOILS_EROSION,PLT_CN,plot_id,identifier,--
+ENTIRE_SOILS_EROSION,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_EROSION,INVYR,Inventory_year,value,--
@@ -305,9 +305,9 @@ ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,description
 ENTIRE_SOILS_EROSION,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
 ENTIRE_SOILS_VISIT,CN,soil_visit_id,description,A unique sequence number used to identify a soils visit record.
 ENTIRE_SOILS_VISIT,CN,soil_visit_id,identifier,--
-ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,description,Foreign key linking the soils visit record to the P2 plot record.
-ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,identifier,--
-ENTIRE_SOILS_VISIT,PLT_CN,plot_visit_id,foreign_key,--
+ENTIRE_SOILS_VISIT,PLT_CN,plot_id,description,Foreign key linking the soils visit record to the P2 plot record.
+ENTIRE_SOILS_VISIT,PLT_CN,plot_id,identifier,--
+ENTIRE_SOILS_VISIT,PLT_CN,plot_id,foreign_key,--
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,description,The year that best represents when the inventory data were collected.
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,identifier,--
 ENTIRE_SOILS_VISIT,INVYR,Inventory_year,value,--
@@ -339,7 +339,7 @@ ENTIRE_SOILS_VISIT,MODIFIED_DATE,Data_modification_time,description,The date on 
 ENTIRE_SOILS_VISIT,MODIFIED_DATE,Data_modification_time,value,--
 ENTIRE_SOILS_VISIT,MODIFIED_IN_INSTANCE,Data_modification_instance,description,The database instance in which the record was modified. This field will be null if the data have not been modified since initial creation.
 ENTIRE_SOILS_VISIT,MODIFIED_IN_INSTANCE,Data_modification_instance,value,--
-ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,description,A code indicating the type of plot data collected. Production plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when MANUAL <1.0.
+ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,description,"A code indicating the type of plot data collected. Production plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when MANUAL <1.0."
 ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,value,--
 ENTIRE_SOILS_VISIT,QA_STATUS,Quality_assurance,control_vocabulary,"1|Standard production plot.;2|Cold check.;3|Reference plot (off grid).;4|Training/practice plot (off grid).;5|Botched plot file (disregard during data processing)."
 ENTIRE_SURVEY,CN,Soil_survey,description,A unique sequence number used to identify a survey record.
@@ -380,8 +380,8 @@ ENTIRE_SURVEY,SUBCYCLE,Inventory_subcycle_number,description,"For an annual inve
 ENTIRE_SURVEY,SUBCYCLE,Inventory_subcycle_number,identifier,--
 ENTIRE_SURVEY,PRJ_CN,project_sequence_number,description,Foreign key linking the survey record to the project record.
 ENTIRE_SURVEY,PRJ_CN,project_sequence_number,identifier,--
-ENTIRE_PLOT,CN,Soil_plot,description,A unique sequence number used to identify a plot record.
-ENTIRE_PLOT,CN,Soil_plot,identifier,--
+ENTIRE_PLOT,CN,plot_id,description,A unique sequence number used to identify a plot record.
+ENTIRE_PLOT,CN,plot_id,identifier,--
 ENTIRE_PLOT,SRV_CN,survey_sequence_number,description,Foreign key linking the plot record to the survey record.
 ENTIRE_PLOT,SRV_CN,survey_sequence_number,identifier,--
 ENTIRE_PLOT,CTY_CN,county_sequence_number,description,Foreign key linking the plot record to the survey record.
@@ -453,9 +453,7 @@ ENTIRE_PLOT,MANUAL,Field_guide_number,identifier,--
 ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,description,This attribute is populated through 2005 for the former North Central work unit (SURVEY.RSCD = 23) and is blank (null) for all other FIA work units.
 ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,value,--
 ENTIRE_PLOT,KINDCD_NC,sample_kind_North_Central,control_vocabulary,"0|New/lost.;6|Remeasured.;8|Old location but not remeasured.;20|Skipped.;33|Replacement of lost plot."
-ENTIRE_PLOT,QA_STATUS,Quality_assurance,description,"A code indicating the type of plot data collected. Production
-plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when
-MANUAL <1.0."
+ENTIRE_PLOT,QA_STATUS,Quality_assurance,description,"A code indicating the type of plot data collected. Production plots have QA_STATUS = 1 or 7. May not be populated for some FIA work units when MANUAL <1.0."
 ENTIRE_PLOT,QA_STATUS,Quality_assurance,value,--
 ENTIRE_PLOT,QA_STATUS,Quality_assurance,control_vocabulary,"1|Standard production plot.;2|Cold check.;3|Reference plot (off grid).;4|Training/practice plot (off grid).;5|Botched plot file (disregard during data processing)."
 ENTIRE_PLOT,CREATED_BY,Data_collection_person,description,The employee who created the record. This attribute is intentionally left blank in download files
@@ -473,9 +471,7 @@ ENTIRE_PLOT,MODIFIED_IN_INSTANCE,Data_modification_instance,identifier,--
 ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,description,"A code indicating the location of the microplot center on the subplot. The offset microplot center is located 12 feet due east (90 degrees) of subplot center. The current standard is that the microplot is located in the 'OFFSET' location, but some earlier inventories, including some early panels of the annual inventory, may contain data where the microplot was located at the 'CENTER' location. May not be populated for some FIA work units when MANUAL <1.0."
 ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,value,--
 ENTIRE_PLOT,MICROPLOT_LOC,Microplot_location,control_vocabulary,"OFFSET|The microplot center is offset from the subplot center.;CENTER|The microplot center is at the subplot center."
-ENTIRE_PLOT,DECLINATION,Declination,description,"The azimuth correction used to adjust magnetic north to true north, and is defined as follows:
-DECLINATION = (TRUE NORTH - MAGNETIC NORTH).
-This field is only used in cases where FIA work units are adjusting azimuths to correspond to true north. This field includes a decimal place because the USGS corrections are provided to the nearest half degree. DECLINATION is set to a value of 0.0 for plots that are sampled using magnetic azimuths. Only populated by certain FIA work units (SURVEY.RSCD = 26, 27)."
+ENTIRE_PLOT,DECLINATION,Declination,description,"The azimuth correction used to adjust magnetic north to true north, and is defined as follows:\nDECLINATION = (TRUE NORTH - MAGNETIC NORTH).\nThis field is only used in cases where FIA work units are adjusting azimuths to correspond to true north. This field includes a decimal place because the USGS corrections are provided to the nearest half degree. DECLINATION is set to a value of 0.0 for plots that are sampled using magnetic azimuths. Only populated by certain FIA work units (SURVEY.RSCD = 26, 27)."
 ENTIRE_PLOT,DECLINATION,Declination,value,--
 ENTIRE_PLOT,EMAP_HEX,EMAP_hexagon,description,"The identifier for the approximately 160,000 acre Environmental Monitoring and Assessment Program (EMAP) hexagon in which the plot is located. EMAP hexagons are available to the public, cover the coterminous United States, and have been used in summarizing and aggregating data about numerous natural resources."
 ENTIRE_PLOT,EMAP_HEX,EMAP_hexagon,value,--
@@ -548,9 +544,7 @@ ENTIRE_PLOT,MANUAL_RMRS,field_guide_version,description,The version number of th
 ENTIRE_PLOT,MANUAL_RMRS,field_guide_version,identifier,--
 ENTIRE_PLOT,PAC_ISLAND_PNWRS,Pacific_island_name,description,The name of the Pacific Island where the plot is located. Only populated by certain FIA work units (SURVEY.RSCD = 26).
 ENTIRE_PLOT,PAC_ISLAND_PNWRS,Pacific_island_name,value,--
-ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,description,"A code indicating the best time
-of year to access a plot. Populated for States in the NERS region (SURVEY.RSCD = 24)
-where MANUAL >=4.0."
+ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,description,"A code indicating the best time of year to access a plot. Populated for States in the NERS region (SURVEY.RSCD = 24) where MANUAL >=4.0."
 ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,value,--
 ENTIRE_PLOT,PLOT_SEASON_NERS,Plot_accesible_season,control_vocabulary,"1|Winter;2|Summer;3|Anytime"
 ENTIRE_PLOT,PRECIPITATION,Precipitation,description,"The annual precipitation, in inches, for the location. This attribute may not be populated for all FIA units and/or regions"
