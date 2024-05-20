@@ -38,6 +38,10 @@ library(plyr) # transform a list into a data frame for the bind
 library(dplyr) # work with data tables and pivots
 library(tidyr)
 library(ggplot2)
+library(stringr)
+library(knitr)
+library(kableExtra)
+
 source("../R/readFIA.R", local = knitr::knit_global())
 
 #locate the data locally
@@ -47,7 +51,7 @@ dataAnnotations <- '../data/fia_annotations.csv'
 ```
 
 ```{r, warning=FALSE}
-fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE, format = 'original')
+fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE, format = 'long')
 ```
 # Tables
 
@@ -63,7 +67,9 @@ Please note that there is quite a bit more data in the FIADB and we welcome inte
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_SURVEY') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `ENTIRE_PLOT`
@@ -72,7 +78,9 @@ knitr::kable(fia.ls$annotations %>%
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_PLOT') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `ENTIRE_SOILS_VISIT`
@@ -81,7 +89,9 @@ knitr::kable(fia.ls$annotations %>%
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_SOILS_VISIT') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `ENTIRE_SOILS_SAMPLE_LOC` 
@@ -90,7 +100,9 @@ knitr::kable(fia.ls$annotations %>%
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_SOILS_SAMPLE_LOC') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `ENTIRE_SOILS_EROSION`
@@ -99,7 +111,9 @@ knitr::kable(fia.ls$annotations %>%
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_SOILS_VISIT') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `ENTIRE_SOILS_LAB`
@@ -108,12 +122,20 @@ knitr::kable(fia.ls$annotations %>%
 knitr::kable(fia.ls$annotations %>%
                filter(is_type == 'description',
                       table_id == 'ENTIRE_SOILS_VISIT') %>%
-               select(column_id, of_variable, description = with_entry))
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
 # Data processing
 
+## `readFIA` function
+
+This code mirrors the code that is in the `readFIA` function.
+
 ```{r eval=FALSE}
+
+fia.ls <- readFIA(dataDir, annotationFilename = dataAnnotations, verbose = TRUE, format = 'original')
 
 # Notes from P2 guide
 # ENTIRE_PLOT::SRV_CN links to ENTIRE_SURVEY::CN
@@ -169,23 +191,14 @@ allData <- fia.ls$original_data$ENTIRE_PLOT %>%
                values_to = 'with_entry')
   #after pivot => 2.1 Gb
 
-#Check the annotations
-#TODO Start here...looks kind of funny
-missingData <- fia.ls$annotations %>%
-  anti_join(allData,
-            by = join_by(table_id, column_id))
+```
 
-missingAnnotations <-  allData %>%
-  select(table_id, column_id) %>%
-  unique() %>%
-  anti_join(fia.ls$annotations,
-            by = join_by(table_id, column_id))
+## Subseting for soil carbon
 
+```{r}
 
-soil_carbon.df <- fia.ls$longtable %>%
-  filter(is_type == 'identifier' | (
-    is_type == 'value' &
-           of_variable %in% c(
+soil_carbon.df <- fia.ls$annotations %>%
+  filter(of_variable %in% c(
              'Inventory_year', #an identifier
              'Longtitude', 'Latitude', 'State',
              #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
@@ -194,38 +207,132 @@ soil_carbon.df <- fia.ls$longtable %>%
              'coarse_fraction',
              'organic_carbon',
              'carbon_fraction',
-             'inorganic_carbon'))) %>%
-  filter(any(is_type == 'value'),
-         .by = table_id) %>%
-  select(-column_id) %>%
-  pivot_wider(names_from = is_type, values_from = with_entry) 
-
-row_to_id <- soil_carbon.df %>%
-  select(table_id, of_variable, )
-
-%>%
-  mutate(column_name = sprintf('%s.%s', of_variable, is_type),
-         row_id = sprintf('%s.%s', table_id, row_number)) %>%
-  select(row_id, column_name, with_entry) %>%
-  pivot_wider(names_from = 'column_name', values_from = 'with_entry') %>%
-  select(-row_id) %>%
-  pivot_longer(cols = ! ends_with('identifier'), values_drop_na = TRUE) %>%
-  pivot_wider() %>%
-  filter(!is.na(Layer_type.value)) %>% #only keep observations that have soil information
-  mutate(across(.cols = all_of('Longtitude.value', 'Latitude.value',
-                               'Bulk_density.value',
-                              'organic_carbon.value', 'carbon_fraction.value',
-                              'inorganic_carbon.value'), as.numeric))
-
-lapply(soil_carbon.df, FUN = function(xx){sum(!is.na(xx))})
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         with_entry == '--') %>%
+  select(table_id, column_id, of_variable, is_type) %>%
+  left_join(fia.ls$long_data,
+            by = join_by(table_id, column_id),
+            relationship = "many-to-many")  %>%
+  filter(is_type == 'value') %>%
+  select(starts_with('CN'), of_variable, with_entry) %>%
+  unique() %>%
+  tidyr::unite(col = row_id, starts_with('CN.'), sep = '::') %>%
+  pivot_wider(names_from = of_variable,
+               values_from = with_entry) %>%
+  select(-row_id)
 ```
 
-- [] histogram for each numerical variable
-- [] lat/lon map for locations
+# Working with control vocabulary
 
-```{r eval=FALSE}
+```{r}
+controlVocab <- fia.ls$annotations %>%
+  filter(of_variable %in% c(
+             'Inventory_year', #an identifier
+             'Longtitude', 'Latitude', 'State',
+             #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         is_type == 'control_vocabulary') %>%
+  select(of_variable, with_entry) %>%
+  unique() %>%
+  separate_longer_delim(cols = with_entry, delim = ';') %>%
+  separate_wider_delim(cols = with_entry, delim = '|', names =  c('value', 'definition'))
+```
 
-ggplot(soil_carbon.df) +
-  geom_point(aes(x=Bulk_density.value, y = organic_carbon.value), alpha = 0.1) +
-  facet_wrap(~Layer_type.value, scales='free')
+### State names
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join(controlVocab %>%
+              filter(of_variable == 'State') %>%
+              select('state_name'= definition, value),
+            by = join_by(State == value))
+```
+
+### Layer bounds
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join( controlVocab %>%
+               filter(of_variable == 'Layer_type') %>%
+               mutate(Layer_type.upper = str_extract(definition, pattern = regex('^\\d(?=\\-\\d inch)')),
+                      Layer_type.lower = str_extract(definition, pattern = regex('(?<=\\d\\-)\\d(?= inch)')),
+                      Layer_type.unit = 'inch') %>%
+               select(value, Layer_type.definition = definition, Layer_type.upper, Layer_type.lower, Layer_type.unit),
+            by = join_by(Layer_type == value))
+```
+
+## Casting values
+
+```{r}
+
+soil_carbon.df <- soil_carbon.df %>%
+  mutate(across(.cols = all_of(c("Inventory_year",
+                               "Bulk_density", "coarse_fraction", 
+                               "organic_carbon", 
+                               "inorganic_carbon", "carbon_fraction", 
+                               "Latitude", "Longtitude", 
+                               'Layer_type.upper', 'Layer_type.lower')), as.numeric))
+```
+
+## Make small tables
+
+```{r}
+site.df <- soil_carbon.df %>%
+  select(Latitude, Longtitude, Inventory_year) %>%
+  unique()
+
+layer.df <- soil_carbon.df %>%
+  select(Latitude, Longtitude, Inventory_year, 
+         Layer_type, Layer_type.definition, Layer_type.upper, Layer_type.lower,
+         Bulk_density, coarse_fraction,
+         organic_carbon, inorganic_carbon)
+
+meta.df <- fia.ls$annotations %>%
+  filter(of_variable %in% c(
+             'Inventory_year', #an identifier
+             'Longtitude', 'Latitude', 'State',
+             #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'))
+```
+
+# Figures and report
+
+## Location over time
+
+```{r, fig.width = 6, fig.height = 9}
+ggplot(site.df %>%
+         mutate(decade = floor(Inventory_year/5)*5)) +
+  geom_point(aes(x=Longtitude, y = Latitude), alpha = .1) +
+  facet_wrap(~decade, ncol = 1)
+```
+
+## Layer histograms
+
+```{r}
+ggplot(layer.df %>%
+         pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scales='free')
+```
+
+## Bulk density vs organic carbon
+
+```{r}
+
+ggplot(layer.df) +
+  geom_point(aes(x=Bulk_density, y = organic_carbon), alpha = 0.1) +
+  facet_wrap(~Layer_type, scales='free')
 ```
