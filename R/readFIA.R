@@ -1,5 +1,6 @@
 #' Read function for FIA data
 #' 
+#' This function downloads the entire csv Forest Inventory Analysis Database from https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, unzips the file, reads in a project specific data annotation as well as the tables that have annotations. The data is either returned in the orginal table structure or a long format.
 #'
 #' @param dataDir a string that specifies the filepath of where the data should be downloaded.
 #' @param annotationFilename a string that specifies where the data annotations are
@@ -13,7 +14,7 @@
 #' @importFrom tidyr pivot_longer
 #' 
 #'
-#' @return a list of data frames.
+#' @return a list containing the annotation data frame and the data that is annotated. Note that for this function we trim some of the data due to size and only return plot information related to the soil data.
 
 readFIA <- function(dataDir,
                     annotationFilename,
@@ -24,10 +25,13 @@ readFIA <- function(dataDir,
   
   # Download entire FIA database
   downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+  
+  # What name is the downloaded file
   filename <- "CSV_FIADB_ENTIRE.zip"
   
   if(!file.exists(file.path(dataDir, filename))){
     if(verbose) message('Database not found, downloading...')
+    if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
     utils::download.file(url = downloadUrl, 
                          destfile = file.path(dataDir, 
                                               filename))
@@ -37,41 +41,46 @@ readFIA <- function(dataDir,
   # Unzip zip file
   if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
     if(verbose) message('Unzipping file...')
+    if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
     utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
     if(verbose) message('Unzipping done.')
   }
   
-  # Create return list
-  ans.ls <- list()
-  
   # Read in annotations
   if(verbose) message('Loading annotations.')
-  ans.ls$annotations <- readr::read_csv(annotationFilename,
-                                        col_type = readr::cols(.default = readr::col_character()))
+  annotations.df <- readr::read_csv(annotationFilename,
+                                        col_type = readr::cols(
+                                          .default = readr::col_character()))
   
   # Get list of annotated table names
-  tables <- unique(ans.ls$annotations$table_id)
+  tables <- unique(annotations.df$table_id)
   
   # Read in the original files
   if(verbose) message('Starting data read... ')
   
   # Read in csv's if annotated
-  ans.ls$original_data <- lapply(file.path(dataDir, 
-                                           'CSV_FIADB_ENTIRE', paste(tables, ".csv", sep = "")), 
-                                 FUN = readr::read_csv, 
-                                 col_type = readr::cols(.default = readr::col_character()))
-  names(ans.ls$original_data) <- tables
+  #... go through each of the tables that we have annotations for,
+  #... load the entire table using read_csv as character reads (don't let R guess!)
+  original_data <- lapply(file.path(dataDir, 
+                                    'CSV_FIADB_ENTIRE', 
+                                    paste(tables, ".csv", sep = "")), 
+                          FUN = readr::read_csv, 
+                          col_type = readr::cols(
+                            .default = readr::col_character()))
   
+  #make sure the names are set right
+  names(original_data) <- tables
   
   if(verbose) message('done.')
   
-  
-  
+  # if we are just loading the data, then return things here.
   if(format == 'original'){
-    return(ans.ls)
+    return(list(annotations = annotations.df, original_data = original_data))
   }
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
+  #... in this dataset the id is composed of all CN columns which are table specific unique identifiers, these are taken together to create a unique set of identifier across the tables. 
+  #... in addition to the row, the column of the orginal data entry is recorded using the combined table-column name as an identifier.
   if(verbose) message('Transforming data to id(table, column, row) - with_entry... ')
   if(verbose) warning('this results in a >2Gb data object')
   
@@ -91,28 +100,28 @@ readFIA <- function(dataDir,
   # ENTIRE_SOILS_SAMPLE_LOC => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR
   # ENTIRE_SOILS_LAB => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR, LAYER_TYPE
   
-  allData <- ans.ls$original_data$ENTIRE_PLOT %>%
+  allData <- original_data$ENTIRE_PLOT %>%
     #rename the plot CN to match the foreign key in other tables
     mutate(PLT_CN = CN) %>% 
     #add in the table name to columns
     rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
-    right_join(ans.ls$original_data$ENTIRE_SOILS_VISIT %>% 
+    right_join(original_data$ENTIRE_SOILS_VISIT %>% 
                  #add in the table name to columns
                  rename_with(.cols = !PLT_CN, 
                              ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
                by = join_by(PLT_CN)) %>%
-    full_join(ans.ls$original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
+    full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
                 #add in the table name to columns
                 rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
               by = join_by(PLT_CN)) %>%
-    full_join(ans.ls$original_data$ENTIRE_SOILS_EROSION %>%
+    full_join(original_data$ENTIRE_SOILS_EROSION %>%
                 #add in the table name to columns
                 rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
               by = join_by(PLT_CN),
               relationship = "many-to-many") %>%
-    full_join(ans.ls$original_data$ENTIRE_SOILS_LAB %>%
+    full_join(original_data$ENTIRE_SOILS_LAB %>%
                 #add in the table name to columns
                 rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
@@ -121,6 +130,7 @@ readFIA <- function(dataDir,
     filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
     #before pivot => 0.4 Gb
     #slice_head(n=100) %>%
+    #make everything long
     pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
                  values_drop_na = TRUE,
                  names_to = c('column_id', 'table_id'),
@@ -131,5 +141,5 @@ readFIA <- function(dataDir,
   
   if(verbose) message('done.')
   
-  return(list(annotations = ans.ls$annotations, long_data = allData))
+  return(list(annotations = annotations.df, long_data = allData))
 }
