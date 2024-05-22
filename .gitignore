@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 .Rapp.history
+*.Rproj
 
 # Session Data files
 .RData
@@ -51,3 +52,6 @@ docs
 
 # temp folder where we stash a lot of data
 temp/*
+
+#MacOS files
+*DS_Store
