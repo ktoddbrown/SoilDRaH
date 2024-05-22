@@ -2,8 +2,8 @@
 title: "Forest Inventory Analysis Database"
 date: "Summer 2024"
 output: 
-  html_document:
-    toc: TRUE
+  html_document: 
+    toc: true
     number_sections: true
     code_folding: show
 ---
@@ -41,11 +41,11 @@ library(stringr) # extract text from descriptions
 library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 
-source("../R/readFIA.R", local = knitr::knit_global())
+source("../../R/readFIA.R", local = knitr::knit_global())
 
 #locate the data locally
 dataDir <- '../temp/FS_FIA'
-dataAnnotations <- '../data/fia_annotations.csv'
+dataAnnotations <- '../../data/fia_annotations.csv'
 ```
 
 ```{r, echo=FALSE}
@@ -350,7 +350,7 @@ ggplot(layer.df) +
 The process of transforming the data tables into a single long table requires a dive into the data model and specific code written for the dataset.
 This would need to be extended to include other data tables.
 
-```{r, file= '../R/readFIA.R'}
+```{r, file= '../../R/readFIA.R'}
 ```
 
 # Text extraction *experimental*
