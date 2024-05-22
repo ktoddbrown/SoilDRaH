@@ -8,9 +8,7 @@
 #' @param verbose a boolean that prints out the stage of the file
 #'
 #' @importFrom readr read_csv col_character cols
-#' @importFrom tibble tribble
-#' @importFrom plyr ldply
-#' @importFrom dplyr mutate full_join if_else select
+#' @importFrom dplyr mutate full_join right_join rename_with filter join_by
 #' @importFrom tidyr pivot_longer
 #' 
 #'
@@ -75,7 +73,7 @@ readFIA <- function(dataDir,
   
   # if we are just loading the data, then return things here.
   if(format == 'original'){
-    return(list(annotations = annotations.df, original_data = original_data))
+    return(list(annotations = annotations.df, original = original_data))
   }
   
   # Move into a set of id-of_variable-is_type-with_entry long tables
@@ -102,36 +100,36 @@ readFIA <- function(dataDir,
   
   allData <- original_data$ENTIRE_PLOT %>%
     #rename the plot CN to match the foreign key in other tables
-    mutate(PLT_CN = CN) %>% 
+    dplyr::mutate(PLT_CN = CN) %>% 
     #add in the table name to columns
-    rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
-    right_join(original_data$ENTIRE_SOILS_VISIT %>% 
+    dplyr::rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
+    dplyr::right_join(original_data$ENTIRE_SOILS_VISIT %>% 
                  #add in the table name to columns
-                 rename_with(.cols = !PLT_CN, 
+                 dplyr::rename_with(.cols = !PLT_CN, 
                              ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
-               by = join_by(PLT_CN)) %>%
-    full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
+               by = dplyr::join_by(PLT_CN)) %>%
+    dplyr::full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
                 #add in the table name to columns
-                rename_with(.cols = !PLT_CN, 
+                dplyr::rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
-              by = join_by(PLT_CN)) %>%
-    full_join(original_data$ENTIRE_SOILS_EROSION %>%
+              by = dplyr::join_by(PLT_CN)) %>%
+    dplyr::full_join(original_data$ENTIRE_SOILS_EROSION %>%
                 #add in the table name to columns
-                rename_with(.cols = !PLT_CN, 
+                dplyr::rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
-              by = join_by(PLT_CN),
+              by = dplyr::join_by(PLT_CN),
               relationship = "many-to-many") %>%
-    full_join(original_data$ENTIRE_SOILS_LAB %>%
+    dplyr::full_join(original_data$ENTIRE_SOILS_LAB %>%
                 #add in the table name to columns
-                rename_with(.cols = !PLT_CN, 
+                dplyr::rename_with(.cols = !PLT_CN, 
                             ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
-              by = join_by(PLT_CN),
+              by = dplyr::join_by(PLT_CN),
               relationship = "many-to-many") %>%
-    filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
+    dplyr::filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
     #before pivot => 0.4 Gb
     #slice_head(n=100) %>%
     #make everything long
-    pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
+    tidyr::pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
                  values_drop_na = TRUE,
                  names_to = c('column_id', 'table_id'),
                  names_sep = '\\.',
@@ -141,5 +139,5 @@ readFIA <- function(dataDir,
   
   if(verbose) message('done.')
   
-  return(list(annotations = annotations.df, long_data = allData))
+  return(list(annotations = annotations.df, long = allData))
 }
