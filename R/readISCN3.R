@@ -2,36 +2,33 @@
 #'
 #' This function first downloads the layer, profile, citation, and dataset tables from the ISCN website (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* It then either returns the original structure or reformats the data.
 #'
-#' @param dataDir path to the folder containing ISCN_ALL_DATA_LAYER_C*_1-1.xlsx, ISCN_ALL-DATA-CITATION_1-1.xlsx and ISCN_ALL_DATA_DATASET_1-1.xlsx files. If this is left NULL then files will be downloaded to a temporary directory from the ISCN website and then deleted.
+#' @param dataDir path to the folder containing data files.
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
 #' 
-#' @return list of data.table with layer, dataset and citation information
+#' @return list of annotation and data tables
 #'
 #' @importFrom data.table rbindlist
-#' @importFrom readxl read_excel
 #' @importFrom tibble tibble
 #' @importFrom utils download.file
 #' @import magrittr
 #' 
 #' @export
 #' 
-ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
+readISCN3 <- function(dataDir,
+                    annotationFilename,
+                    format = c('original', 'long')[1],
+                    verbose = TRUE){
   
   ## construct file paths ####
-  delete_dataDir <- is.null(dataDir)
   if(is.null(dataDir)){
-    dataDir <- tempdir()
+    stop('Data folder must be specified.')
   }
   
-  layerDataFiles.arr <- file.path(dataDir, c('ISCN3_layer.csv'))
-  
-  profileDataFiles.arr <- file.path(dataDir, c('ISCN3_profile.csv'))
-  dataFiles.arr <- c(layerDataFiles.arr, 
-                     profileDataFiles.arr,
-                         file.path(dataDir, c(
-                                            'ISCN3_citation.csv', 
-                                            'ISCN3_dataset.csv',
-                                            'ISCNtemplate_2016.csv',
+  dataFiles.ls <- list(layer = file.path(dataDir, 'ISCN3_layer.csv'), 
+                    profile = file.path(dataDir, 'ISCN3_profile.csv'),
+                    citation = file.path(dataDir, 'ISCN3_citation.csv'),
+                    dataset = file.path(dataDir, 'ISCN3_dataset.csv'),
+                    otherDocs = file.path(dataDir, c('ISCNtemplate_2016.csv',
                                             'ISCNTranscribed_TemplateCVs.csv',
                                             'ISCN-Database.pdf',
                                             'Gen3-DB-documentation_REV.pdf',
@@ -54,10 +51,11 @@ ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
                                     "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=4dbc81eab612e09b84c688bb387d06c2", file.path(dataDir, 'ISCN-Database.pdf'),
                                     "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=3903927ae52655ff6359bc7c454aa42e", file.path(dataDir, 'C&QA.Rmd'))
   
-  if(verbose) print('Download file.')
+
   
   for(row_index in 1:nrow(download_table)){
     if(!file.exists(download_table$file_name[row_index])){
+        if(verbose) print(paste('Download file:', download_table$file_name[row_index]))
       utils::download.file(download_table$download_url[row_index], download_table$file_name[row_index], quiet=!verbose)
     }
   }
@@ -68,35 +66,66 @@ ISCN3 <- function(dataDir=NULL, orginalFormat = FALSE, verbose=FALSE){
   
   if(verbose) print('Meta data read in.')
   
-  citation.dt <- readr::read_delim(file.path(dataDir, 'ISCN3_citation.csv'), delim = ';', col_types = strrep('c', times = 12)) %>% 
-    #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
   
-  dataset.dt <- readr::read_delim(file.path(dataDir, 'ISCN3_dataset.csv'), delim = ';', col_types = strrep('c', times = 19)) %>% 
-    #round all modification dates to their nearest day (ie whole number)
-    dplyr::mutate(`modification_date (YYYY-MM-DD)` = as.character(round(as.numeric(`modification_date (YYYY-MM-DD)`))))
+  
+  citation.dt <- readr::read_delim(dataFiles.ls$citation, 
+                                   delim = ';', 
+                                   col_types = readr::cols(.default = readr::col_character()))
+  
+  dataset.dt <- readr::read_delim(dataFiles.ls$dataset, 
+                                   delim = ';', 
+                                   col_types = readr::cols(.default = readr::col_character()))
   
   if(verbose) print('Profile data read in.')
-  #only one profile data sheet
-  profile.dt <- vroom::vroom(file.path(dataDir, 'ISCN3_profile.csv'), col_types = strrep('c', times = 44))
+  profile.dt <- readr::read_delim(dataFiles.ls$profile, 
+                                   delim = ';', 
+                                   col_types = readr::cols(.default = readr::col_character()))
   
   if(verbose) print('Layer data read in.')
-
-  layer.dt <- vroom::vroom(file.path(dataDir, 'ISCN3_layer.csv'), col_types = strrep('c', times = 95))
+  layer.dt <- readr::read_delim(dataFiles.ls$layer, 
+                                   delim = ';', 
+                                   col_types = readr::cols(.default = readr::col_character()))
   
+  #TODO add to the annotation file
   ##add collection level details like citation
-  collection.dt <- data.table::data.table(collection_name_id = 'ISCN3.2', 
-                                                   variable = 'collection_citation',
-                                                   entry = 'Nave L, Johnson K, van Ingen C, Agarwal D, Humphrey M, Beekwilder N. 2017. International Soil Carbon Network (ISCN) Database, Version 3.2. DOI: 10.17040/ISCN/1305039. Database Report: ISCN_SOC-DATA_LAYER_1-1. Accessed 2 February 2017',
-                                                   type = 'value')
-  keys.ls <- makeKeys()
+  # collection.dt <- data.table::data.table(collection_name_id = 'ISCN3.2', 
+  #                                                  variable = 'collection_citation',
+  #                                                  entry = 'Nave L, Johnson K, van Ingen C, Agarwal D, Humphrey M, Beekwilder N. 2017. International Soil Carbon Network (ISCN) Database, Version 3.2. DOI: 10.17040/ISCN/1305039. Database Report: ISCN_SOC-DATA_LAYER_1-1. Accessed 2 February 2017',
+  #                                                  type = 'value')
   
-  if(orginalFormat){
+  annotations.df <- readr::read_delim(file = annotationFilename,
+                                      delim = ',', 
+                                   col_types = readr::cols(.default = readr::col_character()))
+  
+  if(format == 'orginal'){
+    return(list(orginal = list(citation = citation.df, 
+                               datasets = dataset.df,
+                               profile = profile.df,
+                               layer = layer.df,
+                               files = download_table),
+                annotation = annotations.df))
+  }
+  
+  ##TODO start here
+  stop()
+  
+  idColumns <- c('dataset_name', 'dataset_name_sub', 'profile_name')
+  citation_long <- citation.dt %>% 
+    tidyr::pivot_longer(cols = -dataset_name,
+                        names_to = 'column_id',
+                        values_to = 'with_entry',
+                        values_drop_na = TRUE)
+  datset_long <- dataset.df
+  temp <- 
+    dplyr::full_join(dataset.dt,
+                     by = dplyr::join_by(`ISCN 1-1 (2015-12-10)`, dataset_name),
+                     suffix = c('.citation', '.dataset')) %>%
+    dplyr::full_join(profile.dt,
+                     by = dplyr::join_by(dataset_name == dataset_name_sub),
+                     relationship = "many-to-many",
+                     suffix = c('', '.profile')) %>%
     
-    return(list(citation=citation.dt, dataset=dataset.dt, profile = profile.dt, layer = layer.dt, 
-                key=keys.ls$ISCN3, 
-                collection = collection.dt))
-  }else{
+  
     ans <- formatLongTable(list(citation= setDT(citation.dt), 
                                 dataset=setDT(dataset.dt), profile = setDT(profile.dt), layer = setDT(layer.dt)),
                            sourceKey = keys.ls$ISCN3, targetKey=keys.ls$ISCN)
