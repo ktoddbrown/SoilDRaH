@@ -1,23 +1,28 @@
-#' Load ISCN Layer and Meta data
+#' Load ISCN3
 #'
-#' This function first downloads the layer, profile, citation, and dataset tables from the ISCN website (http://iscn.fluxdata.org/data/access-data/database-reports/) data available: ftp://ftp.fluxdata.org/.deba/ISCN/ALL-DATA/* It then either returns the original structure or reformats the data.
+#' This function first downloads the layer, profile, citation, and dataset tables from 
 #'
 #' @param dataDir path to the folder containing data files.
 #' @param verbose boolean flag denoting whether or not to print lots of status messages
+#' @param annotationFilename 
+#' @param format 
 #' 
 #' @return list of annotation and data tables
 #'
 #' @importFrom data.table rbindlist
-#' @importFrom tibble tibble
-#' @importFrom utils download.file
+#' @importFrom tibble tribble cols col_character
+#' @importFrom readr read_delim
+#' @importFrom dplyr mutate bind_rows 
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect all_of
 #' @import magrittr
 #' 
 #' @export
 #' 
 readISCN3 <- function(dataDir,
-                    annotationFilename,
-                    format = c('original', 'long')[1],
-                    verbose = TRUE){
+                      annotationFilename,
+                      format = c('original', 'long')[1],
+                      verbose = TRUE){
   
   ## construct file paths ####
   if(is.null(dataDir)){
@@ -66,29 +71,27 @@ readISCN3 <- function(dataDir,
   
   if(verbose) print('Meta data read in.')
   
-  
-  
-  citation.dt <- readr::read_delim(dataFiles.ls$citation, 
+  citation.df <- readr::read_delim(dataFiles.ls$citation, 
                                    delim = ';', 
                                    col_types = readr::cols(.default = readr::col_character()))
   
-  dataset.dt <- readr::read_delim(dataFiles.ls$dataset, 
+  dataset.df <- readr::read_delim(dataFiles.ls$dataset, 
                                    delim = ';', 
                                    col_types = readr::cols(.default = readr::col_character()))
   
   if(verbose) print('Profile data read in.')
-  profile.dt <- readr::read_delim(dataFiles.ls$profile, 
+  profile.df <- readr::read_delim(dataFiles.ls$profile, 
                                    delim = ';', 
                                    col_types = readr::cols(.default = readr::col_character()))
   
   if(verbose) print('Layer data read in.')
-  layer.dt <- readr::read_delim(dataFiles.ls$layer, 
+  layer.df <- readr::read_delim(dataFiles.ls$layer, 
                                    delim = ';', 
                                    col_types = readr::cols(.default = readr::col_character()))
   
   #TODO add to the annotation file
   ##add collection level details like citation
-  # collection.dt <- data.table::data.table(collection_name_id = 'ISCN3.2', 
+  # collection.df <- data.table::data.table(collection_name_id = 'ISCN3.2', 
   #                                                  variable = 'collection_citation',
   #                                                  entry = 'Nave L, Johnson K, van Ingen C, Agarwal D, Humphrey M, Beekwilder N. 2017. International Soil Carbon Network (ISCN) Database, Version 3.2. DOI: 10.17040/ISCN/1305039. Database Report: ISCN_SOC-DATA_LAYER_1-1. Accessed 2 February 2017',
   #                                                  type = 'value')
@@ -106,46 +109,55 @@ readISCN3 <- function(dataDir,
                 annotation = annotations.df))
   }
   
-  ##TODO start here
-  stop()
-  
-  idColumns <- c('dataset_name', 'dataset_name_sub', 'profile_name')
-  citation_long <- citation.dt %>% 
-    tidyr::pivot_longer(cols = -dataset_name,
+  citation_long <- citation.df %>% 
+    dplyr::mutate(dataset_id = dataset_name) %>%
+    tidyr::pivot_longer(cols = -dataset_id,
                         names_to = 'column_id',
                         values_to = 'with_entry',
-                        values_drop_na = TRUE)
-  datset_long <- dataset.df
-  temp <- 
-    dplyr::full_join(dataset.dt,
-                     by = dplyr::join_by(`ISCN 1-1 (2015-12-10)`, dataset_name),
-                     suffix = c('.citation', '.dataset')) %>%
-    dplyr::full_join(profile.dt,
-                     by = dplyr::join_by(dataset_name == dataset_name_sub),
-                     relationship = "many-to-many",
-                     suffix = c('', '.profile')) %>%
-    
+                        values_drop_na = TRUE) %>%
+    dplyr::mutate(table_id = 'citation')
   
-    ans <- formatLongTable(list(citation= setDT(citation.dt), 
-                                dataset=setDT(dataset.dt), profile = setDT(profile.dt), layer = setDT(layer.dt)),
-                           sourceKey = keys.ls$ISCN3, targetKey=keys.ls$ISCN)
+  dataset_long <- dataset.df %>%
+    dplyr::mutate(dataset_id = dataset_name) %>%
+    tidyr::pivot_longer(cols = -dataset_id,
+                        names_to = 'column_id',
+                        values_to = 'with_entry',
+                        values_drop_na = TRUE) %>%
+    dplyr::mutate(table_id = 'dataset')
+  
+  temp <- dplyr::bind_rows(citation_long,
+                    dataset_long)
+
+  profile_long <- profile.df %>%
+    dplyr::mutate(dataset_id = dataset_name_sub,
+                  profile_id = profile_name,
+                  soc_id = dataset_name_soc) %>%
+    tidyr::pivot_longer(cols = -tidyselect::any_of(c("dataset_id", 
+                                         "profile_id", "soc_id")),
+                        names_to = 'column_id',
+                        values_to = 'with_entry',
+                        values_drop_na = TRUE) %>%
+    dplyr::mutate(table_id = 'profile')
+  
+  layer_long <- layer.df %>%
+    dplyr::mutate(dataset_id = dataset_name_sub,
+                  profile_id = profile_name,
+                  layer_id = layer_name,
+                  soc_id = dataset_name_soc) %>%
+    tidyr::pivot_longer(cols = -tidyselect::any_of(c("dataset_id", 
+                                         "profile_id", 
+                                         "layer_id","soc_id")),
+                        names_to = 'column_id',
+                        values_to = 'with_entry',
+                        values_drop_na = TRUE) %>%
+    dplyr::mutate(table_id = 'layer')
     
-    #### Clean up ####
-    hardKeys <- keys.ls$ISCN3[!is.na(entry), c('variable', 'type', 'entry')]
-    hardKeys[,collection_name_id := factor('ISCN3')]
-    ans$collection <- data.table::rbindlist(list(collection.dt, hardKeys), fill = TRUE)
-    
-    ans$study[, collection_name_id := factor('ISCN3')]
-    ans$study <- ans$study[!is.na(entry)]
-    
-    ans$profile[, collection_name_id := as.factor('ISCN3')]
-    ans$profile <- ans$profile[!is.na(entry)]
-    
-    ans$layer[, collection_name_id := as.factor('ISCN3')]
-    ans$layer <- ans$layer[!is.na(entry)]
-    
-    return(ans)
-  }
+  if(verbose) message('Returning long data (>1Gb).')
+  return(list(annotation = annotations.df,
+              long =  dplyr::bind_rows(citation_long, 
+                                       dataset_long,
+                                       profile_long,
+                                       layer_long)))
 
 }
 
