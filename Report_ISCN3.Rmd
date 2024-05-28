@@ -1,0 +1,40 @@
+---
+title: "ISCN 3 report"
+author: "Katherine Todd-Brown <ktoddbrown@ufl.edu>"
+date: "2024-05-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+source('R/readISCN3.R')
+
+dataDir <- '~/Dropbox (UFL)/Research/Datasets/ISCN3'
+annotationFilename <- 'data/ISCN3Annotations.csv'
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+iscn.ls <- readISCN3(dataDir = dataDir, annotationFilename = annotationFilename, format = 'long', verbose = TRUE)
+```
+
+# describe data tables
+
+# make histograms of numerical values
+
+# plot bulk density vs organic carbon
+
+```{r}
+
+```
+
+# isolate iscn 4 studies and variables
+
+```{r}
+temp <- iscn.ls$long %>%
+  # remove iscn calculated soc stocks
+  filter(!str_detect(string = soc_id, pattern  = '^ISCN SOC')) %>%
+  # remove NRCS data since we will update later
+  filter(!str_detect(string = dataset_id, pattern = '^NRCS'))
+```
