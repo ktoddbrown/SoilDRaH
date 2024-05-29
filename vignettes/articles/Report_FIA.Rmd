@@ -1,34 +1,390 @@
 ---
-title: "Creating FIA annotations"
-author: "Kathe Todd-Brown"
-date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Forest Inventory Analysis Database"
+date: "Summer 2024"
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
 ---
 
-*Purpose*
+The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+# What is the FIADB
+
+The version of the US Forest Service's Forest Inventory Analysis Database described here is the public facing version of the Forest Inventory and Analysis program.
+
+> **Forest Inventory and Analysis**
+For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
+
+Taken from [https://www.fs.usda.gov/research/programs/fia](https://www.fs.usda.gov/research/programs/fia) (Accessed 16-May-2024)
+
+Documentation for this database is concentrated in two documents below:
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+
+The annotations table draws heavily on these two documents with augmentation from private communication with Forest Service scientist.
+
+# Data processing
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) #make tables scrollable
+
+source("../../R/readFIA.R", local = knitr::knit_global())
+
+#locate the data locally
+dataDir <- '../temp/FS_FIA'
+dataAnnotations <- '../../data/fia_annotations.csv'
+```
+
+```{r, echo=FALSE}
+#Change this file to run locally for you
+dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/FS_FIA'
+```
+
+To read in the data base use the `readFIA` function.
+
+```{r, warning=FALSE}
+fia.ls <- readFIA(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  verbose = FALSE, #when first running, switch this to true 
+                  format = 'long')
+
+fia.ls$long %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Tables
+
+There are six tables currently annotated in the FIADB data collection.
+This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
+Below are the descriptions of data columns organized by table.
+
+Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
+
+## Table: `ENTIRE_SURVEY`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SURVEY') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_PLOT`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_PLOT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_VISIT`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_SAMPLE_LOC` 
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_SAMPLE_LOC') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_EROSION`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_LAB`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Data processing
+
+
+
+# Subseting for soil carbon
+
+There is a lot of data here but not all of it is of interest for all purposes.
+In this example we are interested in layer-level soil carbon related measurements, there location, and their observation year.
+Note that we are NOT checking any of the quality control flags here which you would want to do if using this for research purposes.
+
+```{r}
+
+soil_carbon.df <- fia.ls$annotations %>%
+  #identify the variables that we are interested in
+  filter(of_variable %in% c(
+             'Inventory_year',
+             'Longtitude', 'Latitude', 'State',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         #limit these to tables since some of them are duplicates
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         #only look at those that map to the data as marked by '--'
+         with_entry == '--') %>%
+  #create a table for exclusive join
+  select(table_id, column_id, of_variable, is_type) %>%
+  #down select the data that matches the variables of interest above
+  left_join(fia.ls$long,
+            by = join_by(table_id, column_id),
+            relationship = "many-to-many")  %>%
+  #only take the values, just incase there are any methods or units in the table
+  filter(is_type == 'value') %>%
+  #remove the table and column is by keeping the row id (CN), variables (new columns) and entries (new values)
+  select(starts_with('CN'), of_variable, with_entry) %>%
+  unique() %>%
+  #make a single row ID
+  tidyr::unite(col = row_id, starts_with('CN.'), sep = '::') %>%
+  #widen the data table using the row_id
+  pivot_wider(names_from = of_variable,
+               values_from = with_entry) %>%
+  #discard the row_id now that the data is wide and it's implied
+  select(-row_id)
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Working with control vocabulary
+
+Two of these variables (`Layer_type` and `State`) have control vocabularies stored in their annotations.
+In this section parse the control vocabularies from the annotations and apply them to the data table to populate the human readable values.
+
+```{r}
+controlVocab <- fia.ls$annotations %>%
+  #using the same list of variables as above, even though it's overkill here
+  filter(of_variable %in% c(
+             'Inventory_year',
+             'Longtitude', 'Latitude', 
+             'State', #control vocabular
+             'Layer_type', #control vocabular
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         is_type == 'control_vocabulary') %>% #look for the control_vocabulary entry
+  #discard everything except the variable of interest
+  select(of_variable, with_entry) %>%
+  unique() %>%
+  #split out the different key-definitions into their own rows
+  separate_longer_delim(cols = with_entry, delim = ';') %>%
+  #then split the key and definition in to their own columns
+  separate_wider_delim(cols = with_entry, delim = '|', names =  c('value', 'definition'))
+
+controlVocab %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+### State names
+
+Then populate the state names.
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join(controlVocab %>%
+              filter(of_variable == 'State') %>%
+              select('state_name'= definition, value),
+            by = join_by(State == value))
+```
+
+### Layer bounds
+
+Followed by the layer names, which take a little more text parsing to extract the upper and lower bounds as well as associated unit.
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join( controlVocab %>%
+               filter(of_variable == 'Layer_type') %>%
+               mutate(Layer_type.upper = str_extract(definition, pattern = regex('^\\d(?=\\-\\d inch)')),
+                      Layer_type.lower = str_extract(definition, pattern = regex('(?<=\\d\\-)\\d(?= inch)')),
+                      Layer_type.unit = 'inch') %>%
+               select(value, Layer_type.definition = definition, Layer_type.upper, Layer_type.lower, Layer_type.unit),
+            by = join_by(Layer_type == value))
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Casting values
+
+Finally make sure that the numbers are actually numbers.
+
+```{r}
+
+soil_carbon.df <- soil_carbon.df %>%
+  mutate(across(.cols = all_of(c("Inventory_year",
+                               "Bulk_density", "coarse_fraction", 
+                               "organic_carbon", 
+                               "inorganic_carbon", "carbon_fraction", 
+                               "Latitude", "Longtitude", 
+                               'Layer_type.upper', 'Layer_type.lower')), as.numeric))
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+## Make small tables
+
+Often this data is presented in three tables: a site level table with lat/lon and year, a layer level table with the depth and physiochemical information, and a meta table with information on the units and descriptions.
+We given an example below of how this might be organized.
+
+```{r}
+site.df <- soil_carbon.df %>%
+  select(Latitude, Longtitude, Inventory_year) %>%
+  unique()
+
+layer.df <- soil_carbon.df %>%
+  select(Latitude, Longtitude, Inventory_year, 
+         Layer_type, Layer_type.definition, Layer_type.upper, Layer_type.lower,
+         Bulk_density, coarse_fraction,
+         organic_carbon, inorganic_carbon)
+
+meta.df <- fia.ls$annotations %>%
+  filter(of_variable %in% c(
+             'Inventory_year', #an identifier
+             'Longtitude', 'Latitude', 'State',
+             #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'))
+```
+
+# Figures and report
+
+Below are some general figures that might be of interest if you are evaluating this database for use in a study.
+
+## Location over time
+
+```{r, fig.width = 6, fig.height = 9}
+ggplot(site.df %>%
+         mutate(decade = floor(Inventory_year/5)*5)) +
+  geom_point(aes(x=Longtitude, y = Latitude), alpha = .1) +
+  facet_wrap(~decade, ncol = 1)
+```
+
+## Layer histograms
+
+```{r, fig.width = 6, fig.height = 6}
+ggplot(layer.df %>%
+         pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scales='free')
+```
+
+## Bulk density vs organic carbon
+
+```{r, fig.width = 6, fig.height = 6}
+
+ggplot(layer.df) +
+  geom_point(aes(x=Bulk_density, y = organic_carbon), alpha = 0.1) +
+  facet_wrap(~Layer_type, scales='free')
+```
+
+# Process the database: `readFIA` function
+
+The process of transforming the data tables into a single long table requires a dive into the data model and specific code written for the dataset.
+This would need to be extended to include other data tables.
+
+```{r, file= '../../R/readFIA.R'}
+```
+
+# Text extraction *experimental*
+
+Below is an experimental example of text processing based on the PDF documentation.
+Some of this was used to populate the control vocabularies but this primarily intended as an informative example.
+Code execution is turned off.
+
+```{r}
+
+library(tidyverse)
+library(pdftools)
+library(tidyr)
+
+knitr::opts_chunk$set(
+  eval = FALSE, #don't actually run the code below this point
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Purpose
 
 Like many large databases the FIADB has existing documentation with valuable metadata in it that we would like to capture for our data annotations.
 Unfortunately it is locked up as a PDF document and not in a JSON or similar format.
 This document walks through recovering some of that information for our data annotations.
 Initially the data annotations table was compiled by colleagues at the Forest Service so this is only a partial recovery and is meant to be an example of how you can use `R`'s `pdftools` library and regular expression processes to generate some of the metadata.
 
-```{r setup, include = FALSE}
-library(tidyverse)
-library(pdftools)
-library(tidyr)
-
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-
+```{r }
+stop('this should not execute')
 #Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
 
-dataDictionary_pdf <- '~/Dropbox (UFL)/Research/Datasets/FS_FIA/wo-fiadb_user_guide_p2_9-1_final.pdf'
+dataDictionary_pdf <- file.path(dataDir, 'wo-fiadb_user_guide_p2_9-1_final.pdf')
 
 #also refer to 
 #Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
