@@ -33,7 +33,7 @@ metadata_filenames <- lapply(list(col_desc = "NCSS Columns Description.csv",
 
 myconnect <- dbConnect( drv = SQLite(), dbname = sqldb_filename)
 
-print(paste('SQL tables in the database:', dbListTables(myconnect)))
+print(paste('SQL tables in the database:', paste(dbListTables(myconnect), collapse = ', ')))
 ```
 
 ```{r eval=FALSE}
@@ -194,6 +194,18 @@ lab_method <-  RSQLite::dbReadTable(myconnect, 'lab_method_code') #%>%
   # select(mcid, procedure_key, proced_code, requested_analysis_name = requested_anal_name, 
   #        name = proced_name, abbreviation = proced_abbrev, proced_desc,
   #        source_system_key, source_system_name)
+
+temp <- lab_procedure %>%
+  select(-any_of(c('OBJECTID', 'objectid_1'))) %>%
+  mutate(across(.cols = everything(), trimws)) %>% 
+  full_join(lab_method%>%
+              select(-any_of(c('OBJECTID', 'objectid_1'))) %>%
+              mutate(across(.cols = everything(), trimws)), 
+            by = join_by("procedure_key", 
+                         "requested_anal_name",
+                         "proced_name",
+                         "proced_abbrev",
+                         "proced_desc" ))
 
 lab_analyte <- RSQLite::dbReadTable(myconnect, 'lab_analyte')
 
