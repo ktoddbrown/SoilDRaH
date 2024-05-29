@@ -1,0 +1,266 @@
+---
+title: "NRCS-NCSS Report"
+author: "Katherine Todd-Brown <ktoddbrown@ufl.edu>"
+date: "2024-05-28"
+output: html_document
+---
+
+This data is part of the National Cooperative Soil Survey Soil Characterization Data (Lab Data) and was accessed via [https://ncsslabdatamart.sc.egov.usda.gov/](https://ncsslabdatamart.sc.egov.usda.gov/)
+
+```{r setup}
+library(tidyverse)
+library(RSQLite)
+
+dataDir <- "~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922"
+
+sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
+
+metadata_dir <- file.path(dataDir,'FederalGeographicDataCommitteeMetadata')
+
+metadata_filenames <- lapply(list(col_desc = "NCSS Columns Description.csv", 
+                                table_desc = "NCSS Table Description.csv", 
+                                table_relation = "Relationships.csv", 
+                                table_unique = "Unique Constraints.csv"),
+                             function(xx) file.path(metadata_dir, xx))
+
+```
+
+## draft table
+
+```{r eval=FALSE}
+
+#### Connect the SQL database ####
+
+myconnect <- dbConnect( drv = SQLite(), dbname = sqldb_filename)
+
+print(paste('SQL tables in the database:', dbListTables(myconnect)))
+```
+
+```{r eval=FALSE}
+
+tableNames <- tibble(table_name = dbListTables(myconnect)) %>%
+  filter(grepl('^lab_', table_name)) #remove GIS tables(?) that start with st_ and the sqlite_sequence table
+
+meta.df <- plyr::ddply(tableNames, c('table_name'), 
+            .fun = function(xx){
+              headers <- RSQLite::dbListFields(myconnect, xx$table_name)
+              return(data.frame(column_name = headers ))
+            }) %>%
+  unique()
+
+##This is large but if you need to load everything all at once you can do so here
+# OrgData.df <- plyr::dlply(tableNames, c('table_name'), 
+#             .fun = function(xx){
+#               return(list(RSQLite::dbReadTable(myconnect, xx$table_name)))
+#             }) 
+
+#### Fix the descriptions ####
+
+givenDescriptions <- read_csv(file = metadata_filenames$col_desc, 
+                              col_types = cols(.default = col_character())) %>%
+  select(table_name, column_name, 
+         description = column_description, column_number = field_sequence) %>%
+  mutate(given_table_name = table_name,
+         given_column_name = column_name) %>%
+  pivot_longer(cols = c(description, column_number), 
+               names_to = 'of_type', values_to = 'with_entry') %>%
+  mutate(column_name = case_when(
+    column_name == 'bulk_density_saturated_whole_s' ~
+      'bulk_density_saturated_whole_soil',
+    column_name == 'aggregate_stability_05_2_metho' ~ 'aggregate_stability_05_2_method',
+    column_name == 'aluminum_na_pyro_phosphate_met' ~ 'aluminum_na_pyro_phosphate_method',
+    column_name == 'aluminum_plus_half_iron_oxalat' ~ 'aluminum_plus_half_iron_oxalate',
+    column_name == 'bd_thirdbar_reconstitut_method' ~ 'bd_thirdbar_reconstituted_method',
+    column_name == 'bulk_density_saturated_whole_s' ~
+      'bulk_density_saturated_whole_soil',
+    column_name == 'bulk_de_odreconstituted_method' ~
+      'bulk_density_odreconstituted_method',
+    column_name == 'bulk_den_rewet_oven_dry_method' ~ 'bulk_density_rewet_oven_dry_method',
+    column_name == 'bulk_density_field_moist_methd' ~ 'bulk_density_field_moist_method',
+    column_name == 'carbon_sodium_pyro_phospate' ~ 'carbon_sodium_pyro_phosphate',
+    column_name == 'cumulative_curve_lt_1_fourthmm' ~ 'cumulative_curve_lt_1_fourth_mm', 
+    column_name == 'cumulative_curve_lt_5_hundredt' ~ 'cumulative_curve_lt_5_hundredths',
+    column_name == 'le_third_ovendry_whole_soi' ~ 'le_third_ovendry_whole_soil',
+    column_name == 'particle_density_calc_sour' ~ 'particle_density_calc_source',
+    column_name == 'percent_passing_20_micron_siev' ~ 'percent_passing_20_micron_sieve',
+    column_name == 'void_ratio_third_bar_whole_soi' ~ 'void_ratio_third_bar_whole_soil',
+    column_name == 'volume_pct_20_to_75_mm_third_w' ~
+      'volume_pct_20_to_75_mm_third_ws',
+    column_name == 'volume_pct_75_to_250_mm_third' ~ 'volume_pct_75_to_250_mm_third_ws', 
+    column_name == 'volume_pct_gt_2_mm_thirdbarws' ~ 'volume_pct_gt_2_mm_thirdbar_ws',
+    column_name == 'chromium_water_extractabe' ~ 'chromium_water_extractable',
+    column_name == 'color_pyrophosphate_extract' ~ 'color_pyrophosphate_extractable',
+    column_name == 'copper_water_extracable' ~ 'copper_water_extractable',
+    column_name == 'ec_water_extract' ~ 'ec_water_extractable',
+    column_name == 'fe_dithionite_citrate_extract' ~ 'fe_dithionite_citrate_extractable',
+    column_name == 'frag_2_20_mm_wt_pct_lt_75' ~ 'frag__2_20_mm_wt_pct_lt_75', #typo in data not meta
+    column_name == 'wt_pct_clay_clay_free_2mmbase' ~ 'wt_pct_clay_clay_free_2mm_base',
+    column_name == 'water_retention_thirdbar_metho' ~ 'water_retention_thirdbar_method',
+    column_name == 'water_retention_10th_bar_meth' ~ 'water_retention_10th_bar_method',
+    column_name == 'volume_pct_gt_250_mm_thirdbarw' ~ 'volume_pct_gt_250_mm_thirdbar_ws',
+    column_name == 'GC_Glass_Coated_Grain_Glass_Count ' ~ 'GC_Glass_Coated_Grain_Glass_Count', #extra space
+    column_name == 'HG_Glass_Coated_Hornblende_Glass_Count ' ~ 'HG_Glass_Coated_Hornblende_Glass_Count', #extra space
+    column_name == 'le_field_moist_to_oven_dry' ~ 'le_field_moist_to_oben_dry', # typo in data
+    column_name == 'le_third_fifteen_lt_2_mm' ~ 'le_third_fifteen_lt2_mm',
+    column_name == 'le_third_ovendry_lt_2_mm_metho' ~ 'le_third_ovendry_lt_2_mm_method',
+    column_name == 'molybdenum_mehlich3_extractabl' ~ 'molybdenum_mehlich3_extractable',
+    column_name == 'ph_water_extract' ~ 'ph_water_extractable',
+    column_name == 'phosphorous_nh4_oxalate_method' ~ 'phosphorus_ammonium_oxalate_method',
+    column_name == 'phosphorus_anion_resin_capacit' ~ 'phosphorus_anion_resin_capacity',
+    column_name == 'phosphorus_mehlich3_extractabl' ~ 'phosphorus_mehlich3_extractable',
+    column_name == 'h2o_dispersible_fraction_metod' ~ 'water_dispersible_fraction_method',
+    column_name == 'le_to_clay_third_bar_to_ovendr' ~ 'le_to_clay_third_bar_to_ovendry',
+    column_name == 'mineral_content_loi_method' ~ 'mineral_content_loss_ignition_method',
+    column_name == 'mineral_content_loss_on_igniti' ~ 'mineral_content_loss_on_ignition',
+    column_name == 'sand_coarse_ethanol_dispersibl' ~ 'sand_coarse_ethanol_dispersible',
+    column_name == 'sand_medium_ethanol_dispersibl' ~ 'sand_medium_ethanol_dispersible',
+    column_name == 'sand_very_coarse_ethanol_disp' ~ 'sand_very_coarse_ethanol_dispersible',
+    column_name == 'sand_very_fine_ethanol_dispers' ~ 'sand_very_fine_ethanol_dispersible',
+    column_name == 'Pedon_Description_Report' ~ 'pedon_Description_Report',
+    (column_name == 'pedon_key') & (table_name == 'lab_webmap') ~ 'pedon_Key',
+    column_name == 'Soil_Web' ~ 'Soil_web',
+    (column_name == 'user_pedon_id') & (table_name == 'lab_webmap')  ~ 'User_pedon_ID',
+    column_name == 'column_desc' ~ 'column_description',
+    #add in other corrections here
+    TRUE ~ column_name)) %>%
+  bind_rows(
+    read_csv(file = metadata_filenames$table_desc, 
+                              col_types = cols(.default = col_character())) %>%
+      select(table_name, with_entry = table_description) %>%
+      mutate(of_type = 'description')) %>%
+  mutate(table_name = case_when(
+    table_name == 'lab_major_tr_elements_oxides' ~ 'lab_major_and_trace_elements_and_oxides',
+    table_name == 'lab_calculations_and_estimates' ~
+      'lab_calculations_including_estimates_and_default_values',
+    table_name == 'lab_mir_wavelength' ~ 'lab_mir_wavelength_string_d',
+    table_name == 'lab_dd_table_column' ~ 'lab_column_descriptions',
+    table_name == 'lab_dd_table' ~ 'lab_table_descriptions',
+    TRUE ~ table_name)) 
+
+temp <- givenDescriptions %>%
+  pivot_wider(names_from = of_type, values_from = with_entry) %>%
+  mutate(foreign_key = str_detect(string = description, 
+                                  pattern = '(F|f)oreign key')) %>%
+  mutate(foreign_key = if_else(foreign_key, "TRUE", NA_character_)) #%>%
+  # pivot_longer(c(description, foreign_key, column_number),
+  #              names_to = 'is_type',
+  #              values_to = 'with_entry',
+  #             values_drop_na = TRUE)
+write_csv(temp, file = file.path('../temp', 'NCSS_dev.csv'))
+
+```
+
+```{r eval=FALSE}
+### Check the descriptions####
+temp <- meta.df %>%
+  mutate(is_header_match = TRUE) %>%
+  full_join(givenDescriptions, by = join_by(table_name, column_name)) %>%
+  mutate(is_header_match = !is.na(is_header_match))
+
+cross_table <- temp %>%
+  select(sql_table_name = table_name, sql_column_name = column_name,
+         dictionary_table_name = given_table_name,
+         dictionary_column_name = given_column_name) %>%
+  unique() %>%
+  mutate(matching_table_names = (sql_table_name == dictionary_table_name), 
+           matching_column_names = (sql_column_name == dictionary_column_name))
+
+write_csv(givenDescriptions, file = file.path('data', 'NRCS_NCSSAnnotations.csv'))
+##Where are the 'bad' matches? fix "RB_Riebeckite_Blue_Amphibole_Petro_Count"
+#temp %>% filter(!is_header_match, !is.na(column_name))
+
+# Useful relationshpi tables
+#relationship.df <-  read_csv(metadata_filenames$table_relation)
+
+#relationship.df
+
+##Not clear how to use this table
+#temp.df <- RSQLite::dbReadTable(myconnect, 'lab_combine_nasis_ncss')
+
+#####Read in lab procedutres and methods ####
+
+#these two should cross talk and they don't really
+lab_procedure <- RSQLite::dbReadTable(myconnect, 'lab_analysis_procedure') #%>%
+#   mutate(reference = sprintf('%s [SSIR 5 page %d; PDF page %d] %s - %s', 
+#                              proced_desc, SSIR_5_Page, PDF_pg, 
+#                              Links_to_SSIR_42_V_5, notes)) %>%
+#   select(apid, procedure_key, requested_analysis_name = requested_anal_name, 
+#          name = proced_name, abbreviation = proced_abbrev, reference) #%>%
+#   #pivot_longer(cols = !all_of(c('apid', 'procedure_key')),
+#   #             names_to = 'of_type', values_to = 'with_entry') %>%
+#   #mutate(of_variable = 'analysis_procedure')
+
+lab_method <-  RSQLite::dbReadTable(myconnect, 'lab_method_code') #%>%
+  # select(mcid, procedure_key, proced_code, requested_analysis_name = requested_anal_name, 
+  #        name = proced_name, abbreviation = proced_abbrev, proced_desc,
+  #        source_system_key, source_system_name)
+
+lab_analyte <- RSQLite::dbReadTable(myconnect, 'lab_analyte')
+
+lab_prep <- dbReadTable(myconnect, 'lab_preparation')
+
+###Read in sample data ####
+
+#lab_calcs.df <- RSQLite::dbReadTable(myconnect, 'lab_calculations_including_estimates_and_default_values')[1:1000,]
+
+#lab_chemical_properties | 1) estimated_organic_carbon, 2) organic_carbon_walkley_black, oc_walkley_black_method, 
+#dbListFields(myconnect, 'lab_chemical_properties')
+
+lab_chem.df <- RSQLite::dbReadTable(myconnect, 'lab_chemical_properties') %>%
+  select(#OBJECTID, objectid_1,
+    layer_key, labsampnum, 
+    result_source_key, prep_code,
+    estimated_organic_carbon,
+    organic_carbon_walkley_black, oc_walkley_black_method) %>% #325740 obs
+  filter(!is.na(estimated_organic_carbon) | !is.na(organic_carbon_walkley_black)) #296364 obs
+
+#lab_physical_properties | bulk_density_oven_dry, bulk_density_oven_dry_method, 
+# bulk_density_lt_2_mm_air_dry, bulk_density_air_dry_method
+# total_frag_wt_pct_gt_2_mm_ws
+# mineral_content_loss_on_ignition, mineral_content_loss_ignition_method
+lab_phys.df <- dbReadTable(myconnect, 'lab_physical_properties') %>%#406281 obs
+  select(#OBJECTID, objectid_1, 
+    layer_key, labsampnum, 
+    result_source_key, prep_code,
+    bulk_density_oven_dry, bulk_density_oven_dry_method,
+    #bulk_density_lt_2_mm_air_dry, bulk_density_air_dry_method, #vol is only fine earth volume
+    total_frag_wt_pct_gt_2_mm_ws,
+    mineral_content_loss_on_ignition, mineral_content_loss_ignition_method) %>%
+  filter(is.finite(bulk_density_oven_dry) | #is.finite(bulk_density_lt_2_mm_air_dry) |
+           is.finite(total_frag_wt_pct_gt_2_mm_ws) | is.finite(mineral_content_loss_on_ignition)) #224498 obs
+
+### Read in descriptions### 
+
+lab_layer.df <- dbReadTable(myconnect, 'lab_layer')
+lab_pedon.df <- dbReadTable(myconnect, 'lab_pedon') #add in observation date
+lab_site.df <- dbReadTable(myconnect, 'lab_site')
+
+# Looking at moving over data download to https://ncss-tech.github.io/lab-data-delivery/SDA.html
+#See section "4.1 Sequoia-Kings Canyon (CA792)" on https://ncss-tech.github.io/lab-data-delivery/SDA.html
+# lab_combine_nasis_ncss$ssa_key -to-> lab_area[area_type == 'ssa']$area_key
+lab_area <- dbReadTable(myconnect, 'lab_area') 
+lab_combine_nasis_ncss <- dbReadTable(myconnect, 'lab_combine_nasis_ncss')
+
+#### Make the layer table we think we want ####
+
+layer_table <- lab_phys.df %>% 
+  full_join(lab_chem.df, by = c('layer_key', 'result_source_key', 'labsampnum', 'prep_code'), 
+            suffix = c('.phys', '.chem')) %>%
+  left_join(lab_layer.df %>%
+              select(site_key, pedon_key, layer_key, labsampnum,
+                     layer_type, hzn_top, hzn_bot),
+            by = c('layer_key', 'labsampnum'), suffix = c('', '.layer')) %>%
+  left_join(lab_pedon.df %>%
+              mutate(observation_date = lubridate::as_date(observation_date, origin = "1900-01-01")) %>%
+              select('site_key', 'pedon_key', 'pedlabsampnum', 'observation_date'),
+            by = c('site_key', 'pedon_key')) %>%
+  left_join(lab_site.df %>%
+              select(site_key,
+                     horizontal_datum_name, latitude_std_decimal_degrees, longitude_std_decimal_degrees),
+            by = join_by(site_key))
+
+#summary(layer_table$prep_code.chem == layer_table$prep_code.phys)
+
+write_csv(layer_table, file = file.path('data_lvl1', 'NCSS_layer.csv'))
+
+```
