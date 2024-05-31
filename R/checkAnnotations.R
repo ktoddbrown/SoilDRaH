@@ -32,7 +32,7 @@ checkAnnotations <- function(filename){
   
   #check is_type elements
   if(!all(unique(annotation.df$is_type) %in% valid_is_type)){
-    stop(paste('annotation file missing expected names: ', 
+    stop(paste('annotation file contains invalid type: ', 
                setdiff(unique(annotation.df$is_type), valid_is_type)))
   }
   
