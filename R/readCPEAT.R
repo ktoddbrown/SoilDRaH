@@ -256,7 +256,7 @@ readCPEAT <- function(dataDir,
     
     # extract column headers and descriptions
     colHeader <- names(xx$data) 
-    colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = " "))
+    colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = "!"))
     
     if(xx$doi == "10.1594/PANGAEA.934274"){
       colDescript <- c(colDescript[1:4], 
@@ -280,6 +280,7 @@ readCPEAT <- function(dataDir,
   #reset the orginal cache directory
   pangaear::pg_cache$cache_path_set(full_path = oldCache)
   
+  #TODO: This should move to a QA/QC script
   allStudy.df <- allStudy.df %>%
     mutate(across(c(ELEVATION, `ELEVATION.START`, `ELEVATION.END`,
                     Recovery, Penetration,
@@ -289,10 +290,10 @@ readCPEAT <- function(dataDir,
     mutate(core_id = doi)
   
   # Save parameters to CSV file
-  write_csv(allParameters.df, file = file.path('data/', 'Param_annotations.csv'))
+  write_csv(allParameters.df, file = file.path('temp/', 'Param_annotations.csv'))
   
   # Load the CSV file
-  annotationFile <- 'data/Param_annotations.csv'
+  annotationFile <- 'temp/Param_annotations.csv'
   Param_annotations <- read.csv(annotationFile, stringsAsFactors = FALSE)
   
   Param_extracted <- Param_annotations %>%
