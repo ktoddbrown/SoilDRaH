@@ -336,14 +336,12 @@ readCPEAT <- function(dataDir,
       select(table_id, column_id, of_variable, of_type, with_entry, row_number)
     
     #return(allData_test)
-    return(list(annotations = CPEATannotations.df, long = allData_test))
+    return(list(annotations = CPEATannotations.df, 
+                long = allData_test,
+                core = allCores.df,
+                study = allStudy.df, 
+                parameters = allParameters.df))
   }   
-  
-  return(list(core = allCores.df,
-              study = allStudy.df, 
-              parameters = allParameters.df,
-              annotation = annotations.df))
-  
   
 }
 
