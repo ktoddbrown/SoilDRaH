@@ -28,19 +28,19 @@ library(stringr) # extract text from descriptions
 library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 
-source("../SoilDRaH/R/temp.R", local = knitr::knit_global())
+source("../R/readCPEAT.R", local = knitr::knit_global())
 
 #locate the data locally
-dataDir <- '../SoilDRaH/data/test/'
-dataAnnotations <- '../SoilDRaH/data/CPEAT_annotations.csv'
+dataDir <- '../temp'
+dataAnnotations <- '../data/CPEAT_annotations.csv'
 ```
 
 ```{r, echo=FALSE}
 #Change this file to run locally for you
-dataDir  <- '~/Documents/GitHub/SoilDRaH/data/test/'
+#dataDir  <- '~/Dropbox (UFL)/Research/Datasets/'
 ```
 
-To read in the data base use the `test_readCPEAT` function.
+To read in the data base use the `readCPEAT` function.
 
 ```{r, warning=FALSE}
 CPEAT.ls <- readCPEAT(dataDir, 
@@ -48,10 +48,6 @@ CPEAT.ls <- readCPEAT(dataDir,
                   verbose = FALSE, #when first running, switch this to true 
                   format = 'long')
 
-CPEAT.original <- readCPEAT(dataDir, 
-                  annotationFilename = dataAnnotations, 
-                  verbose = FALSE, #when first running, switch this to true 
-                  format = 'original')
 
 CPEAT.ls$long %>%
   slice_head(n=100) %>%
@@ -200,6 +196,12 @@ What follows is documentation code (not to be run) that shows how this was done.
 
 ```{r}
 
+CPEAT.original <- readCPEAT(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  verbose = FALSE, #when first running, switch this to true 
+                  format = 'original')
+
+#TODO Remove PI information from the description
 
     ##Draft annotations for later manual curation
     constructedCoreAnnotations <- allCores.df %>%

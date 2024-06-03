@@ -73,6 +73,7 @@ readCPEAT <- function(dataDir,
     return(allData.ls)
   }
   
+  #TODO Go through allData.ls only once and produce a single shoestring table
   #Pull the core information by accessing the data item in the lists
   allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #print(xx$doi)
@@ -142,6 +143,7 @@ readCPEAT <- function(dataDir,
     return(dplyr::mutate(.data = xx$data, across(.cols = everything(),  as.character)))
   }) 
   
+  #TODO can we add the PI informtion here instead of at the bottom?
   #Pull the study information
   allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #list out all the possible names for the study info, be sure to update
@@ -289,6 +291,8 @@ readCPEAT <- function(dataDir,
   allParameters.df <- allParameters.df %>%
     mutate(core_id = doi)
   
+  #TODO Remove and put into the annotations file.
+  #TODO add the PI information to the study tables
   # Save parameters to CSV file
   write_csv(allParameters.df, file = file.path('temp/', 'Param_annotations.csv'))
   
