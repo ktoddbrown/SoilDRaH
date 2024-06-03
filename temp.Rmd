@@ -1,0 +1,29 @@
+---
+title: "temp"
+author: "Vaasuki Marupaka"
+date: "2024-06-03"
+output: html_document
+---
+
+The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+# What is C-PEAT
+
+The version of the Carbon in Peat on EArth through Time (C-PEAT)Database described here is the public facing version of the PANGAEA repository
+
+The annotations table draws heavily from the parameters section of the original data and also communication with the point of contact for C-PEAT program. 
+
+# Data processing
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) #make tables scrollable
