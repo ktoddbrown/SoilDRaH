@@ -16,6 +16,7 @@
 
 # Defining CPEAT function
 readCPEAT <- function(dataDir,
+                      annotationFilename,
                       format=c('original', 'long')[1], 
                       verbose=FALSE){
   
@@ -72,6 +73,7 @@ readCPEAT <- function(dataDir,
     return(allData.ls)
   }
   
+  #TODO Go through allData.ls only once and produce a single shoestring table
   #Pull the core information by accessing the data item in the lists
   allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #print(xx$doi)
@@ -141,6 +143,7 @@ readCPEAT <- function(dataDir,
     return(dplyr::mutate(.data = xx$data, across(.cols = everything(),  as.character)))
   }) 
   
+  #TODO can we add the PI informtion here instead of at the bottom?
   #Pull the study information
   allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #list out all the possible names for the study info, be sure to update
@@ -254,7 +257,11 @@ readCPEAT <- function(dataDir,
     }
     
     # extract column headers and descriptions
+<<<<<<< HEAD
     colHeader <- names(xx$data)
+=======
+    colHeader <- names(xx$data) 
+>>>>>>> c3fa8e4170edbc3c23fec21fad16ef48bb2ad0e5
     colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = "!"))
     
     if(xx$doi == "10.1594/PANGAEA.934274"){
@@ -279,6 +286,7 @@ readCPEAT <- function(dataDir,
   #reset the orginal cache directory
   pangaear::pg_cache$cache_path_set(full_path = oldCache)
   
+  #TODO: This should move to a QA/QC script
   allStudy.df <- allStudy.df %>%
     mutate(across(c(ELEVATION, `ELEVATION.START`, `ELEVATION.END`,
                     Recovery, Penetration,
@@ -287,164 +295,62 @@ readCPEAT <- function(dataDir,
   allParameters.df <- allParameters.df %>%
     mutate(core_id = doi)
   
-  #TODO move this over to the data folder once we have the pipeline debugged
-  if(TRUE){
-    ##Draft annotations for later manual curation
-    constructedCoreAnnotations <- allCores.df %>%
-      mutate(across(.cols=everything(), as.character)) %>%
-      mutate(core_id = doi) %>% #1:n()) %>%
-      pivot_longer(cols=-c(core_id), values_drop_na = TRUE, names_to = 'column_name')  %>%
-      reframe(example_entry = paste(unique(value)[1:5], collapse = '; '),
-              obs_count = sum(!is.na(value)),
-              .by = c(core_id, column_name)) %>%
-      full_join(allParameters.df,
-                by = c('core_id' = 'doi', 'column_name' = 'header')) %>%
-      select(core_id, column_name, description, example_entry, obs_count) %>%
-      mutate(of_variable = case_when( str_detect(column_name, 'doi') ~ 'doi',
-                                      str_detect(column_name, '[Dd]epth sed') ~ 'layer_mid',
-                                      str_detect(column_name, '[Dd]epth bot') ~ 'layer_bottom',
-                                      str_detect(column_name, '[Dd]epth top') ~ 'layer_top',
-                                      str_detect(column_name, 'Peat') ~ 'peat',
-                                      str_detect(column_name, '[Aa]ge') ~ 'age',
-                                      str_detect(column_name, 'Samp thick') ~ 'layer_thickness',
-                                      str_detect(column_name, 'DBD') ~ 'bulk_density',
-                                      str_detect(column_name, '^OM') ~ 'organic_matter',
-                                      str_detect(column_name, '^LOI') ~ 'loss_on_ignition',
-                                      str_detect(column_name, 'Corg') ~ 'organic_carbon',
-                                      str_detect(column_name, '[Vv]ol ') ~ 'volume',
-                                      str_detect(column_name, '^C ') ~ 'organic_carbon',
-                                      str_detect(column_name, 'TOC') ~ 'organic_carbon',
-                                      str_detect(column_name, 'TIC') ~ 'inorganic_carbon',
-                                      str_detect(column_name, '^TC') ~ 'total_carbon',
-                                      str_detect(column_name, '^TN') ~ 'total_nitrogen',
-                                      str_detect(column_name, 'Dated material') ~ 'age',
-                                      str_detect(column_name, '[Cc]omm') ~ 'age',
-                                      str_detect(column_name, 'label') ~ 'lab_label',
-                                      str_detect(column_name, 'Activity') ~ 'modern_carbon_activity',
-                                      str_detect(column_name, 'F14C') ~ 'modern_carbon_activity',
-                                      str_detect(column_name, 'SR') ~ 'sedimentation_rate',
-                                      str_detect(column_name, 'Water') ~ 'water_content',
-                                      str_detect(column_name, 'Cum mass') ~ 'total_core_mass',
-                                      str_detect(column_name, 'PCAR') ~ 'peat_accumulation_rate',
-                                      TRUE ~ NA),
-             unit = case_when(
-               str_detect(column_name, '\\[m\\]') ~ 'm',
-               str_detect(column_name, '\\[ka.*\\]') ~ 'ka BP',
-               str_detect(column_name, '\\[g/cm\\*\\*3\\]') ~ 'g cm-3',
-               str_detect(column_name, '\\[cm\\]') ~ 'cm',
-               str_detect(column_name, '\\[%\\]') ~ 'mass percent',
-               str_detect(column_name, '\\[pMC\\]') ~ 'modern carbon percent',
-               str_detect(column_name, 'F14C') ~ 'modern carbon fraction',
-               str_detect(column_name, '\\[a AD/CE\\]') ~ 'a CE',
-               str_detect(column_name, '\\[cm/a\\]') ~ 'cm yr-1',
-               str_detect(column_name, '\\[ml\\]') ~ 'mL',
-               str_detect(column_name, '\\[cm\\*\\*3\\]') ~ 'cm3',
-               str_detect(column_name, '\\[g/cm\\*\\*2\\]') ~ 'g cm-2',
-               str_detect(column_name, '\\[g/m\\*\\*2\\/a]') ~ 'g m-2 yr-1',
-               str_detect(column_name, '[a] (years ago)') ~ 'yr before measure',
-               TRUE ~ NA),
-             type = case_when( str_detect(column_name, 'max') ~ 'maximum',
-                               str_detect(column_name, 'min') ~ 'maximum',
-                               str_detect(column_name, '±') ~ '1 sigma',
-                               str_detect(column_name, 'Peat') ~ 'note', #no control vocabulary
-                               !is.na(unit) ~ 'value',
-                               str_detect(column_name, 'Dat.* material') ~ 'method',
-                               str_detect(column_name, '[Cc]omm') ~ 'method',
-                               str_detect(column_name, 'label') ~ 'id',
-                               str_detect(column_name, 'doi') ~ 'id',
-                               TRUE ~ NA)) %>%
-      mutate(calibration_status = case_when(of_variable != 'age' | type != 'value' ~ '',
-                                            str_detect(column_name, 'Age dated [ka]') ~ 'uncalibrated',
-                                            str_detect(column_name, '[Uu]ncalibrated') ~ 'uncalibrated',
-                                            str_detect(description, '[Uu]ncalibrated') ~ 'uncalibrated',
-                                            str_detect(column_name, 'calibrated') ~ 'calibrated',
-                                            str_detect(description, 'calibrated') ~ 'calibrated',
-                                            TRUE ~ ''),
-             age_model = case_when(of_variable != 'age' | type != 'value' ~ '',
-                                   str_detect(column_name, 'OxCal') ~ 'OxCal_4.2.4',
-                                   str_detect(description, 'OxCal') ~ 'OxCal_4.2.4',
-                                   str_detect(column_name, 'Bacon') ~ 'Bacon_2.2',
-                                   str_detect(description, 'Bacon') ~ 'Bacon_2.2',
-                                   TRUE ~ ''),
-             isotope = case_when(of_variable != 'age' | type != 'value' ~ '',
-                                 str_detect(column_name, '14C') ~ '14C',
-                                 str_detect(description, '14C') ~ '14C',
-                                 str_detect(column_name, '210Pb') ~ '210Pb',
-                                 str_detect(description, '210Pb') ~ '210Pb',
-                                 str_detect(column_name, 'ephra-chronostratigraphy') ~ 'tephra-chronostratigraphy',
-                                 str_detect(description, 'ephra-chronostratigraphy') ~ 'tephra-chronostratigraphy',
-                                 TRUE ~ '')) %>%
-      mutate(across(.cols = -column_name, str_trim)) %>%
-      mutate(method = paste(isotope, age_model, calibration_status)) %>%
-      mutate(table_name = 'core') %>%
-      select(core_id, column_name, of_variable, unit, type, method, description) %>%
-      mutate(across(.cols = -column_name, str_trim)) %>%
-      unique()
-    
-    coreAnnotationSub1 <- constructedCoreAnnotations %>% 
-      select(core_id, column_name, of_variable, of_type = type) %>%
-      unique() %>%
-      mutate(with_entry = '--')
-    
-    coreAnnotationSub2 <- constructedCoreAnnotations %>% 
-      select(-type) %>%
-      unique() %>%
-      pivot_longer(cols = c(unit, method, description), names_to = 'of_type', values_to = 'with_entry') %>%
-      mutate(with_entry = str_trim(with_entry)) %>%
-      filter(str_detect(pattern = '\\w', with_entry))
-    
-    studyAnnotation <- tribble(~column_name, ~description, ~of_variable, ~unit,
-                               "core_name", "Core name", "core_name", NA_character_,
-                               "parent_doi", "data package DOI", "data_doi",  NA_character_,
-                               "doi",  "data package DOI", "data_doi",  NA_character_, #same as doi
-                               "citation", "Citation", 'citation',  NA_character_,
-                               "url", "download url", 'download_url',  NA_character_,
-                               "path", "download path", 'data_local_filepath',  NA_character_,
-                               "citation.1", "Citation", 'citation', NA_character_, #same as citation
-                               "related_to", "Related citations", 'related_citation', NA_character_,
-                               "projects", "Related project", 'project', NA_character_,
-                               "coverage", "Bounded coverage", 'bounded_coverage', NA_character_,
-                               "license", "Data license", 'data_license', NA_character_,
-                               "size", "Observation size", 'observation_size', 'data point count',
-                               "LATITUDE", "Latitude", 'latitude', 'decimal degree',
-                               "LONGITUDE", "Longitude", 'longitude', 'decimal degree',
-                               "LOCATION", "Adminstrative region", 'region', NA_character_,
-                               "METHOD.DEVICE", "Sampling devise", 'sample_devise', NA_character_,
-                               "COMMENT", "Data package comment", 'core_comment', NA_character_,
-                               "further_details", "Citations", 'futher_citations', NA_character_,
-                               "ELEVATION", "elevation", 'elevation', 'm',
-                               "Recovery", "core length", 'core_length', 'cm',
-                               "Penetration", "core length", 'core_length', 'cm',
-                               "ELEVATION.START", "Start of elevation transect", 'elevation_start', 'm',
-                               "ELEVATION.END", "End of elevation transect", 'elevation_end', 'm',
-                               "abstract", "Abstract", 'abstract', NA_character_,
-                               "keywords", "Keywords", 'keywords', NA_character_,
-                               "status", "Curation level", 'cutation_level', NA_character_,
-                               "comment", "Dataset Comment", 'core_comment', NA_character_) %>%
-      mutate(table_name = 'study')
-    
-    studyAnnotationSub1 <- studyAnnotation %>%
-      pivot_longer(cols = c(description, unit), 
-                   names_to = 'of_type',
-                   values_to = 'with_entry',
-                   values_drop_na = TRUE)
-    
-    studyAnnotationSub2 <- studyAnnotation %>% 
-      select(column_name, of_variable) %>%
-      mutate(of_type = if_else(of_variable == 'core_comment', 'note', 'value'),
-             with_entry = '--') 
-    
-    
-    annotation.df <- bind_rows(coreAnnotationSub1, coreAnnotationSub2,
-                               studyAnnotationSub1, studyAnnotationSub2) %>%
-      arrange(table_name, core_id, of_variable, of_type)
-  }
+  #TODO Remove and put into the annotations file.
+  #TODO add the PI information to the study tables
+  # Save parameters to CSV file
+  write_csv(allParameters.df, file = file.path('temp/', 'Param_annotations.csv'))
   
-  return(list(core = allCores.df,
-              study = allStudy.df, 
-              parameters = allParameters.df,
-              annotation = annotation.df))
+  # Load the CSV file
+  annotationFile <- 'temp/Param_annotations.csv'
+  Param_annotations <- read.csv(annotationFile, stringsAsFactors = FALSE)
   
+  Param_extracted <- Param_annotations %>%
+    mutate(PI_info = if_else(
+      str_detect(description, "PI[^!]*!"),
+      str_extract(description, "PI[^!]*!"),
+      str_extract(description, "PI.*")
+    ))
+  
+  Param_extracted$PI_info <- str_replace_all(Param_extracted$PI_info, "!", "")
+  
+  Param_extracted <- Param_extracted %>% 
+    select(doi, PI_info) %>% 
+    unique()
+  
+  add_PI_to_study <- allStudy.df %>% 
+    full_join(Param_extracted, by = join_by(doi))
+  
+  # Read in annotations
+  if(verbose) message('Loading annotations.')
+  CPEATannotations.df <- readr::read_csv(annotationFilename,
+                                    col_type = readr::cols(
+                                      .default = readr::col_character())) %>% 
+    select(table_id, column_id, of_variable, of_type = is_type, with_entry)
+  
+  if (format == 'long') {
+    allData_test <- add_PI_to_study %>%
+      dplyr::full_join(allCores.df, by = dplyr::join_by(doi)) %>% 
+      dplyr::group_by(doi) %>%
+      dplyr::mutate(row_number = row_number()) %>% 
+      dplyr::ungroup() %>%
+      tidyr::pivot_longer(cols = -row_number, names_to = 'column_id', values_to = 'with_entry', values_drop_na = TRUE) %>% 
+      full_join(CPEATannotations.df, 
+                by = join_by(column_id),
+                suffix = c('.data', ''),
+                relationship = "many-to-many") %>% 
+      mutate(
+        with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
+                                    with_entry.data, with_entry)) %>%
+      select(-with_entry.data) %>% 
+      select(table_id, column_id, of_variable, of_type, with_entry, row_number)
+    
+    #return(allData_test)
+    return(list(annotations = CPEATannotations.df, 
+                long = allData_test,
+                core = allCores.df,
+                study = allStudy.df, 
+                parameters = allParameters.df))
+  }   
   
 }
 

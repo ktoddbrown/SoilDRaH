@@ -1,34 +1,28 @@
-#' Read function for FIA data
+#' CPEAT data sets
 #' 
-#' This function downloads the Carbon in Peat on Earth through Time (CPEAT) Database from pangaea repository. This reads in the first 1000 records of the CPEAT project from PANGAEA with search term "project:label:PAGES_C-PEAT", as of 2023-December there are 876 data packages found. Reads in a project specific data annotation as well as the tables that have annotations. The data is either returned in the orginal table structure or a long format.
+#' This reads in the first 1000 records of the CPEAT project from PANGAEA with search term "project:label:PAGES_C-PEAT", as of 2023-December there are 875 data packages found.
 #'
-#' @param dataDir a string that specifies the filepath of where the data should be downloaded.
-#' @param annotationFilename a string that specifies where the data annotations are
-#' @param format a string flat to return the original format or the long format.
-#' @param verbose a boolean that prints out the stage of the file
+#' @param dataDir filename of the download directory to store the data in
+#' @param format character flag to either return a list of cores or the cores as a set of tables
+#' @param verbose boolean status to print out updates
 #'
 #' @importFrom pangaear pg_search pg_cache
 #' @importFrom plyr dlply ldply 
 #' @importFrom dplyr mutate across reframe
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_extract
-#' @importFrom readr read_csv col_character cols
-#' @importFrom dplyr mutate full_join right_join rename_with filter join_by
 #' @import magrittr
-#'
-#' @return a list containing the annotation data frame and the data that is annotated. Note that for this function we trim some of the data due to size and only return plot information related to the soil data.
-
-readCPEAT_test <- function(dataDir,
-                    annotationFilename,
-                    format = c('original', 'long')[1],
-                    verbose = TRUE){
+#' @export
+readCPEAT <- function(dataDir,
+                      format=c('original', 'long')[1], 
+                      verbose=FALSE){
   
-  ##### find CPEAT datasets and load in from the pangaea repository 
+  ##### find CPEAT datasets 
   
-  pangaearSearchTerm <- "project:label:PAGES_C-PEAT" # searching the repo using keywords
-  pages.df <- pangaear::pg_search(pangaearSearchTerm, count = 500) %>%  # search limit for 500 results
+  pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
+  pages.df <- pangaear::pg_search(pangaearSearchTerm, count = 500) %>% 
     dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, count = 500, offset = 500)) %>% #the output will contain all columns that appear in any of the inputs
-    dplyr::mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi)) # adding a full citation column
+    dplyr::mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi))
   
   if(nrow(pages.df) != 876){
     warning("unexpected number of CPEAT core datasets found; annotations might be incomplete.") # a warning would let you run the rest of the code!
@@ -36,28 +30,24 @@ readCPEAT_test <- function(dataDir,
   
   #### Download CPEAT datasets
   
-  #Keep the old cache directory so that we can reset it 
+  #Keep the old cache directory so that we can reset it
   oldCache <- pangaear::pg_cache$cache_path_get()
   
-  #create a new directory for all the CPEAT downloads if it doesn't exist
+  #create a new directory for all the CPEAT downloads
   if(!file.exists(file.path(dataDir, 'CPEAT'))){
     dir.create(file.path(dataDir, 'CPEAT'))
   }
-  
-  # set the new data directory 
   dataDir <- file.path(dataDir, 'CPEAT')
   
   #set the cache, we reset back to the oldCache at the end of this function
   pangaear::pg_cache$cache_path_set(full_path = dataDir)
   
   if(verbose) message('Loading the CPEAT datasets, this takes a while...')
-  
   #Pull into a list, all the data from the files the specified dois in the search results 
   allData.ls <- plyr::dlply(pages.df, #search results
                             c("doi"), #grouping on unique identifer
                             .fun = function(xx) { #defining our fetch function as a wrapper
                               
-                              # fetch data package from PANGAEA; this loads in the original data for the studies, in this case C-PEAT
                               datapackage <- pangaear::pg_data(doi = xx$doi, overwrite = FALSE)
                               
                               #check that the pg_data returns a list of a single item, remove that from the parent list
@@ -65,7 +55,7 @@ readCPEAT_test <- function(dataDir,
                                 stop(paste("Data package contains more then one item. DOI:", xx$doi))
                               }
                               
-                              return(datapackage[[1]]) # this returns the first item in data
+                              return(datapackage[[1]])
                             }) 
   
   #### Return the original data without transformation
@@ -79,14 +69,11 @@ readCPEAT_test <- function(dataDir,
   #Pull the core information by accessing the data item in the lists
   allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
     #print(xx$doi)
-    
-    # renaming the columns (indexing using the column numbers!)
     if(xx$doi %in% c("10.1594/PANGAEA.934281")){
       #names(xx$data)[names(xx$data) == "Age unc [±] (Age AD, calculated, 1 sigma)"] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
       names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)' # refer to the actual variable name instead of the number to index
     } # the issue we are running into if we replace the position index for the column with the actual variable name, these column names are duplicates in the original data! 
     
-    # renaming the columns based on specific DOIs
     if(xx$doi %in% c("10.1594/PANGAEA.934343")){
       names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
     }
@@ -135,13 +122,11 @@ readCPEAT_test <- function(dataDir,
         'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
     }
     
-    # Check for duplicate column names
+    
     if(length(names(xx$data)) > length(unique(names(xx$data)))){
       print(names(xx$data)) ## todo - consider throwing a warning that the names are not unique
       warning("Duplicate column names detected")
     }
-    
-    # Convert all columns to character type and return the modified data
     return(dplyr::mutate(.data = xx$data, across(.cols = everything(),  as.character)))
   }) 
   
@@ -257,13 +242,12 @@ readCPEAT_test <- function(dataDir,
         'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
     }
     
-    # extract column headers and descriptions
     colHeader <- names(xx$data)
     colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = " "))
     
     if(xx$doi == "10.1594/PANGAEA.934274"){
       colDescript <- c(colDescript[1:4], 
-                       paste(colDescript[5], ';', colDescript[6]), # concatenating the 5th and 6th element into a single string
+                       paste(colDescript[5], ';', colDescript[6]),
                        colDescript[7:9])
     }
     
@@ -291,37 +275,12 @@ readCPEAT_test <- function(dataDir,
   allParameters.df <- allParameters.df %>%
     mutate(core_id = doi)
   
-  # Read in annotations
-  if(verbose) message('Loading annotations.')
-  annotations.df <- readr::read_csv(annotationFilename,
-                                    col_type = readr::cols(
-                                      .default = readr::col_character()))
-  if(format == 'long') {
-  allData <- allStudy.df %>%
-    dplyr::full_join(allCores.df,
-                     by = dplyr::join_by(doi)) %>% 
-    dplyr::group_by(doi) %>%
-    dplyr::mutate(row_number = row_number()) %>% 
-    dplyr::ungroup() %>%
-    tidyr::pivot_longer(cols = -row_number, names_to = 'column_id', values_to = 'with_entry', values_drop_na = TRUE) %>% 
-    full_join(annotations.df, 
-              by = join_by(column_id),
-              suffix = c('.data', ''),
-              relationship = "many-to-many") %>% 
-    mutate(
-      with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
-                                  with_entry.data, with_entry)) %>%
-    select(-with_entry.data) %>% 
-    select(study_id, table_id, column_id, of_variable, of_type = is_type, with_entry, row_number)
-  
-  return(allData)
-  }   
-  
   return(list(core = allCores.df,
               study = allStudy.df, 
               parameters = allParameters.df,
               annotation = annotation.df))
+  
+  
 }
 
 
-  
