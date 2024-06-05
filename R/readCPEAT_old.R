@@ -277,8 +277,7 @@ readCPEAT <- function(dataDir,
   
   return(list(core = allCores.df,
               study = allStudy.df, 
-              parameters = allParameters.df,
-              annotation = annotation.df))
+              parameters = allParameters.df))
   
   
 }
