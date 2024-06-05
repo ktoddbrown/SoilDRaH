@@ -257,11 +257,7 @@ readCPEAT <- function(dataDir,
     }
     
     # extract column headers and descriptions
-<<<<<<< HEAD
     colHeader <- names(xx$data)
-=======
-    colHeader <- names(xx$data) 
->>>>>>> c3fa8e4170edbc3c23fec21fad16ef48bb2ad0e5
     colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = "!"))
     
     if(xx$doi == "10.1594/PANGAEA.934274"){
@@ -297,35 +293,43 @@ readCPEAT <- function(dataDir,
   
   #TODO Remove and put into the annotations file.
   #TODO add the PI information to the study tables
-  # Save parameters to CSV file
-  write_csv(allParameters.df, file = file.path('temp/', 'Param_annotations.csv'))
   
-  # Load the CSV file
-  annotationFile <- 'temp/Param_annotations.csv'
-  Param_annotations <- read.csv(annotationFile, stringsAsFactors = FALSE)
+  # Load the Parameters CSV file
+  ParametersFile <- 'temp/Param_annotations.csv'
+  Param_annotations <- read.csv(ParametersFile, stringsAsFactors = FALSE)
   
-  Param_extracted <- Param_annotations %>%
+  # extracting just the PI (principle investogator info) here to append it to the study table
+  Param_extracted <- Param_annotations %>% 
     mutate(PI_info = if_else(
-      str_detect(description, "PI[^!]*!"),
-      str_extract(description, "PI[^!]*!"),
-      str_extract(description, "PI.*")
-    ))
-  
-  Param_extracted$PI_info <- str_replace_all(Param_extracted$PI_info, "!", "")
-  
-  Param_extracted <- Param_extracted %>% 
+      str_detect(description, "PI[^!]*"),
+      str_extract(description, "PI[^!]*"),
+      str_extract(description, "PI.*"))) %>% 
     select(doi, PI_info) %>% 
     unique()
   
+  # out of the above extracted parameters table with just doi and PI_info; adding two additional columns with method and comment info, if any!
+  selectParam_extracted <- Param_extracted %>% 
+    mutate(METHOD = str_extract(PI_info, "METHOD/DEVICE:.*?(?=COMMENT|$)"),
+           COMMENT = str_extract(PI_info, "COMMENT:.*")) %>%
+    mutate(METHOD = str_replace(METHOD, "METHOD/DEVICE: ", ""),
+           COMMENT = str_replace(COMMENT, "COMMENT: ", ""),
+           PI_info = str_remove(PI_info, "METHOD/DEVICE:.*"),
+           PI_info = str_remove(PI_info, "COMMENT:.*")) %>%
+    mutate(PI_info = str_trim(PI_info, side = "both")) %>% 
+    select(doi, PI_info) %>% 
+    unique()
+  
+  # adding this to the original study table; the PI_info has the email address (contact information) of the PI 
   add_PI_to_study <- allStudy.df %>% 
-    full_join(Param_extracted, by = join_by(doi))
+    full_join(selectParam_extracted, by = join_by(doi)) %>% 
+    unique()
   
   # Read in annotations
   if(verbose) message('Loading annotations.')
   CPEATannotations.df <- readr::read_csv(annotationFilename,
                                     col_type = readr::cols(
                                       .default = readr::col_character())) %>% 
-    select(table_id, column_id, of_variable, of_type = is_type, with_entry)
+    select(table_id, column_id, of_variable, of_type, with_entry)
   
   if (format == 'long') {
     allData_test <- add_PI_to_study %>%
@@ -346,10 +350,11 @@ readCPEAT <- function(dataDir,
     
     #return(allData_test)
     return(list(annotations = CPEATannotations.df, 
-                long = allData_test,
-                core = allCores.df,
-                study = allStudy.df, 
-                parameters = allParameters.df))
+                long = allData_test
+                # core = allCores.df,
+                # study = allStudy.df, 
+                # parameters = allParameters.df
+                ))
   }   
   
 }
