@@ -1,0 +1,315 @@
+column_id,of_variable,of_type,with_entry,table_id
+Activity [pMC],modern_carbon_activity,description,Activity of radiocarbon in percent of modern carbon [pMC] (Activity),core
+Activity [pMC],modern_carbon_activity,unit,modern carbon percent,core
+Activity [pMC],modern_carbon_activity,value,--,core
+Activity std dev [±],modern_carbon_activity,1 sigma,--,core
+Activity std dev [±],modern_carbon_activity,description,"Activity of radiocarbon in percent of modern carbon, standard deviation [±] (Activity std dev)",core
+Age [a AD/CE],age,description,Age [a AD/CE] (Age),core
+Age [a AD/CE],age,unit,a CE,core
+Age [a AD/CE],age,value,--,core
+"Age [a AD/CE] (#0 = below detection, Age, 210Pb)",age,description,Age [a AD/CE] (Age),core
+"Age [a AD/CE] (#0 = below detection, Age, 210Pb)",age,method,210Pb,core
+"Age [a AD/CE] (#0 = below detection, Age, 210Pb)",age,unit,a CE,core
+"Age [a AD/CE] (#0 = below detection, Age, 210Pb)",age,value,--,core
+"Age [a AD/CE] (Age, 210Pb)",age,description,Age [a AD/CE] (Age),core
+"Age [a AD/CE] (Age, 210Pb)",age,method,210Pb,core
+"Age [a AD/CE] (Age, 210Pb)",age,unit,a CE,core
+"Age [a AD/CE] (Age, 210Pb)",age,value,--,core
+"Age [a AD/CE] (Age, tephra-chronostratigraphy)",age,description,Age [a AD/CE] (Age),core
+"Age [a AD/CE] (Age, tephra-chronostratigraphy)",age,method,tephra-chronostratigraphy,core
+"Age [a AD/CE] (Age, tephra-chronostratigraphy)",age,unit,a CE,core
+"Age [a AD/CE] (Age, tephra-chronostratigraphy)",age,value,--,core
+Age [a AD/CE] (see Method comment),age,description,Age [a AD/CE] (Age),core
+Age [a AD/CE] (see Method comment),age,unit,a CE,core
+Age [a AD/CE] (see Method comment),age,value,--,core
+Age [a AD/CE] alt.,age,description,Age [a AD/CE] (Age),core
+Age [a AD/CE] alt.,age,unit,a CE,core
+Age [a AD/CE] alt.,age,value,--,core
+Age [a] (years ago),age,description,"Age, relative, number of years [a] (Age)",core
+Age [a] (years ago),age,NA,--,core
+Age [ka BP],age,description,AGE [ka BP] (Age),core
+Age [ka BP],age,unit,ka BP,core
+Age [ka BP],age,value,--,core
+Age [ka BP] (Loisel et al. 2014),age,description,AGE [ka BP] (Age),core
+Age [ka BP] (Loisel et al. 2014),age,unit,ka BP,core
+Age [ka BP] (Loisel et al. 2014),age,value,--,core
+Age dated [ka],age,description,"Age, dated [ka] (Age dated)",core
+Age dated [ka],age,unit,ka BP,core
+Age dated [ka],age,value,--,core
+"Age dated [ka] (14C-uncalibrated, Age, 14C AMS)",age,description,"Age, dated [ka] (Age dated)",core
+"Age dated [ka] (14C-uncalibrated, Age, 14C AMS)",age,method,14C  uncalibrated,core
+"Age dated [ka] (14C-uncalibrated, Age, 14C AMS)",age,unit,ka BP,core
+"Age dated [ka] (14C-uncalibrated, Age, 14C AMS)",age,value,--,core
+"Age dated [ka] (Age, 14C uncalibrated)",age,description,"Age, dated [ka] (Age dated)",core
+"Age dated [ka] (Age, 14C uncalibrated)",age,method,14C  uncalibrated,core
+"Age dated [ka] (Age, 14C uncalibrated)",age,unit,ka BP,core
+"Age dated [ka] (Age, 14C uncalibrated)",age,value,--,core
+Age dated [ka] (Uncalibrated date),age,description,"Age, dated [ka] (Age dated)",core
+Age dated [ka] (Uncalibrated date),age,method,uncalibrated,core
+Age dated [ka] (Uncalibrated date),age,unit,ka BP,core
+Age dated [ka] (Uncalibrated date),age,value,--,core
+"Age dated [ka] (calculated, 1 sigma)",age,description,"Age, dated [ka] (Age dated)",core
+"Age dated [ka] (calculated, 1 sigma)",age,unit,ka BP,core
+"Age dated [ka] (calculated, 1 sigma)",age,value,--,core
+Age dated std dev [±],age,1 sigma,--,core
+Age dated std dev [±],age,description,"Age, dated standard deviation [±] (Age dated std dev)",core
+"Age dated std dev [±] (1 sd, Age, 14C AMS)",age,1 sigma,--,core
+"Age dated std dev [±] (1 sd, Age, 14C AMS)",age,description,"Age, dated standard deviation [±] (Age dated std dev)",core
+"Age dated std dev [±] (calculated, 1 sigma)",age,1 sigma,--,core
+"Age dated std dev [±] (calculated, 1 sigma)",age,description,"Age, dated standard deviation [±] (Age dated std dev)",core
+Age e [±],age,1 sigma,--,core
+Age e [±],age,description,"Age, error [±] (Age e)",core
+Age model [ka],age,description,Age model [ka] (Age model),core
+Age model [ka],age,unit,ka BP,core
+Age model [ka],age,value,--,core
+"Age std dev [±] (1 sd, Age, 14C AMS)",age,1 sigma,--,core
+"Age std dev [±] (1 sd, Age, 14C AMS)",age,description,"Age, standard deviation [±] (Age std dev)",core
+Age unc [±],age,1 sigma,--,core
+Age unc [±],age,description,"Age, uncertainty [±] (Age unc)",core
+"Age unc [±] (14C age, calculated, 1 sigma)",age,1 sigma,--,core
+"Age unc [±] (14C age, calculated, 1 sigma)",age,description,"Age, uncertainty [±] (Age unc)",core
+"Age unc [±] (Age AD, calculated, 1 sigma)",age,1 sigma,--,core
+"Age unc [±] (Age AD, calculated, 1 sigma)",age,description,"Age, uncertainty [±] (Age unc)",core
+"Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)",age,1 sigma,--,core
+"Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)",age,description,"Age, uncertainty [±] (Age unc)",core
+Age unc [±] (Lab uncertainty),age,1 sigma,--,core
+Age unc [±] (Lab uncertainty),age,description,"Age, uncertainty [±] (Age unc)",core
+C [%],organic_carbon,description,Carbon [%] (C),core
+C [%],organic_carbon,unit,mass percent,core
+C [%],organic_carbon,value,--,core
+COMMENT,core_comment,description,Data package comment,study
+COMMENT,core_comment,note,--,study
+Cal age [ka BP],age,description,Calendar age [ka BP] (Cal age),core
+Cal age [ka BP],age,unit,ka BP,core
+Cal age [ka BP],age,value,--,core
+"Cal age [ka BP] (Age, 14C calibrated, Bacon 2....)",age,description,Calendar age [ka BP] (Cal age),core
+"Cal age [ka BP] (Age, 14C calibrated, Bacon 2....)",age,method,14C Bacon_2.2 calibrated,core
+"Cal age [ka BP] (Age, 14C calibrated, Bacon 2....)",age,unit,ka BP,core
+"Cal age [ka BP] (Age, 14C calibrated, Bacon 2....)",age,value,--,core
+"Cal age [ka BP] (Age, 14C calibrated, OxCal 4....)",age,description,Calendar age [ka BP] (Cal age),core
+"Cal age [ka BP] (Age, 14C calibrated, OxCal 4....)",age,method,14C OxCal_4.2.4 calibrated,core
+"Cal age [ka BP] (Age, 14C calibrated, OxCal 4....)",age,unit,ka BP,core
+"Cal age [ka BP] (Age, 14C calibrated, OxCal 4....)",age,value,--,core
+"Cal age [ka BP] (Age, 210Pb)",age,description,Calendar age [ka BP] (Cal age),core
+"Cal age [ka BP] (Age, 210Pb)",age,method,210Pb,core
+"Cal age [ka BP] (Age, 210Pb)",age,unit,ka BP,core
+"Cal age [ka BP] (Age, 210Pb)",age,value,--,core
+Cal age [ka BP] (Median Age),age,description,Calendar age [ka BP] (Cal age),core
+Cal age [ka BP] (Median Age),age,unit,ka BP,core
+Cal age [ka BP] (Median Age),age,value,--,core
+Cal age [ka BP] (Median Age) alt.,age,description,Calendar age [ka BP] (Cal age),core
+Cal age [ka BP] (Median Age) alt.,age,unit,ka BP,core
+Cal age [ka BP] (Median Age) alt.,age,value,--,core
+"Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)",age,description,Calendar age [ka BP] (Cal age),core
+"Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)",age,method,14C Bacon_2.2 calibrated,core
+"Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)",age,unit,ka BP,core
+"Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)",age,value,--,core
+"Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)",age,description,Calendar age [ka BP] (Cal age),core
+"Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)",age,method,14C OxCal_4.2.4 calibrated,core
+"Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)",age,unit,ka BP,core
+"Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)",age,value,--,core
+Cal age max [ka BP],age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+Cal age max [ka BP],age,maximum,--,core
+Cal age max [ka BP],age,unit,ka BP,core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",age,maximum,--,core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",age,unit,ka BP,core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,maximum,--,core
+"Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,unit,ka BP,core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",age,maximum,--,core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",age,unit,ka BP,core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,maximum,--,core
+"Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,unit,ka BP,core
+Cal age max [ka BP] alt.,age,description,"Calendar age, maximum/old [ka BP] (Cal age max)",core
+Cal age max [ka BP] alt.,age,maximum,--,core
+Cal age max [ka BP] alt.,age,unit,ka BP,core
+Cal age min [ka BP],age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+Cal age min [ka BP],age,maximum,--,core
+Cal age min [ka BP],age,unit,ka BP,core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)",age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)",age,maximum,--,core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)",age,unit,ka BP,core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,maximum,--,core
+"Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)",age,unit,ka BP,core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",age,maximum,--,core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",age,unit,ka BP,core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,maximum,--,core
+"Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)",age,unit,ka BP,core
+Cal age min [ka BP] alt.,age,description,"Calendar age, minimum/young [ka BP] (Cal age min)",core
+Cal age min [ka BP] alt.,age,maximum,--,core
+Cal age min [ka BP] alt.,age,unit,ka BP,core
+Cal age std dev [±],age,1 sigma,--,core
+Cal age std dev [±],age,description,"Calendar age, standard deviation [±] (Cal age std dev)",core
+Cal age std e [±],age,1 sigma,--,core
+Cal age std e [±],age,description,"Calendar age, standard error [±] (Cal age std e)",core
+Comm,age,description,"Age, comment (Comm)",core
+Comm,age,method,--,core
+Comment,age,description,Comment (Comment),core
+Comment,age,method,--,core
+Corg dens [g/cm**3],organic_carbon,description,"Density, organic carbon [g/cm  3] (Corg dens)",core
+Corg dens [g/cm**3],organic_carbon,unit,g cm-3,core
+Corg dens [g/cm**3],organic_carbon,value,--,core
+Cum mass [g/cm**2],total_core_mass,description,Cumulative mass [g/cm  2] (Cum mass),core
+Cum mass [g/cm**2],total_core_mass,unit,g cm-2,core
+Cum mass [g/cm**2],total_core_mass,value,--,core
+DBD [g/cm**3],bulk_density,description,"Density, dry bulk [g/cm  3] (DBD)",core
+DBD [g/cm**3],bulk_density,unit,g cm-3,core
+DBD [g/cm**3],bulk_density,value,--,core
+Dated material,age,description,"Age, dated material (Dated material)",core
+Dated material,age,method,--,core
+"Dated material (Type of material (bulk, wood,...)",age,description,"Age, dated material (Dated material)",core
+"Dated material (Type of material (bulk, wood,...)",age,method,--,core
+Depth bot [m],layer_bottom,description,"Depth, bottom/max [m] (Depth bot)",core
+Depth bot [m],layer_bottom,unit,m,core
+Depth bot [m],layer_bottom,value,--,core
+Depth sed [m],layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m],layer_mid,unit,m,core
+Depth sed [m],layer_mid,value,--,core
+Depth sed [m] (LOI sample depth),layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m] (LOI sample depth),layer_mid,unit,m,core
+Depth sed [m] (LOI sample depth),layer_mid,value,--,core
+Depth sed [m] (Sample midpoint depth (rounded)),layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m] (Sample midpoint depth (rounded)),layer_mid,unit,m,core
+Depth sed [m] (Sample midpoint depth (rounded)),layer_mid,value,--,core
+Depth sed [m] (Sample midpoint depth of Baco...),layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m] (Sample midpoint depth of Baco...),layer_mid,unit,m,core
+Depth sed [m] (Sample midpoint depth of Baco...),layer_mid,value,--,core
+Depth sed [m] (Sample midpoint depth of OxCa...),layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m] (Sample midpoint depth of OxCa...),layer_mid,unit,m,core
+Depth sed [m] (Sample midpoint depth of OxCa...),layer_mid,value,--,core
+Depth sed [m] (Sample midpoint depth),layer_mid,description,"DEPTH, sediment/rock [m] (Depth sed)",core
+Depth sed [m] (Sample midpoint depth),layer_mid,unit,m,core
+Depth sed [m] (Sample midpoint depth),layer_mid,value,--,core
+Depth top [m],layer_top,description,"Depth, top/min [m] (Depth top)",core
+Depth top [m],layer_top,unit,m,core
+Depth top [m],layer_top,value,--,core
+ELEVATION,elevation,description,elevation,study
+ELEVATION,elevation,unit,m,study
+ELEVATION,elevation,value,--,study
+ELEVATION.END,elevation_end,description,End of elevation transect,study
+ELEVATION.END,elevation_end,unit,m,study
+ELEVATION.END,elevation_end,value,--,study
+ELEVATION.START,elevation_start,description,Start of elevation transect,study
+ELEVATION.START,elevation_start,unit,m,study
+ELEVATION.START,elevation_start,value,--,study
+F14C,modern_carbon_activity,description,Fraction modern carbon (F14C),core
+F14C,modern_carbon_activity,unit,modern carbon fraction,core
+F14C,modern_carbon_activity,value,--,core
+LATITUDE,latitude,description,Latitude,study
+LATITUDE,latitude,unit,decimal degree,study
+LATITUDE,latitude,value,--,study
+LOCATION,region,description,Adminstrative region,study
+LOCATION,region,value,--,study
+LOI [%],loss_on_ignition,description,Loss on ignition [%] (LOI),core
+LOI [%],loss_on_ignition,unit,mass percent,core
+LOI [%],loss_on_ignition,value,--,core
+LOI [%] (weight-%),loss_on_ignition,description,Loss on ignition [%] (LOI),core
+LOI [%] (weight-%),loss_on_ignition,unit,mass percent,core
+LOI [%] (weight-%),loss_on_ignition,value,--,core
+LONGITUDE,longitude,description,Longitude,study
+LONGITUDE,longitude,unit,decimal degree,study
+LONGITUDE,longitude,value,--,study
+Lab label,lab_label,description,Laboratory code/label (Lab label),core
+Lab label,lab_label,id,--,core
+Lab label (Radiocarbon lab code),lab_label,description,Laboratory code/label (Lab label),core
+Lab label (Radiocarbon lab code),lab_label,id,--,core
+METHOD.DEVICE,sample_devise,description,Sampling devise,study
+METHOD.DEVICE,sample_devise,value,--,study
+Method comm,age,description,Method comment (Method comm),core
+Method comm,age,method,--,core
+Method comm (Dating method),age,description,Method comment (Method comm),core
+Method comm (Dating method),age,method,--,core
+Method comm (Further information),age,description,Method comment (Method comm),core
+Method comm (Further information),age,method,--,core
+OM [%],organic_matter,description,Organic matter [%] (OM),core
+OM [%],organic_matter,unit,mass percent,core
+OM [%],organic_matter,value,--,core
+OM dens [g/cm**3],organic_matter,description,"Density, organic matter [g/cm  3] (OM dens)",core
+OM dens [g/cm**3],organic_matter,unit,g cm-3,core
+OM dens [g/cm**3],organic_matter,value,--,core
+PCAR [g/m**2/a],peat_accumulation_rate,description,Peat carbon accumulation rate per year [g/m  2/a] (PCAR),core
+PCAR [g/m**2/a],peat_accumulation_rate,unit,g m-2 yr-1,core
+PCAR [g/m**2/a],peat_accumulation_rate,value,--,core
+PI_info,Principal_Investigator_information,description,PI details including email address,study
+PI_info,Principal_Investigator_information,value,--,study
+Peat type,peat_description,description,Peat type (Peat type),core
+Peat type,peat_description,note,--,core
+Peat type (Loisel et al. 2014),peat_description,description,Peat type (Peat type),core
+Peat type (Loisel et al. 2014),peat_description,note,--,core
+Penetration,core_length,description,core length,study
+Penetration,core_length,unit,cm,study
+Penetration,core_length,value,--,study
+Recovery,core_length,description,core length,study
+Recovery,core_length,unit,cm,study
+Recovery,core_length,value,--,study
+SR [cm/a],sedimentation_rate,description,Sedimentation rate per year [cm/a] (SR),core
+SR [cm/a],sedimentation_rate,unit,cm yr-1,core
+SR [cm/a],sedimentation_rate,value,--,core
+Samp thick [cm],layer_thickness,description,Sample thickness [cm] (Samp thick),core
+Samp thick [cm],layer_thickness,unit,cm,core
+Samp thick [cm],layer_thickness,value,--,core
+Samp vol [cm**3],volume,description,Sample volume [cm  3] (Samp vol),core
+Samp vol [cm**3],volume,unit,cm3,core
+Samp vol [cm**3],volume,value,--,core
+Sample label,lab_label,description,Sample code/label (Sample label),core
+Sample label,lab_label,id,--,core
+TC [%],total_carbon,description,"Carbon, total [%] (TC)",core
+TC [%],total_carbon,unit,mass percent,core
+TC [%],total_carbon,value,--,core
+TIC [%],inorganic_carbon,description,"Carbon, inorganic, total [%] (TIC)",core
+TIC [%],inorganic_carbon,unit,mass percent,core
+TIC [%],inorganic_carbon,value,--,core
+TN [%],total_nitrogen,description,"Nitrogen, total [%] (TN)",core
+TN [%],total_nitrogen,unit,mass percent,core
+TN [%],total_nitrogen,value,--,core
+TOC [%],organic_carbon,description,"Carbon, organic, total [%] (TOC)",core
+TOC [%],organic_carbon,unit,mass percent,core
+TOC [%],organic_carbon,value,--,core
+Vol [ml],volume,description,Volume [ml] (Vol),core
+Vol [ml],volume,unit,mL,core
+Vol [ml],volume,value,--,core
+Water wm [%],water_content,description,"Water content, wet mass [%] (Water wm)",core
+Water wm [%],water_content,unit,mass percent,core
+Water wm [%],water_content,value,--,core
+abstract,abstract,description,Abstract,study
+abstract,abstract,value,--,study
+citation,citation,description,Citation,study
+citation,citation,value,--,study
+citation.1,citation,description,Citation,study
+citation.1,citation,value,--,study
+comment,core_comment,description,Dataset Comment,study
+comment,core_comment,note,--,study
+core_name,core_name,description,Core name,study
+core_name,core_name,value,--,study
+coverage,bounded_coverage,description,Bounded coverage,study
+coverage,bounded_coverage,value,--,study
+doi,data_doi,description,data package DOI,study
+doi,data_doi,value,--,study
+doi,doi,id,--,core
+further_details,futher_citations,description,Citations,study
+further_details,futher_citations,value,--,study
+keywords,keywords,description,Keywords,study
+keywords,keywords,value,--,study
+license,data_license,description,Data license,study
+license,data_license,value,--,study
+parent_doi,data_doi,description,data package DOI,study
+parent_doi,data_doi,value,--,study
+path,data_local_filepath,description,download path,study
+path,data_local_filepath,value,--,study
+projects,project,description,Related project,study
+projects,project,value,--,study
+related_to,related_citation,description,Related citations,study
+related_to,related_citation,value,--,study
+size,observation_size,description,Observation size,study
+size,observation_size,unit,data point count,study
+size,observation_size,value,--,study
+status,cutation_level,description,Curation level,study
+status,cutation_level,value,--,study
+url,download_url,description,download url,study
+url,download_url,value,--,study
