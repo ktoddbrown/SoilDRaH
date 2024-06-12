@@ -2,15 +2,14 @@
 
 Soil Data Rescue and Harmonization:
 
-``` mermaid
-sequenceDiagram;
-  participant annotation;
-  participant read;
-  participant shoestring;
-  participant curate;
-  annotation->>read;
-  read->>shoestring;
-  shoestring->>curate;
+```mermaid
+flowchart LR
+    A[data] & B[annotation]
+    -->id1([read])
+    -->id2([pivot])
+    -->C[data+metadata]
+    -->id3([pivot])
+    -->id4{{curation}}
 ```
 
 Helper scripts
