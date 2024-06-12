@@ -1,0 +1,153 @@
+---
+title: "ISCN3 report"
+date: "Summer 2024"
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
+---
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) #make tables scrollable
+library(tidyverse)
+
+source("../../R/readISCN3.R", local = knitr::knit_global())
+
+#locate the data locally
+dataDir <- '../temp/ISCN3'
+dataAnnotations <- '../../data/ISCN3Annotations.csv'
+```
+
+```{r, echo=FALSE}
+#Change this file to run locally for you
+dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/ISCN3'
+```
+
+```{r}
+iscn.ls <- readISCN3(dataDir = dataDir,
+                     annotationFilename = dataAnnotations,
+                     format = 'long')
+```
+# Data tables
+
+## Table: `citation`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'citation') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `citation`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'citation') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `dataset`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'dataset') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `profile`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'profile') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `layer`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'layer') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Review read scripting decisions
+
+id sections
+joins and merges of data tables
+
+# Data processing
+
+## SOC
+
+```{r}
+
+# keep layer depths, layer-soc, organic carbon fraction, bulk density, and coarse fraction
+# keep latitude and longitude
+
+column_selection <- iscn.ls$annotation %>%
+  filter((of_variable %in% c('latitude', 'longitude',
+                            'state', 'country') & table_id == 'layer') |
+         (table_id == 'layer' & 
+         (of_variable %in% c('layer_observation_time',
+                            'upper_depth_bound', 'lower_depth_bound',
+                            'organic_carbon', 'coarse_fragment') |
+  str_detect(of_variable, 'bulk_density')))) %>%
+  filter(with_entry == '--') %>%
+  select(ends_with('_id'), of_variable, is_type)
+
+soc.ls <- iscn.ls$long %>% #nrow 17 967 513
+  # remove nrcs data
+  filter(!str_detect(dataset_id, 'NRCS'),
+         !str_detect(soc_id, 'ISCN SOC stock'),
+         !str_detect(soc_id, 'AK DSC Project SOC')) %>% #nrow 1 043 250
+  right_join(column_selection, 
+             relationship = "many-to-many",
+  by = join_by(column_id, table_id))  #nrow 454 994
+
+wide_soc <- soc.ls %>%
+  select(dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type), 
+              values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
+  filter(!is.na(bulk_density_sample_value) |
+           !is.na(bulk_density_other_value) |
+           !is.na(bulk_density_total_value) |
+           !is.na(bulk_density_whole_value) ) %>% #nrow 20 570
+  filter(!is.na(organic_carbon_value)) %>% #nrow 8 704
+  mutate(across(c(longitude_value, latitude_value,
+                  layer_observation_time_value,
+                  upper_depth_bound_value, lower_depth_bound_value,
+                  organic_carbon_value, coarse_fragment_value,
+                  bulk_density_sample_value,
+                  bulk_density_other_value,
+                  bulk_density_total_value,
+                  bulk_density_whole_value), as.numeric)) %>%
+  mutate(layer_observation_time_value = as_date(layer_observation_time_value, origin = ymd('1900-01-01')))
+  
+```
+
+
