@@ -51,3 +51,6 @@ docs
 
 # temp folder where we stash a lot of data
 temp/*
+
+.DS_Store
+*.Rproj
