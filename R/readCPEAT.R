@@ -66,86 +66,49 @@ readCPEAT <- function(dataDir,
                             }) 
   
   #### Return the original data without transformation
-  ## TODO- load in annotations and return with the rest of the data
-  ### TODO - replace the arguments for the format with original and long instead of byCore and byDatatype
   
   if(format == 'original'){
-    return(allData.ls)
+    return(list(orginal = allData.ls, 
+                annotations = read_csv(file = annotationFilename, 
+                                       col_types = cols(.default = col_character()))))
   }
-  
-  #TODO Go through allData.ls only once and produce a single shoestring table
-  #Pull the core information by accessing the data item in the lists
-  allCores.df <- plyr::ldply(allData.ls, .fun = function(xx) {
-    #print(xx$doi)
+
     
-    # renaming the columns (indexing using the column numbers!)
-    if(xx$doi %in% c("10.1594/PANGAEA.934281")){
-      #names(xx$data)[names(xx$data) == "Age unc [±] (Age AD, calculated, 1 sigma)"] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)' # refer to the actual variable name instead of the number to index
-    } # the issue we are running into if we replace the position index for the column with the actual variable name, these column names are duplicates in the original data! 
+#############################
+###Shoestring all the data
+
+  long.df <- plyr::ldply(CPEAT.original, .id = 'doi',
+                             .fun = function(xx, verbose = FALSE) {
     
-    # renaming the columns based on specific DOIs
-    if(xx$doi %in% c("10.1594/PANGAEA.934343")){
-      names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-    }
-    
-    if(xx$doi %in% c("10.1594/PANGAEA.941094")){
-      names(xx$data)[10] <- 'Age [a AD/CE] alt.'
-    }
-    
-    if(xx$doi %in% c("10.1594/PANGAEA.929068")){
-      names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') # unknown
-    }
-    
-    if(identical(names(xx$data)[c(2:4, 6:8)], 
-                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
-       xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
-      #The method note (OxCal & Bacon) were dropped from the Median Age, so we are adding them back in
-      names(xx$data)[c(2:4, 6:8)] <- c(
-        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') 
-    }
-    
-    if(identical(names(xx$data)[2:7], 
-                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
-       xx$doi %in% c("10.1594/PANGAEA.930030")){
-      
-      names(xx$data)[2:7] <- c(
-        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
-    }
-    
-    # Check for duplicate column names
+    if(verbose) print(paste('Processing - ', xx$doi))
+                               
+    ###################################
+    #### Process layer data
+                               
     if(length(names(xx$data)) > length(unique(names(xx$data)))){
-      print(names(xx$data)) ## todo - consider throwing a warning that the names are not unique
-      warning("Duplicate column names detected")
+      #warning(names(xx$data))
+      warning(paste(xx$doi, "- Duplicate column names detected"))
+      #TODO make this more elegant
+      #right now pivoting column names has to be unique so adding a counter to the end
+      names(xx$data) <- paste(names(xx$data), 1:length(names(xx$data)))
     }
+                               
+    colume_number <- tibble(column_name = names(xx$data),
+                            column_number = 1:length(names(xx$data)))
     
-    # Convert all columns to character type and return the modified data
-    return(dplyr::mutate(.data = xx$data, across(.cols = everything(),  as.character)))
-  }) 
-  
-  #TODO can we add the PI informtion here instead of at the bottom?
-  #Pull the study information
-  allStudy.df <- plyr::ldply(allData.ls, .fun = function(xx) {
+    layerData <- xx$data %>%
+      mutate(across(.cols = everything(), as.character)) %>%
+      mutate(row_number = 1:n()) %>%
+      pivot_longer(cols = -row_number, names_to = 'column_name',
+                   values_to = 'with_entry',
+                   values_drop_na = TRUE) %>%
+      left_join(colume_number, by = join_by(column_name)) %>%
+      mutate(table_name = 'data')
+    
+    #####################################
+    ### Process primary study information
+    ### This information is stored in the first level list
+    
     #list out all the possible names for the study info, be sure to update
     #...this list manually if the warning is thrown.
     primaryNames <- intersect(names(xx), c('parent_doi', 'doi', 'citation', 
@@ -157,8 +120,9 @@ readCPEAT <- function(dataDir,
                     setdiff(names(xx), c(primaryNames, 'metadata', 'data'))))
     }
     
-    #access the study information in the primary list
-    ans.ls <- xx[primaryNames]
+    ##############
+    ###Meta data
+    ###This information is stored under a list named 'metadata'
     
     #deal with the information in the metadata, again we name each possible
     #...list item here and if there are new names this needs to be updated.
@@ -167,20 +131,23 @@ readCPEAT <- function(dataDir,
                                                  "abstract", "keywords",
                                                  "status",
                                                  "license", "size", "comment"))
+    
     if(any( ! (names(xx$metadata) %in% c(metaNames, 'events', 'parameters')))){
       warning(paste('possible missing informatin at metadata level for', xx$doi))
     }
     
-    #append the metadata items to the items from the primary list
-    ans.ls <- c(ans.ls, xx$metadata[metaNames])
+    #############
+    ###Events
+    ###This information is under the list 'metadata$events'
     
     #Pull in the study information from the 'events' item in the list
     #...again there should be no items that are not matching the manual array here
-    eventsNames <- intersect(names(xx$metadata$events), c("LATITUDE", "LONGITUDE",
-                                                          "ELEVATION", "ELEVATION START", "ELEVATION END",
-                                                          "Penetration", "Recovery",
-                                                          "LOCATION", "METHOD/DEVICE", 
-                                                          "COMMENT"))
+    eventsNames <- intersect(names(xx$metadata$events), 
+                             c("LATITUDE", "LONGITUDE",
+                               "ELEVATION", "ELEVATION START", "ELEVATION END",
+                               "Penetration", "Recovery",
+                               "LOCATION", "METHOD/DEVICE", 
+                               "COMMENT"))
     
     #Take out the first item of the list which is actually the core name itself.
     if(any( ! (names(xx$metadata$events)[-1] %in%  
@@ -191,171 +158,52 @@ readCPEAT <- function(dataDir,
       warning(paste('possible missing informatin at metadata-events level for', xx$doi))
     }
     
+    
     #The core name is a special case where the information is in the name and not
     #...in the list values. Deal with that and append the events information.
-    ans.ls <- c(list(core_name = names(xx$metadata$events)[1]),
-                ans.ls, 
-                xx$metadata$events[eventsNames])
+    studyData <- as.data.frame(c(xx[primaryNames], 
+                                 xx$metadata[metaNames],
+                                 list(core_name = names(xx$metadata$events)[1]),
+                                 xx$metadata$events[eventsNames])) %>%
+      pivot_longer(cols = everything(), 
+                   names_to = 'column_name',
+                   values_to = 'with_entry')
     
-    # change everything to a data frame to make it easier to read
-    return(as.data.frame(ans.ls, stringsAsFactors = FALSE))
-  })
-  
-  
-  allParameters.df <-  plyr::ldply(allData.ls, .fun = function(xx) {
     
-    ##Copy-paste (sigh... yes I know) from allCores.df construction
-    if(xx$doi %in% c("10.1594/PANGAEA.934281")){
-      names(xx$data)[10] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
+    ####### 
+    ###Process parameter information
+    
+    if(xx$doi == "10.1594/PANGAEA.934274" &
+       length(xx$metadata$parameters) > nrow(colume_number)){
+      #A comment on the data age material got split between two column entries here
+      #...combine them into the same entry
+      xx$metadata$parameters[[5]] <- c(xx$metadata$parameters[[5]],
+                                           xx$metadata$parameters[[6]])
+      xx$metadata$parameters[6] <- NULL
     }
     
-    if(xx$doi %in% c("10.1594/PANGAEA.934343")){
-      names(xx$data)[9] <- 'Age unc [±] (Age, tephra-chronostratigraphy, calculated, 1 sigma)'
-    }
+    colume_number$description <- unlist(lapply(xx$metadata$parameters, 
+                                               function(yy){
+      return(paste(as.character(yy), collapse = ' '))
+                                                 }))
     
-    if(xx$doi %in% c("10.1594/PANGAEA.941094")){
-      names(xx$data)[10] <- 'Age [a AD/CE] alt.'
-    }
+    layerData <- colume_number %>%
+      pivot_longer(cols = description, 
+                   names_to = 'is_type', 
+                   values_to = 'with_entry') %>%
+      mutate(table_name = 'data') %>%
+      bind_rows(layerData) 
     
-    if(xx$doi %in% c("10.1594/PANGAEA.929068")){
-      names(xx$data)[5:7] <- paste(names(xx$data)[5:7], 'alt.') #true replicates??; they are not true replicates in the data but have same column names- hence adding alt. to the column name to distinguish!
-    }
-    
-    if(identical(names(xx$data)[c(2:4, 6:8)], 
-                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
-       xx$doi %in% c("10.1594/PANGAEA.929655", "10.1594/PANGAEA.930133")){
-      names(xx$data)[c(2:4, 6:8)] <- c(
-        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here; i think there are no methods here to add to this dataset!
-    }
-    
-    if(identical(names(xx$data)[2:7], 
-                 c("Cal age [ka BP] (Median Age, Age, 14C calibrat...)", 
-                   "Cal age max [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, OxCal 4....)",
-                   "Cal age [ka BP] (Median Age, Age, 14C calibrat...)",
-                   "Cal age max [ka BP] (Age, 14C calibrated, Bacon 2....)",
-                   "Cal age min [ka BP] (Age, 14C calibrated, Bacon 2....)")) |
-       xx$doi %in% c("10.1594/PANGAEA.930030")){
-      
-      names(xx$data)[2:7] <- c(
-        'Cal age [ka BP] (Median Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, OxCal 4.2.4)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, OxCal 4.2.4)',
-        'Cal age [ka BP] (Median Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age max [ka BP] (Age, 14C calibrated, Bacon 2.2)', 
-        'Cal age min [ka BP] (Age, 14C calibrated, Bacon 2.2)') #add the methods that are dropped here
-    }
-    
-    # extract column headers and descriptions
-    colHeader <- names(xx$data)
-    colDescript <- unlist(lapply(xx$metadata$parameters, paste, collapse = "!"))
-    
-    if(xx$doi == "10.1594/PANGAEA.934274"){
-      colDescript <- c(colDescript[1:4], 
-                       paste(colDescript[5], ';', colDescript[6]), # concatenating the 5th and 6th element into a single string
-                       colDescript[7:9])
-    }
-    
-    #pull the parameter descriptions in and append them to the headers in the data
-    ParametersGeo <- data.frame(header = colHeader, 
-                                description = colDescript, 
-                                stringsAsFactors = FALSE) %>%
-      #add in a column index
-      dplyr::mutate(column_index = 1:ncol(xx$data))
-    
-    return(ParametersGeo)
-  })
+    # Convert all columns to character type and return the modified data
+    return(bind_rows(studyData, layerData))
+  }) 
   
-  # include a read function for the data annotations associated with CPEAT
-  #... check that there isn't new columns
-  
-  #reset the orginal cache directory
-  pangaear::pg_cache$cache_path_set(full_path = oldCache)
-  
-  #TODO: This should move to a QA/QC script
-  allStudy.df <- allStudy.df %>%
-    mutate(across(c(ELEVATION, `ELEVATION.START`, `ELEVATION.END`,
-                    Recovery, Penetration,
-                    size), ~stringr::str_extract(.x, '\\d+')))
-  
-  allParameters.df <- allParameters.df %>%
-    mutate(core_id = doi)
-  
-  #TODO Remove and put into the annotations file.
-  #TODO add the PI information to the study tables
-  
-  # Load the Parameters CSV file
-  ParametersFile <- 'temp/Param_annotations.csv'
-  Param_annotations <- read.csv(ParametersFile, stringsAsFactors = FALSE)
-  
-  # extracting just the PI (principle investogator info) here to append it to the study table
-  Param_extracted <- Param_annotations %>% 
-    mutate(PI_info = if_else(
-      str_detect(description, "PI[^!]*"),
-      str_extract(description, "PI[^!]*"),
-      str_extract(description, "PI.*"))) %>% 
-    select(doi, PI_info) %>% 
-    unique()
-  
-  # out of the above extracted parameters table with just doi and PI_info; adding two additional columns with method and comment info, if any!
-  selectParam_extracted <- Param_extracted %>% 
-    mutate(METHOD = str_extract(PI_info, "METHOD/DEVICE:.*?(?=COMMENT|$)"),
-           COMMENT = str_extract(PI_info, "COMMENT:.*")) %>%
-    mutate(METHOD = str_replace(METHOD, "METHOD/DEVICE: ", ""),
-           COMMENT = str_replace(COMMENT, "COMMENT: ", ""),
-           PI_info = str_remove(PI_info, "METHOD/DEVICE:.*"),
-           PI_info = str_remove(PI_info, "COMMENT:.*")) %>%
-    mutate(PI_info = str_trim(PI_info, side = "both")) %>% 
-    select(doi, PI_info) %>% 
-    unique()
-  
-  # adding this to the original study table; the PI_info has the email address (contact information) of the PI 
-  add_PI_to_study <- allStudy.df %>% 
-    full_join(selectParam_extracted, by = join_by(doi)) %>% 
-    unique()
-  
-  # Read in annotations
-  if(verbose) message('Loading annotations.')
-  CPEATannotations.df <- readr::read_csv(annotationFilename,
-                                    col_type = readr::cols(
-                                      .default = readr::col_character())) %>% 
-    select(table_id, column_id, of_variable, of_type, with_entry)
-  
-  if (format == 'long') {
-    allData_test <- add_PI_to_study %>%
-      dplyr::full_join(allCores.df, by = dplyr::join_by(doi)) %>% 
-      dplyr::group_by(doi) %>%
-      dplyr::mutate(row_number = row_number()) %>% 
-      dplyr::ungroup() %>%
-      tidyr::pivot_longer(cols = -row_number, names_to = 'column_id', values_to = 'with_entry', values_drop_na = TRUE) %>% 
-      full_join(CPEATannotations.df, 
-                by = join_by(column_id),
-                suffix = c('.data', ''),
-                relationship = "many-to-many") %>% 
-      mutate(
-        with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
-                                    with_entry.data, with_entry)) %>%
-      select(-with_entry.data) %>% 
-      select(table_id, column_id, of_variable, of_type, with_entry, row_number)
-    
-    #return(allData_test)
-    return(list(annotations = CPEATannotations.df, 
-                long = allData_test
-                # core = allCores.df,
-                # study = allStudy.df, 
-                # parameters = allParameters.df
+
+    return(list(long = long.df, 
+                annotations = read_csv(file = annotationFilename, 
+                                       col_types = cols(.default = col_character()))
                 ))
-  }   
+    
   
 }
 
