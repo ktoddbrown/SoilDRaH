@@ -28,7 +28,7 @@ readCPEAT <- function(dataDir,
     dplyr::mutate(fullcitation = paste0(citation, ". PANGAEA, https://doi.org/", doi)) # adding a full citation column
   
   if(nrow(pages.df) != 876){
-    warning("unexpected number of CPEAT core datasets found; annotations might be incomplete.") # a warning would let you run the rest of the code!
+    warning("unexpected number of CPEAT core datasets found; code could behave unexpectedly. Please report to the repository.") # a warning would let you run the rest of the code!
   }
   
   #### Download CPEAT datasets
@@ -50,7 +50,7 @@ readCPEAT <- function(dataDir,
   if(verbose) message('Loading the CPEAT datasets, this takes a while...')
   
   #Pull into a list, all the data from the files the specified dois in the search results 
-  allData.ls <- plyr::dlply(pages.df, #search results
+  CPEAT.original <- plyr::dlply(pages.df, #search results
                             c("doi"), #grouping on unique identifer
                             .fun = function(xx) { #defining our fetch function as a wrapper
                               
@@ -68,7 +68,7 @@ readCPEAT <- function(dataDir,
   #### Return the original data without transformation
   
   if(format == 'original'){
-    return(list(orginal = allData.ls, 
+    return(list(orginal = CPEAT.original, 
                 annotations = read_csv(file = annotationFilename, 
                                        col_types = cols(.default = col_character()))))
   }
@@ -87,8 +87,9 @@ readCPEAT <- function(dataDir,
                                
     if(length(names(xx$data)) > length(unique(names(xx$data)))){
       #warning(names(xx$data))
-      warning(paste(xx$doi, "- Duplicate column names detected"))
-      #TODO make this more elegant
+      ##This is a know issue. Surpressing warning.
+      #warning(paste(xx$doi, "- Duplicate column names detected"))
+      #TODO make this more elegant, we may need to read in and parse the txt files instead of relying on pangear
       #right now pivoting column names has to be unique so adding a counter to the end
       names(xx$data) <- paste(names(xx$data), 1:length(names(xx$data)))
     }
@@ -198,6 +199,10 @@ readCPEAT <- function(dataDir,
     return(bind_rows(studyData, layerData))
   }) 
   
+  #Set the table and column IDs to match the annotations
+  long.df <- long.df %>%
+    mutate(column_id = trimws(str_remove(column_name, pattern = '(\\(|\\[).+')),
+           table_id = if_else(is.na(table_name), 'study', 'core'))
 
     return(list(long = long.df, 
                 annotations = read_csv(file = annotationFilename, 
