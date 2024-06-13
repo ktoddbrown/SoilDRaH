@@ -20,6 +20,7 @@ library(stringr) # extract text from descriptions
 library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(tidyverse)
+library(maps)
 
 source("../../R/readISCN3.R", local = knitr::knit_global())
 
@@ -146,8 +147,70 @@ wide_soc <- soc.ls %>%
                   bulk_density_other_value,
                   bulk_density_total_value,
                   bulk_density_whole_value), as.numeric)) %>%
-  mutate(layer_observation_time_value = as_date(layer_observation_time_value, origin = ymd('1900-01-01')))
+  mutate(layer_observation_time_date = 
+           if_else(layer_observation_time_value < 2000,
+                   ymd(paste0(as.character(layer_observation_time_value), '-01-01')), 
+                   as_date(layer_observation_time_value, origin = ymd('1900-01-01'))))
   
+```
+
+
+```{r}
+knitr::kable(wide_soc %>%
+               slice_head(n=100) ) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Numeric histograms
+
+```{r}
+
+plot.df <- wide_soc %>%
+  pivot_longer(cols = where(is.numeric), 
+               names_to = 'variable', values_to = 'value',
+               values_drop_na = TRUE)
+
+ggplot(plot.df) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~variable, scales = 'free')
+
+ggplot(plot.df %>%
+         select(dataset_id, profile_id, layer_observation_time_date) %>%
+         unique()) +
+  geom_histogram(aes(x=layer_observation_time_date))
+```
+
+## Bulk density vs organic carbon
+
+```{r}
+plot.df <- wide_soc %>%
+  pivot_longer(cols = matches('bulk_density.*_value'), 
+               names_to = 'bulk_density_type', values_to = 'bulk_density',
+               values_drop_na = TRUE)
+
+ggplot(plot.df) +
+  geom_point(aes(x=bulk_density, y = organic_carbon_value)) +
+  facet_wrap(~bulk_density_type, scales = 'free')
+```
+
+## Gelocation
+
+```{r}
+
+world_map <- map_data("world")
+
+plot.df <- wide_soc %>%
+  select(dataset_id, profile_id, latitude_value, longitude_value) %>%
+  unique()
+
+ggplot(data=world_map) + 
+   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
+  geom_point(data = plot.df, 
+             aes(x=longitude_value, y = latitude_value),
+             color = 'blue', alpha = .1) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
 ```
 
 
