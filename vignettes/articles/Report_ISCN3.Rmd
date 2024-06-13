@@ -8,6 +8,17 @@ output:
     code_folding: show
 ---
 
+The purpose of this document is to summarize the International Soil Carbon Network Database and demonstrate how to use the `readISCN3` function.
+
+> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/.
+
+
+*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
+
+Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+
+# Set up
+
 ```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
 
 library(readr) # read in the csv tables
@@ -29,9 +40,11 @@ dataDir <- '../temp/ISCN3'
 dataAnnotations <- '../../data/ISCN3Annotations.csv'
 ```
 
+
 ```{r, echo=FALSE}
 #Change this file to run locally for you
 dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/ISCN3'
+
 ```
 
 ```{r}
@@ -39,18 +52,11 @@ iscn.ls <- readISCN3(dataDir = dataDir,
                      annotationFilename = dataAnnotations,
                      format = 'long')
 ```
+
 # Data tables
 
-## Table: `citation`
-
-```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'citation') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
+ISCN3 contains four primary data tables: `citation`, `dataset`, `profile`, and `layer`.
+Below are the column descriptions from the annotations.
 
 ## Table: `citation`
 
@@ -96,20 +102,33 @@ knitr::kable(iscn.ls$annotation %>%
   scroll_box(width = "100%", height = "300px")
 ```
 
-# Review read scripting decisions
 
-id sections
-joins and merges of data tables
+# Processing the ISCN3 database: `readISCN3`
+
+Calling the `readISCN3` function is shown below. 
+
+```{r eval=FALSE}
+iscn.ls <- readISCN3(dataDir = dataDir,
+                     annotationFilename = dataAnnotations,
+                     format = 'long')
+```
+
+The function itself is echoed here.
+
+```{r, file= '../../R/readISCN3.R'}
+```
 
 # Data processing
 
-## SOC
+Using the read function let's look at the soil organic carbon related functions for datsets that are not in the NRCS.
+
+## Soil organic carbon
+
+Looking only at geolocation, depth, and soil orgnaic carbon stocks.
 
 ```{r}
 
-# keep layer depths, layer-soc, organic carbon fraction, bulk density, and coarse fraction
-# keep latitude and longitude
-
+#Use the annotations to set up the column selection
 column_selection <- iscn.ls$annotation %>%
   filter((of_variable %in% c('latitude', 'longitude',
                             'state', 'country') & table_id == 'layer') |
@@ -121,24 +140,29 @@ column_selection <- iscn.ls$annotation %>%
   filter(with_entry == '--') %>%
   select(ends_with('_id'), of_variable, is_type)
 
+# Subset the ISCN database
 soc.ls <- iscn.ls$long %>% #nrow 17 967 513
   # remove nrcs data
   filter(!str_detect(dataset_id, 'NRCS'),
          !str_detect(soc_id, 'ISCN SOC stock'),
          !str_detect(soc_id, 'AK DSC Project SOC')) %>% #nrow 1 043 250
+  # use the column selection to subset the database
   right_join(column_selection, 
              relationship = "many-to-many",
   by = join_by(column_id, table_id))  #nrow 454 994
 
+#spread out the columns
 wide_soc <- soc.ls %>%
   select(dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) %>%
   pivot_wider(names_from = c(of_variable, is_type), 
               values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
+  #remove observations that don't have associated bulk density
   filter(!is.na(bulk_density_sample_value) |
            !is.na(bulk_density_other_value) |
            !is.na(bulk_density_total_value) |
            !is.na(bulk_density_whole_value) ) %>% #nrow 20 570
   filter(!is.na(organic_carbon_value)) %>% #nrow 8 704
+  #Convert everything to numeric values
   mutate(across(c(longitude_value, latitude_value,
                   layer_observation_time_value,
                   upper_depth_bound_value, lower_depth_bound_value,
@@ -147,6 +171,7 @@ wide_soc <- soc.ls %>%
                   bulk_density_other_value,
                   bulk_density_total_value,
                   bulk_density_whole_value), as.numeric)) %>%
+  #convert the date from Excel format to a lubridate object
   mutate(layer_observation_time_date = 
            if_else(layer_observation_time_value < 2000,
                    ymd(paste0(as.character(layer_observation_time_value), '-01-01')), 
@@ -164,7 +189,7 @@ knitr::kable(wide_soc %>%
 
 ## Numeric histograms
 
-```{r}
+```{r fig.width=9}
 
 plot.df <- wide_soc %>%
   pivot_longer(cols = where(is.numeric), 
@@ -212,5 +237,4 @@ ggplot(data=world_map) +
   theme(axis.title = element_blank(),
         axis.text = element_blank())
 ```
-
 
