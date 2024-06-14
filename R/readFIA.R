@@ -46,9 +46,10 @@ readFIA <- function(dataDir,
   
   # Read in annotations
   if(verbose) message('Loading annotations.')
-  annotations.df <- readr::read_csv(annotationFilename,
+  annotations.df <- readr::read_delim(annotationFilename,
                                         col_type = readr::cols(
-                                          .default = readr::col_character()))
+                                          .default = readr::col_character()),
+                                      delim = ';')
   
   # Get list of annotated table names
   tables <- unique(annotations.df$table_id)

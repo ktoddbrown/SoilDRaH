@@ -10,6 +10,8 @@ checkAnnotations <- function(filename){
   data_ref <- '--' #string for reference to annotated data to appear in the `with_entry` column
   
   valid_is_type <- c('identifier',
+                     'description',
+                     'foreign_key',
                      'value',
                      'unit',
                      'method',
@@ -44,7 +46,7 @@ checkAnnotations <- function(filename){
     }))
   
   #check that only table-columns have the '--'
-  if(!(any(is.na(check_self_ref$column_id)))){
+  if((any(is.na(check_self_ref$column_id)))){
     stop('no reference to data table premitted without specifying the column_id')
   }
   
