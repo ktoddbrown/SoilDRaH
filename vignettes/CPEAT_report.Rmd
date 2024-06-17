@@ -12,6 +12,11 @@ Here you will find links to documentation from the data provider, links to where
 
 The version of the Carbon in Peat on EArth through Time (C-PEAT)Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
 
+> **C-PEAT Database**
+Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
+
+Taken from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
+
 The annotations table draws heavily from the parameters list of the original data and also from the point of contact for C-PEAT collection of datasets (Dr. Julie Loisel). 
 
 # Data processing
