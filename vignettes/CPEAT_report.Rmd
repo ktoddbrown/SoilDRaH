@@ -29,7 +29,7 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(pangaear)
 
-source("../R/readCPEAT.R", local = knitr::knit_global())
+source("./R/readCPEAT.R", local = knitr::knit_global())
 
 #locate the data locally
 dataDir <- './temp'
@@ -51,7 +51,8 @@ CPEAT.ls <- readCPEAT(dataDir,
 
 
 CPEAT.ls$long %>%
-  slice_head(n=100) %>%
+  select(doi, column_id, table_id, with_entry, row_number) %>% 
+  slice_head(n=650) %>%
   knitr::kable() %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -59,7 +60,7 @@ CPEAT.ls$long %>%
 
 ```{r, eval=FALSE}
 # TODO: Check data integrity of the long format
-# Are all the rows identifiable? Can you match columns to their orginal rows and reconstruct the orginal tables?
+# Are all the rows identifiable? Can you match columns to their original rows and reconstruct the original tables?
 ```
 
 
@@ -86,7 +87,7 @@ knitr::kable(CPEAT.ls$annotations %>%
 knitr::kable(CPEAT.ls$annotations %>%
                filter(of_type %in% c('description', 'unit'),
                       table_id == 'core') %>%
-               select(column_id, of_variable, description = with_entry)) %>%
+               select(column_id, of_variable, of_type, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
 
@@ -99,38 +100,58 @@ knitr::kable(CPEAT.ls$annotations %>%
 # Subseting for soil carbon
 
 There is a lot of data here but not all of it is of interest for all purposes.
-In this example we are interested in layer-level soil carbon related measurements, there geolocation.
+In this example we are interested in layer-level soil carbon related measurements and the geolocation.
 Note that we are NOT checking any of the quality control flags here which you would want to do if using this for research purposes.
 
 ```{r}
 # this function reads much better!
-CPEAT_soc_cores <- CPEAT.ls$core %>% 
-  select(doi, `Depth sed [m]`, `Depth top [m]`, `Depth bot [m]`, 
-         `Depth sed [m] (Sample midpoint depth)`, 
-         `Depth sed [m] (Sample midpoint depth (rounded))`, 
-         `Depth sed [m] (Sample midpoint depth of OxCa...)`, 
-         `Depth sed [m] (Sample midpoint depth of Baco...)`,
-         `Depth sed [m] (LOI sample depth)`,
-         `Samp thick [cm]`, `DBD [g/cm**3]`, `OM [%]`, `OM dens [g/cm**3]`, `Corg dens [g/cm**3]`,
-         `TC [%]`, `TOC [%]`, `C [%]`, `LOI [%]`, `LOI [%] (weight-%)`, `TIC [%]`) %>% 
-    dplyr::full_join(CPEAT.ls$study,
-                     by = dplyr::join_by(doi)) %>% 
-    dplyr::group_by(doi) %>%
-    dplyr::mutate(row_number = row_number()) %>% 
-    dplyr::ungroup() %>%
-    tidyr::pivot_longer(cols = -row_number, 
-                        names_to = 'column_id', 
-                        values_to = 'with_entry', 
-                        values_drop_na = TRUE) %>% 
-    left_join(CPEAT.ls$annotations, 
-              by = join_by(column_id),
-              suffix = c('.data', ''),
-              relationship = "many-to-many") %>% 
-    mutate(with_entry = dplyr::if_else((with_entry == "--") | is.na(with_entry),
-                                  with_entry.data, with_entry)) %>%
-    select(-with_entry.data) %>% 
-    select(table_id, column_id, of_variable, is_type = of_type, with_entry, row_number) # 5,546,485 obs, 6 total columns
 
+CPEAT_SOC <- CPEAT.ls$annotations %>% 
+  #identify the variables that we are interested in
+  filter(of_variable %in% c(
+             "organic_carbon",
+             "bulk_density",
+             "layer_bottom" ,
+             "layer_mid",
+             "layer_top",
+             "latitude",
+             "longitude",
+             "region",
+             "elevation",
+             "elevation_end",
+             "elevation_start",
+             "loss_on_ignition",
+             "organic_matter",
+             "layer_thickness",
+             "total_carbon",
+             "inorganic_carbon"),
+         #limit these to tables since some of them are duplicates
+         table_id %in% c('study', 'core'),
+         #only look at those that map to the data as marked by '--'
+         with_entry == '--') %>%
+  #create a table for exclusive join
+  select(table_id, column_name = column_id, of_variable, of_type) %>%
+  #down select the data that matches the variables of interest above
+  left_join(CPEAT.ls$long,
+            by = join_by(table_id, column_name),
+            relationship = "many-to-many")  %>%
+  #only take the values, just incase there are any methods or units in the table
+  filter(of_type == 'value', is.na(is_type) | is_type != 'description') %>%
+  unique() %>%
+  select(doi, column_name, with_entry, row_number) %>% 
+  #make a single row ID
+  #tidyr::unite(col = core_id, doi, sep = '::') %>%
+  #group_by(doi, column_name) %>% 
+  pivot_wider(names_from = column_name,
+               values_from = with_entry) %>% # 62024 obs
+  unique()
+
+
+CPEAT_SOC %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 
 ```
 
@@ -139,22 +160,11 @@ CPEAT_soc_cores <- CPEAT.ls$core %>%
 Finally make sure that the numbers are actually numbers.
 
 ```{r}
+# changing the structure of the column variables except doi
+CPEAT_SOC <- CPEAT_SOC %>% 
+  dplyr::mutate(across(-doi, as.numeric))
 
-soil_carbon.df <- CPEAT.ls$core %>% 
-  select(doi, 
-         contains('Depth sed'),
-         #`Depth sed [m]`, 
-         # `Depth sed [m] (Sample midpoint depth)`, 
-         # `Depth sed [m] (Sample midpoint depth (rounded))`, 
-         # `Depth sed [m] (Sample midpoint depth of OxCa...)`, 
-         # `Depth sed [m] (Sample midpoint depth of Baco...)`,
-         # `Depth sed [m] (LOI sample depth)`,
-         `Depth top [m]`, `Depth bot [m]`, 
-         `Samp thick [cm]`, `DBD [g/cm**3]`, `OM [%]`, `OM dens [g/cm**3]`, `Corg dens [g/cm**3]`,
-         `TC [%]`, `TOC [%]`, `C [%]`, `LOI [%]`, `LOI [%] (weight-%)`, `TIC [%]`) %>% 
- dplyr::mutate(across(-doi, as.numeric))
-  
-soil_carbon.df %>%
+CPEAT_SOC %>%
   slice_head(n=100) %>%
   knitr::kable() %>%
   kable_paper() %>%
@@ -168,15 +178,14 @@ Often this data is presented in three tables: a site level table with lat/lon an
 We given an example below of how this might be organized.
 
 ```{r}
-site.df <- CPEAT.ls$study %>%
-  select(doi, core_name, LATITUDE, LONGITUDE, LOCATION, ELEVATION, ELEVATION.START, ELEVATION.END) %>%
-  unique()
+# site level info
+site.df <- CPEAT_SOC %>%
+  select(doi, LATITUDE, LONGITUDE, LOCATION, ELEVATION, ELEVATION.START, ELEVATION.END) %>%
+  filter(!is.na(LATITUDE)) %>% 
+  unique() %>% 
+  dplyr::mutate(across(-doi, as.numeric))
 
-layer.df <- soil_carbon.df %>%
-  left_join(CPEAT.ls$study %>% 
-              select(doi, core_name, citation),
-            by = join_by(doi))
-
+# metadata information for the datasets
 meta.df <- CPEAT.ls$annotations %>%
   #identify the variables that we are interested in
   filter(of_variable %in% c('data_doi',
@@ -188,6 +197,46 @@ meta.df <- CPEAT.ls$annotations %>%
              'depth_loi', 'LOI', 'Total_inorganic_carbon', 'depth'),
          table_id %in% c('study', 'core'))
 
+#just renaming the object to maintain uniformity in naming across datasets
+layer.df <- CPEAT_SOC 
+```
+
+## Figures and Report
+
+Below are some general figures that might be of interest if you are evaluating this database for use in a study.
+
+# Plotting Layer histograms!
+
+```{r}
+ggplot(layer.df %>%
+         pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scales='free')
+```
+
+# Bulk density vs Organic carbon %
+
+```{r}
+ggplot(layer.df) +
+  geom_point(aes(x=`DBD [g/cm**3]`, y = `C [%]`), alpha = 0.1)
+```
+
+# Bulk density vs Total organic carbon %
+
+```{r}
+ggplot(layer.df) +
+  geom_point(aes(x=`DBD [g/cm**3]`, y = `TOC [%]`), alpha = 0.1)
+```
+
+# Geolocations
+
+```{r}
+ggplot(site.df) +
+  geom_polygon(data = map_data('world'),
+               aes(x = long, y = lat, group = group), 
+               fill = NA, color = 'lightgrey') +
+  geom_point(aes(x=LONGITUDE, y = LATITUDE), alpha = .1, color = 'darkorange')+
+  labs(x = NULL, y = NULL)
 ```
 
 # Construct annotations
@@ -309,9 +358,9 @@ str(CPEAT.original[1])
     
     #The core name is a special case where the information is in the name and not
     #...in the list values. Deal with that and append the events information.
-    studyData <- as.data.frame(c(xx[primaryNames], 
+    studyData <- as.data.frame(c(xx[primaryNames], # combining the primary study, metadata, and event data info into a single data frame
                                  xx$metadata[metaNames],
-                                 list(core_name = names(xx$metadata$events)[1]),
+                                 list(core_name = names(xx$metadata$events)[1]), # this extracts and includes the core names (typically the first element of the 'events' sub-list)  as a separate entry column 
                                  xx$metadata$events[eventsNames])) %>%
       pivot_longer(cols = everything(), 
                    names_to = 'column_name',
@@ -330,6 +379,7 @@ str(CPEAT.original[1])
       xx$metadata$parameters[6] <- NULL
     }
     
+    # creating a description column to the column_number tibble for each parameter table by combining its elements into a single string.
     colume_number$description <- unlist(lapply(xx$metadata$parameters, 
                                                function(yy){
       return(paste(as.character(yy), collapse = ' '))
