@@ -61,8 +61,8 @@ checkAnnotations <- function(filename,
                setdiff(unique(annotation.df$is_type), valid_is_type)))
   }
   
-  check_self_ref <- annotation.df %>%
-    dplyr::filter(with_entry == data_ref) %>%
+  check_self_ref <- annotation.df |>
+    dplyr::filter(with_entry == data_ref) |>
     dplyr::mutate(across(.cols = dplyr::everything(),.fns = function(xx){
       xx[xx == data_ref] <- NA
       return(xx)
