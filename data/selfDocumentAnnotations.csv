@@ -1,0 +1,12 @@
+table_id;column_id;of_variable;is_type;with_entry
+selfDocument;table_id;table_name;identifier;--
+selfDocument;table_id;table_name;definition;The table name that may be used to further specify the column. Optional if the column_id are unique for the study (either due to orgnial data structure or construction in the read function).
+selfDocument;column_id;column_header;identifier;--
+selfDocument;column_id;column_header;definition;The column name or header or identifier that links to the table being annotated. When combined with the table_id, this must be a unique identifer for column-level information.
+selfDocument;of_variable;variable;value;--
+selfDocument;of_variable;variable;definition;The property or variable that the information in this column is associated with.
+selfDocument;is_type;type;value;--
+selfDocument;is_type;type;definition;The dimension or type of information associated with a specific variable and column
+selfDocument;is_type;type;control_vocabulary;"value|the observation or measurement;definition|a human readable definition of the variable;unit|unit of measure for the observation;control_vocabulary|paired term definitions used to describe the variable;identifier|part of a unique identifier for a datum, for example a row or column identifier in a data table;foreign_key|an identifier shared between tables that matches with a different column name;method|a description or code of the method used for an observation;note|a free text note associated with an observation;standard_deviation|the standard deviation of a datum;size|the size of a constructed observation;minimum_threshold|the minimum posible value of an observation (ex mass can not be negative);maximum_threshold|the maximum possible value of an observation (ex pH can not be larger then 14)"
+selfDocument;with_entry;entry;value;--
+selfDocument;with_entry;entry;definition;the entry associated with the id-variable-type tuple or a '--' to denote reference to the data table being annotated

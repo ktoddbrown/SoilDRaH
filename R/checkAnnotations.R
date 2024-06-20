@@ -1,23 +1,23 @@
-checkAnnotations <- function(filename){
+checkAnnotations <- function(filename,
+                             annotationsCheckFile = 'data/selfDocumentAnnotations.csv'){
   
-  expectedHeaders <- c("table_id", #Table id should match the basename of the csv file
-                       "column_id", #This should match the exact text of the headers
-                       "of_variable", #variables should match how the orginal file talks about data. For example if bulk density is reported as both fine earth and whole the variable might be `fine_bulk_density` and `whole_bulk_densith`. Best practice is to use `_` to seperate words and lower case.
-                       "is_type", #should be one of the control vocabulary below
-                       "with_entry" #should be either the value/entry associated with this time and varible OR a `--` to indicate a reference to the described data table.
-                       )
+  selfDoc <- readr::read_delim('data/selfDocumentAnnotations.csv', 
+                               delim = ';',
+                               col_types = readr::cols(.default = readr::col_character()),)
+  
+  expectedHeaders <- selfDoc$column_id |>
+    unique()
   
   data_ref <- '--' #string for reference to annotated data to appear in the `with_entry` column
   
-  valid_is_type <- c('identifier',
-                     'description',
-                     'foreign_key',
-                     'value',
-                     'unit',
-                     'method',
-                     'note',
-                     'control_vocabulary',
-                     'standard_deviation')
+  control_vocab.df <- selfDoc |>
+    dplyr::filter(column_id == 'is_type', is_type == 'control_vocabulary') |>
+    dplyr::select(with_entry) |>
+    tidyr::separate_longer_delim(cols = with_entry, delim = ';') |>
+    tidyr::separate_wider_delim(cols = with_entry, delim = '|', names = c('vocabulary', 'definition')) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), .fns = trimws))
+  
+  valid_is_type <- control_vocab.df$vocabulary
   
   #assume ';' deliminator to be consistent with how R structures csv in data folders
   annotation.df <- read_delim(filename, 
