@@ -1,7 +1,23 @@
+#' Check annotations
+#' 
+#' This function checks that the annotations files adhere to self documented standards. 
+#'
+#' @param filename the annotation files being checked
+#' @param annotationsCheckFile the standard annotation file to be checked against
+#' @param annotationsDirectory the directory holding the annotation files
+#'
+#' @return 0 if everything checks out, otherwise throws an error.
+#' @export
+#' 
+#' @importFrom dplyr mutate filter across everything
+#' @importFrom readr read_delim cols col_character
+#' @importFrom tidyr separate_longer_delim separate_wider_delim
+#'
 checkAnnotations <- function(filename,
-                             annotationsCheckFile = 'data/selfDocumentAnnotations.csv'){
+                             annotationsCheckFile = 'selfDocumentAnnotations.csv',
+                             annotationsDirectory = 'data'){
   
-  selfDoc <- readr::read_delim('data/selfDocumentAnnotations.csv', 
+  selfDoc <- readr::read_delim(file.path(annotationsDirectory, 'selfDocumentAnnotations.csv'), 
                                delim = ';',
                                col_types = readr::cols(.default = readr::col_character()),)
   
@@ -20,8 +36,8 @@ checkAnnotations <- function(filename,
   valid_is_type <- control_vocab.df$vocabulary
   
   #assume ';' deliminator to be consistent with how R structures csv in data folders
-  annotation.df <- read_delim(filename, 
-                             col_types = cols(.default = col_character()),
+  annotation.df <- readr::read_delim(file.path(annotationsDirectory, filename),
+                             col_types = readr::cols(.default = readr::col_character()),
                              delim = ';')
   
   
@@ -32,6 +48,13 @@ checkAnnotations <- function(filename,
                paste0(setdiff(expectedHeaders, names(annotation.df)), collapse = ', ')))
   }
   
+  #throw a warning that there are extra headers
+  if(!all(names(annotation.df) %in%
+          expectedHeaders)){
+    warning(paste('annotation file has extra names: ', 
+               paste0(setdiff(names(annotation.df), expectedHeaders), collapse = ', ')))
+  }
+  
   #check is_type elements
   if(!all(unique(annotation.df$is_type) %in% valid_is_type)){
     stop(paste('annotation file contains invalid type: ', 
@@ -39,8 +62,8 @@ checkAnnotations <- function(filename,
   }
   
   check_self_ref <- annotation.df %>%
-    filter(with_entry == data_ref) %>%
-    mutate(across(.cols = everything(),.fns = function(xx){
+    dplyr::filter(with_entry == data_ref) %>%
+    dplyr::mutate(across(.cols = dplyr::everything(),.fns = function(xx){
       xx[xx == data_ref] <- NA
       return(xx)
     }))
