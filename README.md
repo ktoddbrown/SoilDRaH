@@ -6,10 +6,10 @@ The Soil Data Rescue and Harmonization (Soil-DRaH) project is a collaborative ef
 flowchart LR
     remote['archived data'] --download--> lvl0['Level 0 data']
     remote --'create'--> meta['data annotations']
-    lvl0 --pivot--> lvl1['Level 1 data format']
+    lvl0 --pivot--> lvl1['Level 1 data']
     meta --join--> lvl1
-    lvl1 --curate--> lvl2['Level 2 data format']
-    lvl1a --curate--> lvl2
+    lvl1 --curate--> lvl2['Level 2 data']
+    lvl1a[['Other level 1 data']] --curate--> lvl2
 ```
 
 ## Table of Contents
