@@ -52,6 +52,7 @@ docs
 
 # temp folder where we stash a lot of data
 temp/*
+*/temp/*
 
 #MacOS files
 *DS_Store

@@ -42,10 +42,11 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 
 source("../../R/readFIA.R", local = knitr::knit_global())
+source('../../R/checkAnnotations.R')
 
 #locate the data locally
 dataDir <- '../temp/FS_FIA'
-dataAnnotations <- '../../data/fia_annotations.csv'
+dataAnnotations <- '../../data/FIA_Annotations.csv'
 ```
 
 ```{r, echo=FALSE}
@@ -352,6 +353,23 @@ This would need to be extended to include other data tables.
 
 ```{r, file= '../../R/readFIA.R'}
 ```
+
+# Checking format
+
+```{r}
+# read_csv('../../data/FIA_Annotations.csv', 
+#          col_types = cols(.default = col_character())) %>%
+#   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
+
+#temp %>% filter(with_entry == '--') %>% View()
+if(checkAnnotations(filename = '../../data/FIA_Annotation.csv') == 0){
+  print('Annotations check out!')
+}
+
+checkAnnotations(filename = '')
+```
+
+
 
 # Text extraction *experimental*
 
