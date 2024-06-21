@@ -1,4 +1,4 @@
-#' Title
+#' Read in the NCSS database
 #'
 #' @param dataDir 
 #' @param annotationFilename 
@@ -16,9 +16,10 @@ readNCSS <- function(dataDir,
                      format = c('original', 'long')[1],
                      verbose = TRUE){
   
-  
-  dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
-  annotationFilename <- "data/NCSS_Annotations.csv" #debugging
+  ##Dev variables
+  #format <- 'long'
+  #dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
+  #annotationFilename <- "data/NCSS_Annotations.csv" #debugging
    
   #### Set up the file names ####
   sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
@@ -34,7 +35,7 @@ readNCSS <- function(dataDir,
   
   #### Read in the annotations file ####
   annotations.df <- readr::read_delim(annotationFilename, delim = ';',
-                               col_types = readr::cols(.default = col_character()))
+                               col_types = readr::cols(.default = readr::col_character()))
   
   #### Check downloads ####
   
@@ -74,26 +75,91 @@ readNCSS <- function(dataDir,
     warning('This function currently only extracts tables associated with non-NA `of_variables` (currently layer-resolved soil organic carbon and geolocation).')
     
     reducedAnnotations <- annotations.df |>
-      filter(any(!is.na(of_variable)), .by = table_id)
+      dplyr::filter(any(!is.na(of_variable)), .by = table_id)
     
     annotatedTables <- reducedAnnotations$table_id |>
       unique() |>
       #only read in annotations that are there, some annotated tables provided by NRCS are 'meta'
-      intersect(dbListTables(myconnect))
+      intersect(RSQLite::dbListTables(myconnect))
     
     #tableNames <- dbListTables(myconnect)
     
-    if(verbose) message('Reading in all tables, this takes some time and results in 1.1 GB data object')
+    if(verbose) message('Reading in all tables, this takes some time and results in 1.3 GB data object')
     orginalTables <- lapply(setNames(object = as.list(annotatedTables), annotatedTables),
                             function(xx) {RSQLite::dbReadTable(myconnect, xx)})
     
+        
     ### Clean up the connection ####
     dbDisconnect(myconnect)
+    
+    ### Make the tables that we are interested in longer ###
+    
+    #Only thse tables have been varified for the soc, obs time, and geolocation variables
+    verified_tables <- list('lab_physical_properties' = 'lab_physical_properties',
+               'lab_chemical_properties' = 'lab_chemical_properties',
+               'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
+               lab_layer = 'lab_layer',
+               lab_site = 'lab_site',
+               lab_pedon = 'lab_pedon')
+    
+    message("This function only reads the annotated information from the following tables:")
+    message(names(verified_tables))
+    
+    ans.df <- plyr::ldply(verified_tables,
+          function(tableName.str){
+            temp_key <- reducedAnnotations |> 
+              dplyr::filter(table_id == tableName.str,
+                            with_entry == '--') |>
+              dplyr::select(-with_entry)
+            
+            non_id_columns <- temp_key |>
+              dplyr::filter(is_type != 'identifier')
+            
+            ident_columns <- temp_key |>
+              dplyr::filter(is_type  == 'identifier')
+            
+            #The result_source_key is equal to the layer_key here
+            lab_phy.long <- orginalTables[[tableName.str]] |>
+              dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
+              dplyr::mutate(dplyr::across(.cols = everything(), .fns = as.character)) |>
+              tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
+                                  names_to = 'column_id', values_to = 'with_entry',
+                                  values_drop_na = TRUE) |>
+              dplyr::full_join(non_id_columns, 
+                               by = join_by(column_id),
+                               relationship = "many-to-many") |>
+              dplyr::filter(any(is_type == 'value'), .by = ident_columns$column_id)
+            
+          }, .id = NULL)
+    
+    ## Debugging and dev code for the function above
+    # tableKey <- 'lab_pedon'
+    # temp_key <- reducedAnnotations |> 
+    #   dplyr::filter(table_id == tableKey,
+    #          with_entry == '--') |>
+    #   dplyr::select(-with_entry)
+    # 
+    # non_id_columns <- temp_key |>
+    #   dplyr::filter(is_type != 'identifier')
+    # 
+    # ident_columns <- temp_key |>
+    #   dplyr::filter(is_type  == 'identifier')
+    # 
+    # #The result_source_key is equal to the layer_key here
+    # temp.long <- orginalTables[[tableKey]] |>
+    #   dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
+    #   dplyr::mutate(dplyr::across(.cols = everything(), .fns = as.character)) |>
+    #   tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
+    #                names_to = 'column_id', values_to = 'with_entry',
+    #                values_drop_na = TRUE) |>
+    #   dplyr::full_join(non_id_columns, by = join_by(column_id)) |>
+    #   dplyr::filter(any(is_type == 'value'), .by = ident_columns$column_id)
+    # 
+
+    
+    return(list(annotations = annotations.df, long = ans.df))
   }
   
-  
-  ### Clean up the connection ####
-  dbDisconnect(myconnect)
   
   
 }
