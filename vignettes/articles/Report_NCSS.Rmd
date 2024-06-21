@@ -10,6 +10,228 @@ This data is part of the National Cooperative Soil Survey Soil Characterization 
 ```{r setup}
 library(tidyverse)
 library(RSQLite)
+library(knitr)
+library(kableExtra)
+
+source('../../R/readNCSS.R')
+
+```
+
+```{r}
+ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
+                    annotationFilename = '../../data/NCSS_Annotations.csv',
+                    format = 'long')
+```
+
+## Table: `lab_pedon`
+
+```{r}
+table_str <- 'lab_pedon'
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_site`
+
+```{r}
+table_str <- 'lab_site'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_layer`
+
+```{r}
+table_str <- 'lab_layer'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_calculations_including_estimates_and_default_values`
+
+```{r}
+table_str <- 'lab_calculations_including_estimates_and_default_values'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_chemical_properties`
+
+```{r}
+table_str <- 'lab_chemical_properties'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_chemical_properties`
+
+```{r}
+table_str <- 'lab_physical_properties'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Data processing
+
+```{r}
+
+temp_pedon <- ncss.df$long %>%
+  filter(table_id == 'lab_pedon') %>%
+  select(where(~ any(!is.na(.)))) %>%
+  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+
+temp_site <- ncss.df$long %>%
+  filter(table_id == 'lab_site') %>%
+  select(where(~ any(!is.na(.)))) %>%
+  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+
+temp_layer <- ncss.df$long %>%
+  filter(table_id == 'lab_layer') %>%
+  select(where(~ any(!is.na(.)))) %>%
+  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+
+temp_samples <- ncss.df$long %>%
+  filter(! table_id %in% c('lab_pedon', 'lab_site', 'lab_layer')) %>%
+  select(where(~ any(!is.na(.)))) %>%
+  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+
+
+soc.df <- temp_site %>%
+  full_join(temp_pedon, by = join_by(site_key)) %>%
+  full_join(temp_layer, by = join_by(site_key, pedon_key)) %>%
+  full_join(temp_samples, by = join_by(layer_key))  %>%
+  pivot_longer(cols = !ends_with('_key'), 
+                names_sep = '::', 
+                names_to = c('of_variable', 'is_type'), 
+                values_to = 'with_entry') %>%
+  pivot_wider(names_from = 'is_type', values_from = 'with_entry')
+```
+
+# Soil carbon figures
+
+```{r}
+
+plot.df <- soc.df %>% 
+  select(-method) %>%
+  filter(!is.na(value)) %>%
+  pivot_wider(names_from = 'of_variable', values_from = 'value') %>%
+  mutate(across(.cols = one_of(c('longitude', 'latitude', 'observation_date',
+                                 'layer_top', 'layer_bottom',
+                                 'layer_order', 'mineral_remaining_on_ignition',
+                                 'total_carbon', 'organic_carbon_estimated',
+                                 'organic_carbon_walkley_black', 'coarse_fraction',
+                                 'whole_soil_bulk_density')),
+                as.numeric)) %>%
+  mutate(across(.cols = one_of(c('horizon_designation', 'layer_type',
+                                 'horizon_designation_other')),
+                as.factor)) %>%
+  mutate(observation_date = lubridate::as_date(observation_date,
+                                               origin = lubridate::ymd('1900-01-01')))
+
+```
+
+```{r fig.width = 9, fig.height=6}
+
+hist.df <- plot.df %>%
+  pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)
+
+
+ggplot(hist.df) + 
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scale= 'free', nrow=4)
+```
+
+```{r}
+ggplot(plot.df) +
+  geom_histogram(aes(x=observation_date))
+```
+
+# OC vs BD Scatter
+
+```{r}
+
+ggplot(plot.df) +
+  geom_point(aes(x=whole_soil_bulk_density, y = organic_carbon_estimated))
+
+```
+
+# Calculate SOC
+
+```{r}
+plot2.df <- plot.df %>%
+  filter(coarse_fraction < 100, organic_carbon_estimated > 0) %>%
+  mutate(soc = whole_soil_bulk_density * (1-coarse_fraction/100) * organic_carbon_estimated) %>%
+  filter(is.finite(soc))
+
+ggplot(plot2.df) +
+  geom_histogram(aes(x=soc)) +
+  labs(x='Soil organic carbon (g cm-3)') +
+  scale_x_log10()
+```
+
+## Location over time
+
+```{r}
+ggplot(plot.df %>%
+         select(longitude, latitude, site_key, pedon_key, observation_date) %>%
+         filter(is.finite(longitude + latitude)) %>%
+         unique() %>%
+         mutate(decade = floor(year(round_date(observation_date, unit = 'year'))/10) * 10)) +
+  geom_polygon(colour="grey", fill="white",
+               aes(x=long, y=lat, group=group),
+               data = map_data("world")) +
+  geom_point(aes(x=longitude, y = latitude), alpha = .1) +
+  facet_wrap(~decade) +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+```
+
+
+# Read script
+
+```{r file = '../../R/readNCSS.R', eval=FALSE}
 
 ```
 
