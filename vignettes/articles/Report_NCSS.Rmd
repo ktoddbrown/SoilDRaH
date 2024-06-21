@@ -145,6 +145,7 @@ givenDescriptions <- read_csv(file = metadata_filenames$col_desc,
       mutate(of_type = 'description')) %>%
   mutate(table_name = case_when(
     table_name == 'lab_major_tr_elements_oxides' ~ 'lab_major_and_trace_elements_and_oxides',
+    table_name == 'lab_major_trace_elements_and_oxides'  ~ 'lab_major_and_trace_elements_and_oxides',
     table_name == 'lab_calculations_and_estimates' ~
       'lab_calculations_including_estimates_and_default_values',
     table_name == 'lab_mir_wavelength_string_d' ~ 'lab_mir_wavelength',

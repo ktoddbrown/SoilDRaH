@@ -1,0 +1,1082 @@
+table_id;column_id;column_number;of_variable;is_type;with_entry
+lab_analysis_procedure;proced_abbrev;5;analysis_procedure;description;A character string containing the procedure abbreviation.
+lab_analysis_procedure;proced_abbrev;5;analysis_procedure;abbreviation;--
+lab_analysis_procedure;proced_desc;6;analysis_procedure;description;SSIR number version and page
+lab_analysis_procedure;proced_desc;6;analysis_procedure;reference;--
+lab_analysis_procedure;proced_name;4;analysis_procedure;description;A character string containing the Soil Survey Laboratory name of the procedure.
+lab_analysis_procedure;proced_name;4;analysis_procedure;method;--
+lab_analysis_procedure;procedure_key;2;analysis_procedure;identifier;--
+lab_analysis_procedure;procedure_key;2;analysis_procedure;foreign_key;--
+lab_analysis_procedure;procedure_key;2;analysis_procedure;description;procedure key
+lab_analysis_procedure;requested_anal_name;3;analysis_procedure;description;requested_anal_name
+lab_analysis_procedure;requested_anal_name;3;analysis_procedure;value;--
+lab_analysis_procedure;apid;1;analysis_procedure;identifier;--
+lab_analysis_procedure;apid;1;analysis_procedure;foreign_key;--
+lab_analysis_procedure;apid;1;analysis_procedure;description;"An internal ID (integer) that is part (or all) of a key that uniquely identifies a record.  Also known as part (or all) of the ""primary key"".  This value is managed by NASIS and cannot be edited"
+lab_analysis_procedure;SSIR_5_Page;7;analysis_procedure;description;SSIR_5_Page
+lab_analysis_procedure;SSIR_5_Page;7;analysis_procedure;reference;--
+lab_analysis_procedure;Links_to_SSIR_42_V_5;9;analysis_procedure;description;Links_to_SSIR_42_V_5
+lab_analysis_procedure;Links_to_SSIR_42_V_5;9;analysis_procedure;reference;--
+lab_analysis_procedure;notes;10;analysis_procedure;description;Notes describing decisions, issues, or other history related to the record.
+lab_analysis_procedure;notes;10;analysis_procedure;note;--
+lab_analysis_procedure;PDF_pg;8;analysis_procedure;description;PDF_pg
+lab_analysis_procedure;PDF_pg;8;analysis_procedure;reference;--
+lab_analyte;analyte_abbrev;4;NA;description;A character string containing the Analyte Abbreviation, the short name given to a particular analyte (reportable result).
+lab_analyte;analyte_agg_method;10;NA;description;analyte_agg analysis method
+lab_analyte;analyte_algorithm;11;NA;description;analyte_algorithm
+lab_analyte;analyte_code;5;NA;description;A character string containing the Analyte Code is a SSL assigned code which identifies a particular analyte. The code is used as a formative element of the method code, reported with the analyte result.
+lab_analyte;analyte_data_type;6;NA;description;analyte_data_type
+lab_analyte;analyte_desc;12;NA;description;A character string containing the description of the analyte. Some analytes have special meaning in soil characterization, which is different than the conventional analytical meaning.
+lab_analyte;analyte_format;7;NA;description;analyte_format
+lab_analyte;analyte_key;1;NA;description;analyte key
+lab_analyte;analyte_name;3;NA;description;A character string containing the name of the analyte used by the SSL. The analyte is a property or analytical result derived from raw data.
+lab_analyte;analyte_size_frac_base;13;NA;description;analyte_size_frac_base
+lab_analyte;analyte_source_type;9;NA;description;analyte_source_type
+lab_analyte;analyte_type;2;NA;description;analyte_type
+lab_analyte;uom_abbrev;8;NA;description;A character string containing the unit of measure abbreviation.
+lab_analyte;uom_abbrev;8;NA;unit;--
+lab_area;area_abbrev;8;region;identifier;--
+lab_area;area_code;6;region;identifier;--
+lab_area;area_desc;9;region;description;--
+lab_area;area_key;1;region;foreign_key;--
+lab_area;area_name;7;region;description;The name given to the specified geographic area.
+lab_area;area_name;7;region;value;--
+lab_area;area_sub_type;3;NA;description;area_sub_type
+lab_area;area_type;2;NA;foreign_key;--
+lab_area;area_type;2;NA;description;The record ID (an integer number) of a particular record (component record, horizon record, etc.) in a particular table (component table, horizon table, etc.). A record ID is not sufficient in and of itself to uniquely identify a record in a table. Each record in a table is uniquely identified by the combination of a record ID and the ID of the database in which the entity (area type, legend or data mapunit), of which the record is a member, was created.
+lab_area;parent_area_key;4;NA;foreign_key;--
+lab_area;parent_area_key;4;NA;description;parent_area key
+lab_area;parent_org_key;5;NA;foreign_key;--
+lab_area;parent_org_key;5;NA;description;parent_org key
+lab_calculations_including_estimates_and_default_values;percent_passing_2_micron_sieve;79;NA;description;This is the cumulative gravimetric percentage of particles with diameters <2 microns (0.002 mm), reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_20_micron_sieve;77;NA;description;This is the cumulative gravimetric percentage of particles with diameters <20 microns (0.02 mm), reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_3_eights_inch;72;NA;description;This is the cumulative gravimetric percentage of particles passing through a 3/8 inch sieve, reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_3_inch_sieve;35;NA;description;This is the cumulative gravimetric percentage of particles passing through a 3 inch sieve, reported on a <3 inch base.(<75 mm)
+lab_calculations_including_estimates_and_default_values;percent_passing_3_quarter_inch;71;NA;description;This is the cumulative gravimetric percentage of particles passing through a 3/4 inch sieve, reported on a <3 inch base. (< 75 mm)
+lab_calculations_including_estimates_and_default_values;percent_passing_5_micron_sieve;78;NA;description;This is the cumulative gravimetric percentage of particles with diameters <5 microns (0.005 mm), reported on a <3 inch base.  ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_no_10_sieve;74;NA;description;This is the cumulative gravimetric percentage of particles passing through a No. 10 (2.00 mm) sieve, reported on a <3 inch base.  ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_no_200_sieve;76;NA;description;This is the cumulative gravimetric percentage of particles passing through a No. 200 (0.074 mm) sieve, reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_no_4_sieve;73;NA;description;This is the cumulative gravimetric percentage of particles passing through a No. 4 (4.76 mm) sieve, reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;percent_passing_no_40_sieve;75;NA;description;This is the cumulative gravimetric percentage of particles passing through a No. 40 (0.42 mm) sieve, reported on a <3 inch base. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;pores_drained_third_bar_ws;57;NA;description;Drained pores at 1/3 bar tension is the volumetric percent of drained pores at 1/3 bar water tension, reported on a whole soil base. These are defined as noncapillary pores.
+lab_calculations_including_estimates_and_default_values;pores_filled_third_bar_ws;58;NA;description;Filled pores at 1/3 bar tension is the volumetric percent of water filled pores at 1/3 bar water tension, reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;prep_code;3;NA;foreign_key;--
+lab_calculations_including_estimates_and_default_values;prep_code;3;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_calculations_including_estimates_and_default_values;result_source_key;2;NA;foreign_key;--
+lab_calculations_including_estimates_and_default_values;result_source_key;2;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_calculations_including_estimates_and_default_values;bulk_density_3rd_bar_for_calc;4;NA;description;bulk_density_3rd_bar_for_calc
+lab_calculations_including_estimates_and_default_values;bulk_density_3rd_bar_source;5;NA;description;bulk_density_3rd_bar_source
+lab_calculations_including_estimates_and_default_values;bulk_density_oven_dry_ws;9;whole_soil_bulk_density;description;Bulk density, whole soil, oven dry is the weight per unit volume of the whole soil, with volume measured on oven dry natural fabric (clods). It is reported as grams per cubic centimeter on a whole soil base.
+lab_calculations_including_estimates_and_default_values;bulk_density_oven_dry_ws;9;whole_soil_bulk_density;value;--
+lab_calculations_including_estimates_and_default_values;bulk_density_oven_dry_ws;9;whole_soil_bulk_density;unit;grams per cubic centimeter of whole soil
+lab_calculations_including_estimates_and_default_values;bulk_density_oven_dry_ws;9;whole_soil_bulk_density;method;Bulk density, whole soil, oven dry is the weight per unit volume of the whole soil, with volume measured on oven dry natural fabric (clods). It is reported as grams per cubic centimeter on a whole soil base.
+lab_calculations_including_estimates_and_default_values;bulk_density_saturated_whole_soil;10;NA;description;The bulk density of saturated whole soil is calculated from the bulk density and water content at 1/3 bar water tension, and the amount of water needed to saturate the 1/3 bar soil. It is reported as grams per cubic centimeter on a whole soil base.
+lab_calculations_including_estimates_and_default_values;bulk_density_third_bar_ws;8;NA;description;Bulk density, whole soil, 1/3 bar is the weight per unit volume of the soil, with volume being measured after equilibration at 1/3 bar water tension. It is reported as grams per cubic centimeter on a whole soil base.
+lab_calculations_including_estimates_and_default_values;bulk_density_whole_soil_moist;36;NA;description;Bulk density, whole soil, moist is the weight per unit volume of the whole soil, with volume measured at field (sampling) moisture in clods. It is reported as grams per cubic centimeter, whole soil base.
+lab_calculations_including_estimates_and_default_values;void_ratio_third_bar_lt_2_mm;54;NA;description;The void ratio at 1/3 bar, <2 mm is the calculated ratio of pore volume to solids volume at 1/3 bar water tension, reported as a ratio on a <2 mm base.
+lab_calculations_including_estimates_and_default_values;void_ratio_third_bar_whole_soil;55;NA;description;The void ratio at 1/3 bar, whole soil is the calculated ratio of pore volume to solids volume at 1/3 bar water tension, reported as a ratio on a whole soil base.
+lab_calculations_including_estimates_and_default_values;vol_pct_usda_silt_third_bar_ws;13;NA;description;Particles with 0.002 to 0.05 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_2_to_5_mm_third_ws;67;NA;description;Particles with 2 to 5 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_2_to_75_mm_third_ws;64;NA;description;Particles with 2 to 75 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_20_to_75_mm_third_ws;65;NA;description;Particles with 20 to 75 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_5_to_20_mm_third_ws;66;NA;description;Particles with 5 to 20 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_75_to_250_mm_third_ws;63;NA;description;Particles with 75 to 250 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_gt_2_mm_thirdbar_ws;61;NA;description;volume_pct_gt_2_mm_thirdbarws
+lab_calculations_including_estimates_and_default_values;volume_pct_gt_250_mm_thirdbar_ws;62;NA;description;Particles with >250 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_lt_2_mm_third_ws;11;NA;description;Particles with <2 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_usda_clay_ws;14;NA;description;Particles with <0.002 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;volume_pct_usda_sand_ws;12;NA;description;Particles with 0.05 to 2.0 mm diameter are reported as a volume percent on a whole soil at 1/3 bar water tension base.
+lab_calculations_including_estimates_and_default_values;water_retention_difference_ws;56;NA;description;The volume of water released when the soil is dried from 1/3 bar to 15 bars of water tension. It is reported on a whole soil base as centimeters of water per centimeter depth of soil, but the value is constant for other units.
+lab_calculations_including_estimates_and_default_values;weight_pct_2_to_5_mm_ws;59;NA;description;The gravimetric percentage of 2 to 5 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_pct_2_to_75_mm_ws;40;NA;description;The gravimetric percentage of 2 to 75 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_pct_20_to_75_mm_ws;41;NA;description;The gravimetric percentage of 20 to 75 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_pct_5_to_20_mm_ws;42;NA;description;The gravimetric percentage of 5 to 20 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_pct_75_to_250_mm_ws;39;NA;description;The gravimetric percentage of 75 to 250 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_pct_less_than_2_mm_ws;60;NA;description;The weight fraction of particles with <2 mm diameter is reported as a gravimetric percent on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_percent_gt_2_mm_ws;37;coarse_fraction;description;The weight fraction of particles with >2 mm diameter is reported as a gravimetric percent on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_percent_gt_2_mm_ws;37;coarse_fraction;value;--
+lab_calculations_including_estimates_and_default_values;weight_percent_gt_2_mm_ws;37;coarse_fraction;unit;mass per mass whole soil
+lab_calculations_including_estimates_and_default_values;weight_percent_gt_2_mm_ws;37;coarse_fraction;method;The weight fraction of particles with >2 mm diameter is reported as a gravimetric percent on a whole soil base.
+lab_calculations_including_estimates_and_default_values;weight_percent_gt_250_mm_ws;38;NA;description;The gravimetric percentage of >250 mm diameter particles is reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;wf_0175;34;NA;description;The gravimetric percentage of 0.1 to 75 mm diameter particles is reported on a = 15%. Algorithm: (100. - wf_275) * ((sand_vc_psa + sand_m_psa + sand_f_psa + sand_c_psa) / 100.) + wf_275
+lab_calculations_including_estimates_and_default_values;wf_2075;33;NA;description;Volume of fragments 20 to 75 mm on a whole soil base.
+lab_calculations_including_estimates_and_default_values;wf_25;31;NA;description;Volume of fragments 2 to 5 mm on a Whole_Soil_Base
+lab_calculations_including_estimates_and_default_values;wf_520;32;NA;description;Volume of fragments with a diameter of 2 to 5 mm on a Whole Soil Base
+lab_calculations_including_estimates_and_default_values;wt_pct_2_20_mm_clay_free_ws;19;NA;description;The gravimetric percent of particles with 2.0-20 mm diameter, reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_2_75_mm_clay_free_ws;18;NA;description;The gravimetric percent of particles with 2.0-75 mm diameter, reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_clay_clay_free_2mm_base;30;NA;description;The gravimetric percent of particles with <0.002 mm diameter (total clay), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_cs_clay_free_lt2mmbase;24;NA;description;The gravimetric percent of particles with 0.5-1.0 mm diameter (coarse sand), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_csi_clay_free_lt2mmbase;28;NA;description;The gravimetric percent of particles with 0.02-0.05 mm diameter (coarse silt), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_fs_clay_free_lt2mmbase;26;NA;description;The gravimetric percent of particles with 0.10-0.25 mm diameter (fine sand), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_fsi_clay_free_lt2mmbase;29;NA;description;The gravimetric percent of particles with 0.002-0.02 mm diameter (fine silt), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_gt_2_mm_clay_free_ws;17;NA;description;The gravimetric percent of particles with >2.0 mm diameter, reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_ms_clay_free_lt2mmbase;25;NA;description;The gravimetric percent of particles with 0.25-0.50 mm diameter (medium sand), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_sand_clay_free_ws;20;NA;description;The gravimetric percent of particles with 0.05-2.0 mm diameter, reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_silt_clay_free_ws;21;NA;description;The gravimetric percent of particles with 0.002-0.05 mm diameter, reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_tot_clay_clay_free_ws;22;NA;description;The gravimetric percent of particles with <0.002 mm diameter (total clay), reported on a clay free whole soil base.
+lab_calculations_including_estimates_and_default_values;wt_pct_vcs_clay_free_lt2mmbase;23;NA;description;The gravimetric percent of particles with 1.0-2.0 mm diameter (very coarse sand), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;wt_pct_vfs_clay_free_lt2mmbase;27;NA;description;The gravimetric percent of particles with 0.05-0.10 mm diameter (very fine sand), reported on a clay free <2 mm base.
+lab_calculations_including_estimates_and_default_values;cumulative_curve_less_than_1mm;80;NA;description;The cumulative gravimetric percentage of particles with <1.0 mm diameter, reported on a <3 inch base. (< 75 mm)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_lt_1_fourth_mm;43;NA;description;The cumulative gravimetric percentage of particles with <0.25 mm diameter, reported on a <3 inch base.
+lab_calculations_including_estimates_and_default_values;cumulative_curve_lt_1_half_mm;81;NA;description;The cumulative gravimetric percentage of particles with <0.5 mm diameter, reported on a <3 inch base.  ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_lt_1_tenth_mm;44;NA;description;The cumulative gravimetric percentage of particles with <0.10 mm diameter, reported on a <3 inch base. (< 75 mm base)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_lt_5_hundredths;45;NA;description;The cumulative gravimetric percentage of particles with <0.05 mm diameter, reported on a <3 inch base. (< 75 mm base)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_size_lt_10_pe;48;NA;description;The particle diameter (mm) at which 10% (by weight) of the particles in the <3 inch base sample are finer. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_size_lt_50_pe;47;NA;description;The particle diameter (mm) at which 50% (by weight) of the particles in the <3 inch base sample are finer. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;cumulative_curve_size_lt_60_pe;46;NA;description;The particle diameter (mm) at which 60% (by weight) of the particles in the <3 inch base sample are finer. ( < 75 mm base)
+lab_calculations_including_estimates_and_default_values;gradation_curvature;50;NA;description;The coefficient of curvature is a descriptive parameter calculated from the cumulative grain size distribution curve (gradation curve). It is used in the Unified Soil Classification System to evaluate grading characteristics of coarse materials.
+lab_calculations_including_estimates_and_default_values;gradiation_uniformity;49;NA;description;The coefficient of uniformity is a descriptive parameter calculated from the cumulative grain size distribution curve (gradation curve). It is used in the Unified Soil Classification System to evaluate grading characteristics of coarse materials. (< 75 mm fraction)
+lab_calculations_including_estimates_and_default_values;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_calculations_including_estimates_and_default_values;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_calculations_including_estimates_and_default_values;le_third_bar_to_oven_dry_rewet;52;NA;description;Linear extensibility percent, rewet, 1/3 bar/OD isthe percent dimensional change of a rewet clod as water content changes from oven dry to 1/3 bar tension. It is reported as percent length change on a<2 mm base.
+lab_calculations_including_estimates_and_default_values;le_third_fifteen_whole_soil;53;NA;description;Linear extensibility percent, whole soil,1/3 bar/15 bar is the percent change in a clod dimension as water content changes from 15 bar to 1/3 bar tension. It is reported as percent length change on a whole soil base.
+lab_calculations_including_estimates_and_default_values;le_third_ovendry_whole_soil;51;NA;description;Linear extensibility percent, whole soil,1/3 bar/Ovendry is the percent change in a clod dimension as water content changes from ovendry to 1/3 bar tension. It is reported as percent length change on a whole soil base.
+lab_calculations_including_estimates_and_default_values;particle_density_calc_source;7;NA;description;particle_density_calc_sour
+lab_calculations_including_estimates_and_default_values;particle_density_for_calc;6;NA;description;particle_density_for_calc
+lab_calculations_including_estimates_and_default_values;pct_pores_drained_third_bar_ws;15;NA;description;Drained pores at 1/3 bar tension is the volumetric percent of drained pores at 1/3 bar water tension, reported on a whole soil base. These are defined as noncapillary pores.
+lab_calculations_including_estimates_and_default_values;pct_pores_filled_third_bar_ws;16;NA;description;Filled pores at 1/3 bar tension is the volumetric percent of water filled pores at 1/3 bar water tension, reported on a whole soil base.
+lab_calculations_including_estimates_and_default_values;percent_passing_1_and_1_half;69;NA;description;This is the cumulative gravimetric percentage of particles passing through a 1.5 inch sieve, reported on a <3 inch base. (< 75 mm)
+lab_calculations_including_estimates_and_default_values;percent_passing_1_inch_sieve;70;NA;description;This is the cumulative gravimetric percentage of particles passing through a 1 inch sieve, reported on a <3 inch base. ( < 75 mm)
+lab_calculations_including_estimates_and_default_values;percent_passing_2_inch_sieve;68;NA;description;This is the cumulative gravimetric percentage of particles passing through a 2 inch sieve, reported on a <3 inch base.(<75 mm)
+lab_chemical_properties;ph_cacl2;56;NA;description;The pH, 1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio.
+lab_chemical_properties;ph_cacl2_method;57;NA;description;ph_cacl2 analysis method
+lab_chemical_properties;ph_h2o;58;NA;description;The pH, 1:1 soil-water suspension is the pH of a sample measured in distilled water at a 1:1 soil:solution ratio. If wider ratios increase the pH, salts are indicated.
+lab_chemical_properties;ph_h2o_method;59;NA;description;ph_h2o analysis method
+lab_chemical_properties;ph_kcl;54;NA;description;The pH, 1:1 soil-KCl suspension is the pH of a sample measured in 1.0N KCl at a 1:1 soil:solution ratio. If the pH in KCl < pH in water, Al+++ is indicated.
+lab_chemical_properties;ph_kcl_method;55;NA;description;ph_kcl analysis method
+lab_chemical_properties;ph_naf;65;NA;description;The pH, 1:50 soil-NaF suspension is the pH of a sample measured in 1.0N NaF at a 1:50 soil:solution ratio. If PH_NAF is > 9.4, andic materials are indicated.
+lab_chemical_properties;ph_naf_method;66;NA;description;ph_naf analysis method
+lab_chemical_properties;ph_oxidized;62;NA;description;The oxidized pH is the pH of a sample measured after incubation while saturated with distilled water. It is normally used to indicate the acid producing potential of acid sulfate materials.
+lab_chemical_properties;ph_oxidized_initial;63;NA;description;ph_oxidized_initial
+lab_chemical_properties;ph_oxidized_method;64;NA;description;ph_oxidized analysis method
+lab_chemical_properties;ph_saturated_paste;60;NA;description;The pH, saturated paste is the pH of the solution extracted from the saturated paste sample. It is used as an indicator of the irrigated pH of soils with soluble salts.
+lab_chemical_properties;ph_saturated_paste_method;61;NA;description;ph_saturated_paste analysis method
+lab_chemical_properties;ph_water_extractable;67;NA;description;The pH, water extract is the pH of the solution extracted from the sample with water. It is used as an indicator of the irrigated pH of soils with water.
+lab_chemical_properties;ph_water_extract_method;68;NA;description;ph_water_extract analysis method
+lab_chemical_properties;phosphate_water_extractable;161;NA;description;PO4 in the water extract. It is reported as meq per liter of extract.
+lab_chemical_properties;phosphorus_ammonium_oxalate_method;118;NA;description;phosphorous_nh4_oxalate analysis method
+lab_chemical_properties;phosphorus_ammonium_oxalate;117;NA;description;Phosphorus extracted with ammonium oxalate
+lab_chemical_properties;phosphorus_anion_resin_24_hr;120;NA;description;phosphorus_anion_resin_24_hr
+lab_chemical_properties;phosphorus_anion_resin_capacity;207;NA;description;Anion Exchange Resin Capacity is calculated by adding the reading at 1 hour and the reading at 24 hours.
+lab_chemical_properties;phosphorus_anion_resin_method;121;NA;description;phosphorus_anion_resin analysis method
+lab_chemical_properties;phosphorus_anion_resin_one_hr;119;NA;description;phosphorus_anion_resin_one_hr
+lab_chemical_properties;phosphorus_bray1;122;NA;description;This is the phosphorus extractable by the Bray-1 method, reported as milligrams per kilogram on a <2 mm base. It is used as an index of plant-available phosphorus. Bray-1 extracts adsorbed P.
+lab_chemical_properties;phosphorus_bray1_method;123;NA;description;phosphorus_bray1 analysis method
+lab_chemical_properties;phosphorus_bray2;124;NA;description;This is the phosphorus extractable by the Bray-2  method, reported as milligrams per kilogram on a <2 mm base. Bray-2 extracts both adsorbed and easily acid-soluble forms of P.
+lab_chemical_properties;phosphorus_bray2_method;125;NA;description;phosphorus_bray2 analysis method
+lab_chemical_properties;phosphorus_citric_acid;126;NA;description;The water soluble phosphorus is the fraction extracted by distilled water. It represents an attempt to approximate the P concentration in the soil solution, i.e. the mobile P.
+lab_chemical_properties;phosphorus_citric_acid_method;127;NA;description;phosphorus_citric_acid analysis method
+lab_chemical_properties;phosphorus_mehlich_3;128;NA;description;The phosphorus extracted by the Mehlich III solution.
+lab_chemical_properties;phosphorus_mehlich_3_method;129;NA;description;phosphorus_mehlich_3 analysis method
+lab_chemical_properties;phosphorus_mehlich3_extractable;185;NA;description;The phosphorus extracted by the Mehlich III solution.
+lab_chemical_properties;phosphorus_olsen;130;NA;description;The Olsen extractable phosphorus is used as an indicator of available phosphorus in calcareous soil materials (pH >6).
+lab_chemical_properties;phosphorus_olsen_method;131;NA;description;phosphorus_olsen analysis method
+lab_chemical_properties;phosphorus_water;132;NA;description;The water soluble phosphorus is the fraction extracted by distilled water. It represents an attempt to approximate the P concentration in the soil solution, i.e. the mobile P.
+lab_chemical_properties;phosphorus_water_extractable;160;NA;description;The water soluble phosphorus is the fraction extracted by distilled water. It represents an attempt to approximate the P concentration in the soil solution, i.e. the mobile P.
+lab_chemical_properties;phosphorus_water_method;133;NA;description;phosphorus_water analysis method
+lab_chemical_properties;po4_satx;95;NA;description;PO4 in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;po4_satx_method;96;NA;description;po4_satx analysis method
+lab_chemical_properties;potassium_mehlich3_extractable;186;NA;description;The potassium extracted by the Mehlich III solution.
+lab_chemical_properties;potassium_water_extractable;162;NA;description;The potassium extracted by the water solution.
+lab_chemical_properties;prep_code;3;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_chemical_properties;resistivity_saturated_paste;73;NA;description;Resistivity is the electrical resistance of a saturated soil paste in a standard resistance cup, reported as ohms per centimeter on the <2 mm fraction. It is a measure of the amount of soluble salts in the sample.
+lab_chemical_properties;resistivity_sp_method;74;NA;description;resistivity_sp analysis method
+lab_chemical_properties;result_source_key;2;NA;foreign_key;TRUE
+lab_chemical_properties;result_source_key;2;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_chemical_properties;selenium_mehlich3_extractable;187;NA;description;The selenium extracted by the Mehlich III solution.
+lab_chemical_properties;selenium_water_extractable;163;NA;description;The selenium extracted by the water solution.
+lab_chemical_properties;silica_ammonium_oxalate;42;NA;description;The amount of ammonium oxalate extractable silica relates to the amount of allophane and imogolite in andic materials. It is reported as a gravimetric percent on a <2 mm base.
+lab_chemical_properties;silica_ammonium_oxalate_method;43;NA;description;silica_ammonium_oxalate analysis method
+lab_chemical_properties;silicon_mehlich3_extractable;188;NA;description;The silicon extracted by the Mehlich III solution.
+lab_chemical_properties;silicon_water_extractable;164;NA;description;The silicon extracted by the water solution.
+lab_chemical_properties;so4_satx;101;NA;description;Sulfate in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;so4_satx_method;102;NA;description;so4_satx analysis method
+lab_chemical_properties;sodium_absorption_ratio;206;NA;description;The sodium absorption ratio is calculated by NA_SATX/sqrt((CA_SATX+MG_SATX)/2). It is approximately equal to the exchangeable sodium percentage. CMS derived value default
+lab_chemical_properties;sodium_mehlich3_extractable;189;NA;description;The sodium extracted by the Mehlich III solution.
+lab_chemical_properties;sodium_water_extractable;165;NA;description;The sodium extracted by the Water solution.
+lab_chemical_properties;acetate_water_extractable;137;NA;description;The acetate anion in the water extract.
+lab_chemical_properties;acidity_bacl2_tea_ph_8_2;12;NA;description;Extractable acidity, BaCl2-TEA at pH 8.2, is a measure of the amount of acid neutralized at a set pH. It is a measure of the potential acidity present, and does not distinguish between exchangeable and nonexchangeable components.
+lab_chemical_properties;acidity_bacl2_tea_ph_82_method;13;NA;description;acidity_bacl2_tea_ph_82 analysis method
+lab_chemical_properties;al_ammonium_oxalate_method;41;NA;description;al_ammonium_oxalate analysis method
+lab_chemical_properties;aluminum_ammonium_oxalate;40;NA;description;Ammonium  oxalate extractable aluminum is an estimate of the total pedogenic Al, much of which may be in noncrystalline materials or complexed by organic matter. It is reported as gravimetric percent on a <2 mm base.
+lab_chemical_properties;aluminum_dc_extract_method;33;NA;description;aluminum_dc_extract analysis method
+lab_chemical_properties;aluminum_dithionite_citrate;32;NA;description;Dithionite citrate extractable aluminum is an indicator of the amount of aluminum substituted for iron in iron oxides. It does not necessarily represent total pedogenic Al.
+lab_chemical_properties;aluminum_kcl_extract_method;15;NA;description;aluminum_kcl_extract analysis method
+lab_chemical_properties;aluminum_kcl_extractable;14;NA;description;KCl extractable aluminum approximates the exchangeable Al, and is a measure of the active acidity present in soils with a 1:1 water pH less than 5.5. It relates to the immediate lime requirement and the CEC of the soil.
+lab_chemical_properties;aluminum_mehlich3_extractable;171;NA;description;The aluminum extracted by the Mehlich III solution.
+lab_chemical_properties;aluminum_na_pyro_phosphate;50;NA;description;Sodium pyrophosphate extractable aluminum is the fraction extracted by 0.1M sodium pyrophosphate. It was originally considered the portion associated with organic compounds, although subsequent evidence indicates other forms are also removed.
+lab_chemical_properties;aluminum_na_pyro_phosphate_method;51;NA;description;aluminum_na_pyro_phosphate_met
+lab_chemical_properties;aluminum_plus_half_iron_oxalate;200;NA;description;The extractable aluminum is added to half of the amount of extractable iron in an ammonium oxalate solution.
+lab_chemical_properties;aluminum_saturation;195;NA;description;Aluminum saturation is calculated by (AL_KCL/(Sum of bases))*100. It provides some inference of potential Al toxicity problems, although many other factors influence Al toxicity.
+lab_chemical_properties;aluminum_water_extractable;138;NA;description;The aluminum extracted by the water solution.
+lab_chemical_properties;ammonium_ox_opt_dens_method;37;NA;description;ammonium_ox_opt_dens analysis method
+lab_chemical_properties;ammoniumoxalate_opticaldensity;36;NA;description;Ammonium oxalate optical density is a measure of the light blocking capacity of the extract. It relates to the amount of noncrystalline materials dissolved by the solution.
+lab_chemical_properties;arsenic_mehlich3_extractable;172;NA;description;The arsenic extracted by the Mehlich III solution.
+lab_chemical_properties;arsenic_water_extractable;139;NA;description;The arsenic extracted by the water solution.
+lab_chemical_properties;barium_mehlich3_extractable;173;NA;description;The barium extracted by the Mehlich III solution.
+lab_chemical_properties;barium_water_extractable;140;NA;description;The barium extracted by the water solution.
+lab_chemical_properties;base_sat_nh4oac_ph_7;197;NA;description;NH4OAC base saturation (pH 7.0) is calculated by (BASE_SUM/CEC_NH4)*100.
+lab_chemical_properties;base_sat_sum_of_cations_ph_8_2;196;NA;description;Base saturation by sum of cations (pH 8.2) is calculated by (BASE_SUM/CEC_SUM)*100.
+lab_chemical_properties;boron_water_extractable;141;NA;description;The boron extracted by the water solution.
+lab_chemical_properties;br_satx;97;NA;description;The bromide anion in the saturation extract.
+lab_chemical_properties;br_satx_method;98;NA;description;The bromide anion in the saturation extract.
+lab_chemical_properties;bromide_water_extractable;142;NA;description;The bromide extracted by the water solution.
+lab_chemical_properties;c_na_pyro_phosphate_method;47;NA;description;c_na_pyro_phosphate analysis method
+lab_chemical_properties;ca_nh4_ph_7;4;NA;description;NH4OAC extractable calcium is the fraction removed by pH 7.0 NH4OAC. It is assumed to represent the exchangeable Ca. It is reported as meq per 100 grams on a <2 mm base. It is not reported for samples containing carbonates or soluble salts.
+lab_chemical_properties;ca_nh4_ph_7_method;5;NA;description;ca_nh4_ph_7 analysis method
+lab_chemical_properties;ca_plus_mg_satx;79;NA;description;CMS analyte. Calcium plus magnesium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;ca_plus_mg_satx_method;80;NA;description;ca_plus_mg_satx analysis method
+lab_chemical_properties;ca_satx;75;NA;description;Calcium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;ca_satx_method;76;NA;description;ca_satx analysis method
+lab_chemical_properties;ca_to_mg_ratio;203;NA;description;ca_to_mg_ratio
+lab_chemical_properties;caco3_lt_2_mm;69;NA;description;Carbonate in the < 2mm fraction is measured by CO2 evolution after acid treatment. It is reported as gravimetric percent CaCO3 on a <2 mm base, even though carbonates of Mg, Na, K, and Fe may be present and react with the acid.
+lab_chemical_properties;caco3_lt_2_mm_method;70;NA;description;caco3_lt_2_mm analysis method
+lab_chemical_properties;caco3_lt_20_mm;201;NA;description;Carbonate in the less than 20mm fraction is measured by CO2 evolution after acid treatment. It is reported as gravimetric percent CaCO3 on a 20 mm base, even though carbonates of Mg, Na, K, and Fe may be present and react with the acid.
+lab_chemical_properties;cadmium_mehlich3_extractable;174;NA;description;The cadmium extracted by the Mehlich III solution.
+lab_chemical_properties;cadmium_water_extractable;143;NA;description;The cadmium extracted by the water solution.
+lab_chemical_properties;calcium_mehlich3_extractable;175;NA;description;The calcium extracted by the Mehlich III solution.
+lab_chemical_properties;calcium_water_extractable;144;NA;description;The calcium extracted by the water solution.
+lab_chemical_properties;carbon_sodium_pyro_phosphate;46;NA;description;Sodium pyrophosphate extractable carbon was originally thought to correspond to carbon that bound Fe and Al in spodic materials. It is reported on a <2 mm base.
+lab_chemical_properties;carbon_to_nitrogen_ratio;199;NA;description;The carbon to nitrogen ratio is calculated by C_TOT_NCS/N_TOT_NCS. It provides information related to soil fertility and the state of organic matter decomposition. It is reported on a <2 mm base.
+lab_chemical_properties;cec_nh4_ph_7;20;NA;description;CEC by NH4OAC is the cation exchange capacity of the sample, determined by 1N NH4OAC in a system highly buffered at pH 7.0. It is reported as meq per 100 grams sample, on a <2 mm base.
+lab_chemical_properties;cec_nh4_ph_7_method;21;NA;description;cec_nh4_ph_7 analysis method
+lab_chemical_properties;chloride_water_extractable;145;NA;description;The chloride extracted by the water solution.
+lab_chemical_properties;chromium_mehlich3_extractable;176;NA;description;The chromium extracted by the Mehlich III solution.
+lab_chemical_properties;chromium_water_extractable;146;NA;description;The chromium extracted by the water solution.
+lab_chemical_properties;cl_satx;91;NA;description;Chloride in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;cl_satx_method;92;NA;description;cl_satx analysis method
+lab_chemical_properties;co3_plus_hco3_satx;89;NA;description;CMS analyte. Bicarbonate plus carbonate in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;co3_plus_hco3_satx_method;90;NA;description;co3_plus_hco3_satx analysis method
+lab_chemical_properties;co3_satx;85;NA;description;Carbonate in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;co3_satx_method;86;NA;description;co3_satx analysis method
+lab_chemical_properties;cobalt_mehlich3_extractable;177;NA;description;The  cobalt extracted by the Mehlich III solution.
+lab_chemical_properties;cobalt_water_extractable;147;NA;description;The cobalt extracted by the water solution.
+lab_chemical_properties;strontium_mehlich3_extractable;190;NA;description;The strontium extracted by the Mehlich III solution.
+lab_chemical_properties;strontium_water_extractable;166;NA;description;The strontium extracted by the water solution.
+lab_chemical_properties;sulfate_water_extractable;167;NA;description;Sulfate in the water extract. It is reported as meq per liter of extract.
+lab_chemical_properties;sum_of_cations_cec_pH_8_2;193;NA;description;This is the calculated CEC at pH 8.2. It is calculated by (BASE_SUM+ACID_TEA). It is reported as meq per 100 grams sample on a <2 mm base.
+lab_chemical_properties;sum_of_nh4_ph_7_Ext_bases;192;NA;description;The sum of NH4OAC extractable bases is calculated as (CA_NH4+MG_NH4+NA_NH4+K_NH4). It is reported as meq per 100 grams on a <2 mm base.
+lab_chemical_properties;total_carbon_ncs;22;total_carbon;description;Total carbon is a measure of all organic and inorganic carbon, including that found in carbonate minerals.
+lab_chemical_properties;total_carbon_ncs;22;total_carbon;value;--
+lab_chemical_properties;total_carbon_ncs_method;23;total_carbon;description;total_carbon_ncs analysis method
+lab_chemical_properties;total_carbon_ncs_method;23;total_carbon;method;--
+lab_chemical_properties;total_estimated_salts_satx;204;NA;description;The total estimated salt content of a sample is calculated from the electrical conductivity. It is reported as gravimetric percent on a <2 mm base.
+lab_chemical_properties;total_nitrogen_ncs;24;NA;description;Total nitrogen is a measure of all organic and inorganic nitrogen, including that found in nitrogen minerals.
+lab_chemical_properties;total_nitrogen_ncs_method;25;NA;description;total_nitrogen_ncs analysis method
+lab_chemical_properties;total_sulfur_ncs;26;NA;description;Total sulfur is the sum of organic and inorganic forms, reported as a gravimetric percent on a <2 mm base.
+lab_chemical_properties;total_sulfur_ncs_method;27;NA;description;total_sulfur_ncs analysis method
+lab_chemical_properties;vanadium_water_extractable;168;NA;description;The vanadium extracted by the water solution.
+lab_chemical_properties;water_extract_method;136;NA;description;The method using water to extract cations and anions.  Used to mimic the soil solution.
+lab_chemical_properties;zinc_mehlich3_extractable;191;NA;description;The zinc extracted by the Mehlich III solution.
+lab_chemical_properties;zinc_water_extractable;169;NA;description;The zinc extracted by the water solution.
+lab_chemical_properties;copper_mehlich3_extractable;178;NA;description;The copper extracted by the Mehlich III solution.
+lab_chemical_properties;copper_water_extractable;148;NA;description;The copper extracted by the water solution.
+lab_chemical_properties;corrected_gyp_lt_2_mm_method;72;NA;description;corrected_gyp_lt_2_mm analysis method
+lab_chemical_properties;corrected_gypsum_lt_2_mm;71;NA;description;Corrected Gypsum ( Uncorrected Gypsum * Factor)
+lab_chemical_properties;ec_predict_one_to_two;111;NA;description;The salt predict electrical conductivity is used to determine whether additional salt analyses are needed, and to estimate appropriate dilution ratios for additional tests. It is reported as mmhos per centimeter of a 1:2 soil:water mixture by weight.
+lab_chemical_properties;ec_predict_one_to_two_method;112;NA;description;ec_predict_one_to_two analysis method
+lab_chemical_properties;ec_water_extractable;149;NA;description;The electrical conductivity of the water extract solution.
+lab_chemical_properties;ecec_base_plus_aluminum;194;NA;description;The effective cation exchange capacity is calculated by BASE_SUM+AL_KCL. It is not calculated if soluble salts are present. It is reported as meq per 100 grams on a <2 mm base.
+lab_chemical_properties;electrical_cond_satx_method;110;NA;description;electrical_cond_satx analysis method
+lab_chemical_properties;electrical_conductivity_satx;109;NA;description;The electrical conductivity of the saturation extract is used to estimate the concentration of salts in a sample, and provides inferences on cation concentration in solution and osmotic pressure. It is reported as mmhos per centimeter.
+lab_chemical_properties;estimated_organic_carbon;198;organic_carbon;description;CMS analyte. Organic carbon is a measure of all organic forms of carbon in the soil, including organic carbon within minerals.
+lab_chemical_properties;estimated_organic_carbon;198;organic_carbon;value;--
+lab_chemical_properties;estimated_organic_carbon;198;organic_carbon;method;"""CMS analyte of extimated organic carbon"""
+lab_chemical_properties;exchangeable_sodium;205;NA;description;This is the exchangeable sodium percentage (ESP), reported on a <2 mm base. If salts are present, ESP has been corrected for the water soluble Na.
+lab_chemical_properties;f_satx;93;NA;description;Fluoride in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;f_satx_method;94;NA;description;f_satx analysis method
+lab_chemical_properties;fe_ammoniumoxalate_extractable;38;NA;description;Ammonium oxalate extractable iron is considered a measure of the noncrystalline Fe in soils. It provides some inferences of the amount of Fe in various forms. It is reported as gravimetric % on a <2mm base.
+lab_chemical_properties;fe_dithionite_citrate_extractable;30;NA;description;Dithionite citrate extractable iron is considered a general measure of total pedogenic iron. It provides inferences on the amount of iron in various forms, P fixing potential, aggregate stability, and degree of weathering. Reported as grav % on <2mm.
+lab_chemical_properties;fluoride_water_extractable;150;NA;description;The flouride extracted by the water solution.
+lab_chemical_properties;gypsum_lt_20_mm;202;NA;description;Calcium sulfate as gypsum in the <20 mm fraction is reported as a gravimetric percent on a <20 mm base.
+lab_chemical_properties;h20_satx;107;NA;description;Water content of the saturation paste is the gravimetric percent water in a sample prior to collection of the saturation extract.
+lab_chemical_properties;h20_satx_method;108;NA;description;h20_satx analysis method
+lab_chemical_properties;hco3_satx;87;NA;description;Bicarbonate (HCO3) in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;hco3_satx_method;88;NA;description;hco3_satx analysis method
+lab_chemical_properties;iron_ammonium_oxalate_method;39;NA;description;iron_ammonium_oxalate analysis method
+lab_chemical_properties;iron_dc_extract_method;31;NA;description;iron_dc_extract analysis method
+lab_chemical_properties;iron_kcl_extractable;18;NA;description;iron_kcl_extractable
+lab_chemical_properties;iron_kcl_extractable_method;19;NA;description;iron_kcl_extractable analysis method
+lab_chemical_properties;iron_mehlich3_extractable;179;NA;description;The iron extracted by the Mehlich III solution.
+lab_chemical_properties;iron_na_pyro_phosphate_method;49;NA;description;iron_na_pyro_phosphate analysis method
+lab_chemical_properties;iron_sodium_pyro_phosphate;48;NA;description;Sodium pyrophosphate extractable iron is assumed to be the fraction associated with organic complexes. It is reported as gravimetric percent on a <2 mm base.
+lab_chemical_properties;iron_water_extractable;151;NA;description;The iron extracted by the water solution.
+lab_chemical_properties;k_nh4_ph_7;10;NA;description;NH4OAC extractable potassium is the fraction removed by pH 7.0 NH4OAC. It is assumed to represent the exchangeable K. It is reported as meq per 100 grams on a <2 mm base.
+lab_chemical_properties;k_nh4_ph_7_method;11;NA;description;k_nh4_ph_7 analysis method
+lab_chemical_properties;k_satx;83;NA;description;Potassium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;k_satx_method;84;NA;description;k_satx analysis method
+lab_chemical_properties;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_chemical_properties;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_chemical_properties;lead_mehlich3_extractable;180;NA;description;The lead extracted by the Mehlich III solution.
+lab_chemical_properties;lead_water_extractable;152;NA;description;The lead extracted by the water solution.
+lab_chemical_properties;magnesium_mehlich3_extractable;181;NA;description;The magnesium extracted by the Mehlich III solution.
+lab_chemical_properties;magnesium_water_extractable;153;NA;description;The magnesium extracted by the water solution.
+lab_chemical_properties;manganese_ammonium_oxalate;44;NA;description;The ammonium oxalate extractable manganese is assumed to be the fraction held in noncrystalline compounds. It is reported as milligrams per kilogram on a <2 mm base.
+lab_chemical_properties;manganese_dc_extract_method;35;NA;description;manganese_dc_extract analysis method
+lab_chemical_properties;manganese_dithionite_citrate;34;NA;description;Dithionite citrate extractable manganese is considered easily reducible manganese. It is reported as gravimetric percent on a 0.2% are rare.
+lab_chemical_properties;manganese_kcl_extract_method;17;NA;description;manganese_kcl_extract analysis method
+lab_chemical_properties;manganese_kcl_extractable;16;NA;description;The KCl extractable manganese approximates the exchangeable or plant available fraction. It is reported as milligrams per kilogram on a <2 mm base.
+lab_chemical_properties;manganese_mehlich3_extractable;182;NA;description;The manganese extracted by the Mehlich III solution.
+lab_chemical_properties;manganese_na_pyro_phosphate;52;NA;description;Sodium pyrophosphate extractable manganese is the fraction extracted by 0.1M sodium pyrophosphate. It was originally considered the portion associated with organic compounds, although subsequent evidence indicates other forms are also removed.
+lab_chemical_properties;manganese_water_extractable;154;NA;description;The manganese extracted by the water solution.
+lab_chemical_properties;mehlich_3_extractable_method;170;NA;description;mehlich_3_extractable analysis method
+lab_chemical_properties;melanic_index;113;NA;description;Melanic index is an absorbance ratio for melanic Andisols.
+lab_chemical_properties;melanic_index_method;114;NA;description;melanic_index analysis method
+lab_chemical_properties;mg_nh4_ph_7;6;NA;description;NH4OAC extractable magnesium is the fraction removed by pH 7.0 NH4OAC. It is assumed to represent the exchangeable Mg if MgCO3 is not present. It is reported as meq per 100 grams on a <2 mm base.
+lab_chemical_properties;mg_nh4_ph_7_method;7;NA;description;mg_nh4_ph_7 analysis method
+lab_chemical_properties;mg_satx;77;NA;description;Magnesium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;mg_satx_method;78;NA;description;mg_satx analysis method
+lab_chemical_properties;mn_ammonium_oxalate_method;45;NA;description;mn_ammonium_oxalate analysis method
+lab_chemical_properties;mn_na_pyro_phosphate_method;53;NA;description;mn_na_pyro_phosphate analysis method
+lab_chemical_properties;molybdenum_mehlich3_extractable;183;NA;description;The molybdenum extracted by the Mehlich III solution.
+lab_chemical_properties;molybdenum_water_extractable;155;NA;description;The molybdenum extracted by the water solution.
+lab_chemical_properties;na_nh4_ph_7;8;NA;description;NH4OAC extractable sodium is the fraction removed by pH 7.0 NH4OAC. It is assumed to represent the exchangeable Na. It is reported as meq per 100 grams on a <2 mm base.
+lab_chemical_properties;na_nh4_ph_7_method;9;NA;description;na_nh4_ph_7 analysis method
+lab_chemical_properties;na_satx;81;NA;description;Sodium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;na_satx_method;82;NA;description;na_satx analysis method
+lab_chemical_properties;new_zealand_phos_retent_method;116;NA;description;new_zealand_phos_retent analysis method
+lab_chemical_properties;new_zealand_phosphorus_retent;115;NA;description;The New Zealand phosphorus retention is the gravimetric percent phosphorus removed from a solution by equilibration with a sample. It is reported on a <2 mm base. High P retention indicates andic material.
+lab_chemical_properties;nickel_mehlich3_extractable;184;NA;description;The nickel extracted by the Mehlich III solution.
+lab_chemical_properties;nickel_water_extractable;156;NA;description;The nickel extracted by the water solution.
+lab_chemical_properties;nitrate_1m_kcl;134;NA;description;The nitrate nitrogen is the fraction in NO3 form. It is extracted by 1M KCl and represents the soluble NO3 that may be subject to leaching.
+lab_chemical_properties;nitrate_1m_kcl_method;135;NA;description;nitrate_1m_kcl analysis method
+lab_chemical_properties;nitrate_n_water_extractable;157;NA;description;The Nitrate_(NO3) N extracted by the Water solution.
+lab_chemical_properties;nitrate_water_extractable;158;NA;description;Nitrate in the water extract. It is reported as meq per liter of extract.
+lab_chemical_properties;nitrite_water_extractable;159;NA;description;Nitrite in the water extract. It is reported as meq per liter of extract.
+lab_chemical_properties;no2_satx;103;NA;description;Nitrite in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;no2_satx_method;104;NA;description;no2_satx analysis method
+lab_chemical_properties;no3_satx;105;NA;description;Nitrate in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
+lab_chemical_properties;no3_satx_method;106;NA;description;no3_satx analysis method
+lab_chemical_properties;oac_satx;99;NA;description;The acetate anion in the saturation extract.
+lab_chemical_properties;oac_satx_method;100;NA;description;oac_satx analysis method
+lab_chemical_properties;oc_walkley_black_method;29;organic_carbon;description;oc_walkley_black analysis method
+lab_chemical_properties;oc_walkley_black_method;29;organic_carbon;method;--
+lab_chemical_properties;organic_carbon_walkley_black;28;organic_carbon;description;Organic carbon is a measure of all organic forms of carbon in the soil, including organic carbon within minerals.
+lab_chemical_properties;organic_carbon_walkley_black;28;organic_carbon;value;--
+lab_combine_nasis_ncss;priority;7;NA;description;priority
+lab_combine_nasis_ncss;priority2;8;NA;description;priority2
+lab_combine_nasis_ncss;samp_class_type;10;NA;description;samp_class_type
+lab_combine_nasis_ncss;samp_classdate;11;NA;description;samp_classdate
+lab_combine_nasis_ncss;samp_classification_name;12;NA;description;samp_classification_name
+lab_combine_nasis_ncss;samp_name;9;NA;description;samp_name
+lab_combine_nasis_ncss;samp_osdtypelocflag;26;NA;description;samp_osdtypelocflag
+lab_combine_nasis_ncss;samp_taxceactcl;19;NA;description;samp_taxceactcl
+lab_combine_nasis_ncss;samp_taxfamhahatmatcl;76;NA;description;samp_taxfamhahatmatcl
+lab_combine_nasis_ncss;samp_taxgrtgroup;15;NA;description;samp_taxgrtgroup
+lab_combine_nasis_ncss;samp_taxminalogy;24;NA;description;samp_taxminalogy
+lab_combine_nasis_ncss;samp_taxmoistscl;22;NA;description;samp_taxmoistscl
+lab_combine_nasis_ncss;samp_taxorder;13;NA;description;samp_taxorder
+lab_combine_nasis_ncss;samp_taxother;25;NA;description;samp_taxother
+lab_combine_nasis_ncss;samp_taxpartsize;17;NA;description;samp_taxpartsize
+lab_combine_nasis_ncss;samp_taxpartsizemod;18;NA;description;samp_taxpartsizemod
+lab_combine_nasis_ncss;samp_taxreaction;20;NA;description;samp_taxreaction
+lab_combine_nasis_ncss;samp_taxsubgrp;16;NA;description;samp_taxsubgrp
+lab_combine_nasis_ncss;samp_taxsuborder;14;NA;description;samp_taxsuborder
+lab_combine_nasis_ncss;samp_taxtempcl;21;NA;description;samp_taxtempcl
+lab_combine_nasis_ncss;samp_taxtempregime;23;NA;description;samp_taxtempregime
+lab_combine_nasis_ncss;site_key;2;NA;description;An integer number that uniquely identifies a particular site
+lab_combine_nasis_ncss;site_obsdate;65;NA;description;site_obsdate
+lab_combine_nasis_ncss;siteiid;63;NA;description;siteiid
+lab_combine_nasis_ncss;siteobjupdate;80;NA;description;siteobjupdate
+lab_combine_nasis_ncss;ssa_key;72;NA;description;ssa key
+lab_combine_nasis_ncss;SSL_class_type;46;NA;description;SSL_class_type
+lab_combine_nasis_ncss;SSL_classdate;47;NA;description;SSL_classdate
+lab_combine_nasis_ncss;SSL_classification_name;48;NA;description;SSL_classification_name
+lab_combine_nasis_ncss;SSL_name;45;NA;description;SSL_name
+lab_combine_nasis_ncss;SSL_osdtypelocflag;62;NA;description;SSL_osdtypelocflag
+lab_combine_nasis_ncss;SSL_taxceactcl;55;NA;description;SSL_taxceactcl
+lab_combine_nasis_ncss;SSL_taxfamhahatmatcl;78;NA;description;SSL_taxfamhahatmatcl
+lab_combine_nasis_ncss;SSL_taxgrtgroup;51;NA;description;SSL_taxgrtgroup
+lab_combine_nasis_ncss;SSL_taxminalogy;60;NA;description;SSL_taxminalogy
+lab_combine_nasis_ncss;SSL_taxmoistscl;58;NA;description;SSL_taxmoistscl
+lab_combine_nasis_ncss;SSL_taxorder;49;NA;description;SSL_taxorder
+lab_combine_nasis_ncss;SSL_taxother;61;NA;description;SSL_taxother
+lab_combine_nasis_ncss;SSL_taxpartsize;53;NA;description;SSL_taxpartsize
+lab_combine_nasis_ncss;SSL_taxpartsizemod;54;NA;description;SSL_taxpartsizemod
+lab_combine_nasis_ncss;SSL_taxreaction;56;NA;description;SSL_taxreaction
+lab_combine_nasis_ncss;SSL_taxsubgrp;52;NA;description;SSL_taxsubgrp
+lab_combine_nasis_ncss;SSL_taxsuborder;50;NA;description;SSL_taxsuborder
+lab_combine_nasis_ncss;SSL_taxtempcl;57;NA;description;SSL_taxtempcl
+lab_combine_nasis_ncss;SSL_taxtempregime;59;NA;description;SSL_taxtempregime
+lab_combine_nasis_ncss;state_key;69;NA;description;state key
+lab_combine_nasis_ncss;upedonid;5;NA;description;upedonid
+lab_combine_nasis_ncss;usiteid;64;NA;description;usiteid
+lab_combine_nasis_ncss;corr_class_type;28;NA;description;corr_class_type
+lab_combine_nasis_ncss;corr_classdate;29;NA;description;corr_classdate
+lab_combine_nasis_ncss;corr_classification_name;30;NA;description;corr_classification_name
+lab_combine_nasis_ncss;corr_name;27;NA;description;corr_name
+lab_combine_nasis_ncss;corr_osdtypelocflag;44;NA;description;corr_osdtypelocflag
+lab_combine_nasis_ncss;corr_taxceactcl;37;NA;description;corr_taxceactcl
+lab_combine_nasis_ncss;corr_taxfamhahatmatcl;77;NA;description;corr_taxfamhahatmatcl
+lab_combine_nasis_ncss;corr_taxgrtgroup;33;NA;description;corr_taxgrtgroup
+lab_combine_nasis_ncss;corr_taxminalogy;42;NA;description;corr_taxminalogy
+lab_combine_nasis_ncss;corr_taxmoistscl;40;NA;description;corr_taxmoistscl
+lab_combine_nasis_ncss;corr_taxorder;31;NA;description;corr_taxorder
+lab_combine_nasis_ncss;corr_taxother;43;NA;description;corr_taxother
+lab_combine_nasis_ncss;corr_taxpartsize;35;NA;description;corr_taxpartsize
+lab_combine_nasis_ncss;corr_taxpartsizemod;36;NA;description;corr_taxpartsizemod
+lab_combine_nasis_ncss;corr_taxreaction;38;NA;description;corr_taxreaction
+lab_combine_nasis_ncss;corr_taxsubgrp;34;NA;description;corr_taxsubgrp
+lab_combine_nasis_ncss;corr_taxsuborder;32;NA;description;corr_taxsuborder
+lab_combine_nasis_ncss;corr_taxtempcl;39;NA;description;corr_taxtempcl
+lab_combine_nasis_ncss;corr_taxtempregime;41;NA;description;corr_taxtempregime
+lab_combine_nasis_ncss;country_key;68;NA;description;country key
+lab_combine_nasis_ncss;county_key;70;NA;description;county key
+lab_combine_nasis_ncss;labdatadescflag;6;NA;description;labdatadescflag
+lab_combine_nasis_ncss;latitude_decimal_degrees;66;NA;description;latitude_decimal_degrees
+lab_combine_nasis_ncss;longitude_decimal_degrees;67;NA;description;longitude_decimal_degrees
+lab_combine_nasis_ncss;mlra_key;71;NA;description;mlra key
+lab_combine_nasis_ncss;nforest_key;74;NA;description;nforest key
+lab_combine_nasis_ncss;note;75;NA;description;note
+lab_combine_nasis_ncss;npark_key;73;NA;description;npark key
+lab_combine_nasis_ncss;pedlabsampnum;3;NA;description;An identifier for the pedon sample that is assigned by the Kellogg Soil Survey Laboratory. This identifier is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_combine_nasis_ncss;pedobjupdate;79;NA;description;pedobjupdate
+lab_combine_nasis_ncss;pedon_key;1;NA;description;An integer number that uniquely identifies a particular pedon
+lab_combine_nasis_ncss;pedoniid;4;NA;description;pedoniid
+lab_dd_domain_detail;choice;5;NA;description;A character string that represents a member of a domain. This value must be unique for every member of a given domain.
+lab_dd_domain_detail;choice_desc;7;NA;description;choice_desc
+lab_dd_domain_detail;choice_inactive;3;NA;description;choice_inactive
+lab_dd_domain_detail;choice_label;6;NA;description;A character string containing the longer label corresonding to a member (choice) of a domain in the LIMS system. This value is not stored in the LIMS database. In addition to to hopefully making it clearer as to what a choice in a particular domain represents, this mixed case string is often more suitable for representing a domain choice in a hard copy report.
+lab_dd_domain_detail;choice_sequence;4;NA;description;Specifies the sequence in which the members of a domain should be ordered or displayed.
+lab_dd_domain_detail;domain_detail_key;1;NA;description;domain_detail key
+lab_dd_domain_detail;domain_key;2;NA;description;An integer number that uniquely identifies a domain in the LIMS system.
+lab_dd_domain_master;source_domain_id;8;NA;description;source_domain_id
+lab_dd_domain_master;domain_count;3;NA;description;domain_count
+lab_dd_domain_master;domain_description;7;NA;description;domain_description
+lab_dd_domain_master;domain_key;1;NA;description;An integer number that uniquely identifies a domain in the LIMS system.
+lab_dd_domain_master;domain_max_len;5;NA;description;domain_max_len
+lab_dd_domain_master;domain_min_len;4;NA;description;domain_min_len
+lab_dd_domain_master;domain_name;2;NA;description;The name of the domain to which a column's values are restricted. A domain is a finite list of character strings that a column's value may assume.
+lab_dd_domain_master;domain_order_method;6;NA;description;domain_order analysis method
+lab_table_descriptions;table_audit_flag;4;NA;description;table_audit_flag
+lab_table_descriptions;table_desc;5;NA;description;table_desc
+lab_table_descriptions;table_key;1;NA;description;An integer number that uniquely identifies each table in the LIMS database.
+lab_table_descriptions;table_label;3;NA;description;A descriptive label associated with a database table. For SSURGO, every table's label must be unique, making a table's label a suitable alias for identifying a table. For SSURGO, table labels are typically mixed case character strings with embedded blanks.
+lab_table_descriptions;table_name;2;NA;description;The logical name of a particular database table.
+lab_column_descriptions;table_key;2;NA;description;An integer number that uniquely identifies each table in the LIMS database.
+lab_column_descriptions;column_data_type;7;NA;description;A character string containing the physical data type of a column in the LIMS database.
+lab_column_descriptions;column_default;14;NA;description;A character string containing the default value of a column.
+lab_column_descriptions;column_description;18;NA;description;column_desc
+lab_column_descriptions;column_field_size;8;NA;description;The default display width of a column in spreadsheet view and reports, in characters.
+lab_column_descriptions;column_key;1;NA;description;An integer number that uniquely identifies a particular table column in the LIMS database.
+lab_column_descriptions;column_label;6;NA;description;The column label.
+lab_column_descriptions;column_max;11;NA;description;column_max
+lab_column_descriptions;column_min;10;NA;description;column_min
+lab_column_descriptions;column_name;5;NA;description;A character string containing the physical name of a column in the LIMS database.
+lab_column_descriptions;column_not_null;12;NA;description;A Boolean value that indicates whether or not a value is always required for a column in the LIMS database.
+lab_column_descriptions;column_precision;9;NA;description;The number of digits to the right of the decimal place when a number is displayed in the LIMS system.
+lab_column_descriptions;column_seq;3;NA;description;column_seq
+lab_column_descriptions;column_type;4;NA;description;A character string from a choice list, containing the kinds of columns that denote the type of handling that should be used for that column on a data entry form.
+lab_column_descriptions;column_unique;13;NA;description;A Boolean value that indicates if the corresponding column should be unique.
+lab_column_descriptions;domain_key;15;NA;description;An integer number that uniquely identifies a domain in the LIMS system.
+lab_column_descriptions;foreign_column_name;17;NA;foreign_key;TRUE
+lab_column_descriptions;foreign_column_name;17;NA;description;A character string containing the physical name of a column in the LIMS database, in this case a column corresponding to a particular foreign key column in another table.
+lab_column_descriptions;foreign_table_name;16;NA;foreign_key;TRUE
+lab_column_descriptions;foreign_table_name;16;NA;description;A character string containing the physical name of a table in the LIMS database, in this case the table corresponding to a particular foreign key.
+lab_layer;project_key;3;NA;identifier;--
+lab_layer;project_key;3;NA;description;An integer number that uniquely identifies a particular project
+lab_layer;site_key;4;NA;identifier;--
+lab_layer;site_key;4;NA;description;An integer number that uniquely identifies a particular site
+lab_layer;stratified_textures_flag;21;NA;description;A Boolean flag that when set (Y) indicates that the textures that comprise a particular texture group, are stratified.
+lab_layer;texture_description;22;NA;description;The full texture description for a horizon, using full texture class and in lieu of names rather than abbreviations.
+lab_layer;hzn_bot;12;layer_bottom;description;The bottom (lower) depth of the layer.
+lab_layer;hzn_desgn;14;horizon_designation;description;The concatenation of three kinds of symbols (four data elements) used in various combinations to designate layers within the soil. (SSM)
+lab_layer;hzn_desgn;14;horizon_designation;value;--
+lab_layer;hzn_desgn_old;13;NA;description;Horizon designation originally entered in the database
+lab_layer;hzn_desgn_other;19;horizon_designation_other;description;The portion of the horizon designation that did not parse into the regular fields
+lab_layer;hzn_desgn_other;19;horizon_designation_other;value;--
+lab_layer;hzn_discontinuity;15;NA;description;"One of four kinds of symbols, when concatenated, are used to distinguish different kinds of layers in soils.  A discontinuity is a significant change in particle-size distribution or mineralogy that indicates a difference in the material from which the horizons formed and/or a significant difference in age, unless that difference in age is indicated by the suffix ""b"". (SSM)"
+lab_layer;hzn_master;16;NA;description;One of four kinds of symbols, that when concatenated, are used to distinguish different kinds of layers in soils.  Master horizons and layers are the base symbols to which other characters are added to complete the designations.  Capital letters, virgiles (/), and ampersands (&) are used. (SSM)
+lab_layer;hzn_prime;17;NA;description;A character used to indicate that this horizon has an identical horizon designation as some overlying horizon.  The two horizons in question are separated by at least one other horizon.
+lab_layer;hzn_top;11;layer_top;description;The top (upper) depth of the layer.
+lab_layer;hzn_vert_subdvn;18;NA;description;This is the end of the horizon designation. One of the four kinds of symbols, when concatenated, are used to distinguish different kinds of layers in soils. Vertical subdivisions, the last of the four pieces, are used to subdivide a horizon or layer designated by a single letter or combination of letters or numbers or letters and numbers.
+lab_layer;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_layer;layer_field_label_1;8;NA;description;The label assigned in the field to the layer.
+lab_layer;layer_field_label_2;9;NA;description;A second label assigned in the field to the layer.
+lab_layer;layer_field_label_3;10;NA;description;A third label assigned in the field to the layer.
+lab_layer;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_layer;layer_sequence;6;NA;description;The horizon layer number is a sequential number (starting at 1 for the top horizon) for horizons in a pedon. It is used to order data in reports.
+lab_layer;layer_type;7;layer_type;description;The layer type indicates whether the layer is a horizon, layer or non-layer reporting type.  The intent is to allow flexible reporting of data for pedons, projects or other data groupings.
+lab_layer;layer_type;7;layer_type;value;--
+lab_layer;non_hzn_desgn;20;NA;description;A string entered into the horizon field that is not a horizon designation
+lab_layer;pedon_key;5;NA;identifier;--
+lab_layer;pedon_key;5;NA;description;An integer number that uniquely identifies a particular pedon
+lab_major_and_trace_elements_and_oxides;phosphorus_major_element;12;NA;description;Phosphorus_Major_Element is the total P measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;phosphorus_trace_element;30;NA;description;Phosphorus_Trace_Element is the total P measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;potassium_major_element;8;NA;description;Potassium_Major_Element is the total K measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;potassium_oxide_total;42;NA;description;potassium_oxide_total
+lab_major_and_trace_elements_and_oxides;prep_code;3;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_major_and_trace_elements_and_oxides;result_source_key;2;NA;foreign_key;TRUE
+lab_major_and_trace_elements_and_oxides;result_source_key;2;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_major_and_trace_elements_and_oxides;selenium_trace_element;33;NA;description;Selenium_Trace_Element is the total Se measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;silicon_major_element;13;NA;description;Silicon_Major_Element is the total Si measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;silver_trace_element;18;NA;description;Silver_Trace_Element is the total Ag measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;sodium_major_element;11;NA;description;Sodium_Major_Element is the total Na measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;aluminum_major_element;5;NA;description;Aluminum_Major_Element is the total AL measured after total dissolution of a size fraction of soil material. It is stored as percent of the element and reported as  percent oxide on the base of the size fraction used.
+lab_major_and_trace_elements_and_oxides;aluminum_oxide_total;41;NA;description;aluminum_oxide_total
+lab_major_and_trace_elements_and_oxides;antimony_trace_element;32;NA;description;Antimony_Trace_Element is the total Sb measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;arsenic_trace_element;19;NA;description;Arsenic_Trace_Element is the total As measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;barium_trace_element;20;NA;description;Barium_Trace_Element is the total Ba measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;beryllium_trace_element;21;NA;description;Beryllium_Trace_Element is the total Be measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;cadmium_trace_element;22;NA;description;Cadmium_Trace_Element is the total Cd measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;calcium_major_element;6;NA;description;Calcium_Major Element is the total Ca measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;chromium_trace_element;24;NA;description;Chromium_Trace_Element is the total Cr measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;cobalt_trace_element;23;NA;description;Cobalt_Trace_Element is the total Co measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;strontium_major_element;14;NA;description;Strontium_Major_Element is the total Sr measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;strontium_trace_element;35;NA;description;Strontium_Trace_Element is the total Sr measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;thallium_trace_element;36;NA;description;Thallium_Trace_Element is the total Tl measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;tin_trace_element;34;NA;description;Tin_Trace_Element is the total Sn measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;titanium_major_element;15;NA;description;Titanium_Major_Element is the total Ti measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;trace_element_method;17;NA;description;trace_element analysis method
+lab_major_and_trace_elements_and_oxides;tungsten_trace_element;38;NA;description;Tungsten_Trace_Element is the total W measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;vanadium_trace_element;37;NA;description;Vanadium_Trace_Element is the total V measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;zinc_trace_element;39;NA;description;Zinc_Trace_Element is the total Zn measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;zirconium_major_element;16;NA;description;Zirconium_Major_Element is total Zr measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;copper_trace_element;25;NA;description;Copper_Trace_Element is the total Cu measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;iron_major_element;7;NA;description;Iron_Major_Element is the total Fe measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;iron_oxide_total;40;NA;description;iron_oxide_total
+lab_major_and_trace_elements_and_oxides;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_major_and_trace_elements_and_oxides;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_major_and_trace_elements_and_oxides;lead_trace_element;31;NA;description;Lead_Trace_Element is the total Pb measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;magnesium_major_element;9;NA;description;Magnesium_Major_Element is the total Mg measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;major_element_method;4;NA;description;major_element analysis method
+lab_major_and_trace_elements_and_oxides;manganese_major_element;10;NA;description;Manganese_Major_Element is the total Mn measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;manganese_trace_element;27;NA;description;Manganese_Trace_Element is the total Mn measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;mercury_trace_element;26;NA;description;Mercury_Trace_Element is the total Hg measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;molybdenum_trace_element;28;NA;description;Molybdenum_Trace_Element is the total Mo measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_major_and_trace_elements_and_oxides;nickel_trace_element;29;NA;description;Nickel_Trace_Element is the total Ni measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
+lab_method_code;proced_abbrev;5;NA;description;A character string containing the procedure abbreviation.
+lab_method_code;proced_code;7;NA;description;proced_code
+lab_method_code;proced_desc;6;NA;description;proced_desc
+lab_method_code;proced_name;4;NA;description;A character string containing the Soil Survey Laboratory name of the procedure.
+lab_method_code;procedure_key;2;NA;description;procedure key
+lab_method_code;requested_anal_name;3;NA;description;requested_anal_name
+lab_method_code;source_system_key;8;NA;description;source_system key
+lab_method_code;source_system_name;9;NA;description;source_system_name
+lab_method_code;mcid;1;NA;description;mcid
+lab_mineralogy_glass_count;Petro_Count_Method;23;NA;description;"Method counting 300 grains of a specific PSDA sand or silt fraction using a petrographic microscope, and identifying and quantifying the grains for each mineral type; results are expressed in percentage of the fraction"
+lab_mineralogy_glass_count;PG_Palygorskite_Petro_Count;183;NA;description;Quantity of palygorskite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PI_Pyrite_Petro_Count;132;NA;description;Quantity of pyrite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PJ_Plumbojarosite_Petro_Count;129;NA;description;Quantity of plumbojarosite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PK_Perovskite_Petro_Count;124;NA;description;Quantity of perovskite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PL_Phlogophit_Petro_Count;125;NA;description;Quantity of phlogophite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PM_Pumice_Glass_Count;22;NA;description;pm_pumice_glass_count
+lab_mineralogy_glass_count;PM_Pumice_Petro_Count;192;NA;description;Quantity of pumice mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PN_Pollen_Petro_Count;130;NA;description;Quantity of pollen mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PO_Plant_Opal_Glass_Count;18;NA;description;Quantity of plant opal glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PO_Plant_Opal_Petro_Count;128;NA;description;Quantity of plant opal mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PR_Pyroxene_Petro_Count;135;NA;description;Quantity of pyroxene mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;prep_code;4;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_mineralogy_glass_count;PU_Pyrolusite_Petro_Count;133;NA;description;Quantity of pyrolusite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PY_Pyrophyllite_Petro_Count;134;NA;description;Quantity of pyrophyllite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;QC_Clay_Coated_Quartz_Petro_Count;55;NA;description;Quantity of clay coated quartz mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;QG_Glass_Coated_Quartz_Glass_Count;15;NA;description;Quantity of glass coated quartz glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;QG_Glass_Coated_Quartz_Petro_Count;81;NA;description;Quantity of glass coated quartz mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;QI_Iron_Oxide_Coated_Quartz_Petro_Count;94;NA;description;Quantity of iron oxide coated quartz mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;QZ_Quartz_Petro_Count;136;NA;description;Quantity of quartz mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;RA_Resistant_Aggregates_Petro_Count;137;NA;description;Quantity of resistant aggregates mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;RB_Riebeckite_Blue_Amphibole_Petro_Count;141;NA;description;Quantity of riebeckit mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;RE_Resistant_Minerals_Petro_Count;139;NA;description;Quantity of resistant minerals mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;Resistant_Minerals_Total_Mineral_Soil;195;NA;description;Sum of the percent of all resistant minerals identified in the medium sand sized fraction using the petrographic microscope.
+lab_mineralogy_glass_count;result_source_key;3;NA;foreign_key;TRUE
+lab_mineralogy_glass_count;result_source_key;3;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_mineralogy_glass_count;RO_Rhodochrosite_Petro_Count;140;NA;description;Quantity of rhodochrosite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;RU_Rutile_Petro_Count;142;NA;description;Quantity of rutile mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SA_Siliceous_Aggregates_Petro_Count;146;NA;description;Quantity of siliceoud aggregates mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SC_Scapolite_Petro_Count;184;NA;description;Quantity of scapolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SE_Sepiolite_Petro_Count;185;NA;description;Quantity of sepiolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SG_Sphalerite_Petro_Count;148;NA;description;Quantity of sphalerite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SI_Siderite_Petro_Count;145;NA;description;Quantity of siderite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SL_Sillimanite_Petro_Count;147;NA;description;Quantity of sillimanite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SM_Smectite_Petro_Count;186;NA;description;Quantity of smectite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SN_Spinel_Petro_Count;150;NA;description;Quantity of spinel mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SO_Staurolite_Petro_Count;152;NA;description;Quantity of staurolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AC_Actinolite_Petro_Count;24;NA;description;Quantity of actinolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AE_Anatase_Petro_Count;27;NA;description;Quantity of anatase mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AF_Arfvedsonite_Petro_Count;37;NA;description;Quantity of arfvedsonite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AG_Antigorite_Petro_Count;34;NA;description;Quantity of antigorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AH_Anthophyllite_Petro_Count;33;NA;description;Quantity of anthrophyllite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AI_Aegirine_Augite_Petro_Count;170;NA;description;Quantity of aegirine-augite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AL_Allophane_Petro_Count;171;NA;description;Quantity of allophane mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AM_Amphibole_Petro_Count;26;NA;description;Quantity of amphibole mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AN_andalusite_Petro_Count;28;NA;description;Quantity of andalusite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;analyzed_size_frac;5;NA;description;analyzed_size_frac
+lab_mineralogy_glass_count;AO_Aragonite_Petro_Count;36;NA;description;Quantity of aragonite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AP_Apatite_Petro_Count;35;NA;description;Quantity of apatite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AR_Weatherable_Aggregates_Glass_Count;20;NA;description;Quantity of weatherable aggregate glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AR_Weatherable_Aggregates_Petro_Count;165;NA;description;Quantity of weatherable aggregates mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AU_Augite_Petro_Count;38;NA;description;Quantity of augite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;AY_Anhydrite_Petro_Count;30;NA;description;Quantity of anhydrite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BA_Barite_Petro_Count;39;NA;description;Quantity of barite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BC_Biotite_Chlorite_Petro_Count;43;NA;description;Quantity of biotite-chlorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BE_Bohmite_Petro_Count;44;NA;description;Quantity of bohmite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BG_Basic_Glass_Count;7;NA;description;Quantity of dark-colored glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BG_Basic_Glass_Petro_Count;40;NA;description;Quantity of basic glass mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BK_Brookite_Petro_Count;46;NA;description;Quantity of brookite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BR_Brucite_Petro_Count;47;NA;description;Quantity of brucite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BT_Biotite_Petro_Count;42;NA;description;Quantity of biotite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BY_Beryl_Petro_Count;41;NA;description;Quantity of beryl mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;BZ_Bronzite_Petro_Count;45;NA;description;Quantity of bronzite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CA_Calcite_Petro_Count;48;NA;description;Quantity of calcite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CB_Carbonate_Aggregates_Petro_Count;49;NA;description;Quantity of carbonate aggregates mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CC_Coal_Petro_Count;58;NA;description;Quantity of coal mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CD_Chert_Chalcedony_Jasper_Agate_Onyx_Petro_Count;51;NA;description;Quantity of chert-chalcedony-jasper-agate-onyx mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CE_Cobaltite_Petro_Count;172;NA;description;Quantity of cobaltite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CH_Cliachite_Bauxite_Petro_Count;56;NA;description;Quantity of cliachite bauxite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CL_Chlorite_Petro_Count;52;NA;description;Quantity of chlorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CM_Chlorite_Mica_Petro_Count;53;NA;description;Quantity of chlorite-mica mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CN_Corundum_Petro_Count;60;NA;description;Quantity of corundum mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CO_Collophane_Petro_Count;59;NA;description;Quantity of collophane mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SP_Sphene_Petro_Count;149;NA;description;Quantity of sphalerite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SR_Sericite_Petro_Count;144;NA;description;Quantity of sericite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SS_Sponge_Spicule_Glass_Count;19;NA;description;Quantity of sponge spicule glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SS_Sponge_Spicule_Petro_Count;151;NA;description;Quantity of sponge-spicule mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ST_Stilbite_Petro_Count;153;NA;description;Quantity of stilbite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SU_Sulfur_Petro_Count;154;NA;description;Quantity of sulfur mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;SZ_Serpentine_Petro_Count;193;NA;description;Quantity of serpentine mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;TA_Talc_Petro_Count;155;NA;description;Quantity of talc mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;TD_Tridymite_Petro_Count;187;NA;description;Quantity of tridymite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;TE_Tremolite_Petro_Count;158;NA;description;Quantity of tremolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;TH_thenardite_Petro_Count;188;NA;description;Quantity of thenardite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;TM_Tourmaline_Petro_Count;157;NA;description;Quantity of tourmaline mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;Total_Grains_Counted;194;NA;description;total_grains_counted
+lab_mineralogy_glass_count;TP_Topaz_Petro_Count;156;NA;description;Quantity of topaz mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;VC_Vermiculite_Chlorite_Petro_Count;160;NA;description;Quantity of vermiculite-chlorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;VH_Vermiculite_Hydrobiotite_Petro_Count;161;NA;description;Quantity of vermiculite hydrobiotite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;VI_Vivianite_Petro_Count;163;NA;description;Quantity of vivianite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;VM_Vermiculite_Mica_Petro_Count;162;NA;description;Quantity of vermiculite-mica mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;VR_Vermiculite_Petro_Count;159;NA;description;Quantity of vermiculite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;WE_Weatherable_Mineral_petro_Count;166;NA;description;Quantity of weatherable minerals mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;WV_Wavellite_Petro_Count;164;NA;description;Quantity of wavellite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ZE_Zeolite_Petro_Count;167;NA;description;Quantity of zeolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ZO_Zoisite_Petro_Count;169;NA;description;Quantity of zoisite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ZR_Zircon_Petro_Count;168;NA;description;Quantity of zircon mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CR_Cristobalite_Petro_Count;61;NA;description;Quantity of cristobalite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CT_Cassiterite_Petro_Count;50;NA;description;Quantity of cassiterite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CY_Chrysotile_Petro_Count;54;NA;description;Quantity of chrysotile mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;CZ_Clinozoisite_Petro_Count;57;NA;description;Quantity of clinozoisite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;DI_Diatoms_Glass_Count;8;NA;description;Quantity of diatoms glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;DI_Diatoms_Petro_Count;62;NA;description;Quantity of diatoms mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;DL_Dolomite_Petro_Count;64;NA;description;Quantity of dolomite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;DP_Diopside_Petro_Count;63;NA;description;Quantity of diopside mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;DU_Dumortierite_Petro_Count;65;NA;description;Quantity of dumortierite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;EN_Enstatite_Petro_Count;66;NA;description;Quantity of enstatite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;EP_Epidote_Petro_Count;67;NA;description;Quantity of epidote mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FA_andesite_Petro_Count;29;NA;description;Quantity of andesite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FB_Albite_Petro_Count;25;NA;description;Quantity of albite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FC_Microcline_Petro_Count;111;NA;description;Quantity of microcline mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FD_Feldspar_Petro_Count;68;NA;description;Quantity of feldspar mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FE_Iron_Oxides_Geothite_Magnetite_Hematite_Li_Petro_Count;95;NA;description;Quantity of iron oxides geothite magnetite hematite li mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FF_Foraminifera_Petro_Count;72;NA;description;Quantity of foraminifera mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FG_Glass_Coated_Feldspar_Glass_Count;11;NA;description;Quantity of glass coated feldspar glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FG_Glass_Coated_Feldspar_Petro_Count;77;NA;description;Quantity of glass coated feldspar mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FH_Anorthoclase_Petro_Count;32;NA;description;Quantity of anorthoclase mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FK_Potassium_Feldspar_Petro_Count;131;NA;description;Quantity of potassium feldspar mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FL_Labradorite_Petro_Count;99;NA;description;Quantity of labradorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FM_Ferromagnesium_Petro_Count;70;NA;description;Quantity of ferromagnesium mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FN_Anorthite_Petro_Count;31;NA;description;Quantity of anorthite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FO_Oligoclase_Petro_Count;117;NA;description;Quantity of oligoclase mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FP_Plagioclase_Feldspar_Petro_Count;127;NA;description;Quantity of plagioclase mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FR_Orthoclase_Petro_Count;120;NA;description;Quantity of orthoclase mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FS_Sanidine_Petro_Count;143;NA;description;Quantity of sanidine mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FU_Fluorite_Petro_Count;71;NA;description;Quantity of fluorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;FZ_Feldspathoids_Petro_Count;69;NA;description;Quantity of feldspathoids mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GA_Glass_Aggregates_Glass_Count;9;NA;description;Quantity of glass aggreagates glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GA_Glass_Aggregates_Petro_Count;76;NA;description;Quantity of glass aggregates mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GC_Glass_Coated_Grain_Glass_Count;12;NA;description;Quantity of glass coated grains in the glass count from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GC_Glass_Coated_Grain_Petro_Count;78;NA;description;Quantity of glass coated mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GD_Gold_Petro_Count;87;NA;description;Quantity of gold mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GE_Goethite_Petro_Count;86;NA;description;Quantity of goethite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GG_Galena_Petro_Count;73;NA;description;Quantity of galea mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GI_Gibbsite_Petro_Count;75;NA;description;Quantity of gibbsite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GL_Glauconite_Petro_Count;84;NA;description;Quantity of glauconite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;Glass_Count_Method;6;NA;description;"Method counting 300 grains of a specific PSDA sand or silt fraction using a petrographic microscope, and identifying only the glass or glass coated grains; all other minerals are placed in the OTHER category; results are expressed as % of the PSDA fraction"
+lab_mineralogy_glass_count;Glass_Count_Mineral_Interpretation;196;NA;description;glass_count_interpretation
+lab_mineralogy_glass_count;GM_Glassy_Materials_Glass_Count;16;NA;description;Quantity of glassy materials glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GM_Glassy_Matrials_Petro_Count;83;NA;description;Quantity of glassy minerals mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GN_Garnet_Petro_Count;74;NA;description;Quantity of garnet mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GO_Glaucophane_Petro_Count;85;NA;description;Quantity of glaucophane mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GS_Glass_Glass_Count;10;NA;description;Quantity of glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GS_Glass_Petro_Count;82;NA;description;Quantity of glass mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;GY_Gypsum_Petro_Count;88;NA;description;Quantity of gypsum mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HA_Halite_Petro_Count;173;NA;description;Quantity of halite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HB_Hydrobiotite_Petro_Count;92;NA;description;Quantity of hydrobiotite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HE_Hematite_Petro_Count;90;NA;description;Quantity of hematite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HG_Glass_Coated_Hornblende_Glass_Count;13;NA;description;Quantity of glass coated hornblende grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HG_Glass_Coated_Hornblende_Petro_Count;79;NA;description;Quantity of glass coated hornblende mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HN_Hornblende_Petro_Count;91;NA;description;Quantity of hornblende mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HS_Hydroxy_Interlayer_Smectite_Petro_Count;190;NA;description;Quantity of hydroxy-interlayer-smectite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HV_Hydroxy_Interlayer_Vermiculite_Petro_Count;191;NA;description;Quantity of hydroxy-interlayered-vermiculite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;HY_Hypersthene_Petro_Count;189;NA;description;Quantity of hypersthene mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ID_Iddingsite_Petro_Count;93;NA;description;Quantity of iddingsite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;IL_Illite_Hydromuscovite_Petro_Count;174;NA;description;Quantity of illite-hydromuscovite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;JO_Jarosite_Petro_Count;96;NA;description;Quantity of jarosite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;KH_Halloysite_Petro_Count;89;NA;description;Quantity of halloysite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;KK_Kaolinite_Petro_Count;97;NA;description;Quantity of kaolinite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;KY_Kyanite_Petro_Count;98;NA;description;Quantity of kyanite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LA_Lamprobolite_Petro_Count;100;NA;description;Quantity of lamprobolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_mineralogy_glass_count;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_mineralogy_glass_count;LC_Analcime_Petro_Count;175;NA;description;Quantity of analcime mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LE_Lepidocrocite_Petro_Count;176;NA;description;Quantity of lepidocrocite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LI_Leucite_Petro_Count;177;NA;description;Quantity of leucite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LM_Limonite_Petro_Count;104;NA;description;Quantity of limonite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LO_Lepidomelane_Petro_Count;102;NA;description;Quantity of lepidomelane mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LP_Lepidolite_Petro_Count;101;NA;description;Quantity of lepidolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LT_Lithiophorite_Petro_Count;105;NA;description;Quantity of lithiophorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;LU_Leucoxene_Petro_Count;103;NA;description;Quantity of leucoxene mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MC_Montmorillonite_Chlorite_Petro_Count;178;NA;description;Quantity of montmorillonite-chlorite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MD_Resistant_Mineraloids_Petro_Count;138;NA;description;Quantity of resistant mineraloids mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ME_Magnesite_Petro_Count;106;NA;description;Quantity of magnesite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MG_Magnetite_Petro_Count;107;NA;description;Quantity of magnetite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MH_Maghemite_Petro_Count;179;NA;description;Quantity of maghemite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MI_Mica_Petro_Count;110;NA;description;Quantity of mica mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;ML_Melilite_Petro_Count;109;NA;description;Quantity of melilite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MM_Montmorillonite_Mica_Petro_Count;180;NA;description;Quantity of montmorillonite-mica mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MR_Marcasite_Petro_Count;108;NA;description;Quantity of marcasite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MS_Muscovite_Petro_Coun;114;NA;description;Quantity of muscovite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MT_Montmorillonite_Petro_Count;113;NA;description;Quantity of montmorillonite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MV_Montmorillonite_Vermiculite_Petro_Count;181;NA;description;Quantity of montmorillonite-vermiculite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;MZ_Monazite_Petro_Count;112;NA;description;Quantity of monazite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;NE_Nepheline_Petro_Count;115;NA;description;Quantity of nepheline mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;NX_Non_Crystalline_Petro_Count;116;NA;description;Quantity of non-crystalline mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OG_Glass_Coated_Opaque_Petro_Count;80;NA;description;Quantity of glass coated opaque mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OG_Glass_Coated_Opaques_Glass_Count;14;NA;description;Quantity of glass coated opagues glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OP_Opaques_Petro_Count;119;NA;description;Quantity of opaques mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OR_Other_Resistant_Minerals_Petro_Count;121;NA;description;Quantity of other resistant mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OT_Other_Glass_Count;17;NA;description;Quantity of other glass grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OT_Other_Petro_Count;123;NA;description;Quantity of other mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OV_Olivine_Petro_Count;118;NA;description;Quantity of olivine mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;OW_Other_Weatherable_Minerals_Petro_Count;122;NA;description;Quantity of other weatherable mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PA_Palagonite_Glass_Count;21;NA;description;pa_palagonite_glass_count
+lab_mineralogy_glass_count;PA_Palagonite_Petro_Count;182;NA;description;Quantity of palagonite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mineralogy_glass_count;PD_Piemontite_Petro_Count;126;NA;description;Quantity of piemontite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
+lab_mir;rep_num;5;NA;description;An integer number of the replicate number, identifies the number of times the sample was analyzed.
+lab_mir;smp_id;4;NA;description;An integer number that uniquely identifies a particular sample, which is used internally by the LIMS. The Sample ID is the primary key of the Sample table. The Sample is the fundamental unit of the LIMS. The Sample ID is generated by a separate application outside of LIMS.
+lab_mir;absorbance;8;NA;description;Analysis of specific absorption features also reveals details about the molecular structure of the sample, for example organic matter quality.
+lab_mir;d_wavelength_array_id;9;NA;description;An integer number that uniquely identifies the wavelength collection from the lab_mir_wavelength domain
+lab_mir;filename;7;NA;description;The unique filename of the results file.
+lab_mir;id;1;NA;description;The unique record identifier.
+lab_mir;lab_proj_name;6;NA;description;A character string containing the name the project submitter has given to the project. This is to allow the project submitter to identify the project with a name not constrained by the LIMS
+lab_mir;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_mir;layer_key;3;NA;description;An integer number that uniquely identifies a particular layer
+lab_mir_wavelength;wavelength_string;3;NA;description;The list of wavelengths used for analysis of the sample
+lab_mir_wavelength;d_wavelength_array_id;1;NA;description;An integer number that uniquely identifies the wavelength collection from the lab_mir_wavelength domain
+lab_mir_wavelength;description;2;NA;description;a description of the wavelength collection
+lab_pedon;site_key;10;NA;description;An integer number that uniquely identifies a particular site
+lab_pedon;cntrl_depth_to_bot;7;NA;description;Depth to the bottom of the taxonomic particle size control section.  (Soil Taxonomy)
+lab_pedon;cntrl_depth_to_top;6;NA;description;Depth to the top of the taxonomic particle size control section. (Soil Taxonomy)
+lab_pedon;user_pedon_id;4;NA;description;A short label to help a user identify a particular pedon.
+lab_pedon;fldsyb;8;NA;description;fldsyb
+lab_pedon;mapsyb;9;NA;description;mapsyb
+lab_pedon;observation_date;3;NA;description;The date on which this particular soil was described or sampled, expressed as month, day, year -- xx/xx/xxxx.
+lab_pedon;pedlabsampnum;2;NA;description;An identifier for the pedon sample that is assigned by the Kellogg Soil Survey Laboratory. This identifier is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_pedon;pedon_key;1;NA;description;An integer number that uniquely identifies a particular pedon
+lab_pedon;pedon_seq_num;5;NA;description;The consecutive number of the pedon sampled in a particular survey area in a particular year.
+lab_physical_properties;plastic_limit;74;NA;description;The measured water content of the soil, expressed on a dry weight basis, at the change between the semisolid and plastic states.
+lab_physical_properties;plastic_limit_method;75;NA;description;plastic_limit analysis method
+lab_physical_properties;prep_code;3;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_physical_properties;psda_ethanol_dispersion_method;82;NA;description;psda_ethanol_dispersion analysis method
+lab_physical_properties;result_source_key;2;NA;foreign_key;TRUE
+lab_physical_properties;result_source_key;2;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_physical_properties;sand_coarse;16;NA;description;Coarse sand is the soil separate with 0.5 to 1.0 mm particle diameter. It is reported a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;sand_coarse_ethanol_dispersible;89;NA;description;Ethanol and Ultrasonic probe dispersible coarse sand, <2mm (by pipette) is the gravimetric percent 1.0 to 2.0 mm diameter particles separated without chemical dispersants or the removal of organic matter and salts. It is reported on a <2 mm base.
+lab_physical_properties;sand_coarse_h2o_dispersible;102;NA;description;H2O dispersible coarse sand, <2mm (by pipette) is the gravimetric percent 1.0 to 2.0 mm diameter particles of a moist sample separated without chemical dispersants or the removal of organic matter and salts . It is reported on a <2 mm base.
+lab_physical_properties;sand_fine;14;NA;description;Fine sand is the soil separate with 0.10 to 0.25 mm diameter particles. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;sand_fine_ethanol_dispersible;87;NA;description;Ethanol and Ultrasonic probe disp fine sand, <2mm (by pipette) is the gravimetric percent of 0.10 to 0.25 mm diameter particles separated without the use of chemical dispersants or removal of organic matter and salts. It is reported on a <2 mm base.
+lab_physical_properties;sand_fine_h2o_dispersible;100;NA;description;H2O dispersible fine sand, <2mm (by pipette) is the gravimetric percent of 0.10 to 0.25 mm diameter particles separated without the use of chemical dispersants or removal of organic matter and salts. It is reported on a <2 mm base.
+lab_physical_properties;sand_medium;15;NA;description;Medium sand is the soil separate with 0.25 to 0.50 mm particle diameter. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;sand_medium_ethanol_dispersible;88;NA;description;Ethanol and Ultrasonic probe dispersible medium sand, <2mm (by pipette) is the gravimetric percent 0.25 to 0.50 mm diameter particles separated without chemical dispersants or removal of organic matter and salts. It is reported on a <2 mm base.
+lab_physical_properties;sand_medium_h2o_dispersible;101;NA;description;H2O dispersible medium sand, <2mm (by pipette) is the gravimetric percent 0.25 to 0.50 mm diameter particles of a moist sample separated without chemical dispersants or removal of organic matter and salts. It is reported on a <2 mm base.
+lab_physical_properties;sand_total;8;NA;description;Mineral particles 0.05mm to 2.0mm in equivalent diameter as a weight percentage of the less than 2 mm fraction.
+lab_physical_properties;sand_total_ethanol_dispersible;83;NA;description;Ethanol and Ultrasonic probe dispersible sand, <2mm (by pipette) is the gravimetric percent 0.05 to 2.0 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;sand_total_h2o_dispersible;98;NA;description;H2O dispersible sand, <2mm (by pipette) is the gravimetric percent 0.05 to 2.0 mm diameter particles of a moist sample separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;sand_vc_h2o_dispersible;103;NA;description;H2O dispersible very coarse sand, <2mm (by pipette) is the gravimetric percent 1.0 to 2.0 mm diameter particles of a moist sample separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;sand_very_coarse;17;NA;description;Very coarse sand is the soil separate with 1.0 to 2.0 mm particle diameter. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;sand_very_coarse_ethanol_dispersible;90;NA;description;Ethanol and Ultrasonic probe dispersible very coarse sand, <2mm (by pipette) is the gravimetric percent 1.0 to 2.0 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;sand_very_fine;13;NA;description;Very fine sand is the soil separate with 0.05 to 0.10 mm particle diameter. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;sand_very_fine_ethanol_dispersible;86;NA;description;Ethanol and Ultrasonic probe dispersible very fine sand, <2mm (by pipette) is the gravimetric percent 0.05 to 0.10 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;sand_vf_h2o_dispersible;99;NA;description;H2O dispersible very fine sand, <2mm (by pipette) is the gravimetric percent 0.05 to 0.10 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;silt_coarse;12;NA;description;Coarse silt is the soil separate with 0.02 to 0.05 mm particle size. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;silt_coarse_h2o_dispersible;97;NA;description;H2O dispersible coarse silt, <2mm (by pipette) is the gravimetric percent of 0.02 to 0.05 mm diameter particles of a moist sample separated without chemical dispersion, or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;silt_fine;11;NA;description;Fine silt is the soil separate with 0.002 to 0.02 mm particle diameter. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;silt_fine_h2o_dispersible;96;NA;description;H2O and Ultrasonic probe dispersible fine silt, <2mm (by pipette) is the gravimetric percent 0.002 to 0.02 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;silt_total;7;NA;description;Total silt is the soil separate with 0.002 to 0.05 mm particle size. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;silt_total_ethanol_dispersible;84;NA;description;Ethanol and Ultrasonic probe dispersible silt, <2mm (by pipette) is the gravimetric percent 0.002 to 0.05 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;silt_total_h2o_dispersible;95;NA;description;H2O dispersible silt, <2mm (by pipette) is the gravimetric percent 0.002 to 0.05 mm diameter particles separated without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;aggregate_stability_05_2_method;77;NA;description;aggregate_stability_05_2 analysis method
+lab_physical_properties;aggregate_stability_05_2_mm;76;NA;description;Aggregate stability is the weight percent of 0.5mm - 2mm aggregates remaining after wet sieving.
+lab_physical_properties;airdry_ovendry_ratio;70;NA;description;The ratio of air dry gravimetric percent water over oven dry (105 degrees C) gravimetric percent water. If gypsum is present, this ratio is corrected for crystal water in the gypsum.
+lab_physical_properties;atterberg_liquid_limit;71;NA;description;Atterberg liquid limit is the gravimetric percent water content of the soil at a defined boundary between the liquid and plastic states. It is determined by ASTM method D 4318 and reported as percent water on a <0.4 mm base. Values less than 14 cannot be measured and are assigned a zero in the database.  The zero indicates a non-plastic soil.
+lab_physical_properties;atterberg_liquid_limit_method;72;NA;description;atterberg_liquid_limit analysis method
+lab_physical_properties;atterberg_plasticity_index;73;NA;description;Atterberg plasticity index is the calculation of the liquid limit minus the plastic limit. It is defined by the ASTM D 4318 test.
+lab_physical_properties;bd_before_rewet_organic_method;107;NA;description;bd_before_rewet_organic analysis method
+lab_physical_properties;bd_third_bar_lt2_reconstituted;32;NA;description;Bulk density, <2mm fraction, reconstituted, 1/3 bar is the weight per unit volume of the <2 mm fraction, with volume measured on reconstituted samples at 1/3 bar water tension. It is reported as grams per cubic centimeter on a <2 mm base.
+lab_physical_properties;bd_third_rewet_organic_method;109;NA;description;bd_third_rewet_organic analysis method
+lab_physical_properties;bd_thirdbar_before_rewet_organ;106;NA;description;Bulk density, 1/3 bar rewet (organic soils) is the weight per unit volume of the <2 mm fraction, with volume being measured after samples have been equilibrated at 1/3 bar water tension, air dried, and re-equilibrated at 1/3 bar tension.
+lab_physical_properties;bd_thirdbar_reconstituted_method;33;NA;description;bd_thirdbar_reconstitut analysis method
+lab_physical_properties;bd_thirdbar_rewet_organic_soil;108;NA;description;Bulk density, 1/3 bar rewet (organic soils) is the weight per unit volume of the <2 mm fraction, with volume being measured after samples have been equilibrated at 1/3 bar water tension, air dried, and re-equilibrated at 1/3 bar tension.
+lab_physical_properties;bulk_density_odreconstituted_method;35;NA;description;bulk_de_odreconstituted analysis method
+lab_physical_properties;bulk_den_ovendry_reconstituted;34;NA;description;Bulk density, <2mm fraction, reconstituted, oven dry is the weight per unit volume of the <2 mm fraction, with volume measured on oven dry (105 C) reconstituted samples. It is reported as grams per cubic centimeter on a <2 mm base.
+lab_physical_properties;bulk_den_rewet_oven_dry;110;NA;description;Bulk density, oven dry (105 C) is the weight per unit volume of the <2 mm fraction, with volume measured on oven dry (105 C) natural fabric (clods). It is reported as grams per cubic centimeter on a <2 mm base.
+lab_physical_properties;bulk_density_rewet_oven_dry_method;111;NA;description;bulk_den_rewet_oven_dry analysis method
+lab_physical_properties;bulk_density_air_dry_method;31;NA;description;bulk_density_air_dry analysis method
+lab_physical_properties;bulk_density_field_moist;36;NA;description;bulk_density_field_moisture
+lab_physical_properties;bulk_density_field_moist_method;37;NA;description;bulk_density_field_moist analysis method
+lab_physical_properties;bulk_density_lt_2_mm_air_dry;30;NA;description;Bulk density, <2mm fraction, air-dry is the weight per unit volume of the <2 mm fraction, with volume measured after air drying.  It is reported as grams per cubic centimeter on a <2 mm base.
+lab_physical_properties;bulk_density_oven_dry;28;NA;description;The oven dry weight of the less than 2 mm soil material per unit volume of soil exclusive of the desiccation cracks, measured on a coated clod.
+lab_physical_properties;bulk_density_oven_dry_method;29;NA;description;bulk_density_oven_dry analysis method
+lab_physical_properties;bulk_density_tenth_bar;24;NA;description;The oven dried weight of the less than 2 mm soil material per unit volume of soil at a water tension of one tenth bar.
+lab_physical_properties;bulk_density_tenth_bar_method;25;NA;description;bulk_density_tenth_bar analysis method
+lab_physical_properties;bulk_density_third_bar;26;NA;description;The oven dry weight of the less than 2 mm soil material per unit volume of soil at a water tension of one third bar.
+lab_physical_properties;bulk_density_third_bar_method;27;NA;description;bulk_density_third_bar analysis method
+lab_physical_properties;cec7_clay_ratio;80;NA;description;This ratio is calculated by CEC_NH4_pH_7/Clay. It provides an index to clay activity, and allows inferences about clay mineralogy, the contribution of clay to the exchange capacity, and solution chemistry to be made.
+lab_physical_properties;clay_caco3;10;NA;description;Carbonate clay is the part of <0.002 mm diameter particles that are composed of carbonates. It is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;clay_co3_h2o_dispersible;94;NA;description;H2O dispersible CO3 clay, <2mm (by pipette) is the gravimetric percent of <0.002 mm particle diameter carbonates dispersed without chemical dispersants, organic matter and clay removal. It is reported on a <2 mm base.
+lab_physical_properties;clay_fine;9;NA;description;Fine clay is the <0.0002 mm particle diameter soil separate. It is reported as a gravimetric percent of the <2mm fraction.
+lab_physical_properties;clay_fine_h2o_dispersible;93;NA;description;H2O dispersible fine clay, <2mm (by pipette) is the gravimetric percent of <0.0002 mm diameter particles dispersed without chemical dispersants or organic matter and salt removal. It is reported on a <2 mm base.
+lab_physical_properties;clay_tot_h2o_dispersible;92;NA;description;H2O dispersible clay, <2mm (by pipette) is the gravimetric percent of <0.002 mm particles dispersed without organic matter and salt removal, and without chemical dispersion. It is reported on a <2 mm base.
+lab_physical_properties;clay_total;6;NA;description;Total clay is the soil separate with <0.002 mm particle diameter. Clay size carbonate is included. Total clay is reported as a gravimetric percent of the <2 mm fraction.
+lab_physical_properties;clay_total_ethanol_dispersible;85;NA;description;Ethanol and Ultrasonic probe dispersible clay, <2mm (by pipette) is the gravimetric percent of <0.002 mm particles dispersed without organic matter and salt removal, and without chemical dispersion. It is reported on a <2 mm base.
+lab_physical_properties;cole_whole_soil;42;NA;description;Coefficient of Linear Extensibility as determined by SSIR51V1-3.5.4 is an expression of the volume change between the water content of the clod at 1/3- or 1/10-bar tension (33kPa or 10kPa tension) and oven dryness.
+lab_physical_properties;texture_lab;4;NA;description;An expression, based on the USDA system of particle sizes, for the relative portions of the various size groups of individual mineral grains less than 2mm equivalent diameter in a mass of soil as determined using laboratory determined percentages of soil separates.
+lab_physical_properties;total_frag_wt_pct_gt_2_mm_ws;22;NA;description;The best estimate of the total horizon fragment weight, in percent, on a whole soil basis.
+lab_physical_properties;water_15_bar_to_clay_ratio;79;NA;description;The ratio of 15 bar H2O percent / clay percent calculated by (W15AD or W15FM)/CLAY_TOT, reported as grams per gram, on a <2 mm base. It provides inferences about clay mineralogy and the effectiveness of dispersion in the particle size analysis.
+lab_physical_properties;water_retention_0_bar_method;51;NA;description;water_retention_0_bar analysis method
+lab_physical_properties;water_retention_0_bar_sieve;50;NA;description;The volumetric content of soil water retained at a tension of 0 bars (0 kPa), expressed as a percentage of the whole soil
+lab_physical_properties;water_retention_1_bar;58;NA;description;The volumetric content of soil water retained at a tension of 1 bar (100 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_1_bar_method;59;NA;description;water_retention_1_bar analysis method
+lab_physical_properties;water_retention_10th_bar;54;NA;description;The volumetric content of soil water retained at a tension of 1/10 bar (10 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_10th_bar_method;55;NA;description;water_retention_10th_bar analysis method
+lab_physical_properties;water_retention_15_bar;66;NA;description;The volumetric content of soil water retained at a tension of 15 bars (1500 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_15_bar_method;67;NA;description;water_retention_15_bar analysis method
+lab_physical_properties;water_retention_2_bar;60;NA;description;The volumetric content of soil water retained at a tension of 2 bars (200 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_2_bar_method;61;NA;description;water_retention_2_bar analysis method
+lab_physical_properties;water_retention_3_bar_method;63;NA;description;water_retention_3_bar analysis method
+lab_physical_properties;water_retention_3_bar_sieve;62;NA;description;Three bar water, <2mm fraction is the gravimetric percent water held by <2 mm samples equilibrated at three bar water tension. It is reported on a <2 mm base.
+lab_physical_properties;water_retention_5_bar_method;65;NA;description;water_retention_5_bar analysis method
+lab_physical_properties;water_retention_5_bar_sieve;64;NA;description;Five bar water, <2mm fraction is the gravimetric percent water held by <2 mm samples equilibrated at five bar water tension. It is reported on a <2 mm base.
+lab_physical_properties;water_retention_6_hund_method;53;NA;description;water_retention_6_hund analysis method
+lab_physical_properties;water_retention_6_hundredths;52;NA;description;The volumetric content of soil water retained at a tension of .06 bar (6 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_field_state;68;NA;description;The volumetric content of soil water retained at field state moisture content, expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_field_state_me;69;NA;description;water_retention_field_state analysis method
+lab_physical_properties;water_retention_third_bar;56;NA;description;The volumetric content of soil water retained at a tension of 1/3 bar (33 kPa), expressed as a percentage of the whole soil.
+lab_physical_properties;water_retention_thirdbar_method;57;NA;description;Third bar water, <2mm fraction is the gravimetric percent water held by <2 mm samples equilibrated at one third bar water tension. It is reported on a <2 mm base
+lab_physical_properties;wt_pct_1_tenth_to_75_mm;23;NA;description;The gravimetric percentage of 0.1 to 75 mm diameter particles reported  in the <75 mm size fraction.
+lab_physical_properties;cole_whole_soil_method;43;NA;description;cole_whole_soil analysis method
+lab_physical_properties;color_pyrophosphate_extractable;104;NA;description;The Munsell color of the pyrophosphate extract of organic material provides information on the nature of the material. Light colors are associated with fibric materials, and darker colors with sapric materials.
+lab_physical_properties;color_pyrophosphate_method;105;NA;description;color_pyrophosphate analysis method
+lab_physical_properties;decomposition_state;119;NA;description;Decomposition State based on soil color and %fiber rubbed
+lab_physical_properties;effective_cec_to_clay_ratio;81;NA;description;The ECEC / total clay ratio is calculated by ECEC_CEC/CLAY_TOT. It is reported on a <2 mm base.
+lab_physical_properties;estimated_om_plus_mineral;115;NA;description;EOM (based on Total C) plus Mineral Content
+lab_physical_properties;estimated_organic_matter;114;NA;description;Estimated Organic Matter based on Total C
+lab_physical_properties;fiber_analysis_method;116;NA;description;fiber_analysis analysis method
+lab_physical_properties;fiber_rubbed;118;NA;description;Rubbed fiber is an approximate measure of the fibric portion of the organic matter in a sample. It is reported as a volume percent of the sample.
+lab_physical_properties;fiber_unrubbed;117;NA;description;Unrubbed fiber is an approximate measure of the fibric and hemic portions of the organic matter in a sample. It is reported as a volume percent of the sample.
+lab_physical_properties;frag__2_20_mm_wt_pct_lt_75;19;NA;description;The gravimetric percentage of 2 to 20 mm diameter particles is reported on a <75 mm base.
+lab_physical_properties;frag_2_5_mm_wt_pct_lt_75;18;NA;description;e gravimetric percentage of 2 to 5 mm diameter particles in the <75 mm size fraction.
+lab_physical_properties;frag_20_75_mm_wt_pct_lt_75;21;NA;description;The gravimetric percentage of 20 to 75 mm diameter particles reported  in the <75 mm size fraction.
+lab_physical_properties;frag_5_20_mm_wt_pct_lt_75;20;NA;description;The gravimetric percentage of 5 to 20 mm diameter particles reported  in the <75 mm size fraction.
+lab_physical_properties;water_dispersible_fraction_method;91;NA;description;h2o_dispersible_fraction analysis method
+lab_physical_properties;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_physical_properties;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_physical_properties;le_field_moist_to_oben_dry;48;NA;description;Linear extensibility percent, field moist to ovendry is the percent change in a clod dimension as water content changes from oven dry to field moist water tension. It is reported as percent length change on a <2 mm base.
+lab_physical_properties;le_fm_to_od_method;49;NA;description;le_fm_to_od analysis method
+lab_physical_properties;le_third_fifteen_lt2_mm;44;NA;description;Linear extensibility percent, <2 mm, 1/3 bar/15 bar is the percent change in a clod dimension as water content changes from 15 bar to 1/3 bar water tension. It is reported as percent length change on a <2 mm base.
+lab_physical_properties;le_third_fifteen_lt2_method;45;NA;description;le_third_fifteen_lt2 analysis method
+lab_physical_properties;le_third_ovendry_lt_2_mm;46;NA;description;Linear extensibility percent, <2mm, 1/3 bar/OD is the percent dimensional change of a clod as water content changes from oven dry to 1/3 bar water tension. It is reported as percent length change on a<2 mm base.
+lab_physical_properties;le_third_ovendry_lt_2_mm_method;47;NA;description;le_third_ovendry_lt_2_mm analysis method
+lab_physical_properties;le_to_clay_third_bar_to_ovendry;78;NA;description;The LEP / total clay ratio is calculated by LEP/CLAY_TOT. It is an indicator of clay mineralogy. It is reported, without units, on a <2 mm base.
+lab_physical_properties;limnic_material_type;120;NA;description;Limnic material type based on soil color and %fiber rubbed
+lab_physical_properties;mineral_content_loss_ignition_method;113;mineral_remaining_on_ignition;description;mineral_content_loi analysis method
+lab_physical_properties;mineral_content_loss_ignition_method;113;mineral_remaining_on_ignition;method;--
+lab_physical_properties;mineral_content_loss_on_ignition;112;mineral_remaining_on_ignition;description;Mineral Content, Loss on Ignition (400 degrees C)(8F1). The mineral content of the <2mm fraction is the gravimetric percent of plant ash and mineral particles that remain after ignition. It is reported on a <2 mm base.
+lab_physical_properties;mineral_content_loss_on_ignition;112;mineral_remaining_on_ignition;value;--
+lab_physical_properties;mineral_content_loss_on_ignition;112;mineral_remaining_on_ignition;unit;mass percent of <2 mm fine earth
+lab_physical_properties;particle_density_gt_2_mm;40;NA;description;particle_density_gt_2_mm
+lab_physical_properties;particle_density_gt_2mm_method;41;NA;description;particle_density_gt_2mm analysis method
+lab_physical_properties;particle_density_less_than_2mm;38;NA;description;Mass per unit of volume (not including pore space) of the solid soil particle either mineral or organic.  Also known as specific gravity.
+lab_physical_properties;particle_density_lt_2mm_method;39;NA;description;particle_density_lt_2mm analysis method
+lab_physical_properties;particle_size_method;5;NA;description;particle_size analysis method
+lab_preparation;prep_abbrev;3;NA;description;prep_abbrev
+lab_preparation;prep_code;2;NA;identifier;--
+lab_preparation;prep_code;2;NA;foreign_key;--
+lab_preparation;prep_code;2;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_preparation;prep_desc;7;NA;description;prep_desc
+lab_preparation;prep_key;1;NA;description;prep key
+lab_preparation;prep_rpt_sort_order;8;NA;description;prep_rpt_sort_order
+lab_preparation;final_size_frac;6;NA;description;final_size_frac
+lab_preparation;moisture_state;4;NA;description;moisture_state
+lab_preparation;orig_size_frac;5;NA;description;orig_size_frac
+lab_rosetta_key;rosetta_key;1;NA;description;rosetta key
+lab_rosetta_key;alpha;5;NA;description;Related to the inverse of the air entry suction, function expects log10-transformed values with units of cm
+lab_rosetta_key;theta_r;3;NA;description;theta_r
+lab_rosetta_key;theta_s;4;NA;description;theta_s
+lab_rosetta_key;usedmodel;7;NA;description;usedmodel
+lab_rosetta_key;wlupdated;8;NA;description;wlupdated
+lab_rosetta_key;Ko;10;NA;description;Ko
+lab_rosetta_key;Ks;9;NA;description;Ks
+lab_rosetta_key;layer_key;2;NA;description;An integer number that uniquely identifies a particular layer
+lab_rosetta_key;Lpar;11;NA;description;Lpar
+lab_rosetta_key;npar;6;NA;description;npar
+lab_site;site_key;1;NA;description;An integer number that uniquely identifies a particular site
+lab_site;user_site_id;2;NA;description;A short label to help a user identify a particular site.
+lab_site;horizontal_datum_name;3;longitude;description;The identification given to the reference system used for defining the coordinates of points.  (Content Standards for Spatial Metadata, FGDC, 3/31/94 draft)
+lab_site;horizontal_datum_name;3;longitude;method;--
+lab_site;horizontal_datum_name;3;latitude;description;The identification given to the reference system used for defining the coordinates of points.  (Content Standards for Spatial Metadata, FGDC, 3/31/94 draft)
+lab_site;horizontal_datum_name;3;latitude;method;--
+lab_site;latitude_degrees;5;NA;description;Latitude in degrees.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;latitude_direction;4;NA;description;Latitude position north or south of the equator.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;latitude_minutes;6;NA;description;Latitude in minutes.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;latitude_seconds;7;NA;description;Latitude in seconds and decimal seconds.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;latitude_std_decimal_degrees;12;latitude;description;Standardized latitude value in decimal degrees, in geographic coordinate system, WGS84 datum. Values are either auto-populated from GPS, or computed from original latitude coordinates using standard conversion algorithms.
+lab_site;latitude_std_decimal_degrees;12;latitude;value;--
+lab_site;latitude_std_decimal_degrees;12;latitude;unit;decimal degrees
+lab_site;longitude_degrees;9;NA;description;Longitude in degrees.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;longitude_direction;8;NA;description;Longitude east or west of Greenwich (the Prime Meridian or origin).  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;longitude_minutes;10;NA;description;Longitude minutes.  (Snyder, J.P., 1982, Map Projections Used by the USGS)
+lab_site;longitude_seconds;11;NA;description;Longitude in seconds and decimal seconds.  (Snyder, J.P., 1982, Map Projections Used by USGS)
+lab_site;longitude_std_decimal_degrees;13;longitude;description;Standardized Longitude value in decimal degrees, in geographic coordinate system, WGS84 datum. Values are either auto-populated from GPS, or computed from original latitude coordinates using standard conversion algorithms.
+lab_site;longitude_std_decimal_degrees;13;longitude;value;--
+lab_site;longitude_std_decimal_degrees;13;longitude;unit;decimal degrees
+lab_site;longitude_std_decimal_degrees;13;longitude;method;WGS84
+lab_site;msrepl_tran_version;14;NA;description;msrepl_tran_version
+lab_webmap;Primary_Lab_Report;7;NA;description;Primary_Lab_Report
+lab_webmap;Series;2;NA;description;Series
+lab_webmap;Soil_Classification;6;NA;description;Soil_Classification
+lab_webmap;Soil_Profile;13;NA;description;Soil_Profile
+lab_webmap;Soil_web;14;NA;description;Soil_Web
+lab_webmap;Supplementary_Lab_Report;9;NA;description;Supplementary_Lab_Report
+lab_webmap;Taxonomy_Report;8;NA;description;Taxonomy_Report
+lab_webmap;User_pedon_ID;3;NA;description;A short label to help a user identify a particular pedon.
+lab_webmap;Water_Retention_Report;10;NA;description;Water_Retention_Report
+lab_webmap;wmiid;1;NA;description;wmiid
+lab_webmap;Correlation_Report;11;NA;description;Correlation_Report
+lab_webmap;lat;15;NA;description;lat
+lab_webmap;latlong;17;NA;description;latlong
+lab_webmap;long;16;NA;description;long
+lab_webmap;pedon_Description_Report;12;NA;description;Pedon_Description_Report
+lab_webmap;pedon_Key;4;NA;description;An integer number that uniquely identifies a particular pedon
+lab_webmap;peiid;5;NA;description;peiid
+lab_xray_and_thermal;PG_Palygorskite_thermal_Gravimetric_Analysis;94;NA;description;palygorskite_thermal_gravimetric
+lab_xray_and_thermal;PG_Palygorskite_X_Ray;45;NA;description;palygorskite_x_ray
+lab_xray_and_thermal;PL_Phlogophite_X_Ray;46;NA;description;phlogophite_x_ray
+lab_xray_and_thermal;prep_code;4;NA;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
+lab_xray_and_thermal;PY_Pyrophyllite_X_Ray;49;NA;description;pyrophyllite_x_ray
+lab_xray_and_thermal;QZ_Quartz_Differential_Scanning_Calorimetry;84;NA;description;quartz_differential scanning
+lab_xray_and_thermal;QZ_Quartz_Differential_thermal_Analysis;101;NA;description;quartz_differential_thermal
+lab_xray_and_thermal;QZ_Quartz_X_Ray;50;NA;description;quartz_x_ray
+lab_xray_and_thermal;RE_Resistant_Minerals_X_Ray;51;NA;description;resistant_minerals_x_ray
+lab_xray_and_thermal;result_source_key;3;NA;foreign_key;TRUE
+lab_xray_and_thermal;result_source_key;3;NA;description;Foreign key to the pedon or layer table depending on the result_type
+lab_xray_and_thermal;SE_Sepiolite_X_Ray;52;NA;description;sepiolite_x_ray
+lab_xray_and_thermal;SM_Smectite_Differential_Scanning_Calorimetry;82;NA;description;smectite_differential scanning
+lab_xray_and_thermal;AE_Anatase_X_Ray;9;NA;description;anatase_x_ray
+lab_xray_and_thermal;AG_Antigoite_X_Ray;10;NA;description;"Antigorite determined using portable X-Ray fluorescence on a powdered sample; XRF sample cup with polypropylene film"
+lab_xray_and_thermal;AG_Antigorite_thermal_Gravimetric_Analysis;91;NA;description;The percent antigorite calculated from using the TGA instrument to heat a dried ground sample, generally the clay fraction, to 900 C, and quantifying the fractional weight loss of the sample betweent about 600-800 C.
+lab_xray_and_thermal;AG_Gypsum_thermal_Gravimetric_Analysis;87;NA;description;The percent gypsum calculated from using the TGA instrument to heat a dried ground sample, generally the clay fraction, to 900 C, and quantifying the fractional weight loss of the sample between about 180-220 C.
+lab_xray_and_thermal;AM_Amphibole_X_Ray;7;NA;description;"Amphiboleas determined using portable X-Ray fluorescence on a powdered sample; XRF sample cup with polypropylene film."
+lab_xray_and_thermal;analyzed_size_frac;5;NA;description;analyzed_size_frac
+lab_xray_and_thermal;AO_Aragonite_X_Ray;11;NA;description;aragonite_x_ray
+lab_xray_and_thermal;AT_Alunite_Differential_Scanning_Calorimetry;81;NA;description;alunite_differential scanning
+lab_xray_and_thermal;BC_Biotite_Chlorite_X_Ray;13;NA;description;biotite_chlorite_x_ray
+lab_xray_and_thermal;BD_Beidellite_X_Ray;71;NA;description;beidellite_x_ray
+lab_xray_and_thermal;BE_Boehmite_X_Ray;70;NA;description;boehmite_x_ray
+lab_xray_and_thermal;BR_Brucite_X_Ray;14;NA;description;brucite_x_ray
+lab_xray_and_thermal;BT_Biotite_X_Ray;12;NA;description;biotite_x_ray
+lab_xray_and_thermal;CA_Calcite_thermal_Gravimetric_Analysis;95;NA;description;calcite_thermal_gravimetric
+lab_xray_and_thermal;CA_Calcite_X_Ray;15;NA;description;calcite_x_ray
+lab_xray_and_thermal;CL_Chlorite_X_Ray;16;NA;description;chlorite_x_ray
+lab_xray_and_thermal;Clay_Mineral_Interpretation;72;NA;description;clay_mineral_interpretation
+lab_xray_and_thermal;CM_Chlorite_Mica_X_Ray;17;NA;description;chlorite_mica_x_ray
+lab_xray_and_thermal;Coarse_Silt_Mineral_Interpretation;73;NA;description;coarse_silt_mineral_interp
+lab_xray_and_thermal;SZ_Serpentine_X_Ray;69;NA;description;serpentine_x_ray
+lab_xray_and_thermal;TA_Talc_X_Ray;53;NA;description;talc_x_ray
+lab_xray_and_thermal;TD_Tridymite_X_Ray;55;NA;description;tridymite_x_ray
+lab_xray_and_thermal;TH_thenardite_X_Ray;54;NA;description;thenardite_x_ray
+lab_xray_and_thermal;thermal_Gravimetric_Method;86;NA;description;thermal_gravimetric analysis method
+lab_xray_and_thermal;VC_Vermiculite_Chlorite_X_Ray;57;NA;description;vermiculite_chlorite_x_ray
+lab_xray_and_thermal;Very_Fine_Sand_Mineral_Interpretation;75;NA;description;vfs_mineral_interp
+lab_xray_and_thermal;VH_Vermiculite_Hydrobiotite_X_Ray;58;NA;description;vermiculite_hydrobiotite_x_ray
+lab_xray_and_thermal;VM_Vermiculite_Mica_X_Ray;59;NA;description;vermiculite_mica_x_ray
+lab_xray_and_thermal;VR_Vermiculite_Differential_Calorimetry;85;NA;description;vermiculite_differential scanning
+lab_xray_and_thermal;VR_Vermiculite_X_Ray;56;NA;description;"Vermiculite as determined using portable X-Ray fluorescence on a powdered sample; XRF sample cup with polypropylene film."
+lab_xray_and_thermal;X_Ray_Method;6;NA;description;x_ray analysis method
+lab_xray_and_thermal;ZE_Zeolite_X_Ray;60;NA;description;zeolite_x_ray
+lab_xray_and_thermal;CR_Cristobalite_X_Ray;18;NA;description;cristobalite_x_ray
+lab_xray_and_thermal;Differential_Scanning_Calorimeter_Method;76;NA;description;diff_scanning_calorimeter analysis method
+lab_xray_and_thermal;Differential_thermal_Analysis_Method;96;NA;description;differential_thermal_analysis
+lab_xray_and_thermal;DL_Dolomite_X_Ray;19;NA;description;dolomite_x_ray
+lab_xray_and_thermal;EN_Enstatite_X_Ray;20;NA;description;enstatite_x_ray
+lab_xray_and_thermal;FD_Feldspar_X_Ray;21;NA;description;feldspar_x_ray
+lab_xray_and_thermal;Fine_Sand_Mineral_Interpretation;74;NA;description;fine_sand_mineral_interp
+lab_xray_and_thermal;FK_Potassium_Feldspar_X_Ray;48;NA;description;potassium_feldspar_x_ray
+lab_xray_and_thermal;FL_Labradorite_X_Ray;32;NA;description;labradorite_x_ray
+lab_xray_and_thermal;FO_Oligoclase_X_Ray;43;NA;description;oligoclase_x_ray
+lab_xray_and_thermal;FP_Plagioclase_Feldspar_X_Ray;47;NA;description;plagioclase_feldspar_x_ray
+lab_xray_and_thermal;FR_Orthoclase_X_Ray;44;NA;description;orthoclase_x_ray
+lab_xray_and_thermal;FT_Fluorapatite_X_Ray;64;NA;description;fluorapatite_x_ray
+lab_xray_and_thermal;GE_Geothite_Differential_Scanning_Calorimetry;79;NA;description;geothite_differential scanning
+lab_xray_and_thermal;GE_Geothite_Differential_thermal_Analysis;99;NA;description;The percent goethite is calculated from the proportional temperature difference between a inert reference material and the sample at about 300-400C
+lab_xray_and_thermal;GE_Geothite_X_Ray;24;NA;description;geothite_x_ray
+lab_xray_and_thermal;GE_Kaolinite_Differential_thermal_Analysis;89;NA;description;ge_kao_diff_thermal_analysis
+lab_xray_and_thermal;GI_Gibbsite_Differential_Scanning_Calorimetry;77;NA;description;The percent gibbsite calculated from using the DSC instrument to heat a dried ground sample, generally the clay fraction, to 700 C, and quantifying the proportional heat of reaction at about 250-350 C.
+lab_xray_and_thermal;GI_Gibbsite_Differential_thermal_Analysis;97;NA;description;The percent gibbsite is calculated from the proportional temperature difference between a inert reference material and the sample at about 250-350C
+lab_xray_and_thermal;GI_Gibbsite_thermal_Gravimetric_Analysis;88;NA;description;The percent gibbsite calculated from using the TGA instrument to heat a dried ground sample, generally the clay fraction, to 900 C, and quantifying the fractional weight loss of the sample at about 250-350 C.
+lab_xray_and_thermal;GI_Gibbsite_X_Ray;22;NA;description;gibbsite_x_ray
+lab_xray_and_thermal;GL_Glauconite_X_Ray;23;NA;description;glauconite_x_ray
+lab_xray_and_thermal;GY_Gypsum_Differential_Scanning_Calorimetry;80;NA;description;gypsum_differential scanning
+lab_xray_and_thermal;GY_Gypsum_X_Ray;25;NA;description;gypsum_x_ray
+lab_xray_and_thermal;HA_Halite_X_Ray;61;NA;description;halite_x_ray
+lab_xray_and_thermal;HA_PT_Paragonite_X_Ray;66;NA;description;pt_paragonite_x_ray
+lab_xray_and_thermal;HB_Hydrobiotite_X_Ray;29;NA;description;hydrobiotite_x_ray
+lab_xray_and_thermal;HE_Hematite_X_Ray;27;NA;description;hematite_x_ray
+lab_xray_and_thermal;HN_Hornblende_X_Ray;28;NA;description;hornblende_x_ray
+lab_xray_and_thermal;HS_Hydroxy_Interlayered_Smectite_X_Ray;62;NA;description;hydroxy_inter_smectite_x_ray
+lab_xray_and_thermal;HV_Hydroxy_Interlayered_Vermiculite_X_Ray;63;NA;description;hydroxy_inter_vermiculite_xray
+lab_xray_and_thermal;IL_Illite_Hydromuscovite_X_Ray;30;NA;description;illite_hydromuscovite_x_ray
+lab_xray_and_thermal;JO_Jarosite_X_Ray;68;NA;description;jarosite_x_ray
+lab_xray_and_thermal;KH_Halloysite_Differential_Scanning_Calorimetry;83;NA;description;halloysite_differential scanning
+lab_xray_and_thermal;KH_Halloysite_Differential_thermal_Analysis;100;NA;description;The percent halloysite is calculated from the proportional temperature difference between a inert reference material and the sample at about 450-550C
+lab_xray_and_thermal;KH_Halloysite_thermal_Gravimetric_Analysis;92;NA;description;halloysite_thermal_gravimetric
+lab_xray_and_thermal;KH_Halloysite_X_Ray;26;NA;description;halloysite_x_ray
+lab_xray_and_thermal;KK_Kaolinite_Differential_Scanning_Calorimetry;78;NA;description;The percent kaolinite calculated from using the DSC instrument to heat a dried ground sample, generally the clay fraction, to 700 C, and quantifying the proportional heat of reaction at about 450-550 C.
+lab_xray_and_thermal;KK_Kaolinite_Differential_thermal_Analysis;98;NA;description;The percent kaolinite is calculated from the proportional temperature difference between a inert reference material and the sample at about 450-550C
+lab_xray_and_thermal;KK_Kaolinite_thermal_Gravimetric_Analysis;90;NA;description;The percent kaolinite calculated from using the TGA instrument to heat a dried ground sample, generally the clay fraction, to 900 C, and quantifying the fractional weight loss of the sample between about 450-550 C.
+lab_xray_and_thermal;KK_Kaolinite_X_Ray;31;NA;description;kaolinite_x_ray
+lab_xray_and_thermal;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
+lab_xray_and_thermal;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_xray_and_thermal;LC_Anacime_X_Ray;8;NA;description;anacime_x_ray
+lab_xray_and_thermal;LE_Lepidocrocite_X_Ray;33;NA;description;lepidocrocite_x_ray
+lab_xray_and_thermal;MC_Montmorillonite_Chlorite_X_Ray;38;NA;description;montmorillonite_chlorite_x_ray
+lab_xray_and_thermal;MG_Magnetite_X_Ray;35;NA;description;magnetite_x_ray
+lab_xray_and_thermal;MH_Maghemite_X_Ray;34;NA;description;maghemite_x_ray
+lab_xray_and_thermal;MI_Mica_X_Ray;36;NA;description;mica_x_ray
+lab_xray_and_thermal;MM_Montmorillonite_Mica_X_Ray;39;NA;description;montmorillonite_mica_x_ray
+lab_xray_and_thermal;MS_Muscovite_X_Ray;41;NA;description;muscovite_x_ray
+lab_xray_and_thermal;MT_Montmorillonite_thermal_Gravimetric_Analysis;93;NA;description;montmorillonite_thermal_gravimetric
+lab_xray_and_thermal;MT_Montmorillonite_X_Ray;37;NA;description;montmorillonite_x_ray
+lab_xray_and_thermal;MV_Montmorillonite_Vermiculite_X_Ray;40;NA;description;montmorillonite_verm_x_ray
+lab_xray_and_thermal;NA_Natron_X_Ray;67;NA;description;natron_x_ray
+lab_xray_and_thermal;NU_Natrojarosite_X_Ray;65;NA;description;natrojarosite_x_ray
+lab_xray_and_thermal;NX_Non_Crystalline_X_Ray;42;NA;description;non_crystalline_x_ray
+lab_analysis_procedure;NA;NA;NA;description;The Analysis Procedure table is a lookup table which contains information about the analysiscprocedure.  The analysis procedure is the basic analytical method applied to a prepared sample.  This procedure may be applied to different sample preparations, but the default size-fraction is the most commonly used size-fraction.  An analysis may have more than one procedure, one of which is chosen by the analyst to complete the analysis.
+lab_analyte;NA;NA;NA;description;The Analyte table is a lookup table which contains information about an analyte (primary result of an analysis by a procedure).  The LIMS uses this data to format the data, provide abbreviations and units of measure for reporting the data.
+lab_area;NA;NA;NA;description;A lookup table containing the list of valid NRCS areas, both current and obsolete for Country, County, Soil Survey Area and MLRA.  Note that a soil survey area code is a concatenation of a U.S. state FIPS code and a soil survey area number.  Since this table is intended to record only U.S. and U.S. territory soil survey areas, every soil survey area code in this table should be unique.
+lab_calculations_including_estimates_and_default_values;NA;NA;NA;description;This table contains the results of calculations using measured, estimated and default values.
+lab_chemical_properties;NA;NA;NA;description;This table contains the results of the analysis of chemical properties of the soil that are measured by the KSSL and cooperating university laboratories.
+lab_combine_nasis_ncss;NA;NA;NA;description;This table is a linkage betwwen NASIS Pedon morphological and the Lab data. This table stores information about locations, layers or horizons of a pedon that has had samples submitted to the SSL at the National Soil Survey Center or one of the various laboratories at NCSS cooperating universities.  Data is periodically transferred from the SSL database to this table.
+lab_layer;NA;NA;NA;description;The Layer table contains information about the layer, including the field identifier, horizon designation, reporting, and depths.  Layer in the LIMS can be a true soil horizon or a reporting layer which does not correspond to the traditional soil horizon.  The lay_rpt_seq_num sets the order of display for layer reports.  The layer is the intended way analytical results are reported in the LIMS.  New to the LIMS is the ability to allow stratified or vertically subdivided layers to be reported.
+lab_major_and_trace_elements_and_oxides;NA;NA;NA;description;This table contains major and trace elements, total oxides, x-ray data and the method codes related to the methods used.
+lab_method_code;NA;NA;NA;description;This table relates a non-connotative method code with the preparation, instrument, size fraction, analyte, procedure (if any) and calculation algorithm (if any) represented by that method code.
+lab_mineralogy_glass_count;NA;NA;NA;description;The Optical Mineralogy glass count Count Data table holds the raw data for the sample.  The table hold what type of optical count, the size fraction and replicate number.
+lab_mir;NA;NA;NA;description;Spectroscopy is the study of the interaction between matter and electromagnetic radiation. It is based on the principle that molecular vibrations and electronic transitions associated with soil constituents absorb light while interacting with radiation.
+lab_mir_wavelength;NA;NA;NA;description;The lab_mir_wavelength table is a lookup of the collection of wavelengths used for sampling the samples
+lab_pedon;NA;NA;NA;description;The LIMS Pedon table holds general information about the pedon.  The pedon is associated with a site.  The converse is not necessarily true.
+lab_physical_properties;NA;NA;NA;description;This table contains the results of analysis of physical properties of the soil that are measured by the KSSL and cooperating university laboratories.
+lab_preparation;NA;NA;NA;description;The Preparation table holds the information about the type of preparation, size of the orginal and final fractions prepared,  default container type and preparation sort order.
+lab_rosetta_key;NA;NA;NA;description;ROSETTA, which implements five hierarchical pedotransfer functions (PTFs) for the estimation of water retention, and the saturated and unsaturated hydraulic conductivity.
+lab_site;NA;NA;NA;description;The LIMS Site table holds the site (location) information about the place where the samples or pedon originated.
+lab_webmap;NA;NA;NA;description;This table is used to develop a webmap which is used to interactive display of geographic information pertaining to laboratory information.  The interactive map offers a national database of soil characterization data, allowing location of pedons spatially. Pedons are the smallest unit of soil containing all the soil horizons of a particular soil type. Clicking on a pedon location within the interactive map will enable users to access lab data about that pedon. View the new interactive map by clicking here offsite link image. You can also view the map on the Soil Lab Data Mart website (bottom left of page) here: https://ncsslabdatamart.sc.egov.usda.gov/.
+lab_xray_and_thermal;NA;NA;NA;description;The X-ray Diffraction Data table holds the raw data for the each mineral in the sample.
+table_name;NA;NA;NA;description;table_description

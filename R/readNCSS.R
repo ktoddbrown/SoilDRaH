@@ -17,8 +17,8 @@ readNCSS <- function(dataDir,
                      verbose = TRUE){
   
   
-  #dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
-  #annotationFilename <- "data/NCSS_Annotations.csv" #debugging
+  dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
+  annotationFilename <- "data/NCSS_Annotations.csv" #debugging
    
   #### Set up the file names ####
   sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
@@ -71,7 +71,21 @@ readNCSS <- function(dataDir,
     
     return(list(annotations = annotations.df, original = orginalTables))
   }else{
-    warning('This function currently only extracts the layer-resolved soil organic carbon variables.')
+    warning('This function currently only extracts tables associated with non-NA `of_variables` (currently layer-resolved soil organic carbon and geolocation).')
+    
+    reducedAnnotations <- annotations.df |>
+      filter(any(!is.na(of_variable)), .by = table_id)
+    
+    annotatedTables <- reducedAnnotations$table_id |>
+      unique() |>
+      #only read in annotations that are there, some annotated tables provided by NRCS are 'meta'
+      intersect(dbListTables(myconnect))
+    
+    #tableNames <- dbListTables(myconnect)
+    
+    if(verbose) message('Reading in all tables, this takes some time and results in 1.1 GB data object')
+    orginalTables <- lapply(setNames(object = as.list(annotatedTables), annotatedTables),
+                            function(xx) {RSQLite::dbReadTable(myconnect, xx)})
     
     ### Clean up the connection ####
     dbDisconnect(myconnect)
