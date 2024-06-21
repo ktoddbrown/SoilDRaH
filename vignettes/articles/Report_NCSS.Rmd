@@ -11,42 +11,53 @@ This data is part of the National Cooperative Soil Survey Soil Characterization 
 library(tidyverse)
 library(RSQLite)
 
-dataDir <- "~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922"
-
-sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
-
-metadata_dir <- file.path(dataDir,'FederalGeographicDataCommitteeMetadata')
-
-metadata_filenames <- lapply(list(col_desc = "NCSS Columns Description.csv", 
-                                table_desc = "NCSS Table Description.csv", 
-                                table_relation = "Relationships.csv", 
-                                table_unique = "Unique Constraints.csv"),
-                             function(xx) file.path(metadata_dir, xx))
-
 ```
 
-## draft table
+# Constructing metadata
+
+This is primarily left here for documentation and future updating needs.
 
 ```{r eval=FALSE}
-
-#### Connect the SQL database ####
-
-myconnect <- dbConnect( drv = SQLite(), dbname = sqldb_filename)
-
-print(paste('SQL tables in the database:', dbListTables(myconnect)))
-```
-
-```{r eval=FALSE}
-
-tableNames <- tibble(table_name = dbListTables(myconnect)) %>%
-  filter(grepl('^lab_', table_name)) #remove GIS tables(?) that start with st_ and the sqlite_sequence table
-
-meta.df <- plyr::ddply(tableNames, c('table_name'), 
-            .fun = function(xx){
-              headers <- RSQLite::dbListFields(myconnect, xx$table_name)
-              return(data.frame(column_name = headers ))
-            }) %>%
-  unique()
+  
+  verbose <- TRUE
+  dataDir <- "../../temp/NRCS_NCSS_20230922/"
+  
+  
+  sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
+  
+  metadata_dir <- file.path(dataDir,'FederalGeographicDataCommitteeMetadata')
+  
+  metadata_filenames <- lapply(list(col_desc = "NCSS Columns Description.csv", 
+                                    table_desc = "NCSS Table Description.csv", 
+                                    table_relation = "Relationships.csv", 
+                                    table_unique = "Unique Constraints.csv"),
+                               function(xx) file.path(metadata_dir, xx))
+  
+  #######
+  ###Check downloads
+  
+  if(!file.exists(sqldb_filename)){
+    message(paste('Expected zip file not found. Go here and download the sqlite zip file. https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx and place it in the directory:', file.path(getwd(), dataDir )))
+  }
+  
+  #### Connect the SQL database ####
+  
+  myconnect <- RSQLite::dbConnect( drv = RSQLite::SQLite(), dbname = sqldb_filename)
+  
+  if(verbose) message(paste('SQL tables in the database:', paste(RSQLite::dbListTables(myconnect), collapse = ', ')))
+  
+  
+  tableNames <- tibble(table_name = dbListTables(myconnect)) %>%
+    filter(grepl('^lab_', table_name)) #remove GIS tables(?) that start with st_ and the sqlite_sequence table
+  
+  if(verbose) message(paste('Trimming SQL tables to:', paste(tableNames$table_name, collapse = ', ')))
+  
+  meta.df <- plyr::ddply(tableNames, c('table_name'), 
+                         .fun = function(xx){
+                           headers <- RSQLite::dbListFields(myconnect, xx$table_name)
+                           return(data.frame(column_name = headers ))
+                         }) %>%
+    unique()
 
 ##This is large but if you need to load everything all at once you can do so here
 # OrgData.df <- plyr::dlply(tableNames, c('table_name'), 
@@ -54,6 +65,10 @@ meta.df <- plyr::ddply(tableNames, c('table_name'),
 #               return(list(RSQLite::dbReadTable(myconnect, xx$table_name)))
 #             }) 
 
+  ### Clean up the connection ####
+  dbDisconnect(myconnect)
+  
+  
 #### Fix the descriptions ####
 
 givenDescriptions <- read_csv(file = metadata_filenames$col_desc, 
@@ -132,43 +147,39 @@ givenDescriptions <- read_csv(file = metadata_filenames$col_desc,
     table_name == 'lab_major_tr_elements_oxides' ~ 'lab_major_and_trace_elements_and_oxides',
     table_name == 'lab_calculations_and_estimates' ~
       'lab_calculations_including_estimates_and_default_values',
-    table_name == 'lab_mir_wavelength' ~ 'lab_mir_wavelength_string_d',
+    table_name == 'lab_mir_wavelength_string_d' ~ 'lab_mir_wavelength',
     table_name == 'lab_dd_table_column' ~ 'lab_column_descriptions',
     table_name == 'lab_dd_table' ~ 'lab_table_descriptions',
-    TRUE ~ table_name)) 
+    TRUE ~ table_name)) %>%
+    pivot_wider(names_from = of_type, values_from = with_entry)
 
-temp <- givenDescriptions %>%
-  pivot_wider(names_from = of_type, values_from = with_entry) %>%
-  mutate(foreign_key = str_detect(string = description, 
-                                  pattern = '(F|f)oreign key')) %>%
-  mutate(foreign_key = if_else(foreign_key, "TRUE", NA_character_)) #%>%
-  # pivot_longer(c(description, foreign_key, column_number),
-  #              names_to = 'is_type',
-  #              values_to = 'with_entry',
-  #             values_drop_na = TRUE)
-write_csv(temp, file = file.path('../temp', 'NCSS_dev.csv'))
+# This was manually compiled by Vaasuki Marupaka and others in the Todd-Brown Lab
+# https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing
+curatedAnnotations <- read_csv(file = '../../temp/[DRAFT] ISCN datakeys temp - NCSS_May2024.csv',
+         col_types = cols(.default = col_character()))
 
+# Manually reviewed diff between currated and auto and 5 rows were determed to be corrections
+if(FALSE){
+  diff_curated.df <- curatedAnnotations %>%
+    anti_join(givenDescriptions)
+  
+  diff_auto.df <- givenDescriptions %>%
+    anti_join(curatedAnnotations)
+}
+
+finalAnnotations <- curatedAnnotations %>%
+  pivot_longer(cols = c(identifier, foreign_key, description, value, unit, method, reference, note, abbreviation), 
+               names_to = 'is_type', 
+               values_to = 'with_entry', 
+               values_drop_na = TRUE) %>%
+  select(table_id = table_name, column_id = column_name, column_number,
+         of_variable, is_type, with_entry)
+
+write_delim(finalAnnotations, delim = ';',
+            file = file.path('../../data', 'NCSS_Annotations.csv'))
 ```
 
-```{r eval=FALSE}
-### Check the descriptions####
-temp <- meta.df %>%
-  mutate(is_header_match = TRUE) %>%
-  full_join(givenDescriptions, by = join_by(table_name, column_name)) %>%
-  mutate(is_header_match = !is.na(is_header_match))
-
-cross_table <- temp %>%
-  select(sql_table_name = table_name, sql_column_name = column_name,
-         dictionary_table_name = given_table_name,
-         dictionary_column_name = given_column_name) %>%
-  unique() %>%
-  mutate(matching_table_names = (sql_table_name == dictionary_table_name), 
-           matching_column_names = (sql_column_name == dictionary_column_name))
-
-write_csv(givenDescriptions, file = file.path('data', 'NRCS_NCSSAnnotations.csv'))
-##Where are the 'bad' matches? fix "RB_Riebeckite_Blue_Amphibole_Petro_Count"
-#temp %>% filter(!is_header_match, !is.na(column_name))
-
+```{r}
 # Useful relationshpi tables
 #relationship.df <-  read_csv(metadata_filenames$table_relation)
 
