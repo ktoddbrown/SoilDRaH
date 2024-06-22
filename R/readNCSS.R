@@ -9,8 +9,10 @@
 #' @export
 #'
 #' @importFrom RSQLite dbConnect SQLite dbListTables
+#' @importFrom dplyr filter select mutate full_join
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect everything all_of
 #'
-#' @examples
 readNCSS <- function(dataDir,
                      annotationFilename,
                      format = c('original', 'long')[1],
@@ -121,7 +123,8 @@ readNCSS <- function(dataDir,
             #The result_source_key is equal to the layer_key here
             lab_phy.long <- orginalTables[[tableName.str]] |>
               dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
-              dplyr::mutate(dplyr::across(.cols = everything(), .fns = as.character)) |>
+              dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), 
+                                          .fns = as.character)) |>
               tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
                                   names_to = 'column_id', values_to = 'with_entry',
                                   values_drop_na = TRUE) |>
