@@ -606,6 +606,24 @@ bulk_density.df <- alllayer.df |>
                        names = c('bulk_density_unknown', 'bulk_density_unknown.note')) |>
   mutate(across(.cols = c(bulk_density_fine, bulk_density_whole, bulk_density_unknown),
                 as.numeric))
+
+metaBulkDensity <- mapping_bulk_density |>
+  select(study_id, column_id = header_str, of_variable = header_str, description, method, unit) |>
+  pivot_longer(cols = c('description', 'method', 'unit'), 
+               names_to = 'is_type',
+               values_to = 'with_entry') |>
+  bind_rows(tribble(~study_id, ~column_id, ~of_variable, ~is_type, ~with_entry,
+                    NA, "bulk_density_fine", "bulk_density_fine", 'value', '--',
+                    NA, "bulk_density_fine.note", "bulk_density_fine", 'note', '--',
+                    NA, "bulk_density_unknown", "bulk_density_unknown", 'value', '--',
+                    NA, "bulk_density_unknown.note", "bulk_density_unknown", 'note', '--',
+                    NA, "bulk_density_whole", "bulk_density_whole", 'value', '--',
+                    NA, "bulk_density_whole.note", "bulk_density_whole", 'note', '--',
+                    )) |>
+  select(-study_id) |>
+  unique() |>
+  arrange(of_variable)
+
 ```
 
 ```{r}
@@ -619,11 +637,31 @@ plot.df <- bulk_density.df %>%
 
 ggplot(plot.df |>
          filter(value > 0, value < 4)) +
-  geom_histogram(aes(x=value)) +
-  facet_wrap(~name, ncol = 1)
+  geom_histogram(aes(x=value), bins = 30) +
+  facet_wrap(~name, ncol = 1, scales = 'free_y')
 ```
 
-## soil fractions (organic carbon, inorganic carbon, coarse)
+```{r}
+ggplot(bulk_density.df) +
+  geom_point(aes(x=bulk_density_whole, y = bulk_density_fine))
+
+ggplot(bulk_density.df) +
+  geom_point(aes(x=bulk_density_whole, y = bulk_density_unknown))
+
+ggplot(bulk_density.df) +
+  geom_point(aes(x=bulk_density_fine, y = bulk_density_unknown))
+```
+
+## Soil mass fractions (organic carbon, inorganic carbon, coarse)
+
+```{r}
+ref <- allmeta.df |>
+  dplyr::filter(of_variable %in% c('inorganic_carbon', 'carbon_fraction', 'coarse_fraction',
+                                   'organic_carbon', 'coarse_fragment')) |>
+  pivot_wider(names_from = 'is_type', values_from = 'with_entry',
+              values_fn = function(xx)paste(xx, collapse = ':::')) |>
+  mutate(unit = 'mass percent')
+```
 
 # Reassembiling tables
 
