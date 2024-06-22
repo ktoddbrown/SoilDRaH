@@ -2,26 +2,46 @@
 title: "NRCS-NCSS Report"
 author: "Katherine Todd-Brown <ktoddbrown@ufl.edu>"
 date: "2024-05-28"
-output: html_document
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
 ---
 
-This data is part of the National Cooperative Soil Survey Soil Characterization Data (Lab Data) and was accessed via [https://ncsslabdatamart.sc.egov.usda.gov/](https://ncsslabdatamart.sc.egov.usda.gov/)
+This data is part of the National Cooperative Soil Survey Soil Characterization Data (Lab Data) and was accessed via [https://ncsslabdatamart.sc.egov.usda.gov/](https://ncsslabdatamart.sc.egov.usda.gov/).
+The NCSS Data (Lab Data) was collected the by the National Cooperative Soil Survey of the United States Department of Agriculture.
+This dataset contains the measurements across several projects of various purposes.
+
+This data set is quite extensive with over 1,014 columns across 24 tables.
+While we have integrated the available metedata into the data annotations presented here, we have not completed the annotations beyond the description imports for soil carbon stock estimates, bulk density, organic carbon fraction, layer depth, and geo-location.
+
+**Citation:**
+National Cooperative Soil Survey,
+National Cooperative Soil Survey Soil Characterization Database,
+http://ncsslabdatamart.sc.egov.usda.gov/
+(Accessed September 22, 2023)
 
 ```{r setup}
-library(tidyverse)
-library(RSQLite)
-library(knitr)
-library(kableExtra)
+library(tidyverse) #manipulate the data tables
+library(RSQLite) #read in the sqlite file that holds the sample data
+library(knitr) #make pretty reports
+library(kableExtra) #make pretty scrollable tables
 
-source('../../R/readNCSS.R')
+source('../../R/readNCSS.R') #load in the read file
 
+#knitr::opts_chunk$set()
 ```
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
                     annotationFilename = '../../data/NCSS_Annotations.csv',
                     format = 'long')
 ```
+
+# Data descriptions
+
+Below is the description for tables containing soil carbon stocks, layer depth, and geolocation information.
 
 ## Table: `lab_pedon`
 
@@ -30,6 +50,7 @@ table_str <- 'lab_pedon'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -43,6 +64,7 @@ table_str <- 'lab_site'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -56,6 +78,7 @@ table_str <- 'lab_layer'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -69,6 +92,7 @@ table_str <- 'lab_calculations_including_estimates_and_default_values'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -82,6 +106,7 @@ table_str <- 'lab_chemical_properties'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
@@ -95,12 +120,14 @@ table_str <- 'lab_physical_properties'
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
                select(column_id, of_variable, description = with_entry)) %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
 ```
 
-# Data processing
+# Soil organic carbon data processing
+
 
 ```{r}
 
@@ -148,7 +175,6 @@ soc.df <- temp_site %>%
   pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
-# Soil carbon figures
 
 ```{r}
 
@@ -171,6 +197,8 @@ plot.df <- soc.df %>%
 
 ```
 
+## Histograms
+
 ```{r fig.width = 9, fig.height=6}
 
 hist.df <- plot.df %>%
@@ -182,12 +210,14 @@ ggplot(hist.df) +
   facet_wrap(~name, scale= 'free', nrow=4)
 ```
 
+### Observational date
+
 ```{r}
 ggplot(plot.df) +
   geom_histogram(aes(x=observation_date))
 ```
 
-# OC vs BD Scatter
+## OC vs BD Scatter
 
 ```{r}
 
@@ -196,7 +226,7 @@ ggplot(plot.df) +
 
 ```
 
-# Calculate SOC
+## Calculate SOC
 
 ```{r}
 plot2.df <- plot.df %>%
