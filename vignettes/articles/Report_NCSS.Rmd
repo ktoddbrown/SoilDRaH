@@ -28,7 +28,8 @@ library(RSQLite) #read in the sqlite file that holds the sample data
 library(knitr) #make pretty reports
 library(kableExtra) #make pretty scrollable tables
 
-source('../../R/readNCSS.R') #load in the read file
+source('../../R/checkAnnotations.R') #load in the check function for annotations
+source('../../R/readNCSS.R') #load in the read function
 
 #knitr::opts_chunk$set()
 ```
@@ -264,6 +265,24 @@ ggplot(plot.df %>%
 ```{r file = '../../R/readNCSS.R', eval=FALSE}
 
 ```
+
+# Checking format
+
+```{r eval=FALSE}
+#TODO rerun after updating the checkAnnotations to run off of the csv file
+
+# read_csv('../../data/FIA_Annotations.csv', 
+#          col_types = cols(.default = col_character())) %>%
+#   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
+
+#temp %>% filter(with_entry == '--') %>% View()
+if(checkAnnotations(filename = '../../data/NCSS_Annotations.csv') == 0){
+  print('Annotations check out!')
+}
+
+checkAnnotations(filename = '')
+```
+
 
 # Constructing metadata
 
