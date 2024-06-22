@@ -269,18 +269,17 @@ ggplot(plot.df %>%
 # Checking format
 
 ```{r eval=FALSE}
-#TODO rerun after updating the checkAnnotations to run off of the csv file
 
 # read_csv('../../data/FIA_Annotations.csv', 
 #          col_types = cols(.default = col_character())) %>%
 #   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
 
 #temp %>% filter(with_entry == '--') %>% View()
-if(checkAnnotations(filename = '../../data/NCSS_Annotations.csv') == 0){
+if(checkAnnotations(filename = 'NCSS_Annotations.csv',
+                      annotationsDirectory = '../../data') == 0){
   print('Annotations check out!')
 }
 
-checkAnnotations(filename = '')
 ```
 
 
