@@ -398,6 +398,70 @@ dataRegions.df |>
 
 ## latitued and longitude
 
+```{r}
+ref <- allmeta.df %>%
+  filter(str_detect(string = of_variable, pattern = '.atitude') |
+           str_detect(string = of_variable, pattern = '.ongt?itude'))
+
+#all latitude/longitude should be in decimal degrees centered on 0
+#FIA datum is based on state code:
+# "The approximate latitude of the plot in decimal degrees using NAD 83 datum (these Pacific Islands plots use WSG84 datum - SURVEY.RSCD = 26 and SURVEY.STATECD = 60, 64, 66, 68, 69, or 70). Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available."
+
+FIAdatum <- alllocation.df %>%
+  filter(study_id == 'FIA',
+         is_type == 'value',
+         of_variable == 'State') %>%
+  #the with_entry is now the STATECD
+  mutate(datum = if_else(with_entry %in% c('60', '64', '66', '68', '69', '70'), 
+                         'WSG84', 'NAD83')) %>%
+  #Note that there are currently no locations with these state codes - 20240622
+  select(study_id, plot_id, datum) %>%
+  unique()
+
+ISCNdatum <- alllocation.df %>%
+  filter(study_id == 'ISCN3', 
+         is_type == 'method') %>% #all the methods here are datums
+  select(study_id, dataset_id, profile_id, datum = with_entry) %>%
+  unique() 
+
+latLon.df <- alllocation.df %>%
+  filter(str_detect(of_variable, pattern = '.atitude') |
+           str_detect(of_variable, pattern = '.ongt?itude'),
+         is_type == 'value') %>%
+  mutate(header_name = if_else(str_detect(of_variable, pattern = '.atitude'), 
+                               'latitude', 'longitude')) %>%
+  select(ends_with('_id'), header_name, with_entry) %>%
+  pivot_wider(names_from = header_name, values_from = with_entry) %>%
+  mutate(across(.cols = c(latitude, longitude), as.numeric)) %>%
+  #check for bounds, nothing to remove
+  left_join(bind_rows(FIAdatum, ISCNdatum),
+            by = join_by(study_id, dataset_id, profile_id, plot_id)) %>%
+  mutate(across(.cols = datum, as.factor))
+
+#dummy check to future proof changes
+if(latLon.df$latitude > 90 | latLon.df$latitude < -90 |
+   latLon.df$longitude > 180 | latLon.df$longitude < -180){
+  stop('out of bounds')
+}
+  
+metaLatLon.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
+                         'FIA', 'latitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.",
+                         'FIA', 'longitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.")
+```
+
+
+Note that the FIA database currently does not have soil observations for the state codes associated with `WSG84`.
+
+```{r}
+latLon.df %>%
+  reframe(count = n(), .by = c(study_id, datum))
+```
+
+```{r}
+
+summary(latLon.df)
+```
+
 ## layer depth
 
 ## observation year
