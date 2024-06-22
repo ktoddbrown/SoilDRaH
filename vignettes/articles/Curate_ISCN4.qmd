@@ -503,10 +503,125 @@ ggplot(observationYr.df) +
   facet_wrap(~study_id, ncol=1, scales = 'free_y')
 ```
 
-## layer depth
+## Layer depth interval
 
+```{r}
+ref <- allmeta.df |>
+  filter(of_variable %in% c("Layer_type",
+                            "lower_depth_bound", "upper_depth_bound"))
 
-## bulk density
+FIAkey <- ref |>
+  filter(is_type == 'control_vocabulary')  |>
+  select(with_entry) |>
+  tidyr::separate_longer_delim(with_entry, delim = ';') |>
+  tidyr::separate_wider_delim(with_entry, delim = '|', names = c('key', 'value')) |>
+  select(key, value) |>
+  mutate(lower_depth_bound = case_when(str_detect(value, '0-4 inch') ~ 4*2.54, #convert to cm
+                                       str_detect(value, '4-8 inch') ~ 8*2.54,
+                                       TRUE ~ NA),
+         upper_depth_bound = case_when(str_detect(value, '0-4 inch') ~ 0*2.54,
+                                       str_detect(value, '4-8 inch') ~ 4*2.54,
+                                       TRUE ~ NA))
+
+FIAdepth <- alllayer.df |>
+  filter(of_variable %in% c("Layer_type")) |>
+  full_join(FIAkey, by = join_by(with_entry == key)) |>
+  select(study_id, plot_id, layer_id, upper_depth_bound, lower_depth_bound)
+
+ISCNdepth <- alllayer.df %>%
+  filter(of_variable %in% c("lower_depth_bound", "upper_depth_bound")) %>%
+  filter(is_type == 'value') |>
+  #TODO: Worldwide soil carbon and ... needs to be address in readISCN
+  # dplyr::reframe(n = dplyr::n(), 
+  #                  entries = paste(with_entry, collapse = '::'),
+  #                  .by = c(study_id, dataset_id, profile_id, layer_id,
+  # is_type, plot_id, of_variable)) |>
+  # dplyr::filter(n > 1L)
+  pivot_wider(names_from = of_variable, values_from = with_entry,
+              values_fn = function(xx){
+                if(length(xx) > 1){
+                  return(c(NA)) #drop ambiguous data, known issue with ISCN
+                }else{
+                  return(xx)
+                }
+              }) %>%
+  select(study_id, dataset_id, profile_id, layer_id, upper_depth_bound, lower_depth_bound) %>%
+  mutate(across(c(upper_depth_bound, lower_depth_bound), as.numeric))
+
+depth.df <- ISCNdepth |>
+  bind_rows(FIAdepth)
+
+metaDepth.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
+                         NA, 'upper_depth_bound', 'value', '--',
+                         NA, 'upper_depth_bound', 'unit', 'cm',
+                         NA, 'upper_depth_bound', 'description', 'depth to upper layer bound from surface',
+                         NA, 'lower_depth_bound', 'value', '--',
+                         NA, 'lower_depth_bound', 'unit', 'cm',
+                         NA, 'lower_depth_bound', 'description', 'depth to lower layer bound from surface',
+)
+```
+
+## Bulk density
+
+```{r}
+ref <- allmeta.df |>
+  dplyr::filter(str_detect(string = of_variable,
+                    pattern = 'ulk_density')) |>
+  pivot_wider(names_from='is_type', values_from = 'with_entry',
+              values_fn = function(xx)paste(xx, collapse = '::'))
+
+mapping_bulk_density <- tribble(
+  ~study_id, ~of_variable, ~header_str, ~description, ~method,
+  'ISCN3', 'bulk_density_sample', 'bulk_density_fine', 'fine earth bulk density, <2mm', 'measured',
+  'ISCN3', 'bulk_density_total', 'bulk_density_whole', 'whole soil bulk density', 'measured',
+  'ISCN3', 'bulk_density_whole', 'bulk_density_whole', 'whole soil bulk density', 'estimated',
+  'ISCN3', 'bulk_density_other', 'bulk_density_unknown', 'whole or fine soil bulk density', 'unknown',
+  'FIA', 'Bulk_density', 'bulk_density_whole', 'whole soil bulk density', 'measured') %>%
+  mutate(unit = 'g cm-3')
+
+bulk_density.df <- alllayer.df |>
+  dplyr::filter(of_variable %in% mapping_bulk_density$of_variable) |>
+  mutate(is_type = if_else(is_type == 'method', 'note', is_type)) |>
+  pivot_wider(names_from = is_type, values_from = with_entry,
+              values_fn = function(xx){
+                if(length(xx) > 1){
+                  return(c(NA)) #drop ambiguous data, known issue with ISCN
+                }else{
+                  return(xx)
+                }
+              }) |>
+  filter(!is.na(value)) |>
+  mutate(value = as.numeric(value)) |>
+  #filter(value > 0 & value < 2.65) |> #bound the bulk density of quartz
+  full_join(mapping_bulk_density |>
+              select(study_id, of_variable, header_str), by = join_by(study_id, of_variable)) |>
+  mutate(temp = paste(value, note, sep = ":::")) |>
+  select(ends_with('_id'), header_str, temp) |>
+  pivot_wider(names_from = header_str, values_from = temp) |>
+  separate_wider_delim(bulk_density_fine, delim = ":::", 
+                       names = c('bulk_density_fine', 'bulk_density_fine.note')) |>
+  separate_wider_delim(bulk_density_whole, delim = ":::", 
+                       names = c('bulk_density_whole', 'bulk_density_whole.note')) |>
+  separate_wider_delim(bulk_density_unknown, delim = ":::", 
+                       names = c('bulk_density_unknown', 'bulk_density_unknown.note')) |>
+  mutate(across(.cols = c(bulk_density_fine, bulk_density_whole, bulk_density_unknown),
+                as.numeric))
+```
+
+```{r}
+summary(bulk_density.df)
+```
+
+```{r}
+plot.df <- bulk_density.df %>%
+  select(ends_with('_id'), bulk_density_whole, bulk_density_fine, bulk_density_unknown) %>%
+  pivot_longer(cols = starts_with('bulk_density'), values_drop_na = TRUE)
+
+ggplot(plot.df |>
+         filter(value > 0, value < 4)) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, ncol = 1)
+```
 
 ## soil fractions (organic carbon, inorganic carbon, coarse)
 
@@ -515,11 +630,15 @@ ggplot(observationYr.df) +
 ```{r}
 ISCN4.meta <- metaRegions.df %>%
   bind_rows(metaLatLon.df) %>%
-  bind_rows(metaObsYr)
+  bind_rows(metaObsYr) %>%
+  bind_rows(metaDepth.df)
 
 ISCN4.surfaceLocation <- dataRegions.df %>%
   full_join(latLon.df, by = join_by(study_id, dataset_id, profile_id, plot_id)) %>%
   full_join(observationYr.df, by = join_by(study_id, dataset_id, profile_id, plot_id))
+
+ISCN.layer <- depth.df %>%
+  full_join(bulk_density.df, by = join_by(study_id, dataset_id, profile_id, layer_id, plot_id))
 ```
 
 ```{r}
