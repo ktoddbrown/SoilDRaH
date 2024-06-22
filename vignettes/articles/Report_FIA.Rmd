@@ -364,7 +364,8 @@ This would need to be extended to include other data tables.
 #   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
 
 #temp %>% filter(with_entry == '--') %>% View()
-if(checkAnnotations(filename = '../../data/FIA_Annotation.csv') == 0){
+if(checkAnnotations(filename = 'FIA_Annotations.csv',
+                    annotationsDirectory = '../../data') == 0){
   print('Annotations check out!')
 }
 
