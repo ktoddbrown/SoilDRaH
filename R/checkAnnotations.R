@@ -1,27 +1,43 @@
-checkAnnotations <- function(filename){
+#' Check annotations
+#' 
+#' This function checks that the annotations files adhere to self documented standards. 
+#'
+#' @param filename the annotation files being checked
+#' @param annotationsCheckFile the standard annotation file to be checked against
+#' @param annotationsDirectory the directory holding the annotation files
+#'
+#' @return 0 if everything checks out, otherwise throws an error.
+#' @export
+#' 
+#' @importFrom dplyr mutate filter across everything
+#' @importFrom readr read_delim cols col_character
+#' @importFrom tidyr separate_longer_delim separate_wider_delim
+#'
+checkAnnotations <- function(filename,
+                             annotationsCheckFile = 'selfDocumentAnnotations.csv',
+                             annotationsDirectory = 'data'){
   
-  expectedHeaders <- c("table_id", #Table id should match the basename of the csv file
-                       "column_id", #This should match the exact text of the headers
-                       "of_variable", #variables should match how the orginal file talks about data. For example if bulk density is reported as both fine earth and whole the variable might be `fine_bulk_density` and `whole_bulk_densith`. Best practice is to use `_` to seperate words and lower case.
-                       "is_type", #should be one of the control vocabulary below
-                       "with_entry" #should be either the value/entry associated with this time and varible OR a `--` to indicate a reference to the described data table.
-                       )
+  selfDoc <- readr::read_delim(file.path(annotationsDirectory, 'selfDocumentAnnotations.csv'), 
+                               delim = ';',
+                               col_types = readr::cols(.default = readr::col_character()),)
+  
+  expectedHeaders <- selfDoc$column_id |>
+    unique()
   
   data_ref <- '--' #string for reference to annotated data to appear in the `with_entry` column
   
-  valid_is_type <- c('identifier',
-                     'description',
-                     'foreign_key',
-                     'value',
-                     'unit',
-                     'method',
-                     'note',
-                     'control_vocabulary',
-                     'standard_deviation')
+  control_vocab.df <- selfDoc |>
+    dplyr::filter(column_id == 'is_type', is_type == 'control_vocabulary') |>
+    dplyr::select(with_entry) |>
+    tidyr::separate_longer_delim(cols = with_entry, delim = ';') |>
+    tidyr::separate_wider_delim(cols = with_entry, delim = '|', names = c('vocabulary', 'definition')) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), .fns = trimws))
+  
+  valid_is_type <- control_vocab.df$vocabulary
   
   #assume ';' deliminator to be consistent with how R structures csv in data folders
-  annotation.df <- read_delim(filename, 
-                             col_types = cols(.default = col_character()),
+  annotation.df <- readr::read_delim(file.path(annotationsDirectory, filename),
+                             col_types = readr::cols(.default = readr::col_character()),
                              delim = ';')
   
   
@@ -32,15 +48,22 @@ checkAnnotations <- function(filename){
                paste0(setdiff(expectedHeaders, names(annotation.df)), collapse = ', ')))
   }
   
+  #throw a warning that there are extra headers
+  if(!all(names(annotation.df) %in%
+          expectedHeaders)){
+    warning(paste('annotation file has extra names: ', 
+               paste0(setdiff(names(annotation.df), expectedHeaders), collapse = ', ')))
+  }
+  
   #check is_type elements
   if(!all(unique(annotation.df$is_type) %in% valid_is_type)){
     stop(paste('annotation file contains invalid type: ', 
                setdiff(unique(annotation.df$is_type), valid_is_type)))
   }
   
-  check_self_ref <- annotation.df %>%
-    filter(with_entry == data_ref) %>%
-    mutate(across(.cols = everything(),.fns = function(xx){
+  check_self_ref <- annotation.df |>
+    dplyr::filter(with_entry == data_ref) |>
+    dplyr::mutate(across(.cols = dplyr::everything(),.fns = function(xx){
       xx[xx == data_ref] <- NA
       return(xx)
     }))
