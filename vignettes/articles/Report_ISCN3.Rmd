@@ -1,0 +1,240 @@
+---
+title: "ISCN3 report"
+date: "Summer 2024"
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
+---
+
+The purpose of this document is to summarize the International Soil Carbon Network Database and demonstrate how to use the `readISCN3` function.
+
+> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/.
+
+
+*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
+
+Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+
+# Set up
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) #make tables scrollable
+library(tidyverse)
+library(maps)
+
+source("../../R/readISCN3.R", local = knitr::knit_global())
+
+#locate the data locally
+dataDir <- '../temp/ISCN3'
+dataAnnotations <- '../../data/ISCN3Annotations.csv'
+```
+
+
+```{r, echo=FALSE}
+#Change this file to run locally for you
+dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/ISCN3'
+
+```
+
+```{r}
+iscn.ls <- readISCN3(dataDir = dataDir,
+                     annotationFilename = dataAnnotations,
+                     format = 'long')
+```
+
+# Data tables
+
+ISCN3 contains four primary data tables: `citation`, `dataset`, `profile`, and `layer`.
+Below are the column descriptions from the annotations.
+
+## Table: `citation`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'citation') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `dataset`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'dataset') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `profile`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'profile') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `layer`
+
+```{r}
+knitr::kable(iscn.ls$annotation %>%
+               dplyr::filter(is_type == 'description',
+                      table_id == 'layer') %>%
+               dplyr::select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+
+# Processing the ISCN3 database: `readISCN3`
+
+Calling the `readISCN3` function is shown below. 
+
+```{r eval=FALSE}
+iscn.ls <- readISCN3(dataDir = dataDir,
+                     annotationFilename = dataAnnotations,
+                     format = 'long')
+```
+
+The function itself is echoed here.
+
+```{r, file= '../../R/readISCN3.R'}
+```
+
+# Data processing
+
+Using the read function let's look at the soil organic carbon related functions for datsets that are not in the NRCS.
+
+## Soil organic carbon
+
+Looking only at geolocation, depth, and soil orgnaic carbon stocks.
+
+```{r}
+
+#Use the annotations to set up the column selection
+column_selection <- iscn.ls$annotation %>%
+  filter((of_variable %in% c('latitude', 'longitude',
+                            'state', 'country') & table_id == 'layer') |
+         (table_id == 'layer' & 
+         (of_variable %in% c('layer_observation_time',
+                            'upper_depth_bound', 'lower_depth_bound',
+                            'organic_carbon', 'coarse_fragment') |
+  str_detect(of_variable, 'bulk_density')))) %>%
+  filter(with_entry == '--') %>%
+  select(ends_with('_id'), of_variable, is_type)
+
+# Subset the ISCN database
+soc.ls <- iscn.ls$long %>% #nrow 17 967 513
+  # remove nrcs data
+  filter(!str_detect(dataset_id, 'NRCS'),
+         !str_detect(soc_id, 'ISCN SOC stock'),
+         !str_detect(soc_id, 'AK DSC Project SOC')) %>% #nrow 1 043 250
+  # use the column selection to subset the database
+  right_join(column_selection, 
+             relationship = "many-to-many",
+  by = join_by(column_id, table_id))  #nrow 454 994
+
+#spread out the columns
+wide_soc <- soc.ls %>%
+  select(dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = c(of_variable, is_type), 
+              values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
+  #remove observations that don't have associated bulk density
+  filter(!is.na(bulk_density_sample_value) |
+           !is.na(bulk_density_other_value) |
+           !is.na(bulk_density_total_value) |
+           !is.na(bulk_density_whole_value) ) %>% #nrow 20 570
+  filter(!is.na(organic_carbon_value)) %>% #nrow 8 704
+  #Convert everything to numeric values
+  mutate(across(c(longitude_value, latitude_value,
+                  layer_observation_time_value,
+                  upper_depth_bound_value, lower_depth_bound_value,
+                  organic_carbon_value, coarse_fragment_value,
+                  bulk_density_sample_value,
+                  bulk_density_other_value,
+                  bulk_density_total_value,
+                  bulk_density_whole_value), as.numeric)) %>%
+  #convert the date from Excel format to a lubridate object
+  mutate(layer_observation_time_date = 
+           if_else(layer_observation_time_value < 2000,
+                   ymd(paste0(as.character(layer_observation_time_value), '-01-01')), 
+                   as_date(layer_observation_time_value, origin = ymd('1900-01-01'))))
+  
+```
+
+
+```{r}
+knitr::kable(wide_soc %>%
+               slice_head(n=100) ) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Numeric histograms
+
+```{r fig.width=9}
+
+plot.df <- wide_soc %>%
+  pivot_longer(cols = where(is.numeric), 
+               names_to = 'variable', values_to = 'value',
+               values_drop_na = TRUE)
+
+ggplot(plot.df) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~variable, scales = 'free')
+
+ggplot(plot.df %>%
+         select(dataset_id, profile_id, layer_observation_time_date) %>%
+         unique()) +
+  geom_histogram(aes(x=layer_observation_time_date))
+```
+
+## Bulk density vs organic carbon
+
+```{r}
+plot.df <- wide_soc %>%
+  pivot_longer(cols = matches('bulk_density.*_value'), 
+               names_to = 'bulk_density_type', values_to = 'bulk_density',
+               values_drop_na = TRUE)
+
+ggplot(plot.df) +
+  geom_point(aes(x=bulk_density, y = organic_carbon_value)) +
+  facet_wrap(~bulk_density_type, scales = 'free')
+```
+
+## Gelocation
+
+```{r}
+
+world_map <- map_data("world")
+
+plot.df <- wide_soc %>%
+  select(dataset_id, profile_id, latitude_value, longitude_value) %>%
+  unique()
+
+ggplot(data=world_map) + 
+   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
+  geom_point(data = plot.df, 
+             aes(x=longitude_value, y = latitude_value),
+             color = 'blue', alpha = .1) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+```
+
