@@ -291,23 +291,23 @@ knitr::kable(notValue) |>
 
 Examining the contextual metadata we need to do the following:
 
-  [-] country and state
+  + country and state
     * FIA: Extract the control vocabulary and substitute it into those entries
     * All: Ensure consistent state and country names (capitalization and convention)
-  [] latitude and longitude
+  + latitude and longitude
     * All: Check for upper/lower bounds (latitude -180:180, longitude -90:90)
     * All: populate datum for each value or label as unknown
-  [] layer depth
+  + layer depth
     * FIA: populate upper and lower bounds from control vocabulary
     * All: check zero location
     * All: convert to units to cm
-  [] observation year
+  + observation year
     * ISCN3: convert from days since origin (unless under 2100)
-  [] bulk density
+  + bulk density
     * ISCN3: remove known fine earth bulk density
     * All: convert units to g cm-3
     * All: move over method notes to primary data
-  [] organic carbon, inorganic carbon, and coarse fraction
+  + organic carbon, inorganic carbon, and coarse fraction
     * All: convert units to mass-percent
     * All: move over method notes to primary data
 
@@ -364,11 +364,11 @@ dataRegions.df <- ISCNstate.df |>
   select(study_id, dataset_id, profile_id, plot_id, country, state) |>
   mutate(across(.cols = c(state, country), as.factor))
 
-metaRegions.df <- tribble(~variable, ~is_type, ~with_entry,
+metaRegions.df <- tribble(~of_variable, ~is_type, ~with_entry,
                           'state', 'value', '--',
                           'state', 'description', 'state name within the US',
                           'country', 'value', '--',
-                          'state', 'description', 'country name')
+                          'country', 'description', 'country name')
 
 rm(FIAcountry.df, FIAstate.df, ISCNcountry.df, ISCNstate.df, FIAstate.key)
 ```
@@ -439,41 +439,99 @@ latLon.df <- alllocation.df %>%
   mutate(across(.cols = datum, as.factor))
 
 #dummy check to future proof changes
-if(latLon.df$latitude > 90 | latLon.df$latitude < -90 |
-   latLon.df$longitude > 180 | latLon.df$longitude < -180){
-  stop('out of bounds')
+if(any(latLon.df$latitude > 90 | latLon.df$latitude < -90 |
+   latLon.df$longitude > 180 | latLon.df$longitude < -180)){
+  stop('out of bounds lat-lon')
 }
   
 metaLatLon.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
+                         NA, 'latitude', 'value', '--',
+                         NA, 'latitude', 'unit', 'decimal degrees centered on zero',
                          'FIA', 'latitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.",
-                         'FIA', 'longitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.")
+                         NA, 'longitude', 'value', '--',
+                         NA, 'longitude', 'unit', 'decimal degrees centered on zero',
+                         'FIA', 'longitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.",
+                         NA, 'datum', 'value', '--',
+                         NA, 'datum', 'description', 'Geospacial datum reference for latitude and longitude')
+
+rm(ISCNdatum, FIAdatum, ref)
 ```
 
 
 Note that the FIA database currently does not have soil observations for the state codes associated with `WSG84`.
 
+### Latitude and longitude summary
+
 ```{r}
 latLon.df %>%
-  reframe(count = n(), .by = c(study_id, datum))
+  reframe(count = n(), .by = c(study_id, datum)) |>
+  kable () |>
+  #kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
 ```
 
 ```{r}
+latLon.df |>
+  select(-ends_with('id')) |>
+  summary()
+```
 
-summary(latLon.df)
+## observation year
+
+```{r}
+ref <- allmeta.df |>
+  filter(of_variable %in% c('layer_observation_time', 'Inventory_year' ))
+
+observationYr.df <- alllocation.df |>
+  filter(of_variable %in% c('layer_observation_time', 'Inventory_year' ),
+         is_type == 'value') |> #check that there are no units or other items here
+  mutate(with_entry = as.numeric(with_entry)) |>
+  mutate(observation_year = if_else(with_entry < 2300, #assuming no obs before 1906-04-20
+                                    with_entry,
+                                    year(lubridate::as_date(with_entry, 
+                                                            origin = ymd('1900-01-01'))))) %>%
+  select(ends_with('_id'), observation_year)
+
+metaObsYr <- tribble(~of_variable, ~is_type, ~with_entry,
+                     'observation_year', 'value', '--',
+                     'observation_year', 'description', 'best guess for year closed to sampling date')
+```
+
+```{r}
+ggplot(observationYr.df) +
+  geom_histogram(aes(x=observation_year), binwidth = 1) +
+  facet_wrap(~study_id, ncol=1, scales = 'free_y')
 ```
 
 ## layer depth
 
-## observation year
 
 ## bulk density
 
-## organic carbon fraction
+## soil fractions (organic carbon, inorganic carbon, coarse)
 
-## inorganic carbon
+# Reassembiling tables
 
-## coarse fraction
+```{r}
+ISCN4.meta <- metaRegions.df %>%
+  bind_rows(metaLatLon.df) %>%
+  bind_rows(metaObsYr)
 
+ISCN4.surfaceLocation <- dataRegions.df %>%
+  full_join(latLon.df, by = join_by(study_id, dataset_id, profile_id, plot_id)) %>%
+  full_join(observationYr.df, by = join_by(study_id, dataset_id, profile_id, plot_id))
+```
+
+```{r}
+summary(ISCN4.surfaceLocation)
+```
+
+```{r}
+ISCN4.meta |>
+  kable () |>
+  #kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
 
 # Appendix
 
