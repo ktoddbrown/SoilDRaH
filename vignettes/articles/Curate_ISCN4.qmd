@@ -561,6 +561,66 @@ metaDepth.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
 )
 ```
 
+```{r}
+
+metaDepth.df |>
+  kable () |>
+  #kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+```{r}
+
+allBounds <- sort(unique(c(depth.df$upper_depth_bound, depth.df$lower_depth_bound)))
+
+plot.df <- depth.df |>
+  mutate(site_id = paste(dataset_id, profile_id, plot_id, sep = '-')) |>
+  select(study_id, site_id, layer_id, upper_depth_bound, lower_depth_bound) |>
+  filter(is.finite(upper_depth_bound + lower_depth_bound)) |>
+  reframe(bound_index = which(allBounds >= upper_depth_bound &
+                               allBounds < lower_depth_bound),
+         .by = everything()) |>
+  reframe(count = n(),
+          .by = c(bound_index)) |>
+  mutate(upper_depth_bound = allBounds[bound_index])
+
+ggplot(plot.df) +
+  geom_line(aes(x= -upper_depth_bound, y = count)) +
+  scale_y_log10() +
+  coord_flip() 
+
+ggplot(plot.df) +
+  geom_line(aes(x= -upper_depth_bound, y = count)) +
+  #xlim(c(-300, 0)) +
+  coord_flip()
+```
+
+```{r}
+
+layer_stats <- depth.df |>
+  mutate(site_id = paste(dataset_id, profile_id, plot_id, sep = '-')) |>
+  select(study_id, site_id, layer_id, upper_depth_bound, lower_depth_bound) |>
+  reframe(count = n(),
+      count_finite = sum(is.finite(upper_depth_bound)),
+          missing = sum(is.na(upper_depth_bound + lower_depth_bound)),
+          surface = any(upper_depth_bound == 0),
+          max_depth = max(c(lower_depth_bound, 0), na.rm=TRUE),
+          continuous_layers = all(upper_depth_bound %in% c(0, lower_depth_bound)),
+          .by = c(study_id, site_id))
+
+```
+
+```{r}
+layer_stats |>
+  mutate(unspecified_depth = (count_finite == 0)) |>
+  reframe(layer_count = n(),
+          .by = c(study_id, surface, unspecified_depth, continuous_layers)) |>
+  kable () |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
 ## Bulk density
 
 ```{r}
@@ -623,6 +683,15 @@ metaBulkDensity <- mapping_bulk_density |>
   select(-study_id) |>
   unique() |>
   arrange(of_variable)
+
+```
+
+```{r}
+
+metaBulkDensity|>
+  kable () |>
+  #kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
 
 ```
 
@@ -692,6 +761,14 @@ fractions.df <- alllayer.df |>
 ```
 
 ```{r}
+metaFraction |>
+  kable () |>
+  #kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+
+```{r}
 summary(fractions.df)
 ```
 
@@ -754,13 +831,7 @@ ISCN4.layer |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 ```
-# Site map
 
-## World
-
-## USA
-
-# Depth gradients
 
 
 # Appendix
