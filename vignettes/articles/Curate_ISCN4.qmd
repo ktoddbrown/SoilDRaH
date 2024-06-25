@@ -86,20 +86,27 @@ ISCN4map <- tribble(~study_id, ~table_id, ~source_variable, ~target_variable, ~t
         'FIA', 'ENTIRE_SOILS_LAB', 'inorganic_carbon', 'inorganic_carbon', NA, 'no transformation needed',
         'FIA', 'ENTIRE_SOILS_LAB', 'carbon_fraction', 'carbon_fraction', NA, 'no transformation needed',
         'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Forest_floor_depth_avg', 'depth_to_mineral', NA, 'convert units to cm from tenths of inches',
-        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Litter_layer_depth_avg', 'depth_litter', NA, 'convert units to cm from tenths of inches')
+        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Litter_layer_depth_avg', 'depth_litter', NA, 'convert units to cm from tenths of inches',
+        #'NCSS', NA, 'analysis_procedure', , NA, ,
+        #'NCSS', NA, 'NA', , NA, ,
+        #'NCSS', NA, 'region', , NA, ,
+        'NCSS', NA, 'whole_soil_bulk_density', 'bulk_density_whole', NA, NA,
+        'NCSS', NA, 'coarse_fraction', 'coarse_fraction', NA, NA,
+        'NCSS', NA, 'total_carbon', 'total_carbon', NA, NA,
+        'NCSS', NA, 'organic_carbon_estimated', 'organic_carbon', 'estimated', NA,
+        'NCSS', NA, 'organic_carbon_walkley_black', 'organic_carbon', 'measured:walkley_black', NA,
+        'NCSS', NA, 'layer_bottom', 'lower_depth_bound', NA, NA ,
+        #'NCSS', NA, 'horizon_designation', , NA, ,
+        #'NCSS', NA, 'horizon_designation_other', , NA, ,
+        'NCSS', NA, 'layer_top', 'upper_depth_bound', NA, NA,
+        #'NCSS', NA, 'layer_order', , NA, ,
+        'NCSS', NA, 'layer_type', 'depth_bound_defined' , NA, NA,
+        'NCSS', NA, 'observation_date','observation_year', NA, 'Correct for Excel format',
+        #'NCSS', NA, 'sample_preparation', , NA, ,
+        'NCSS', NA, 'mineral_remaining_on_ignition', 'loss_on_ignition', NA, NA,
+        'NCSS', NA, 'longitude', 'longitude', NA, NA,
+        'NCSS', NA, 'latitude', 'latitude', NA, NA)
 
-
-
-# mapping_bulk_density <- tribble(
-#   ~study_id, ~of_variable, ~header_str, ~description, ~method,
-#   'ISCN3', 'bulk_density_sample', 'bulk_density_fine', 'fine earth bulk density, <2mm', 'measured',
-#   'ISCN3', 'bulk_density_total', 'bulk_density_whole', 'whole soil bulk density', 'measured',
-#   'ISCN3', 'bulk_density_whole', 'bulk_density_whole', 'whole soil bulk density', 'estimated',
-#   'ISCN3', 'bulk_density_other', 'bulk_density_unknown', 'whole or fine soil bulk density', 'unknown',
-#   'FIA', 'Bulk_density', 'bulk_density_whole', 'whole soil bulk density', 'measured') |>
-#   mutate(unit = 'g cm-3')
-
-# show the mapping
 ISCN4map |>
   knitr::kable() |>
   kable_paper() |>
@@ -286,7 +293,60 @@ NCSS.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
 ```
 
 ```{r}
+#| code-summary: "Subset NCSS lvl 1 product"
 
+#NCSS_lvl1 <- list(
+  primary <-  NCSS.ls$long |> 
+    ##nrow 3 710 257
+    # use the column selection to subset the database
+    inner_join(NCSS.ls$annotation |>
+                 mutate(study_id = 'NCSS', table_id = NA) |>
+                 #pull the annotations for the primary data entries
+                 right_join(ISCN4map,
+                           by = join_by(study_id, table_id,
+                                        of_variable == source_variable)) |>
+                 filter(with_entry == '--') |>
+                 select(ends_with('_id'), of_variable, target_variable, is_type), 
+               relationship = "many-to-many",
+               by = join_by(table_id, column_id)) |>
+    select(study_id, table_id, column_id,  dataset_id, profile_id, layer_id, 
+           of_variable, target_variable, is_type, with_entry) |>
+    #nrow 1034386
+    #TODO: Worldwide soil carbon and Northern Circumpolar needs to be address in readISCN
+    #Removing them for now
+    filter(length(with_entry) == 1 | unique(is_type) != 'value',
+           .by = -with_entry) |>
+    #nrow 931464
+    ### Pull the column id into a non-value with_entry and collapse
+    ### This takes care of observations with multiple methods
+    mutate(with_entry = if_else(is_type != 'value', 
+                                paste(column_id, with_entry, sep = ':'), 
+                                with_entry)) |>
+   #### Remove duplicate observations from NCSS ####
+   unique() |> #some entries repeated due to soc_id replication of non SOC variables
+   #### Kick out to wide format for QAQC ####
+    select(study_id, study_id, dataset_id, profile_id, layer_id,, #_id are the row identifier
+           target_variable, is_type, with_entry) |>
+    pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
+              values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
+  
+  #pull in the meta data that is not now in the primary data
+  meta = iscn.ls$annotation |>
+    inner_join(ISCN4map |>
+                 filter(study_id == 'NCSS'),
+               by = join_by(study_id, table_id,
+                            of_variable == source_variable)) |>
+    filter(with_entry != '--') |>
+    mutate(with_entry = if_else(is_type != 'value', 
+                                paste(column_id, with_entry, sep = ':'), 
+                                with_entry)) |>
+    mutate(column_id = paste0(target_variable, is_type, sep = '::')) |>
+    select(study_id, column_id, with_entry, method_class = target_method, action_note)
+)
+
+#memory management
+primary_variables <- c(primary_variables, 'NCSS_lvl1')
+rm(list = setdiff(ls(), primary_variables)) 
 ```
 
 # Harmonize sources
