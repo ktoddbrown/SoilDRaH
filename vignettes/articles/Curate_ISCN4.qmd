@@ -7,6 +7,10 @@ format:
     number-sections: true
     code-fold: true
     code-summary: "Show the code"
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
 ---
 
 This document works through creating a data product of layer-level soil organic carbon profiles (with both observation times recorded and location where possible) from the USDA-FS-FIA Database, ISCN3, and the USDA-NRCS-NCSS Database.
