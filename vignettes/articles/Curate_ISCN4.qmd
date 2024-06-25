@@ -295,46 +295,47 @@ NCSS.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
 ```{r}
 #| code-summary: "Subset NCSS lvl 1 product"
 
-#NCSS_lvl1 <- list(
-  primary <-  NCSS.ls$long |> 
-    ##nrow 3 710 257
+NCSS_lvl1 <- list(
+  primary =  NCSS.ls$long |> 
+    mutate(study_id = 'NCSS', 
+           profile_id = paste0('site_key:', site_key,
+                               '-pedon_key:', pedon_key)) |>
+    select(study_id, profile_id, layer_id = layer_key, #row ids
+           table_id, column_id, #original-variable ids
+           of_variable, is_type, with_entry) |> #meta information
+    ##nrow 5 694 780
     # use the column selection to subset the database
     inner_join(NCSS.ls$annotation |>
-                 mutate(study_id = 'NCSS', table_id = NA) |>
+                 mutate(study_id = 'NCSS') |>
+                 select(study_id, table_id, column_id, of_variable, is_type, with_entry) |>
+                 filter(with_entry == '--') |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
-                           by = join_by(study_id, table_id,
-                                        of_variable == source_variable)) |>
-                 filter(with_entry == '--') |>
+                            by = join_by(study_id,#table_id, column_id #not annotated for NCSS
+                                         of_variable == source_variable))  |>
                  select(ends_with('_id'), of_variable, target_variable, is_type), 
                relationship = "many-to-many",
-               by = join_by(table_id, column_id)) |>
-    select(study_id, table_id, column_id,  dataset_id, profile_id, layer_id, 
+               by = join_by(study_id, column_id, of_variable, is_type)) |>
+    select(study_id, column_id, profile_id, layer_id, 
            of_variable, target_variable, is_type, with_entry) |>
-    #nrow 1034386
-    #TODO: Worldwide soil carbon and Northern Circumpolar needs to be address in readISCN
-    #Removing them for now
-    filter(length(with_entry) == 1 | unique(is_type) != 'value',
-           .by = -with_entry) |>
-    #nrow 931464
+    #nrow 3 754 657
     ### Pull the column id into a non-value with_entry and collapse
     ### This takes care of observations with multiple methods
     mutate(with_entry = if_else(is_type != 'value', 
                                 paste(column_id, with_entry, sep = ':'), 
                                 with_entry)) |>
-   #### Remove duplicate observations from NCSS ####
-   unique() |> #some entries repeated due to soc_id replication of non SOC variables
-   #### Kick out to wide format for QAQC ####
-    select(study_id, study_id, dataset_id, profile_id, layer_id,, #_id are the row identifier
-           target_variable, is_type, with_entry) |>
+    #### Kick out to wide format for QAQC ####
+  select(study_id, profile_id, layer_id,
+         target_variable, is_type, with_entry) |>
     pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
-              values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
+                values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
   
   #pull in the meta data that is not now in the primary data
-  meta = iscn.ls$annotation |>
+  meta = NCSS.ls$annotation |>
+    mutate(study_id = 'NCSS') |>
     inner_join(ISCN4map |>
                  filter(study_id == 'NCSS'),
-               by = join_by(study_id, table_id,
+               by = join_by(study_id, #table_id
                             of_variable == source_variable)) |>
     filter(with_entry != '--') |>
     mutate(with_entry = if_else(is_type != 'value', 
@@ -386,8 +387,9 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
                             '-SOILS_LAB:', `CN.ENTIRE_SOILS_LAB`, sep = '')) |>
     mutate(`depth_bound::method` = `upper_depth_bound::value`) |>
     select(-c(`upper_depth_bound::value`, `lower_depth_bound::value`)) |>
-    mutate(`latitude::method` = 'NAD83') #This applies for non Pacific Island locations, Pacific Island locations are WSG84
+    mutate(`latitude::method` = 'NAD83') #This applies for non Pacific Island locations, Pacific Island locations are WSG84, no current PI locations - 20240625 KTB
   ) |>
+  bind_rows(NCSS_lvl1$primary) |>
   # country/state
   rename(state = `state::value`, country = `country::value`) |>
   mutate(country = if_else(country == 'Unknown', NA_character_, country),
@@ -398,7 +400,7 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
   rename(latitude = `latitude::value`, 
          longitude = `longitude::value`, 
          datum = `latitude::method`) |>
-  mutate(datum = str_remove(datum, pattern = 'datum \\(datum\\)\\:')) |>
+  mutate(datum = str_remove(datum, pattern = regex('.*\\:')) )|>
   mutate(across(c(latitude, longitude), as.numeric)) |>
   # layer depth
   rename(upper_depth_bound = `upper_depth_bound::value`, 
@@ -450,8 +452,8 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
                                             NA, `organic_carbon::method`),
 #          `inorganic_carbon::method` = if_else(is.na(inorganic_carbon), 
 #                                            NA, `inorganic_carbon::method`),
-#          `loss_on_ignition::method` = if_else(is.na(loss_on_ignition), 
-#                                            NA, `loss_on_ignition::method`),
+          `loss_on_ignition::method` = if_else(is.na(loss_on_ignition), 
+                                            NA, `loss_on_ignition::method`),
          `total_carbon::method` = if_else(is.na(total_carbon), 
                                           NA, `total_carbon::method`)) |> 
   mutate(across(c(total_carbon, organic_carbon, 
@@ -481,13 +483,13 @@ ISCN4_meta <- ISCN3_lvl1$meta |>
 
 ## Histograms
 
-```{r}
+```{r fig.width = 8, fig.height = 16}
 plot.df <- ISCN4_primary |>
-  pivot_longer(cols = where(is.numeric), names_to = 'variable')
+  pivot_longer(cols = where(is.numeric), names_to = 'variable', values_drop_na = TRUE)
 
 ggplot(plot.df) + 
   geom_histogram(aes(x=value), bins = 30) +
-  facet_wrap(~variable, scales = 'free')
+  facet_wrap(~study_id + variable, scales = 'free', ncol = 4)
 ```
 
 
