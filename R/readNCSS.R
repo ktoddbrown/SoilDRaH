@@ -107,57 +107,83 @@ readNCSS <- function(dataDir,
     message("This function only reads the annotated information from the following tables:")
     message(names(verified_tables))
     
-    ans.df <- plyr::ldply(verified_tables,
-          function(tableName.str){
-            temp_key <- reducedAnnotations |> 
-              dplyr::filter(table_id == tableName.str,
-                            with_entry == '--') |>
-              dplyr::select(-with_entry)
-            
-            non_id_columns <- temp_key |>
-              dplyr::filter(is_type != 'identifier')
-            
-            ident_columns <- temp_key |>
-              dplyr::filter(is_type  == 'identifier')
-            
-            #The result_source_key is equal to the layer_key here
-            lab_phy.long <- orginalTables[[tableName.str]] |>
-              dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
-              dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), 
-                                          .fns = as.character)) |>
-              tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
-                                  names_to = 'column_id', values_to = 'with_entry',
-                                  values_drop_na = TRUE) |>
-              dplyr::full_join(non_id_columns, 
-                               by = join_by(column_id),
-                               relationship = "many-to-many") |>
-              dplyr::filter(any(is_type == 'value'), .by = ident_columns$column_id)
-            
-          }, .id = NULL)
+    #link all the tables together
+    key.df <- orginalTables$lab_layer |>
+                  select('site_key', 'pedon_key', 'layer_key') |>
+      mutate(across(everything(), as.character))
     
-    ## Debugging and dev code for the function above
-    # tableKey <- 'lab_pedon'
-    # temp_key <- reducedAnnotations |> 
-    #   dplyr::filter(table_id == tableKey,
-    #          with_entry == '--') |>
-    #   dplyr::select(-with_entry)
+    ans.df <- plyr::ldply(verified_tables,
+                          function(tableName.str){
+                            temp_key <- reducedAnnotations |>
+                              dplyr::filter(table_id == tableName.str,
+                                            with_entry == '--') |>
+                              dplyr::select(-with_entry) |>
+                              dplyr::select(table_id, column_id, of_variable, is_type)
+                            
+                            non_id_columns <- temp_key |>
+                              dplyr::filter(is_type != 'identifier') |>
+                              dplyr::select(table_id, column_id, of_variable, is_type)
+                            
+                            ident_columns <- temp_key |>
+                              dplyr::filter(is_type  == 'identifier') |>
+                              dplyr::select(table_id, column_id, of_variable)
+                            
+                            temp.long <- orginalTables[[tableName.str]] |>
+                              # only pull the columns that are annotated
+                              dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
+                              #make sure everything is a character so that we don't have type conflicts
+                              dplyr::mutate(dplyr::across(.cols = everything(), .fns = as.character)) |>
+                              # fill out the keys to link to other tables
+                              left_join(key.df, 
+                                        by = unique(ident_columns$column_id),
+                                        relationship = "many-to-many") |>
+                              # make anything not a row-id column long
+                              tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
+                                                  names_to = 'column_id', values_to = 'with_entry',
+                                                  values_drop_na = TRUE) |>
+                              #link in the meta data to pull in what variable and type is the datum
+                              dplyr::full_join(non_id_columns, 
+                                               by = join_by(column_id),
+                                               relationship = "many-to-many")
+                            return(temp.long)
+                          }, .id = NULL)
+    
+    
+    # # Debugging and dev code for the function above
+    # tableName.str <- 'lab_layer'
+    # 
+    # temp_key <- reducedAnnotations |>
+    #   dplyr::filter(table_id == tableName.str,
+    #                 with_entry == '--') |>
+    #   dplyr::select(-with_entry) |>
+    #   dplyr::select(table_id, column_id, of_variable, is_type)
     # 
     # non_id_columns <- temp_key |>
-    #   dplyr::filter(is_type != 'identifier')
+    #   dplyr::filter(is_type != 'identifier') |>
+    #   dplyr::select(table_id, column_id, of_variable, is_type)
     # 
     # ident_columns <- temp_key |>
-    #   dplyr::filter(is_type  == 'identifier')
+    #   dplyr::filter(is_type  == 'identifier') |>
+    #   dplyr::select(table_id, column_id, of_variable)
     # 
-    # #The result_source_key is equal to the layer_key here
-    # temp.long <- orginalTables[[tableKey]] |>
+    # temp.long <- orginalTables[[tableName.str]] |>
+    #   # only pull the columns that are annotated
     #   dplyr::select(tidyselect::all_of(unique(temp_key$column_id))) |>
+    #   #make sure everything is a character so that we don't have type conflicts
     #   dplyr::mutate(dplyr::across(.cols = everything(), .fns = as.character)) |>
+    #   # fill out the keys to link to other tables
+    #   left_join(key.df, 
+    #             by = unique(ident_columns$column_id),
+    #             relationship = "many-to-many") |>
+    #   # make anything not a row-id column long
     #   tidyr::pivot_longer(cols = tidyselect::all_of(non_id_columns$column_id),
     #                names_to = 'column_id', values_to = 'with_entry',
     #                values_drop_na = TRUE) |>
-    #   dplyr::full_join(non_id_columns, by = join_by(column_id)) |>
-    #   dplyr::filter(any(is_type == 'value'), .by = ident_columns$column_id)
-    # 
+    #   #link in the meta data to pull in what variable and type is the datum
+    #   dplyr::full_join(non_id_columns, 
+    #                    by = join_by(column_id),
+    #                    relationship = "many-to-many")
+    # # # 
 
     
     return(list(annotations = annotations.df, long = ans.df))
