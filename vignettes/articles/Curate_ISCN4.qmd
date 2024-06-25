@@ -56,43 +56,60 @@ We also include an action note but right now these are not tied directly to code
 
 ```{r}
 
-ISCN4map <- tribble(~study_id, ~table_id, ~source_variable, ~target_variable, ~action_note,
-        'ISCN3', 'layer', 'latitude', 'latitude', 'track datum',
-        'ISCN3', 'layer', 'longitude', 'longitude', 'track datum',
-        'ISCN3', 'layer', 'state', 'state', 'check overlap state names',
-        'ISCN3', 'layer','country', 'country', 'rename United States for identified states',
-        'ISCN3', 'layer', 'layer_observation_time', 'observation_year', 'Correct for Excel format',
-        'ISCN3', 'layer', 'upper_depth_bound', 'upper_depth_bound', 'no transformation needed. known issue with ~100 layers having non-unique ids', 
-        'ISCN3', 'layer', 'lower_depth_bound', 'lower_depth_bound', 'no transformation needed. known issue with ~100 layers having non-unique ids',
-        'ISCN3', 'layer', "bulk_density_other", 'bulk_density_unknown', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_sample", 'bulk_density_fine', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_total", 'bulk_density_whole', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_whole", 'bulk_density_whole', 'no transformation needed',
-        'ISCN3', 'layer', 'organic_carbon', 'organic_carbon', 'no transformation needed',
-        'ISCN3', 'layer', 'organic_matter', 'loss_on_ignition', 'no transformation needed',
-        'ISCN3', 'layer', 'total_carbon', 'total_carbon', 'no transformation needed',
-        'ISCN3', 'layer', 'calcium_carbonate', 'inorganic_carbon', 'no transformation needed',
-        'ISCN3', 'layer', 'coarse_fragment', 'coarse_fraction', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Inventory_year', 'observation_year', 'Correct for Excel format',
-        'FIA', 'ENTIRE_PLOT', 'State', 'state', 'check overlap state names',
-        'FIA', 'ENTIRE_PLOT', 'Longtitude', 'longitude', 'track datum',
-        'FIA', 'ENTIRE_PLOT', 'Latitude', 'latitude', 'track datum',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'upper_depth_bound', 'pull control vocabulary and convert inches to cm',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'lower_depth_bound', 'pull control vocabulary and convert inches to cm',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Bulk_density', 'bulk_density_whole', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'coarse_fraction', 'coarse_fraction', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'organic_carbon', 'organic_carbon', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'inorganic_carbon', 'inorganic_carbon', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'carbon_fraction', 'carbon_fraction', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Forest_floor_depth_avg', 'depth_to_mineral', 'convert units to cm from tenths of inches',
-        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Litter_layer_depth_avg', 'depth_litter', 'convert units to cm from tenths of inches')
-        
+ISCN4map <- tribble(~study_id, ~table_id, ~source_variable, ~target_variable, ~target_method, ~action_note,
+        'ISCN3', 'layer', 'latitude', 'latitude', NA, 'track datum',
+        'ISCN3', 'layer', 'longitude', 'longitude', NA, 'track datum',
+        'ISCN3', 'layer', 'state', 'state', NA, 'check overlap state names',
+        'ISCN3', 'layer','country', 'country', NA, 'rename United States for identified states',
+        'ISCN3', 'layer', 'layer_observation_time', 'observation_year', NA, 'Correct for Excel format',
+        'ISCN3', 'layer', 'upper_depth_bound', 'upper_depth_bound', NA, 'no transformation needed. known issue with ~100 layers having non-unique ids', 
+        'ISCN3', 'layer', 'lower_depth_bound', 'lower_depth_bound', NA, 'no transformation needed. known issue with ~100 layers having non-unique ids',
+        'ISCN3', 'layer', "bulk_density_other", 'bulk_density_unknown', 'unknown', 'no transformation needed',
+        'ISCN3', 'layer', "bulk_density_sample", 'bulk_density_fine', 'measured', 'no transformation needed',
+        'ISCN3', 'layer', "bulk_density_total", 'bulk_density_whole', 'measured', 'no transformation needed',
+        'ISCN3', 'layer', "bulk_density_whole", 'bulk_density_whole', 'estimated', 'no transformation needed',
+        'ISCN3', 'layer', 'organic_carbon', 'organic_carbon', NA, 'no transformation needed',
+        'ISCN3', 'layer', 'organic_matter', 'loss_on_ignition', NA, 'no transformation needed',
+        'ISCN3', 'layer', 'total_carbon', 'total_carbon', NA, 'no transformation needed',
+        'ISCN3', 'layer', 'calcium_carbonate', 'inorganic_carbon', NA, 'no transformation needed',
+        'ISCN3', 'layer', 'coarse_fragment', 'coarse_fraction', NA, 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_LAB', 'Inventory_year', 'observation_year', NA, 'Correct for Excel format',
+        'FIA', 'ENTIRE_PLOT', 'State', 'state', NA, 'check overlap state names',
+        'FIA', 'ENTIRE_PLOT', 'Longtitude', 'longitude', NA, 'track datum, Pacific Islands non-standard',
+        'FIA', 'ENTIRE_PLOT', 'Latitude', 'latitude', NA, 'track datum, Pacific Islands non-standard',
+        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'upper_depth_bound', NA, 'pull control vocabulary and convert inches to cm',
+        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'lower_depth_bound', NA, 'pull control vocabulary and convert inches to cm',
+        'FIA', 'ENTIRE_SOILS_LAB', 'Bulk_density', 'bulk_density_whole', 'measured', 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_LAB', 'coarse_fraction', 'coarse_fraction', NA, 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_LAB', 'organic_carbon', 'organic_carbon', NA, 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_LAB', 'inorganic_carbon', 'inorganic_carbon', NA, 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_LAB', 'carbon_fraction', 'carbon_fraction', NA, 'no transformation needed',
+        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Forest_floor_depth_avg', 'depth_to_mineral', NA, 'convert units to cm from tenths of inches',
+        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Litter_layer_depth_avg', 'depth_litter', NA, 'convert units to cm from tenths of inches')
+
+
+
+# mapping_bulk_density <- tribble(
+#   ~study_id, ~of_variable, ~header_str, ~description, ~method,
+#   'ISCN3', 'bulk_density_sample', 'bulk_density_fine', 'fine earth bulk density, <2mm', 'measured',
+#   'ISCN3', 'bulk_density_total', 'bulk_density_whole', 'whole soil bulk density', 'measured',
+#   'ISCN3', 'bulk_density_whole', 'bulk_density_whole', 'whole soil bulk density', 'estimated',
+#   'ISCN3', 'bulk_density_other', 'bulk_density_unknown', 'whole or fine soil bulk density', 'unknown',
+#   'FIA', 'Bulk_density', 'bulk_density_whole', 'whole soil bulk density', 'measured') |>
+#   mutate(unit = 'g cm-3')
 
 # show the mapping
 ISCN4map |>
   knitr::kable() |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
+```
+
+```{r}
+
+#list of primary data objects to carry forward
+primary_variables <- c(ls() , 'primary_variables')
+
 ```
 
 ## ISCN3
@@ -110,9 +127,10 @@ iscn.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
 Subset the annotations to then process the data tables.
 
 ```{r}
-#| code-summary: "Setup ISCN"
+#| code-summary: "ID columns"
 
 #Use the annotations to set up the column selection
+#Pulled up here for ease of reference/review
 ISCN3_column_selection <- iscn.ls$annotation |>
   semi_join(ISCN4map,
             by = join_by(study_id, table_id,
@@ -120,85 +138,72 @@ ISCN3_column_selection <- iscn.ls$annotation |>
   filter(with_entry == '--') |>
   select(ends_with('_id'), of_variable, is_type)
 
-#Subset the ISCN database
+ISCN3_column_selection |>
+  knitr::kable() |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
 
-temp.df <- iscn.ls$long |> 
-  ##nrow 17 967 513
-  filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data
-  ##nrow 2 151 476
-  # use the column selection to subset the database
-  right_join(ISCN3_column_selection, 
-             relationship = "many-to-many",
-  by = join_by(column_id, table_id)) |>
-  ##nrow 822 945
-  select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) |> #remove the soc identifier since we are not pulling calculated SOC
-  unique()
-  #nrow 750701
+```{r}
+#| code-summary: "Subset ISCN3 lvl 1 product"
 
 
-surface_location.df <- temp.df |>
-  filter(of_variable %in% c('latitude', 'longitude',
-                            'state', 'country', 
-                            'layer_observation_time')) |>
-  select(study_id, dataset_id, profile_id,
-         of_variable, is_type, with_entry) |>
-  ## nrow 197 081
-  unique() 
-  ## nrow  73 406
-
-layer.df <- temp.df |>
-  filter(! of_variable %in% c('latitude', 'longitude',
-                              'state', 'country', 
-                              'layer_observation_time')) |>
-  select(study_id, dataset_id, profile_id, layer_id,
-         of_variable, is_type, with_entry)
-
+ISCN3_lvl1 <- list(
+  primary = iscn.ls$long |> 
+    ##nrow 17 967 513
+    filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
+    ##nrow  2 151 476
+    # use the column selection to subset the database
+    inner_join(iscn.ls$annotation |>
+                 #pull the annotations for the primary data entries
+                 right_join(ISCN4map,
+                           by = join_by(study_id, table_id,
+                                        of_variable == source_variable)) |>
+                 filter(with_entry == '--') |>
+                 select(ends_with('_id'), of_variable, target_variable, is_type), 
+               relationship = "many-to-many",
+               by = join_by(table_id, column_id)) |>
+    select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
+           #remove the soc identifier since we are not pulling calculated SOC
+           of_variable, target_variable, is_type, with_entry) |>
+    #nrow 1034386
+    #TODO: Worldwide soil carbon and Northern Circumpolar needs to be address in readISCN
+    #Removing them for now
+    filter(length(with_entry) == 1 | unique(is_type) != 'value',
+           .by = -with_entry) |>
+    #nrow 931464
+    ### Pull the column id into a non-value with_entry and collapse
+    ### This takes care of observations with multiple methods
+    mutate(with_entry = if_else(is_type != 'value', 
+                                paste(column_id, with_entry, sep = ':'), 
+                                with_entry)) |>
+   #### Remove duplicate observations from ISCN3 ####
+   unique() |> #some entries repeated due to soc_id replication of non SOC variables
+   #### Kick out to wide format for QAQC ####
+    select(study_id, study_id, dataset_id, profile_id, layer_id,, #_id are the row identifier
+           target_variable, is_type, with_entry) |>
+    pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
+              values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
   
-ISCN3_meta.df <- iscn.ls$annotation |>
-  semi_join(ISCN3_column_selection |>
-              select(table_id, column_id, of_variable) |>
-              unique(),
-            by = join_by(table_id, column_id, of_variable)) |>
-  filter(with_entry != '--') |>
-  select(study_id, of_variable, is_type, with_entry)
-  
+  #pull in the meta data that is not now in the primary data
+  meta = iscn.ls$annotation |>
+    inner_join(ISCN4map |>
+                 filter(study_id == 'ISCN3'),
+               by = join_by(study_id, table_id,
+                            of_variable == source_variable)) |>
+    filter(with_entry != '--') |>
+    mutate(with_entry = if_else(is_type != 'value', 
+                                paste(column_id, with_entry, sep = ':'), 
+                                with_entry)) |>
+    mutate(column_id = paste0(target_variable, is_type, sep = '::')) |>
+    select(study_id, column_id, with_entry, method_class = target_method, action_note)
+)
+
 #memory management
-rm(temp.df, ISCN3_column_selection, iscn.ls) #comment out for dev
+primary_variables <- c(primary_variables, 'ISCN3_lvl1')
+rm(list = setdiff(ls(), primary_variables)) 
 ```
 
-From this we carry forward three tables.
-
-```{r exampleMeta}
-#| code-summary: 'metadata'
-#| code-fold: true
-
-knitr::kable(ISCN3_meta.df) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
-
-```{r exampleGeo}
-#| code-summary: 'geolocation (surface)'
-#| code-fold: true
-
-knitr::kable(surface_location.df |>
-               slice_head(n=200)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
-
-```{r exampleLayer}
-#| code-summary: 'layer'
-#| code-fold: true
-
-knitr::kable(layer.df |>
-               slice_head(n=200)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
 
 ## Forest Inventory Analysis Database (USDA-FS)
 
@@ -212,109 +217,66 @@ fia.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'),
 
 ```{r}
 
-FIA_column_selection <- fia.ls$annotations |>
-  mutate(study_id = 'FIA') |>
-  semi_join(ISCN4map,
-            by = join_by(study_id, table_id,
-                         of_variable == source_variable)) |>
-  #identify the variables that we are interested in
-  filter(is_type != 'identifier',
-         #only look at those that map to the data as marked by '--'
-         with_entry == '--') |>
-  #create a table for exclusive join
-  select(table_id, column_id, of_variable, is_type)
+FIA_controlVocab <- fia.ls$annotations |>
+  filter(is_type == 'control_vocabulary') |>
+  tidyr::separate_longer_delim(with_entry, delim = ';') |>
+  filter(str_detect(with_entry, regex('\\|'))) |>
+  tidyr::separate_wider_delim(with_entry, delim = '|', 
+                              names = c('with_entry', 'keyed_value')) %>%
+  mutate(is_type = 'value')
 
-FIA_meta.df <- fia.ls$annotations |>
-  semi_join(FIA_column_selection |>
-              select(of_variable) |>
-              unique(),
-            by = join_by(of_variable)) |>
-  filter(with_entry != '--')
-
-temp.df <- FIA_column_selection |>
-  #down select the data that matches the variables of interest above
-  inner_join(fia.ls$long, # |>slice_head(n = 1e3),
-            by = join_by(table_id, column_id),
-            relationship = "many-to-many") 
-
-FIA_location.df <- temp.df |>
-  filter(of_variable %in% c(
-             'Inventory_year',
-             'Longtitude', 'Latitude', 'State')) |>
-  select(plot_id = CN.ENTIRE_PLOT, of_variable, is_type, with_entry) |>
-  unique()
-  ### check unique location identifier
-  #reframe(count = n(), #all counts should be 1
-  #        .by = c(plot_id, of_variable, is_type)) |> summary()
-
-FIA_layer.df <- temp.df |>
-  filter(! of_variable %in% c( 'Inventory_year',
-             'Longtitude', 'Latitude', 'State')) |>
-  select(plot_id = CN.ENTIRE_PLOT, layer_id = CN.ENTIRE_SOILS_LAB, 
-         of_variable, is_type, with_entry) |>
-  unique() #|>
-  ###check unique location identifier
-  #reframe(count = n(), #all counts should be 1
-  #        .by = c(ends_with('_id'), of_variable, is_type)) |> summary()
-
-#memory management
-rm(temp.df, FIA_column_selection, fia.ls) #comment out for dev
-```
-
-# Bind data sources
-
-```{r}
-meta_lvl1.df <- ISCN3_meta.df |>
-  mutate(study_id = 'ISCN3') |>
-  bind_rows(FIA_meta.df |> #drop column_id
-              mutate(study_id = 'FIA')) |>
-  select(study_id, of_variable, is_type, with_entry) |>
-  unique()
-
-#names(surface_location.df) #[1] "study_id" "dataset_id"  "profile_id"  "of_variable" "is_type" "with_entry" 
-location_lvl1.df <- surface_location.df |>
-  bind_rows(FIA_location.df |> #names(FIA_location.df) #[1] "plot_id" "of_variable" "is_type" "with_entry" 
-              mutate(study_id = 'FIA'))
-
-layer_lvl1.df <- layer.df |>
-  bind_rows(FIA_layer.df |> #names(FIA_layer.df) #[1] "plot_id" "layer_id" "of_variable" "is_type" "with_entry" 
-              mutate(study_id = 'FIA'))
-
-#memory management
-rm(layer.df, FIA_layer.df, surface_location.df, FIA_location.df, ISCN3_meta.df, FIA_meta.df)
-```
-
-# Method harmonization
-
-```{r}
-
-#Construct a table of everything that is not a value from all three tables
-
-meta_display <- meta_lvl1.df |>
-  #filter(!is_type %in% c('identifier', 'value')) |>
-  bind_rows(location_lvl1.df |>
-              filter(!is_type %in% c('identifier', 'value'))) |>
-  bind_rows(layer_lvl1.df |>
-              filter(!is_type %in% c('identifier', 'value'))) |>
-  select(study_id, of_variable, is_type, with_entry) |>
-  unique() |>
-  pivot_wider(names_from = is_type,
-              values_from = with_entry,
-              values_fn = function(xx){
-                paste(xx, collapse = '::\n ')
-              })
+FIA_lvl1 <- list(
+  primary = fia.ls$long |>
+    #make sure to set the study_id
+    mutate(study_id = 'FIA') |>
+    #### pull in the target variable that we want to map ####
+    right_join(fia.ls$annotation |>
+                 mutate(study_id = 'FIA') |>
+                 #pull the annotations for the primary data entries
+                 right_join(ISCN4map,
+                            by = join_by(study_id, table_id,
+                                         of_variable == source_variable),
+                            relationship = "many-to-many") |>
+                 filter(with_entry == '--') |>
+                 select(ends_with('_id'), of_variable, target_variable, is_type),
+               relationship = "many-to-many",
+               by = join_by(column_id, table_id, study_id)) |>
+    #### replace the control vocab with the provided text values ####
+    left_join(FIA_controlVocab,
+              by = join_by(table_id, column_id, of_variable, is_type, with_entry)) |>
+    mutate(with_entry = if_else(is.na(keyed_value), with_entry, keyed_value)) |>
+    select(-keyed_value) |>
+    #### Kick out to wide format for QAQC ####
+    select(study_id, starts_with('CN.'), #CN is the row identifier
+           target_variable, is_type, with_entry) |>
+    pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
+                values_from = with_entry),
   
+  meta = fia.ls$annotations |>
+    mutate(study_id = 'FIA') |>
+    #pull the annotations for the primary data entries
+    right_join(ISCN4map,
+               by = join_by(study_id, table_id,
+                            of_variable == source_variable),
+               relationship = "many-to-many")  |>
+    filter(is_type != 'control_vocabulary') |>
+    filter(with_entry != '--') |>
+    mutate(with_entry = if_else(is_type != 'value', 
+                                paste(column_id, with_entry, sep = ':'), 
+                                with_entry)) |>
+    #### Construct the column names ####
+    mutate(column_id = paste0(target_variable, "::", is_type)) |>
+    select(study_id, column_id, with_entry, method_class = target_method, action_note)
+    
+)
+
+#memory management
+primary_variables <- c(primary_variables, 'FIA_lvl1')
+rm(list = setdiff(ls(), primary_variables)) 
 ```
 
+# Harmonize sources
 
-```{r}
-#| code-fold: true
-
-knitr::kable(meta_display) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
 
 Examining the contextual metadata above we need to do the following:
 
@@ -327,7 +289,7 @@ Examining the contextual metadata above we need to do the following:
   + layer depth
     * FIA: populate upper and lower bounds from control vocabulary
     * All: check zero location
-    * All: convert to units to cm
+    * FIA: convert to units to cm
   + observation year
     * ISCN3: convert from days since origin (unless under 2100)
   + bulk density
@@ -338,592 +300,108 @@ Examining the contextual metadata above we need to do the following:
     * All: convert units to mass-percent
     * All: move over method notes to primary data
 
-## Country and state
-
-```{r}
-ISCNcountry.df <- location_lvl1.df |>
-  filter(of_variable %in% 'country',
-         is_type == 'value') |>
-  mutate(with_entry = if_else(with_entry == 'Unknown', NA_character_, with_entry)) |>
-  pivot_wider(names_from = of_variable, values_from = with_entry) |>
-  filter(!is.na(country))
-
-FIAcountry.df <- location_lvl1.df |>
-  filter(study_id == 'FIA') |>
-  select(ends_with('_id')) |>
-  mutate(country = 'United States') # All FIA sites are within the US
-
-FIAstate.key <- meta_lvl1.df |>
-  filter(study_id == 'FIA',
-         is_type == 'control_vocabulary',
-         of_variable == 'State') |>
-  tidyr::separate_longer_delim(with_entry, delim = ';') |>
-  tidyr::separate_wider_delim(with_entry, delim = '|', names = c('key', 'value')) |>
-  select(key, value)
-
-FIAstate.df <- location_lvl1.df |>
-  filter(of_variable %in% c('state', 'State'),
-         is_type == 'value',
-         study_id == 'FIA') |>
-  left_join(FIAstate.key, by = join_by(with_entry == key)) |>
-  select(study_id, plot_id, state = value)
-  
-ISCNstate.df <- location_lvl1.df |>
-  filter(of_variable %in% c('state', 'State'),
-         is_type == 'value',
-         study_id == 'ISCN3') |>
-  select(study_id, dataset_id, profile_id, state = with_entry) |>
-  mutate(state = if_else(state == 'Unknown', NA_character_, state)) |>
-  filter(!is.na(state))
-
-# manual check that differences are not format errors
-#setdiff(unique(FIAstate.df$state), unique(ISCNstate.df$state))
-#setdiff(unique(ISCNstate.df$state), unique(FIAstate.df$state))
-# manually check states are US states
-#unique(ISCNstate.df$state)
-
-dataRegions.df <- ISCNstate.df |>
-  bind_rows(FIAstate.df) |>
-  full_join(ISCNcountry.df |>
-              bind_rows(FIAcountry.df),
-            by = join_by(study_id, dataset_id, profile_id, plot_id)) |>
-  mutate(country = if_else(!is.na(state) & is.na(country), 'United States', country)) |>
-  select(study_id, dataset_id, profile_id, plot_id, country, state) |>
-  mutate(across(.cols = c(state, country), as.factor))
-
-metaRegions.df <- tribble(~of_variable, ~is_type, ~with_entry,
-                          'state', 'value', '--',
-                          'state', 'description', 'state name within the US',
-                          'country', 'value', '--',
-                          'country', 'description', 'country name')
-
-rm(FIAcountry.df, FIAstate.df, ISCNcountry.df, ISCNstate.df, FIAstate.key)
-```
-
-### Country tally
-
-```{r}
-dataRegions.df |>
-  reframe(count = n(), .by = c(country)) |>
-  arrange(desc(count)) |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-### State tally
-
-```{r}
-dataRegions.df |>
-  filter(!is.na(state)) |>
-  reframe(count = n(), .by = c(country, state)) |>
-  arrange(desc(count)) |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## latitued and longitude
-
-```{r}
-ref <- meta_lvl1.df |>
-  filter(str_detect(string = of_variable, pattern = '.atitude') |
-           str_detect(string = of_variable, pattern = '.ongt?itude'))
-
-#all latitude/longitude should be in decimal degrees centered on 0
-#FIA datum is based on state code:
-# "The approximate latitude of the plot in decimal degrees using NAD 83 datum (these Pacific Islands plots use WSG84 datum - SURVEY.RSCD = 26 and SURVEY.STATECD = 60, 64, 66, 68, 69, or 70). Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available."
-
-FIAdatum <- location_lvl1.df |>
-  filter(study_id == 'FIA',
-         is_type == 'value',
-         of_variable == 'State') |>
-  #the with_entry is now the STATECD
-  mutate(datum = if_else(with_entry %in% c('60', '64', '66', '68', '69', '70'), 
-                         'WSG84', 'NAD83')) |>
-  #Note that there are currently no locations with these state codes - 20240622
-  select(study_id, plot_id, datum) |>
-  unique()
-
-ISCNdatum <- location_lvl1.df |>
-  filter(study_id == 'ISCN3', 
-         is_type == 'method') |> #all the methods here are datums
-  select(study_id, dataset_id, profile_id, datum = with_entry) |>
-  unique() 
-
-latLon.df <- location_lvl1.df |>
-  filter(str_detect(of_variable, pattern = '.atitude') |
-           str_detect(of_variable, pattern = '.ongt?itude'),
-         is_type == 'value') |>
-  mutate(header_name = if_else(str_detect(of_variable, pattern = '.atitude'), 
-                               'latitude', 'longitude')) |>
-  select(ends_with('_id'), header_name, with_entry) |>
-  pivot_wider(names_from = header_name, values_from = with_entry) |>
-  mutate(across(.cols = c(latitude, longitude), as.numeric)) |>
-  #check for bounds, nothing to remove
-  left_join(bind_rows(FIAdatum, ISCNdatum),
-            by = join_by(study_id, dataset_id, profile_id, plot_id)) |>
-  mutate(across(.cols = datum, as.factor))
-
-#dummy check to future proof changes
-if(any(latLon.df$latitude > 90 | latLon.df$latitude < -90 |
-   latLon.df$longitude > 180 | latLon.df$longitude < -180)){
-  stop('out of bounds lat-lon')
-}
-  
-metaLatLon.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
-                         NA, 'latitude', 'value', '--',
-                         NA, 'latitude', 'unit', 'decimal degrees centered on zero',
-                         'FIA', 'latitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.",
-                         NA, 'longitude', 'value', '--',
-                         NA, 'longitude', 'unit', 'decimal degrees centered on zero',
-                         'FIA', 'longitude', 'note', "Actual plot coordinates cannot be released because of a Privacy provision enacted by Congress in the Food Security Act of 1985. Therefore, this attribute is approximately +/- 1 mile and, for annual inventory data, most plots are within +/- ½ mile. Annual data have additional uncertainty for private plots caused by swapping plot coordinates for up to 20 percent of the plots. In some cases, the county centroid is used when the actual coordinate is not available.",
-                         NA, 'datum', 'value', '--',
-                         NA, 'datum', 'description', 'Geospacial datum reference for latitude and longitude')
-
-rm(ISCNdatum, FIAdatum, ref)
-```
-
-
-Note that the FIA database currently does not have soil observations for the state codes associated with `WSG84`.
-
-### Latitude and longitude summary
-
-```{r}
-latLon.df |>
-  reframe(count = n(), .by = c(study_id, datum)) |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-```{r}
-latLon.df |>
-  select(-ends_with('id')) |>
-  summary()
-```
-
-## observation year
-
-```{r}
-ref <- meta_lvl1.df |>
-  filter(of_variable %in% c('layer_observation_time', 'Inventory_year' ))
-
-observationYr.df <- location_lvl1.df |>
-  filter(of_variable %in% c('layer_observation_time', 'Inventory_year' ),
-         is_type == 'value') |> #check that there are no units or other items here
-  mutate(with_entry = as.numeric(with_entry)) |>
-  mutate(observation_year = if_else(with_entry < 2300, #assuming no obs before 1906-04-20
-                                    with_entry,
-                                    year(lubridate::as_date(with_entry, 
-                                                            origin = ymd('1900-01-01'))))) |>
-  select(ends_with('_id'), observation_year)
-
-metaObsYr <- tribble(~of_variable, ~is_type, ~with_entry,
-                     'observation_year', 'value', '--',
-                     'observation_year', 'description', 'best guess for year closed to sampling date')
-```
-
-```{r}
-ggplot(observationYr.df) +
-  geom_histogram(aes(x=observation_year), binwidth = 1) +
-  facet_wrap(~study_id, ncol=1, scales = 'free_y')
-```
-
-## Layer depth interval
-
-```{r}
-ref <- meta_lvl1.df |>
-  filter(of_variable %in% c("Layer_type",
-                            "lower_depth_bound", "upper_depth_bound"))
-
-FIAkey <- ref |>
-  filter(is_type == 'control_vocabulary')  |>
-  select(with_entry) |>
-  tidyr::separate_longer_delim(with_entry, delim = ';') |>
-  tidyr::separate_wider_delim(with_entry, delim = '|', names = c('key', 'value')) |>
-  select(key, value) |>
-  mutate(lower_depth_bound = case_when(str_detect(value, '0-4 inch') ~ 4*2.54, #convert to cm
-                                       str_detect(value, '4-8 inch') ~ 8*2.54,
-                                       TRUE ~ NA),
-         upper_depth_bound = case_when(str_detect(value, '0-4 inch') ~ 0*2.54,
-                                       str_detect(value, '4-8 inch') ~ 4*2.54,
-                                       TRUE ~ NA))
-
-FIAdepth <- layer_lvl1.df |>
-  filter(of_variable %in% c("Layer_type")) |>
-  full_join(FIAkey, by = join_by(with_entry == key)) |>
-  select(study_id, plot_id, layer_id, upper_depth_bound, lower_depth_bound)
-
-ISCNdepth <- layer_lvl1.df |>
-  filter(of_variable %in% c("lower_depth_bound", "upper_depth_bound")) |>
-  filter(is_type == 'value') |>
-  #TODO: Worldwide soil carbon and ... needs to be address in readISCN
-  # dplyr::reframe(n = dplyr::n(), 
-  #                  entries = paste(with_entry, collapse = '::'),
-  #                  .by = c(study_id, dataset_id, profile_id, layer_id,
-  # is_type, plot_id, of_variable)) |>
-  # dplyr::filter(n > 1L)
-  pivot_wider(names_from = of_variable, values_from = with_entry,
-              values_fn = function(xx){
-                if(length(xx) > 1){
-                  return(c(NA)) #drop ambiguous data, known issue with ISCN
-                }else{
-                  return(xx)
-                }
-              }) |>
-  select(study_id, dataset_id, profile_id, layer_id, upper_depth_bound, lower_depth_bound) |>
-  mutate(across(c(upper_depth_bound, lower_depth_bound), as.numeric))
-
-depth.df <- ISCNdepth |>
-  bind_rows(FIAdepth)
-
-metaDepth.df <- tribble(~study_id, ~of_variable, ~is_type, ~with_entry,
-                         NA, 'upper_depth_bound', 'value', '--',
-                         NA, 'upper_depth_bound', 'unit', 'cm',
-                         NA, 'upper_depth_bound', 'description', 'depth to upper layer bound from surface',
-                         NA, 'lower_depth_bound', 'value', '--',
-                         NA, 'lower_depth_bound', 'unit', 'cm',
-                         NA, 'lower_depth_bound', 'description', 'depth to lower layer bound from surface',
-)
-```
-
 ```{r}
 
-metaDepth.df |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
+ISCN4_primary <- ISCN3_lvl1$primary |>
+  bind_rows(
+  FIA_lvl1$primary |>
+    mutate(profile_id = paste('PLOT:', `CN.ENTIRE_PLOT`),
+           layer_id = paste('SOILS_VISIT:',`CN.ENTIRE_SOILS_VISIT`, 
+                            '-SOILS_SAMPLE_LOC:', `CN.ENTIRE_SOILS_SAMPLE_LOC`,
+                            '-SOILS_EROSION:', `CN.ENTIRE_SOILS_EROSION`,
+                            '-SOILS_LAB:', `CN.ENTIRE_SOILS_LAB`, sep = '')) |>
+    mutate(`depth_bound::method` = `upper_depth_bound::value`) |>
+    select(-c(`upper_depth_bound::value`, `lower_depth_bound::value`)) |>
+    mutate(`latitude::method` = 'NAD83') #This applies for non Pacific Island locations, Pacific Island locations are WSG84
+  ) |>
+  # country/state
+  rename(state = `state::value`, country = `country::value`) |>
+  mutate(country = if_else(country == 'Unknown', NA_character_, country),
+         state = if_else(state == 'Unknown', NA_character_, state)) |>
+  # if there is a state defined, then the country is in the US
+  mutate(country = if_else(is.na(country) & !is.na(state), 'United States', country)) |>
+  # latitude/longitude/datum
+  rename(latitude = `latitude::value`, 
+         longitude = `longitude::value`, 
+         datum = `latitude::method`) |>
+  mutate(datum = str_remove(datum, pattern = 'datum \\(datum\\)\\:')) |>
+  mutate(across(c(latitude, longitude), as.numeric)) |>
+  # layer depth
+  rename(upper_depth_bound = `upper_depth_bound::value`, 
+         lower_depth_bound = `lower_depth_bound::value`) |>
+  mutate(across(c(upper_depth_bound, lower_depth_bound), as.numeric)) |>
+  mutate(upper_depth_bound = case_when(
+    study_id == 'FIA' & str_detect(`depth_bound::method`, '0-4 inch') ~ 0,
+    study_id == 'FIA' & str_detect(`depth_bound::method`, '4-8 inch') ~ 4*2.54,
+    TRUE ~ NA_real_),
+    lower_depth_bound = case_when(
+      study_id == 'FIA' & str_detect(`depth_bound::method`, '0-4 inch') ~ 4*2.54,
+      study_id == 'FIA' & str_detect(`depth_bound::method`, '4-8 inch') ~ 8*2.54,
+      TRUE ~ NA_real_)) |>
+  # observation year
+  rename(observation_year = `observation_year::value`) |>
+  mutate(across(c(observation_year), as.numeric)) |>
+  mutate(observation_year = if_else(observation_year < 2300, #does not work for years before 1906
+                                    observation_year,
+                                    #this is an excel days since origin
+                                    lubridate::as_date(observation_year,
+                                                       origin = ymd('1900-01-01')) |>
+                                      year())) |>
+  # bulk density
+  rename(bulk_density_fine = `bulk_density_fine::value`, 
+         bulk_density_whole = `bulk_density_whole::value`, 
+         bulk_density_unknown = `bulk_density_unknown::value`) |>
+  mutate(across(c(bulk_density_fine, bulk_density_whole, bulk_density_unknown), as.numeric)) |>
+  mutate(`bulk_density_fine::method` = if_else(is.na(bulk_density_fine), 
+                                               NA, `bulk_density_fine::method`),
+         `bulk_density_whole::method` = if_else(is.na(bulk_density_whole), 
+                                               NA, `bulk_density_whole::method`),
+         `bulk_density_unknown::method` = if_else(is.na(bulk_density_unknown), 
+                                               NA, `bulk_density_unknown::method`)) |>
+  mutate(across(c(bulk_density_fine, bulk_density_whole, bulk_density_unknown),
+                .fns = function(xx){
+                  if_else(xx < 0 | xx > 4, NA, xx)
+                })) |>
+  # mass fraction values
+  rename(total_carbon = `total_carbon::value`,
+         organic_carbon = `organic_carbon::value`,
+         inorganic_carbon = `inorganic_carbon::value`,
+         loss_on_ignition = `loss_on_ignition::value`,
+         coarse_fraction = `coarse_fraction::value`) |>
+  mutate(across(c(total_carbon, organic_carbon, inorganic_carbon, 
+                loss_on_ignition, coarse_fraction), as.numeric)) |>
+  mutate(`coarse_fraction::method` = if_else(is.na(coarse_fraction), 
+                                             NA, `coarse_fraction::method`),
+         `organic_carbon::method` = if_else(is.na(organic_carbon), 
+                                            NA, `organic_carbon::method`),
+#          `inorganic_carbon::method` = if_else(is.na(inorganic_carbon), 
+#                                            NA, `inorganic_carbon::method`),
+#          `loss_on_ignition::method` = if_else(is.na(loss_on_ignition), 
+#                                            NA, `loss_on_ignition::method`),
+         `total_carbon::method` = if_else(is.na(total_carbon), 
+                                          NA, `total_carbon::method`)) |> 
+  mutate(across(c(total_carbon, organic_carbon, 
+                  inorganic_carbon, loss_on_ignition, coarse_fraction), .fns = function(xx){
+    if_else(xx < 0 | xx > 100, NA, xx)
+  })) |>
+  select(study_id, dataset_id, profile_id, layer_id, 
+         country, state,
+         latitude, longitude, datum,
+         upper_depth_bound, lower_depth_bound, `depth_bound::method`,
+         starts_with('observation_year'),
+         starts_with('bulk_density'),
+         starts_with('total_carbon'),
+         starts_with('organic_carbon'),
+         starts_with('inorganic_carbon'),
+         starts_with('loss_on_ignition'),
+         starts_with('coarse_fraction')) |>
+  #factor columns <- move to full table later
+  mutate(across(study_id, as.factor)) |>
+  mutate(across(c(country, state, datum), as.factor))
+
+ISCN4_meta <- ISCN3_lvl1$meta
 
 ```
-
-```{r}
-
-allBounds <- sort(unique(c(depth.df$upper_depth_bound, depth.df$lower_depth_bound)))
-
-plot.df <- depth.df |>
-  mutate(site_id = paste(dataset_id, profile_id, plot_id, sep = '-')) |>
-  select(study_id, site_id, layer_id, upper_depth_bound, lower_depth_bound) |>
-  filter(is.finite(upper_depth_bound + lower_depth_bound)) |>
-  reframe(bound_index = which(allBounds >= upper_depth_bound &
-                               allBounds < lower_depth_bound),
-         .by = everything()) |>
-  reframe(count = n(),
-          .by = c(bound_index)) |>
-  mutate(upper_depth_bound = allBounds[bound_index])
-
-ggplot(plot.df) +
-  geom_line(aes(x= -upper_depth_bound, y = count)) +
-  scale_y_log10() +
-  coord_flip() 
-
-ggplot(plot.df) +
-  geom_line(aes(x= -upper_depth_bound, y = count)) +
-  #xlim(c(-300, 0)) +
-  coord_flip()
-```
-
-```{r}
-
-layer_stats <- depth.df |>
-  mutate(site_id = paste(dataset_id, profile_id, plot_id, sep = '-')) |>
-  select(study_id, site_id, layer_id, upper_depth_bound, lower_depth_bound) |>
-  reframe(count = n(),
-      count_finite = sum(is.finite(upper_depth_bound)),
-          missing = sum(is.na(upper_depth_bound + lower_depth_bound)),
-          surface = any(upper_depth_bound == 0),
-          max_depth = max(c(lower_depth_bound, 0), na.rm=TRUE),
-          continuous_layers = all(upper_depth_bound %in% c(0, lower_depth_bound)),
-          .by = c(study_id, site_id))
-
-```
-
-```{r}
-layer_stats |>
-  mutate(unspecified_depth = (count_finite == 0)) |>
-  reframe(layer_count = n(),
-          .by = c(study_id, surface, unspecified_depth, continuous_layers)) |>
-  kable () |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Bulk density
-
-```{r}
-ref <- meta_lvl1.df |>
-  dplyr::filter(str_detect(string = of_variable,
-                    pattern = 'ulk_density')) |>
-  pivot_wider(names_from='is_type', values_from = 'with_entry',
-              values_fn = function(xx)paste(xx, collapse = '::'))
-
-mapping_bulk_density <- tribble(
-  ~study_id, ~of_variable, ~header_str, ~description, ~method,
-  'ISCN3', 'bulk_density_sample', 'bulk_density_fine', 'fine earth bulk density, <2mm', 'measured',
-  'ISCN3', 'bulk_density_total', 'bulk_density_whole', 'whole soil bulk density', 'measured',
-  'ISCN3', 'bulk_density_whole', 'bulk_density_whole', 'whole soil bulk density', 'estimated',
-  'ISCN3', 'bulk_density_other', 'bulk_density_unknown', 'whole or fine soil bulk density', 'unknown',
-  'FIA', 'Bulk_density', 'bulk_density_whole', 'whole soil bulk density', 'measured') |>
-  mutate(unit = 'g cm-3')
-
-bulk_density.df <- layer_lvl1.df |>
-  dplyr::filter(of_variable %in% mapping_bulk_density$of_variable) |>
-  mutate(is_type = if_else(is_type == 'method', 'note', is_type)) |>
-  pivot_wider(names_from = is_type, values_from = with_entry,
-              values_fn = function(xx){
-                if(length(xx) > 1){
-                  return(c(NA)) #drop ambiguous data, known issue with ISCN
-                }else{
-                  return(xx)
-                }
-              }) |>
-  filter(!is.na(value)) |>
-  mutate(value = as.numeric(value)) |>
-  #filter(value > 0 & value < 2.65) |> #bound the bulk density of quartz
-  full_join(mapping_bulk_density |>
-              select(study_id, of_variable, header_str), by = join_by(study_id, of_variable)) |>
-  mutate(temp = paste(value, note, sep = ":::")) |>
-  select(ends_with('_id'), header_str, temp) |>
-  pivot_wider(names_from = header_str, values_from = temp) |>
-  separate_wider_delim(bulk_density_fine, delim = ":::", 
-                       names = c('bulk_density_fine', 'bulk_density_fine.note')) |>
-  separate_wider_delim(bulk_density_whole, delim = ":::", 
-                       names = c('bulk_density_whole', 'bulk_density_whole.note')) |>
-  separate_wider_delim(bulk_density_unknown, delim = ":::", 
-                       names = c('bulk_density_unknown', 'bulk_density_unknown.note')) |>
-  mutate(across(.cols = c(bulk_density_fine, bulk_density_whole, bulk_density_unknown),
-                as.numeric))
-
-metaBulkDensity <- mapping_bulk_density |>
-  select(study_id, column_id = header_str, of_variable = header_str, description, method, unit) |>
-  pivot_longer(cols = c('description', 'method', 'unit'), 
-               names_to = 'is_type',
-               values_to = 'with_entry') |>
-  bind_rows(tribble(~study_id, ~column_id, ~of_variable, ~is_type, ~with_entry,
-                    NA, "bulk_density_fine", "bulk_density_fine", 'value', '--',
-                    NA, "bulk_density_fine.note", "bulk_density_fine", 'note', '--',
-                    NA, "bulk_density_unknown", "bulk_density_unknown", 'value', '--',
-                    NA, "bulk_density_unknown.note", "bulk_density_unknown", 'note', '--',
-                    NA, "bulk_density_whole", "bulk_density_whole", 'value', '--',
-                    NA, "bulk_density_whole.note", "bulk_density_whole", 'note', '--',
-                    )) |>
-  select(-study_id) |>
-  unique() |>
-  arrange(of_variable)
-
-```
-
-```{r}
-
-metaBulkDensity|>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
-
-```{r}
-summary(bulk_density.df)
-```
-
-```{r}
-plot.df <- bulk_density.df |>
-  select(ends_with('_id'), bulk_density_whole, bulk_density_fine, bulk_density_unknown) |>
-  pivot_longer(cols = starts_with('bulk_density'), values_drop_na = TRUE)
-
-ggplot(plot.df |>
-         filter(value > 0, value < 4)) +
-  geom_histogram(aes(x=value), bins = 30) +
-  facet_wrap(~name, ncol = 1, scales = 'free_y')
-```
-
-```{r}
-ggplot(bulk_density.df) +
-  geom_point(aes(x=bulk_density_whole, y = bulk_density_fine))
-
-ggplot(bulk_density.df) +
-  geom_point(aes(x=bulk_density_whole, y = bulk_density_unknown))
-
-ggplot(bulk_density.df) +
-  geom_point(aes(x=bulk_density_fine, y = bulk_density_unknown))
-```
-
-## Soil mass fractions (organic carbon, inorganic carbon, coarse)
-
-```{r}
-ref <- meta_lvl1.df |>
-  dplyr::filter(of_variable %in% c('inorganic_carbon', 'carbon_fraction', 'coarse_fraction',
-                                   'organic_carbon', 'coarse_fragment')) |>
-  pivot_wider(names_from = 'is_type', values_from = 'with_entry',
-              values_fn = function(xx)paste(xx, collapse = ':::')) |>
-  mutate(unit = 'mass percent') |>
-  mutate(header_str = if_else(str_detect(string = of_variable, pattern = '^coarse_'), 'coarse_fraction', of_variable ))
-
-metaFraction <- ref |>
-  pivot_longer(cols = c(description, method, unit),
-               names_to = 'is_type',
-               values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-  mutate(study_id = if_else(is_type == 'unit', NA, study_id)) |>
-  unique()
-
-fractions.df <- layer_lvl1.df |>
-  filter(of_variable %in% ref$of_variable) |>
-  full_join(ref |>
-              select(of_variable, header_str), 
-            relationship = "many-to-many",
-            by = join_by(of_variable)) |>
-  mutate(header_str = if_else(is_type == 'method', paste0(header_str, '.note'), header_str)) |>
-  select(ends_with('_id'), header_str, with_entry) |>
-  unique() |>
-  pivot_wider(names_from = header_str, values_from = with_entry,
-              values_fn = function(xx){
-                if(length(xx) > 1){
-                  return(c(NA)) #drop ambiguous data, known issue with ISCN
-                }else{
-                  return(xx)
-                }
-              }) |>
-  mutate(across(.cols = c('organic_carbon', 'coarse_fraction', 'carbon_fraction', 'inorganic_carbon'), as.numeric))
-```
-
-```{r}
-metaFraction |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-
-```{r}
-summary(fractions.df)
-```
-
-```{r}
-plot.df <- fractions.df %>%
-  pivot_longer(cols =  c(organic_carbon, coarse_fraction, carbon_fraction, inorganic_carbon),
-               names_to = 'header')
-
-ggplot(plot.df |>
-         filter(value > 0 & value < 100)) +
-  geom_histogram(aes(x=value), bins = 30) +
-  facet_wrap(~header, ncol=1, scales = 'free_y')
-```
-
-# Reassembiling tables
-
-```{r}
-ISCN4.meta <- metaRegions.df |>
-  bind_rows(metaLatLon.df) |>
-  bind_rows(metaObsYr) |>
-  bind_rows(metaDepth.df) |>
-  bind_rows(metaFraction)
-
-ISCN4.surfaceLocation <- dataRegions.df |>
-  full_join(latLon.df, by = join_by(study_id, dataset_id, profile_id, plot_id)) |>
-  full_join(observationYr.df, by = join_by(study_id, dataset_id, profile_id, plot_id))
-
-ISCN4.layer <- depth.df |>
-  full_join(bulk_density.df, by = join_by(study_id, dataset_id, profile_id, layer_id, plot_id)) |>
-  full_join(fractions.df, by = join_by(study_id, dataset_id, profile_id, layer_id, plot_id))
-```
-
-## Metadata
-
-```{r}
-ISCN4.meta |>
-  kable () |>
-  #kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Surface location
-
-```{r}
-ISCN4.surfaceLocation |>
-  select(-ends_with('_id')) |>
-  slice_head(n = 200) |>
-  kable () |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-### Layer
-
-```{r}
-ISCN4.layer |>
-  select(-ends_with('_id')) |>
-  slice_head(n = 200) |>
-  kable () |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-# Check bounds
-
-```{r}
-#ISCN4.layer
-#ISCN4.surfaceLocation
-#ISCN4.meta
-
-rm(list = setdiff(ls(), c('ISCN4.layer', 'ISCN4.surfaceLocation', 'ISCN4.meta',
-                          'RscriptsDir', 'databaseReads')))
-
-# filter all the bulk densities to between 0 and 4
-# filter all fractions between 0 and 100
-# construct SOC values
-# subset surfaceLocation
-
-soc.df <- ISCN4.layer |>
-  mutate( #restruct bulk denstiy to between 0 and 4, replace those outside the bounds with NA
-    bulk_density_whole = if_else(is.finite(bulk_density_whole) &
-           (bulk_density_whole > 0 & bulk_density_whole < 4) |
-           is.na(bulk_density_whole), bulk_density_whole, NA_real_),
-         bulk_density_fine = if_else(is.finite(bulk_density_fine) &
-           (bulk_density_fine > 0 & bulk_density_fine < 4) |
-           is.na(bulk_density_fine), bulk_density_fine, NA_real_),
-         bulk_density_unknown = if_else(is.finite(bulk_density_unknown) &
-           (bulk_density_unknown > 0 & bulk_density_unknown < 4) |
-           is.na(bulk_density_unknown), bulk_density_unknown, NA_real_),
-         #Restrict fractions to between 0 and 100, replace those outside the bounds with NA
-         organic_carbon = if_else(is.finite(organic_carbon) &
-           (organic_carbon > 0 & organic_carbon < 100) |
-           is.na(organic_carbon), organic_carbon, NA_real_),
-         coarse_fraction = if_else(is.finite(coarse_fraction) &
-           (coarse_fraction > 0 & coarse_fraction < 100) |
-           is.na(coarse_fraction), coarse_fraction, NA_real_)) |>
-  # mutate(across(all_of(c('coarse_fraction', 
-  #                         'organic_carbon', 
-  #                         'bulk_density_unknown', 
-  #                         'bulk_density_fine', 
-  #                         'bulk_density_whole')), 
-  #                is.finite)) |>
-  # reframe( count = n(),
-  #          .by = c(coarse_fraction, 
-  #                  organic_carbon, 
-  #                  bulk_density_unknown, 
-  #                  #bulk_density_fine, 
-  #                  bulk_density_whole))
-  filter(any(is.finite(bulk_density_unknown) |
-               is.finite(bulk_density_fine) |
-               is.finite(bulk_density_whole)) &
-           any(is.finite(organic_carbon)) &
-           any(is.finite(coarse_fraction)),
-         .by = c(study_id, dataset_id, profile_id, plot_id))
-
-soc_location.df <- ISCN4.surfaceLocation %>%
-  right_join(soc.df,
-             by = join_by(study_id, dataset_id, profile_id, plot_id),
-             relationship = "many-to-many") |>
-  unique()
-
-sub_location.df <- ISCN4.surfaceLocation %>%
-  semi_join(soc.df) %>%
-  unique() |>
-  mutate(across(c(study_id, dataset_id), as.factor))
-```
-
-
 
 # Appendix
 
