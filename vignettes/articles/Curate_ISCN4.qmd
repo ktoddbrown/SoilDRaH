@@ -40,6 +40,7 @@ annotationFiles <- list(FIA = 'FIA_Annotations.csv',
 
 source(file.path(RscriptsDir, databaseReads$ISCN3))
 source(file.path(RscriptsDir, databaseReads$FIA))
+source(file.path(RscriptsDir, databaseReads$NCSS))
 
 #knitr::opts_chunk$set(collapse = TRUE)
 ```
@@ -273,6 +274,19 @@ FIA_lvl1 <- list(
 #memory management
 primary_variables <- c(primary_variables, 'FIA_lvl1')
 rm(list = setdiff(ls(), primary_variables)) 
+```
+
+## NCSS (USDA-NRCS, Web of Soil version)
+
+```{r}
+NCSS.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
+                    annotationFilename = file.path(annotationsDir, 'NCSS_Annotations.csv'),
+                   format = 'long',
+                   verbose = FALSE)
+```
+
+```{r}
+
 ```
 
 # Harmonize sources
