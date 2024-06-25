@@ -333,11 +333,11 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
   mutate(upper_depth_bound = case_when(
     study_id == 'FIA' & str_detect(`depth_bound::method`, '0-4 inch') ~ 0,
     study_id == 'FIA' & str_detect(`depth_bound::method`, '4-8 inch') ~ 4*2.54,
-    TRUE ~ NA_real_),
+    TRUE ~ upper_depth_bound),
     lower_depth_bound = case_when(
       study_id == 'FIA' & str_detect(`depth_bound::method`, '0-4 inch') ~ 4*2.54,
       study_id == 'FIA' & str_detect(`depth_bound::method`, '4-8 inch') ~ 8*2.54,
-      TRUE ~ NA_real_)) |>
+      TRUE ~ lower_depth_bound)) |>
   # observation year
   rename(observation_year = `observation_year::value`) |>
   mutate(across(c(observation_year), as.numeric)) |>
@@ -397,11 +397,25 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
          starts_with('coarse_fraction')) |>
   #factor columns <- move to full table later
   mutate(across(study_id, as.factor)) |>
-  mutate(across(c(country, state, datum), as.factor))
+  mutate(across(c(country, state, datum, ends_with('method')), as.factor))
 
-ISCN4_meta <- ISCN3_lvl1$meta
+#TODO: Clean this up
+ISCN4_meta <- ISCN3_lvl1$meta |>
+  bind_rows(FIA_lvl1$meta)
 
 ```
+
+## Histograms
+
+```{r}
+plot.df <- ISCN4_primary |>
+  pivot_longer(cols = where(is.numeric), names_to = 'variable')
+
+ggplot(plot.df) + 
+  geom_histogram(aes(x=value), bins = 30) +
+  facet_wrap(~variable, scales = 'free')
+```
+
 
 # Appendix
 
