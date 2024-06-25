@@ -476,8 +476,8 @@ lab_column_descriptions;foreign_column_name;17;NA;foreign_key;TRUE
 lab_column_descriptions;foreign_column_name;17;NA;description;A character string containing the physical name of a column in the LIMS database, in this case a column corresponding to a particular foreign key column in another table.
 lab_column_descriptions;foreign_table_name;16;NA;foreign_key;TRUE
 lab_column_descriptions;foreign_table_name;16;NA;description;A character string containing the physical name of a table in the LIMS database, in this case the table corresponding to a particular foreign key.
-lab_layer;project_key;3;NA;identifier;--
-lab_layer;project_key;3;NA;description;An integer number that uniquely identifies a particular project
+lab_layer;project_key;3;NA;value;--
+lab_layer;project_key;3;NA;description;An integer number that uniquely identifies a particular project. Currently no project table to cross link 20240625 KTB
 lab_layer;site_key;4;NA;identifier;--
 lab_layer;site_key;4;NA;description;An integer number that uniquely identifies a particular site
 lab_layer;stratified_textures_flag;21;NA;description;A Boolean flag that when set (Y) indicates that the textures that comprise a particular texture group, are stratified.

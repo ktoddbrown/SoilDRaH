@@ -132,48 +132,10 @@ knitr::kable(ncss.df$annotations %>%
 
 ```{r}
 
-temp_pedon <- ncss.df$long %>%
-  filter(table_id == 'lab_pedon') %>%
-  select(where(~ any(!is.na(.)))) %>%
+soc.df <- ncss.df$long %>%
   select(ends_with('_key'), of_variable, is_type, with_entry) %>%
-  pivot_wider(names_from = c(of_variable, is_type),
-              values_from = with_entry,
-              names_sep = '::')
+  pivot_wider(names_from = is_type, values_from = with_entry)
 
-temp_site <- ncss.df$long %>%
-  filter(table_id == 'lab_site') %>%
-  select(where(~ any(!is.na(.)))) %>%
-  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
-  pivot_wider(names_from = c(of_variable, is_type),
-              values_from = with_entry,
-              names_sep = '::')
-
-temp_layer <- ncss.df$long %>%
-  filter(table_id == 'lab_layer') %>%
-  select(where(~ any(!is.na(.)))) %>%
-  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
-  pivot_wider(names_from = c(of_variable, is_type),
-              values_from = with_entry,
-              names_sep = '::')
-
-temp_samples <- ncss.df$long %>%
-  filter(! table_id %in% c('lab_pedon', 'lab_site', 'lab_layer')) %>%
-  select(where(~ any(!is.na(.)))) %>%
-  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
-  pivot_wider(names_from = c(of_variable, is_type),
-              values_from = with_entry,
-              names_sep = '::')
-
-
-soc.df <- temp_site %>%
-  full_join(temp_pedon, by = join_by(site_key)) %>%
-  full_join(temp_layer, by = join_by(site_key, pedon_key)) %>%
-  full_join(temp_samples, by = join_by(layer_key))  %>%
-  pivot_longer(cols = !ends_with('_key'), 
-                names_sep = '::', 
-                names_to = c('of_variable', 'is_type'), 
-                values_to = 'with_entry') %>%
-  pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
 
