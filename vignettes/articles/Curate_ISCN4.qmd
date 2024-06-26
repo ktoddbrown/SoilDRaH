@@ -549,13 +549,13 @@ ggplot(depth_summary |>
 
 ```{r}
 ggplot(depth_summary |>
-         filter(count > 30)) +
+         filter(count > 1e3)) +
   geom_ribbon(aes(ymin = organic_carbon_25, 
                   ymax = organic_carbon_75, x = -depth), fill = 'grey') +
   geom_line(aes(y=organic_carbon_5, x = -depth), linetype = 2) +
   geom_line(aes(y=organic_carbon_50, x = -depth)) +
   geom_line(aes(y=organic_carbon_95, x = -depth), linetype = 2) +
-  coord_flip() 
+  coord_flip()
 ```
 
 # Appendix
