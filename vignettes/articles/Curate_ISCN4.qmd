@@ -496,6 +496,67 @@ ggplot(plot.df) +
   facet_wrap(~study_id + variable, scales = 'free', ncol = 4)
 ```
 
+## Location over time
+
+```{r fig.width=8, fig.height=10}
+ggplot(ISCN4_primary %>%
+         select(study_id, dataset_id, profile_id,
+                longitude, latitude, observation_year) %>%
+         filter(is.finite(longitude + latitude)) %>%
+         unique() %>%
+         mutate(decade = floor(observation_year/10) * 10)) +
+  geom_polygon(colour="grey", fill="white",
+               aes(x=long, y=lat, group=group),
+               data = map_data("world")) +
+  geom_point(aes(x=longitude, y = latitude), alpha = .1) +
+  facet_wrap(~decade + study_id, ncol = 4) +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+```
+
+## Depth observations
+
+```{r}
+commonBounds <- c(ISCN4_primary$upper_depth_bound, ISCN4_primary$lower_depth_bound) |>
+  unique() |>
+  sort()
+
+depth_summary <- ISCN4_primary |>
+  select(study_id, dataset_id, profile_id,
+         upper_depth_bound, lower_depth_bound, organic_carbon) |>
+  filter(is.finite(upper_depth_bound + lower_depth_bound)) |>
+  unique() |>
+  #slice_head(n=200) |>
+  reframe(depth = commonBounds[commonBounds >= upper_depth_bound &
+                                              commonBounds < lower_depth_bound],
+          .by = everything()) |>
+  reframe(count = n(),
+          organic_carbon_5 = quantile(organic_carbon, probs = 0.05, na.rm =TRUE),
+          organic_carbon_25 = quantile(organic_carbon, probs = 0.3, na.rm =TRUE),
+          organic_carbon_50 = quantile(organic_carbon, probs = 0.5, na.rm =TRUE),
+          organic_carbon_75 = quantile(organic_carbon, probs = 0.75, na.rm =TRUE),
+          organic_carbon_95 = quantile(organic_carbon, probs = 0.95, na.rm =TRUE),
+          .by = depth)
+```
+
+```{r}
+ggplot(depth_summary |>
+         filter(count > 30)) +
+  geom_line(aes(y=count, x = -depth)) +
+  coord_flip()
+```
+
+```{r}
+ggplot(depth_summary |>
+         filter(count > 30)) +
+  geom_ribbon(aes(ymin = organic_carbon_25, 
+                  ymax = organic_carbon_75, x = -depth), fill = 'grey') +
+  geom_line(aes(y=organic_carbon_5, x = -depth), linetype = 2) +
+  geom_line(aes(y=organic_carbon_50, x = -depth)) +
+  geom_line(aes(y=organic_carbon_95, x = -depth), linetype = 2) +
+  coord_flip() 
+```
 
 # Appendix
 
