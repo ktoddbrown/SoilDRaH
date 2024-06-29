@@ -13,10 +13,18 @@ format:
     colorlinks: true
 ---
 
-This document works through creating a data product of layer-level soil organic carbon profiles (with both observation times recorded and location where possible) from the USDA-FS-FIA Database, ISCN3, and the USDA-NRCS-NCSS Database.
+Soil carbon stocks are critical components of the land carbon balance.
+In a Earth system model context digital soil maps are often used to benchmark and/or parameterize models that simulate the Earth climate over the next 100 years.
+Underlying these digital soil maps are large soil survey databases with geo-located soil organic carbon area-densities, further derived from layer-resolved soil carbon volumentric-density profiles.
+
+We have focused on harmonizing two major US soil surveys: USDA-FS-FIA Database (site: 6 071, layers: 23 155), and the USDA-NRCS-NCSS Web of Soil Database (site:115 611, layers:465 897).
+We developed meta-data annotations to describe the relevant location, observation time, organic carbon fraction, coarse fraction, and bulk density observations.
+These meta-data annotations are then combined with data downloaded from public web-servers and this information used to generate a harmonized data base.
+In addition to these two large survey data collections we also harmonize the ISCN3 data collection (site: 10 312, layer: 54 190).
+This process is documented here.
 
 A brief word of warning, the size of these databases can be considerable for some computers (<10 GBs).
-This code is designed to be run locally on a machine that has the capasity to download and work with this filesize.
+This code is designed to be run locally on a machine that has the capasity to download and work with this file size.
 If your computer is primarily scoped for working with text documents and a few spreadsheets, you may not be able to run this code.
 This code uses the `tidyverse` and `RSQLite` packages with additional formating support from `knitr` and `kableExtra`.
 
@@ -126,24 +134,28 @@ primary_variables <- c(ls() , 'primary_variables')
 
 ## ISCN3
 
-Using the `readISCN3` function ready in the version of ISCN3 archived (on EDI)[https://portal.edirepository.org/nis/mapbrowse?scope=edi&identifier=1160&revision=1].
+The International Soil Carbon Network (vs3) Data base is a collection of single studies and an earlier version of the NCSS database.
+In this workflow we use the `readISCN3` function ready in the version of ISCN3 [archived on EDI](https://portal.edirepository.org/nis/mapbrowse?scope=edi&identifier=1160&revision=1).
+We then remove the NRCS NCSS database (vs 2015) so that we can later replace it with our updated version (vs 2024 - Web of Science).
+Finally we subset the observed variables to focus on soil oraganic carbon measurements.
 
 ```{r readISCN3}
-iscn.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
+#| code-fold: false
+
+ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
                      annotationFilename = file.path(annotationsDir, annotationFiles$ISCN3),
                      format = 'long',
-                     verbose = FALSE) #swicth to TRUE for dev
+                     verbose = FALSE)
+
 ```
 
-
-Subset the annotations to then process the data tables.
 
 ```{r}
 #| code-summary: "ID columns"
 
 #Use the annotations to set up the column selection
 #Pulled up here for ease of reference/review
-ISCN3_column_selection <- iscn.ls$annotation |>
+ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
   semi_join(ISCN4map,
             by = join_by(study_id, table_id,
                          of_variable == source_variable)) |>
@@ -161,12 +173,12 @@ ISCN3_column_selection |>
 
 
 ISCN3_lvl1 <- list(
-  primary = iscn.ls$long |> 
+  primary = ISCN_lvl0.ls$long |> 
     ##nrow 17 967 513
     filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
     ##nrow  2 151 476
     # use the column selection to subset the database
-    inner_join(iscn.ls$annotation |>
+    inner_join(ISCN_lvl0.ls$annotation |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
                            by = join_by(study_id, table_id,
@@ -180,7 +192,7 @@ ISCN3_lvl1 <- list(
            of_variable, target_variable, is_type, with_entry) |>
     #nrow 1034386
     #TODO: Worldwide soil carbon and Northern Circumpolar needs to be address in readISCN
-    #Removing them for now
+    #.... removing them for now
     filter(length(with_entry) == 1 | unique(is_type) != 'value',
            .by = -with_entry) |>
     #nrow 931464
@@ -198,7 +210,7 @@ ISCN3_lvl1 <- list(
               values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
   
   #pull in the meta data that is not now in the primary data
-  meta = iscn.ls$annotation |>
+  meta = ISCN_lvl0.ls$annotation |>
     inner_join(ISCN4map |>
                  filter(study_id == 'ISCN3'),
                by = join_by(study_id, table_id,
@@ -212,15 +224,21 @@ ISCN3_lvl1 <- list(
 )
 
 #memory management
-primary_variables <- c(primary_variables, 'ISCN3_lvl1')
+primary_variables <- c(primary_variables, 'ISCN_lvl0.ls',  'ISCN3_lvl1')
 rm(list = setdiff(ls(), primary_variables)) 
 ```
 
 
 ## Forest Inventory Analysis Database (USDA-FS)
 
+The Forest Inventory Analysis Database from the USDA-FS focuses primarily on tree survey data however it does contain soil information for two layers from 0-4 inches and 4-8 inches as well as litter information.
+This data set is large and must be downloaded from [the FIA Datamart](https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart).
+We then run the `readFIA` function to combine the datatables into a single long format and down select to focus on soil organic carbon stocks.
+
 ```{r}
-fia.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'), 
+#| code-fold: false
+
+FIA_lvl0.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'), 
                   annotationFilename = file.path(annotationsDir, annotationFiles$FIA), 
                   verbose = FALSE, #when first running, switch this to true 
                   format = 'long')
@@ -229,7 +247,7 @@ fia.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'),
 
 ```{r}
 
-FIA_controlVocab <- fia.ls$annotations |>
+FIA_controlVocab <- FIA_lvl0.ls$annotations |>
   filter(is_type == 'control_vocabulary') |>
   tidyr::separate_longer_delim(with_entry, delim = ';') |>
   filter(str_detect(with_entry, regex('\\|'))) |>
@@ -238,11 +256,11 @@ FIA_controlVocab <- fia.ls$annotations |>
   mutate(is_type = 'value')
 
 FIA_lvl1 <- list(
-  primary = fia.ls$long |>
+  primary =  FIA_lvl0.ls$long |>
     #make sure to set the study_id
     mutate(study_id = 'FIA') |>
     #### pull in the target variable that we want to map ####
-    right_join(fia.ls$annotation |>
+    right_join(FIA_lvl0.ls$annotation |>
                  mutate(study_id = 'FIA') |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
@@ -259,12 +277,15 @@ FIA_lvl1 <- list(
     mutate(with_entry = if_else(is.na(keyed_value), with_entry, keyed_value)) |>
     select(-keyed_value) |>
     #### Kick out to wide format for QAQC ####
-    select(study_id, starts_with('CN.'), #CN is the row identifier
+    select(study_id, profile_id = `CN.ENTIRE_PLOT`,
+           layer_id = `CN.ENTIRE_SOILS_LAB`, #starts_with('CN.'), #CN is the row identifier
            target_variable, is_type, with_entry) |>
-    pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
-                values_from = with_entry),
+  unique() |>
+  pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
+                values_from = with_entry,
+                values_fn = function(xx)paste(xx, collapse = '::')),
   
-  meta = fia.ls$annotations |>
+  meta = FIA_lvl0.ls$annotations |>
     mutate(study_id = 'FIA') |>
     #pull the annotations for the primary data entries
     right_join(ISCN4map,
@@ -283,14 +304,18 @@ FIA_lvl1 <- list(
 )
 
 #memory management
-primary_variables <- c(primary_variables, 'FIA_lvl1')
+primary_variables <- c(primary_variables, 'FIA_lvl0.ls', 'FIA_lvl1')
 rm(list = setdiff(ls(), primary_variables)) 
 ```
 
 ## NCSS (USDA-NRCS, Web of Soil version)
 
-```{r}
-NCSS.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
+The National Cooperative Soil Survey (USDA-NRCS) holds 
+
+```{r warning=FALSE}
+#| code-fold: false
+
+NCSS_lvl0.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
                     annotationFilename = file.path(annotationsDir, 'NCSS_Annotations.csv'),
                    format = 'long',
                    verbose = FALSE)
@@ -300,7 +325,7 @@ NCSS.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
 #| code-summary: "Subset NCSS lvl 1 product"
 
 NCSS_lvl1 <- list(
-  primary =  NCSS.ls$long |> 
+  primary =  NCSS_lvl0.ls$long |> 
     mutate(study_id = 'NCSS', 
            profile_id = paste0('site_key:', site_key,
                                '-pedon_key:', pedon_key)) |>
@@ -309,7 +334,7 @@ NCSS_lvl1 <- list(
            of_variable, is_type, with_entry) |> #meta information
     ##nrow 5 694 780
     # use the column selection to subset the database
-    inner_join(NCSS.ls$annotation |>
+    inner_join(NCSS_lvl0.ls$annotation |>
                  mutate(study_id = 'NCSS') |>
                  select(study_id, table_id, column_id, of_variable, is_type, with_entry) |>
                  filter(with_entry == '--') |>
@@ -335,7 +360,7 @@ NCSS_lvl1 <- list(
                 values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
   
   #pull in the meta data that is not now in the primary data
-  meta = NCSS.ls$annotation |>
+  meta = NCSS_lvl0.ls$annotation |>
     mutate(study_id = 'NCSS') |>
     inner_join(ISCN4map |>
                  filter(study_id == 'NCSS'),
@@ -350,7 +375,7 @@ NCSS_lvl1 <- list(
 )
 
 #memory management
-primary_variables <- c(primary_variables, 'NCSS_lvl1')
+primary_variables <- c(primary_variables, 'NCSS_lvl0.ls', 'NCSS_lvl1')
 rm(list = setdiff(ls(), primary_variables)) 
 ```
 
@@ -384,11 +409,11 @@ Examining the contextual metadata above we need to do the following:
 ISCN4_primary <- ISCN3_lvl1$primary |>
   bind_rows(
   FIA_lvl1$primary |>
-    mutate(profile_id = paste('PLOT:', `CN.ENTIRE_PLOT`),
-           layer_id = paste('SOILS_VISIT:',`CN.ENTIRE_SOILS_VISIT`, 
-                            '-SOILS_SAMPLE_LOC:', `CN.ENTIRE_SOILS_SAMPLE_LOC`,
-                            '-SOILS_EROSION:', `CN.ENTIRE_SOILS_EROSION`,
-                            '-SOILS_LAB:', `CN.ENTIRE_SOILS_LAB`, sep = '')) |>
+    # mutate(profile_id = paste('PLOT:', `CN.ENTIRE_PLOT`),
+    #        layer_id = paste('SOILS_VISIT:',`CN.ENTIRE_SOILS_VISIT`, 
+    #                         '-SOILS_SAMPLE_LOC:', `CN.ENTIRE_SOILS_SAMPLE_LOC`,
+    #                         '-SOILS_EROSION:', `CN.ENTIRE_SOILS_EROSION`,
+    #                         '-SOILS_LAB:', `CN.ENTIRE_SOILS_LAB`, sep = '')) |>
     mutate(`depth_bound::method` = `upper_depth_bound::value`) |>
     select(-c(`upper_depth_bound::value`, `lower_depth_bound::value`)) |>
     mutate(`latitude::method` = 'NAD83') #This applies for non Pacific Island locations, Pacific Island locations are WSG84, no current PI locations - 20240625 KTB
@@ -537,14 +562,21 @@ depth_summary <- ISCN4_primary |>
           organic_carbon_50 = quantile(organic_carbon, probs = 0.5, na.rm =TRUE),
           organic_carbon_75 = quantile(organic_carbon, probs = 0.75, na.rm =TRUE),
           organic_carbon_95 = quantile(organic_carbon, probs = 0.95, na.rm =TRUE),
-          .by = depth)
+          .by = c(depth, study_id))
 ```
 
 ```{r}
 ggplot(depth_summary |>
          filter(count > 30)) +
   geom_line(aes(y=count, x = -depth)) +
-  coord_flip()
+  coord_flip() +
+  facet_wrap(~study_id, scales = 'free')
+
+ggplot(depth_summary |>
+         filter(count > 30, depth < 100)) +
+  geom_line(aes(y=count, x = -depth)) +
+  coord_flip()  +
+  facet_wrap(~study_id, scales = 'free_x')
 ```
 
 ```{r}
@@ -555,7 +587,8 @@ ggplot(depth_summary |>
   geom_line(aes(y=organic_carbon_5, x = -depth), linetype = 2) +
   geom_line(aes(y=organic_carbon_50, x = -depth)) +
   geom_line(aes(y=organic_carbon_95, x = -depth), linetype = 2) +
-  coord_flip()
+  coord_flip() +
+  facet_wrap(~study_id, scales = 'free_x')
 ```
 
 # Appendix
