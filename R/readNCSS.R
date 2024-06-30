@@ -1,4 +1,7 @@
 #' Read in the NCSS database
+#' 
+#' This data base works with the Web of Science hosted N
+#' download the sqlite zip file. https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx and place it in the directory
 #'
 #' @param dataDir 
 #' @param annotationFilename 
