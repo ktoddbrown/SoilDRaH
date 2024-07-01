@@ -19,6 +19,8 @@ readFIA <- function(dataDir,
                     format = c('original', 'long')[1],
                     verbose = TRUE){
   
+  #annotationFilename <- 'data/FIA_Annotations.csv'
+  
   if(verbose) warning('This function may have a high memory demand.')
   
   # Download entire FIA database
@@ -52,7 +54,8 @@ readFIA <- function(dataDir,
                                       delim = ';')
   
   # Get list of annotated table names
-  tables <- unique(annotations.df$table_id)
+  tables <- unique((annotations.df |>
+                     filter(!is.na(table_id)))$table_id)
   
   # Read in the original files
   if(verbose) message('Starting data read... ')

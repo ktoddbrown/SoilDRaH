@@ -161,7 +161,7 @@ soil_carbon.df <- fia.ls$annotations %>%
   #identify the variables that we are interested in
   filter(of_variable %in% c(
              'Inventory_year',
-             'Longtitude', 'Latitude', 'State',
+             'Longitude', 'Latitude', 'State',
              'Layer_type',
              'Bulk_density',
              'coarse_fraction',
@@ -208,7 +208,7 @@ controlVocab <- fia.ls$annotations %>%
   #using the same list of variables as above, even though it's overkill here
   filter(of_variable %in% c(
              'Inventory_year',
-             'Longtitude', 'Latitude', 
+             'Longitude', 'Latitude', 
              'State', #control vocabular
              'Layer_type', #control vocabular
              'Bulk_density',
@@ -276,7 +276,7 @@ soil_carbon.df <- soil_carbon.df %>%
                                "Bulk_density", "coarse_fraction", 
                                "organic_carbon", 
                                "inorganic_carbon", "carbon_fraction", 
-                               "Latitude", "Longtitude", 
+                               "Latitude", "Longitude", 
                                'Layer_type.upper', 'Layer_type.lower')), as.numeric))
 
 soil_carbon.df %>%
@@ -294,11 +294,11 @@ We given an example below of how this might be organized.
 
 ```{r}
 site.df <- soil_carbon.df %>%
-  select(Latitude, Longtitude, Inventory_year) %>%
+  select(Latitude, Longitude, Inventory_year) %>%
   unique()
 
 layer.df <- soil_carbon.df %>%
-  select(Latitude, Longtitude, Inventory_year, 
+  select(Latitude, Longitude, Inventory_year, 
          Layer_type, Layer_type.definition, Layer_type.upper, Layer_type.lower,
          Bulk_density, coarse_fraction,
          organic_carbon, inorganic_carbon)
@@ -306,7 +306,7 @@ layer.df <- soil_carbon.df %>%
 meta.df <- fia.ls$annotations %>%
   filter(of_variable %in% c(
              'Inventory_year', #an identifier
-             'Longtitude', 'Latitude', 'State',
+             'Longitude', 'Latitude', 'State',
              #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
              'Layer_type',
              'Bulk_density',
@@ -326,7 +326,7 @@ Below are some general figures that might be of interest if you are evaluating t
 ```{r, fig.width = 6, fig.height = 9}
 ggplot(site.df %>%
          mutate(decade = floor(Inventory_year/5)*5)) +
-  geom_point(aes(x=Longtitude, y = Latitude), alpha = .1) +
+  geom_point(aes(x=Longitude, y = Latitude), alpha = .1) +
   facet_wrap(~decade, ncol = 1)
 ```
 
@@ -369,7 +369,6 @@ if(checkAnnotations(filename = 'FIA_Annotations.csv',
   print('Annotations check out!')
 }
 
-checkAnnotations(filename = '')
 ```
 
 
