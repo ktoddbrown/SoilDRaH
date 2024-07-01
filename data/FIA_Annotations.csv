@@ -1,5 +1,5 @@
 study_id;table_id;column_id;of_variable;is_type;with_entry
-FIA;NA;NA;url;value; https://research.fs.usda.gov/programs/fia
+FIA;;;url;value; https://research.fs.usda.gov/programs/fia
 FIA;ENTIRE_SOILS_SAMPLE_LOC;CN;sample_loc_id;description;A unique sequence number used to identify a soils sample location.
 FIA;ENTIRE_SOILS_SAMPLE_LOC;CN;sample_loc_id;identifier;--
 FIA;ENTIRE_SOILS_SAMPLE_LOC;PLT_CN;plot_id;description;Foreign key linking the soils lab record to the P2 plot record.
