@@ -36,6 +36,7 @@ library(tidyverse) #data structure manipulation
 library(RSQLite) #accessing the NCSS sql library
 library(knitr) # make prettier tables
 library(kableExtra) #make tables scroll-able
+library(maps) #make global maps
 
 RscriptsDir <- '../../R'
 annotationsDir <- '../../data'
@@ -257,11 +258,8 @@ FIA_controlVocab <- FIA_lvl0.ls$annotations |>
 
 FIA_lvl1 <- list(
   primary =  FIA_lvl0.ls$long |>
-    #make sure to set the study_id
-    mutate(study_id = 'FIA') |>
     #### pull in the target variable that we want to map ####
     right_join(FIA_lvl0.ls$annotation |>
-                 mutate(study_id = 'FIA') |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
                             by = join_by(study_id, table_id,
@@ -270,14 +268,16 @@ FIA_lvl1 <- list(
                  filter(with_entry == '--') |>
                  select(ends_with('_id'), of_variable, target_variable, is_type),
                relationship = "many-to-many",
-               by = join_by(column_id, table_id, study_id)) |>
+               by = join_by(column_id, table_id)) |>
     #### replace the control vocab with the provided text values ####
     left_join(FIA_controlVocab,
-              by = join_by(table_id, column_id, of_variable, is_type, with_entry)) |>
+              by = join_by(study_id, table_id, column_id, 
+                           of_variable, is_type, with_entry)) |>
     mutate(with_entry = if_else(is.na(keyed_value), with_entry, keyed_value)) |>
     select(-keyed_value) |>
     #### Kick out to wide format for QAQC ####
-    select(study_id, profile_id = `CN.ENTIRE_PLOT`,
+    select(study_id, 
+           profile_id = `CN.ENTIRE_PLOT`,
            layer_id = `CN.ENTIRE_SOILS_LAB`, #starts_with('CN.'), #CN is the row identifier
            target_variable, is_type, with_entry) |>
   unique() |>
@@ -286,7 +286,6 @@ FIA_lvl1 <- list(
                 values_fn = function(xx)paste(xx, collapse = '::')),
   
   meta = FIA_lvl0.ls$annotations |>
-    mutate(study_id = 'FIA') |>
     #pull the annotations for the primary data entries
     right_join(ISCN4map,
                by = join_by(study_id, table_id,
@@ -299,7 +298,8 @@ FIA_lvl1 <- list(
                                 with_entry)) |>
     #### Construct the column names ####
     mutate(column_id = paste0(target_variable, "::", is_type)) |>
-    select(study_id, column_id, with_entry, method_class = target_method, action_note)
+    select(study_id, column_id, 
+           with_entry, method_class = target_method, action_note)
     
 )
 
