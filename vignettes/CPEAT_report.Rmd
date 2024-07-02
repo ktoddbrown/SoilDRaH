@@ -2,7 +2,11 @@
 title: "Carbon in Peat on EArth through Time"
 author: "Vaasuki Marupaka"
 date: "Summer 2024"
-output: html_document
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
 ---
 
 The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
@@ -10,7 +14,7 @@ Here you will find links to documentation from the data provider, links to where
 
 # What is C-PEAT
 
-The version of the Carbon in Peat on EArth through Time (C-PEAT)Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
+The version of the Carbon in Peat on EArth through Time (C-PEAT) Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
 
 > **C-PEAT Database**
 Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
@@ -34,11 +38,11 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(pangaear)
 
-source("./R/readCPEAT.R", local = knitr::knit_global())
+source("../R/readCPEAT.R", local = knitr::knit_global())
 
 #locate the data locally
-dataDir <- './temp'
-dataAnnotations <- './data/CPEAT_annotations.csv'
+dataDir <- '../temp'
+dataAnnotations <- '../data/CPEAT_annotations.csv'
 ```
 
 ```{r, echo=FALSE}
@@ -48,7 +52,7 @@ dataAnnotations <- './data/CPEAT_annotations.csv'
 
 To read in the data base use the `readCPEAT` function.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 CPEAT.ls <- readCPEAT(dataDir, 
                   annotationFilename = dataAnnotations, 
                   verbose = FALSE, #when first running, switch this to true 
