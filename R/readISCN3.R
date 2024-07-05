@@ -26,6 +26,10 @@ readISCN3 <- function(dataDir,
                       format = c('original', 'long')[1],
                       verbose = TRUE){
   
+  ##dev sets
+  #dataDir <- '~/Dropbox (UFL)/Research/Datasets/ISCN3'
+  #annotationFilename <- 'data/ISCN3Annotations.csv'
+  
   ## construct file paths ####
   if(is.null(dataDir)){
     stop('Data folder must be specified.')
@@ -153,6 +157,13 @@ readISCN3 <- function(dataDir,
                   profile_id = profile_name,
                   layer_id = layer_name,
                   soc_id = dataset_name_soc) %>%
+    #Modify the layer_id for World Soils data set to correct for repeated id's across depth
+    dplyr::mutate(layer_id = 
+                    if_else(dataset_id %in% 
+                              c('Worldwide soil carbon and nitrogen data', 'Northern Circumpolar Soil Carbon Database (NCSCD)'),
+                            paste0(layer_id, '::interval ', 
+                                   `layer_top (cm)`, '-', 
+                                   `layer_bot (cm)`), layer_id)) %>%
     #pivot everything else longer
     tidyr::pivot_longer(cols = -tidyselect::any_of(c("dataset_id", 
                                          "profile_id", 
