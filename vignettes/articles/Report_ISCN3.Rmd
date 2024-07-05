@@ -154,6 +154,8 @@ soc.ls <- iscn.ls$long %>% #nrow 17 967 513
 #spread out the columns
 wide_soc <- soc.ls %>%
   select(dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) %>%
+  #drop duplicates entries imposed by different soc calculation methods
+  unique() %>%
   pivot_wider(names_from = c(of_variable, is_type), 
               values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
   #remove observations that don't have associated bulk density
@@ -219,7 +221,7 @@ ggplot(plot.df) +
   facet_wrap(~bulk_density_type, scales = 'free')
 ```
 
-## Gelocation
+## Geolocation
 
 ```{r}
 
