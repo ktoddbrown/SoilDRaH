@@ -191,24 +191,22 @@ ISCN3_lvl1 <- list(
     select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
            #remove the soc identifier since we are not pulling calculated SOC
            of_variable, target_variable, is_type, with_entry) |>
-    #nrow 1034386
-    #TODO: Worldwide soil carbon and Northern Circumpolar needs to be address in readISCN
-    #.... removing them for now
-    filter(length(with_entry) == 1 | unique(is_type) != 'value',
-           .by = -with_entry) |>
-    #nrow 931464
+    #nrow 1 034 386
+    #### Remove duplicate observations from ISCN3 ####
+   unique() |> #some entries repeated due to soc_id replication of non SOC variables
+    #nrow 973 621
     ### Pull the column id into a non-value with_entry and collapse
     ### This takes care of observations with multiple methods
     mutate(with_entry = if_else(is_type != 'value', 
                                 paste(column_id, with_entry, sep = ':'), 
                                 with_entry)) |>
-   #### Remove duplicate observations from ISCN3 ####
-   unique() |> #some entries repeated due to soc_id replication of non SOC variables
-   #### Kick out to wide format for QAQC ####
-    select(study_id, study_id, dataset_id, profile_id, layer_id,, #_id are the row identifier
-           target_variable, is_type, with_entry) |>
-    pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
-              values_from = with_entry, values_fn = function(xx)paste(xx, collapse = ';\n')), 
+    #### Kick out to wide format for QAQC ####
+  select(study_id, study_id, dataset_id, profile_id, layer_id, #_id are the row identifier
+         target_variable, is_type, with_entry) |>
+    pivot_wider(names_from = c(target_variable, is_type), 
+                names_sep = '::',
+                values_from = with_entry,
+                values_fn = function(xx)paste(xx, collapse = ';\n')), 
   
   #pull in the meta data that is not now in the primary data
   meta = ISCN_lvl0.ls$annotation |>
@@ -404,27 +402,26 @@ Examining the contextual metadata above we need to do the following:
     * All: convert units to mass-percent
     * All: move over method notes to primary data
 
-```{r}
+```{r makeISCN4primary}
 
 ISCN4_primary <- ISCN3_lvl1$primary |>
   bind_rows(
   FIA_lvl1$primary |>
-    # mutate(profile_id = paste('PLOT:', `CN.ENTIRE_PLOT`),
-    #        layer_id = paste('SOILS_VISIT:',`CN.ENTIRE_SOILS_VISIT`, 
-    #                         '-SOILS_SAMPLE_LOC:', `CN.ENTIRE_SOILS_SAMPLE_LOC`,
-    #                         '-SOILS_EROSION:', `CN.ENTIRE_SOILS_EROSION`,
-    #                         '-SOILS_LAB:', `CN.ENTIRE_SOILS_LAB`, sep = '')) |>
     mutate(`depth_bound::method` = `upper_depth_bound::value`) |>
-    select(-c(`upper_depth_bound::value`, `lower_depth_bound::value`)) |>
+    select(-c(`upper_depth_bound::value`, 
+              `lower_depth_bound::value`)) |>
     mutate(`latitude::method` = 'NAD83') #This applies for non Pacific Island locations, Pacific Island locations are WSG84, no current PI locations - 20240625 KTB
   ) |>
   bind_rows(NCSS_lvl1$primary) |>
   # country/state
   rename(state = `state::value`, country = `country::value`) |>
-  mutate(country = if_else(country == 'Unknown', NA_character_, country),
-         state = if_else(state == 'Unknown', NA_character_, state)) |>
+  mutate(country = if_else(country == 'Unknown', 
+                           NA_character_, country),
+         state = if_else(state == 'Unknown', 
+                         NA_character_, state)) |>
   # if there is a state defined, then the country is in the US
-  mutate(country = if_else(is.na(country) & !is.na(state), 'United States', country)) |>
+  mutate(country = if_else(is.na(country) & !is.na(state), 
+                           'United States', country)) |>
   # latitude/longitude/datum
   rename(latitude = `latitude::value`, 
          longitude = `longitude::value`, 
@@ -434,7 +431,8 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
   # layer depth
   rename(upper_depth_bound = `upper_depth_bound::value`, 
          lower_depth_bound = `lower_depth_bound::value`) |>
-  mutate(across(c(upper_depth_bound, lower_depth_bound), as.numeric)) |>
+  mutate(across(c(upper_depth_bound, lower_depth_bound), 
+                as.numeric)) |>
   mutate(upper_depth_bound = case_when(
     study_id == 'FIA' & str_detect(`depth_bound::method`, '0-4 inch') ~ 0,
     study_id == 'FIA' & str_detect(`depth_bound::method`, '4-8 inch') ~ 4*2.54,
@@ -453,11 +451,22 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
                                                        origin = ymd('1900-01-01')) |>
                                       year())) |>
   # bulk density
-  rename(bulk_density_fine = `bulk_density_fine::value`, 
+  dplyr::rename(bulk_density_fine = `bulk_density_fine::value`, 
          bulk_density_whole = `bulk_density_whole::value`, 
          bulk_density_unknown = `bulk_density_unknown::value`) |>
-  mutate(across(c(bulk_density_fine, bulk_density_whole, bulk_density_unknown), as.numeric)) |>
-  mutate(`bulk_density_fine::method` = if_else(is.na(bulk_density_fine), 
+  mutate(across(.cols = c(bulk_density_fine,
+                                     bulk_density_whole,
+                                     bulk_density_unknown),
+                .fns = ~  ifelse(is.na(.x),  NA_real_,
+                                  str_split_1(
+                                    string = as.character(.x), 
+                                      pattern = regex(';\\n') ) |>
+                  as.numeric() |>
+                  mean())), .by = -c(bulk_density_fine,
+                                     bulk_density_whole,
+                                     bulk_density_unknown)) |>
+  mutate(`bulk_density_fine::method` =
+           if_else(is.na(bulk_density_fine), 
                                                NA, `bulk_density_fine::method`),
          `bulk_density_whole::method` = if_else(is.na(bulk_density_whole), 
                                                NA, `bulk_density_whole::method`),
@@ -472,9 +481,18 @@ ISCN4_primary <- ISCN3_lvl1$primary |>
          organic_carbon = `organic_carbon::value`,
          inorganic_carbon = `inorganic_carbon::value`,
          loss_on_ignition = `loss_on_ignition::value`,
-         coarse_fraction = `coarse_fraction::value`) |>
+         coarse_fraction = `coarse_fraction::value`) |>  
   mutate(across(c(total_carbon, organic_carbon, inorganic_carbon, 
-                loss_on_ignition, coarse_fraction), as.numeric)) |>
+                loss_on_ignition, coarse_fraction), 
+                .fns = ~  ifelse(is.na(.x),  NA_real_,
+                                  str_split_1(
+                                    string = as.character(.x), 
+                                      pattern = regex(';\\n') ) |>
+                  as.numeric() |>
+                  mean())), .by = -c(total_carbon, 
+                                     organic_carbon, 
+                                     inorganic_carbon, 
+                loss_on_ignition, coarse_fraction)) |>
   mutate(`coarse_fraction::method` = if_else(is.na(coarse_fraction), 
                                              NA, `coarse_fraction::method`),
          `organic_carbon::method` = if_else(is.na(organic_carbon), 
