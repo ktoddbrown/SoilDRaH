@@ -35,14 +35,14 @@ lab_analyte;analyte_source_type;9;NA;description;analyte_source_type
 lab_analyte;analyte_type;2;NA;description;analyte_type
 lab_analyte;uom_abbrev;8;NA;description;A character string containing the unit of measure abbreviation.
 lab_analyte;uom_abbrev;8;NA;unit;--
-lab_area;area_abbrev;8;region;identifier;--
-lab_area;area_code;6;region;identifier;--
-lab_area;area_desc;9;region;description;--
+lab_area;area_abbrev;8;region;value;--
+lab_area;area_code;6;region;value;--
+lab_area;area_desc;9;region;value;--
 lab_area;area_key;1;region;foreign_key;--
 lab_area;area_name;7;region;description;The name given to the specified geographic area.
 lab_area;area_name;7;region;value;--
 lab_area;area_sub_type;3;NA;description;area_sub_type
-lab_area;area_type;2;NA;foreign_key;--
+lab_area;area_type;2;NA;value;--
 lab_area;area_type;2;NA;description;The record ID (an integer number) of a particular record (component record, horizon record, etc.) in a particular table (component table, horizon table, etc.). A record ID is not sufficient in and of itself to uniquely identify a record in a table. Each record in a table is uniquely identified by the combination of a record ID and the ID of the database in which the entity (area type, legend or data mapunit), of which the record is a member, was created.
 lab_area;parent_area_key;4;NA;foreign_key;--
 lab_area;parent_area_key;4;NA;description;parent_area key
@@ -378,10 +378,12 @@ lab_combine_nasis_ncss;samp_taxsuborder;14;NA;description;samp_taxsuborder
 lab_combine_nasis_ncss;samp_taxtempcl;21;NA;description;samp_taxtempcl
 lab_combine_nasis_ncss;samp_taxtempregime;23;NA;description;samp_taxtempregime
 lab_combine_nasis_ncss;site_key;2;NA;description;An integer number that uniquely identifies a particular site
+lab_combine_nasis_ncss;site_key;2;NA;foreign_key;--
 lab_combine_nasis_ncss;site_obsdate;65;NA;description;site_obsdate
 lab_combine_nasis_ncss;siteiid;63;NA;description;siteiid
 lab_combine_nasis_ncss;siteobjupdate;80;NA;description;siteobjupdate
-lab_combine_nasis_ncss;ssa_key;72;NA;description;ssa key
+lab_combine_nasis_ncss;ssa_key;72;NA;description;key for the lab_area table that is associated with a SSA area type
+lab_combine_nasis_ncss;ssa_key;72;NA;foreign_key;--
 lab_combine_nasis_ncss;SSL_class_type;46;NA;description;SSL_class_type
 lab_combine_nasis_ncss;SSL_classdate;47;NA;description;SSL_classdate
 lab_combine_nasis_ncss;SSL_classification_name;48;NA;description;SSL_classification_name
@@ -401,7 +403,8 @@ lab_combine_nasis_ncss;SSL_taxsubgrp;52;NA;description;SSL_taxsubgrp
 lab_combine_nasis_ncss;SSL_taxsuborder;50;NA;description;SSL_taxsuborder
 lab_combine_nasis_ncss;SSL_taxtempcl;57;NA;description;SSL_taxtempcl
 lab_combine_nasis_ncss;SSL_taxtempregime;59;NA;description;SSL_taxtempregime
-lab_combine_nasis_ncss;state_key;69;NA;description;state key
+lab_combine_nasis_ncss;state_key;69;state;description;key for the lab_area table that is associated with a state area type
+lab_combine_nasis_ncss;state_key;69;state;foreign_key;--
 lab_combine_nasis_ncss;upedonid;5;NA;description;upedonid
 lab_combine_nasis_ncss;usiteid;64;NA;description;usiteid
 lab_combine_nasis_ncss;corr_class_type;28;NA;description;corr_class_type
@@ -423,18 +426,24 @@ lab_combine_nasis_ncss;corr_taxsubgrp;34;NA;description;corr_taxsubgrp
 lab_combine_nasis_ncss;corr_taxsuborder;32;NA;description;corr_taxsuborder
 lab_combine_nasis_ncss;corr_taxtempcl;39;NA;description;corr_taxtempcl
 lab_combine_nasis_ncss;corr_taxtempregime;41;NA;description;corr_taxtempregime
-lab_combine_nasis_ncss;country_key;68;NA;description;country key
-lab_combine_nasis_ncss;county_key;70;NA;description;county key
+lab_combine_nasis_ncss;country_key;68;country;description;key for the lab_area table that is associated with a country area type
+lab_combine_nasis_ncss;country_key;68;country;foreign_key;--
+lab_combine_nasis_ncss;county_key;70;county;description;key for the lab_area table that is associated with a county area type
+lab_combine_nasis_ncss;county_key;70;county;foreign_key;--
 lab_combine_nasis_ncss;labdatadescflag;6;NA;description;labdatadescflag
 lab_combine_nasis_ncss;latitude_decimal_degrees;66;NA;description;latitude_decimal_degrees
 lab_combine_nasis_ncss;longitude_decimal_degrees;67;NA;description;longitude_decimal_degrees
-lab_combine_nasis_ncss;mlra_key;71;NA;description;mlra key
-lab_combine_nasis_ncss;nforest_key;74;NA;description;nforest key
+lab_combine_nasis_ncss;mlra_key;71;mlra;description;key for the lab_area table that is associated with a major land resource area (MLRA) area type
+lab_combine_nasis_ncss;mlra_key;71;mlra;foreign_key;--
+lab_combine_nasis_ncss;nforest_key;74;national_forest;description;key for the lab_area table that is associated with a National Forest System Land(?) area type
+lab_combine_nasis_ncss;nforest_key;74;national_forest;foreign_key;--
 lab_combine_nasis_ncss;note;75;NA;description;note
-lab_combine_nasis_ncss;npark_key;73;NA;description;npark key
+lab_combine_nasis_ncss;npark_key;73;national_park;description;key for the lab_area table that is associated with a National Park System Land area type
+lab_combine_nasis_ncss;npark_key;73;national_park;foreign_key;--
 lab_combine_nasis_ncss;pedlabsampnum;3;NA;description;An identifier for the pedon sample that is assigned by the Kellogg Soil Survey Laboratory. This identifier is used to link the morphological pedon description with the associated measured property values from the laboratory.
 lab_combine_nasis_ncss;pedobjupdate;79;NA;description;pedobjupdate
 lab_combine_nasis_ncss;pedon_key;1;NA;description;An integer number that uniquely identifies a particular pedon
+lab_combine_nasis_ncss;pedon_key;1;NA;identifier;--
 lab_combine_nasis_ncss;pedoniid;4;NA;description;pedoniid
 lab_dd_domain_detail;choice;5;NA;description;A character string that represents a member of a domain. This value must be unique for every member of a given domain.
 lab_dd_domain_detail;choice_desc;7;NA;description;choice_desc

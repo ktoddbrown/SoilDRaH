@@ -1,11 +1,13 @@
 #' Read in the NCSS database
+#' 
+#' This function reads in the NCSS sql database from the USDA-NRCS, Go here and download the sqlite zip file. https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx and place it in the data directory.
 #'
-#' @param dataDir 
-#' @param annotationFilename 
-#' @param format 
-#' @param verbose 
+#' @param dataDir file location for the data folder
+#' @param annotationFilename file location of the annotations file
+#' @param format a flag for the returning data format
+#' @param verbose a flag to return lots of debug statements
 #'
-#' @return
+#' @return a list of either the original tables or meta data and long primary data
 #' @export
 #'
 #' @importFrom RSQLite dbConnect SQLite dbListTables
@@ -96,7 +98,7 @@ readNCSS <- function(dataDir,
     
     ### Make the tables that we are interested in longer ###
     
-    #Only thse tables have been varified for the soc, obs time, and geolocation variables
+    #Only thse tables have been verified for the soc, obs time, and geolocation variables
     verified_tables <- list('lab_physical_properties' = 'lab_physical_properties',
                'lab_chemical_properties' = 'lab_chemical_properties',
                'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
@@ -105,12 +107,74 @@ readNCSS <- function(dataDir,
                lab_pedon = 'lab_pedon')
     
     message("This function only reads the annotated information from the following tables:")
-    message(names(verified_tables))
+    message(paste(paste(names(verified_tables), collapse = ', '),
+              'lab_area', 'lab_combine_nasis_ncss', sep = ', '))
     
     #link all the tables together
     key.df <- orginalTables$lab_layer |>
                   select('site_key', 'pedon_key', 'layer_key') |>
       mutate(across(everything(), as.character))
+    
+    #pull in the two tables to define the state/country
+    #...non-standard cross references here so processing separately
+    #lab_area_crosswalk = 'lab_combine_nasis_ncss',
+    #lab_area_key = 'lab_area'
+    location_names <- orginalTables$lab_combine_nasis_ncss |>
+      select('site_key', 'pedon_key',
+             #'lab_area::site_observation_date' = 'site_obsdate',
+             'lab_area::latitude' = "latitude_decimal_degrees",
+             'lab_area::longitude' = "longitude_decimal_degrees",
+             "country_key", "state_key", 
+             "county_key", "mlra_key", 
+             "ssa_key", "npark_key", "nforest_key") |>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         country_type = area_type, 
+                         country_name = area_name),
+                by = join_by(country_key == area_key)) |>
+      left_join(orginalTables$lab_area |>
+                  mutate(state_type = 
+                           paste(area_type, area_sub_type)) |>
+                  select(area_key,
+                         state_type,
+                         state_name = area_name),
+                by = join_by(state_key == area_key)) |>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         county_type = area_type, 
+                         county_name = area_name),
+                by = join_by(county_key == area_key)) |>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         mlra_type = area_type, 
+                         mlra_name = area_name),
+                by = join_by(mlra_key == area_key)) |>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         ssa_type = area_type, 
+                         ssa_name = area_name),
+                by = join_by(ssa_key == area_key))|>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         npark_type = area_type, 
+                         npark_name = area_name),
+                by = join_by(npark_key == area_key)) |>
+      left_join(orginalTables$lab_area |>
+                  select(area_key, 
+                         nforest_type = area_type, 
+                         nforest_name = area_name),
+                by = join_by(nforest_key == area_key)) |>
+      mutate(across(ends_with('_type'), as.factor)) |>
+      mutate(across(everything(), as.character)) |>
+      pivot_longer(cols = -c('site_key', 'pedon_key'),
+                   #apply the headers to the variable name instead of a column id
+                   names_to = 'of_variable',
+                   values_to = 'with_entry',
+                   values_drop_na = TRUE) |>
+      #remove the lab_area keys from the variables
+      filter(!str_detect(of_variable, regex('_key$'))) |>
+      mutate(is_type = 'value') |> #Dev: Consider coming back to this with the name/type separation
+      left_join(key.df, by = join_by(site_key, pedon_key) )
     
     ans.df <- plyr::ldply(verified_tables,
                           function(tableName.str){
@@ -184,9 +248,10 @@ readNCSS <- function(dataDir,
     #                    by = join_by(column_id),
     #                    relationship = "many-to-many")
     # # # 
-
     
-    return(list(annotations = annotations.df, long = ans.df))
+    return(list(annotations = annotations.df,
+                long = ans.df |>
+                  bind_rows(location_names)))
   }
   
   
