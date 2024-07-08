@@ -69,7 +69,7 @@ readCPEAT <- function(dataDir,
   #### Return the original data without transformation in a list format
   
   if(format == 'original'){
-    return(list(orginal = CPEAT.original, 
+    return(list(original = CPEAT.original, 
                 annotations = read_csv(file = annotationFilename, 
                                        col_types = cols(.default = col_character())))) # this will change the column structure into a character type
   }
@@ -205,8 +205,9 @@ readCPEAT <- function(dataDir,
   long.df <- long.df %>%
     # creating new columns 
     mutate(column_id = trimws(str_remove(column_name, pattern = '(\\(|\\[).+')), # removes any extra text that matches either an opening '(' or. '[' or any more characters that follow; and also trims any trailing white spaces 
-           table_id = if_else(is.na(table_name), 'study', 'core')) # if table_name is NS; it is set to 'study', if not, set to 'core'
-
+           table_id = if_else(is.na(table_name), 'study', 'core')) %>% # if table_name is NS; it is set to 'study', if not, set to 'core'
+    select(-table_name)
+  
     return(list(long = long.df, 
                 annotations = read_csv(file = annotationFilename, 
                                        col_types = cols(.default = col_character()))
