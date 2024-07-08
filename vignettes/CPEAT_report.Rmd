@@ -38,11 +38,11 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(pangaear)
 
-source("../R/readCPEAT.R", local = knitr::knit_global())
+source("./R/readCPEAT.R", local = knitr::knit_global())
 
 #locate the data locally
-dataDir <- '../temp'
-dataAnnotations <- '../data/CPEAT_annotations.csv'
+dataDir <- './temp'
+dataAnnotations <- './data/CPEAT_annotations.csv'
 ```
 
 ```{r, echo=FALSE}
@@ -59,7 +59,7 @@ CPEAT.ls <- readCPEAT(dataDir,
                   format = 'long')
 
 
-CPEAT.ls$long %>%
+CPEAT.ls$long %>% # tital 615,152 obs with 9 columns
   select(doi, column_id, table_id, with_entry, row_number) %>% 
   slice_head(n=650) %>%
   knitr::kable() %>%
@@ -153,7 +153,8 @@ CPEAT_SOC <- CPEAT.ls$annotations %>%
   #group_by(doi, column_name) %>% 
   pivot_wider(names_from = column_name,
                values_from = with_entry) %>% # 62024 obs
-  unique()
+  unique() %>% 
+  dplyr::mutate(across(-doi, as.numeric))
 
 
 CPEAT_SOC %>%
@@ -283,7 +284,7 @@ str(CPEAT.original[1])
 #############################
 ###Shoestring all the data
 
-  long.df <- plyr::ldply(CPEAT.original, .id = 'doi',
+  long.df <- plyr::ldply(CPEAT.original$orginal, .id = 'doi',
                              .fun = function(xx, verbose = FALSE) {
     
     if(verbose) print(paste('Processing - ', xx$doi))
@@ -310,6 +311,7 @@ str(CPEAT.original[1])
                    values_drop_na = TRUE) %>%
       left_join(colume_number, by = join_by(column_name)) %>%
       mutate(table_name = 'data')
+                             
     
     #####################################
     ### Process primary study information
@@ -374,7 +376,7 @@ str(CPEAT.original[1])
       pivot_longer(cols = everything(), 
                    names_to = 'column_name',
                    values_to = 'with_entry')
-    
+                             
     
     ####### 
     ###Process parameter information
@@ -392,20 +394,22 @@ str(CPEAT.original[1])
     colume_number$description <- unlist(lapply(xx$metadata$parameters, 
                                                function(yy){
       return(paste(as.character(yy), collapse = ' '))
-                                                 }))
+                                                 })) 
     
     layerData <- colume_number %>%
       pivot_longer(cols = description, 
                    names_to = 'is_type', 
                    values_to = 'with_entry') %>%
       mutate(table_name = 'data') %>%
-      bind_rows(layerData) 
+      bind_rows(layerData) %>% 
+      mutate(is_type = if_else(is.na(is_type), "value", is_type))
     
     # Convert all columns to character type and return the modified data
     return(bind_rows(studyData, layerData))
   }) 
   
 ```
+
 
 ### Begining QA/QC
 
@@ -439,42 +443,106 @@ str(CPEAT.original[1])
 
 flags_ptn <- '((PI)|(METHOD)|(DEVICE)|(COMMENT)|$)'
 
+studyAnnotation <- tribble(~column_name, ~description, ~of_variable, ~unit,
+                               "core_name", "Core name", "core_name", NA_character_,
+                               "parent_doi", "data package DOI", "data_doi",  NA_character_,
+                               "doi",  "data package DOI", "data_doi",  NA_character_, #same as doi
+                               "citation", "Citation", 'citation',  NA_character_,
+                               "url", "download url", 'download_url',  NA_character_,
+                               "path", "download path", 'data_local_filepath',  NA_character_,
+                               "citation.1", "Citation", 'citation', NA_character_, #same as citation
+                               "related_to", "Related citations", 'related_citation', NA_character_,
+                               "projects", "Related project", 'project', NA_character_,
+                               "coverage", "Bounded coverage", 'bounded_coverage', NA_character_,
+                               "license", "Data license", 'data_license', NA_character_,
+                               "size", "Observation size", 'observation_size', 'data point count',
+                               "LATITUDE", "Latitude", 'latitude', 'decimal degree',
+                               "LONGITUDE", "Longitude", 'longitude', 'decimal degree',
+                               "LOCATION", "Adminstrative region", 'region', NA_character_,
+                               "METHOD.DEVICE", "Sampling devise", 'sample_devise', NA_character_,
+                               "COMMENT", "Data package comment", 'core_comment', NA_character_,
+                               "further_details", "Citations", 'futher_citations', NA_character_,
+                               "ELEVATION", "elevation", 'elevation', 'm',
+                               "Recovery", "core length", 'core_length', 'cm',
+                               "Penetration", "core length", 'core_length', 'cm',
+                               "ELEVATION.START", "Start of elevation transect", 'elevation_start', 'm',
+                               "ELEVATION.END", "End of elevation transect", 'elevation_end', 'm',
+                               "abstract", "Abstract", 'abstract', NA_character_,
+                               "keywords", "Keywords", 'keywords', NA_character_,
+                               "status", "Curation level", 'cutation_level', NA_character_,
+                               "comment", "Dataset Comment", 'core_comment', NA_character_) %>%
+      mutate(table_id = 'study')
+
+studyAnnotationSub1 <- studyAnnotation %>%
+      pivot_longer(cols = c(description, unit), 
+                   names_to = 'of_type',
+                   values_to = 'with_entry',
+                   values_drop_na = TRUE)
+    
+studyAnnotationSub2 <- studyAnnotation %>% 
+      select(column_name, of_variable, table_id) %>%
+      mutate(of_type = if_else(of_variable == 'core_comment', 'note', 'value'),
+             with_entry = '--')
+
+study_annotation.df <- bind_rows(studyAnnotationSub1, studyAnnotationSub2)  %>% # this stacks the above dataframes one over the other keeping all the rows of observations
+  dplyr::rename(column_id = column_name) %>% # renaming the column names to match the data annotations template. 
+  dplyr::arrange(table_id, of_variable, of_type) %>% # arranging the row observations based on the order given here. 
+  dplyr::select(table_id, column_id, of_variable, of_type, with_entry)
+
 long_extended.df <- long.df %>%
   #pull everything not associated with a specific row number
-  filter(is.na(row_number)) %>%
+  filter(is.na(row_number)) %>% # selecting rows with row_number set to NA
   mutate(column_name = str_remove(column_name, pattern = '\\s\\d+$'),
-         description = if_else(is.na(column_number), NA_character_, with_entry)) %>%
-  mutate(new_name = trimws(str_remove(column_name, pattern = '(\\(|\\[).+'))) %>%
-  mutate(unit = str_extract(column_name, pattern = '\\[.+\\]')) %>%
-  mutate(method = str_extract(column_name, pattern = '\\(.+\\)')) %>%
-  mutate(method = str_replace(method, pattern = 'Bacon 2\\.{4}', replacement = 'Bacon 2.2')) %>%
+         description = if_else(is.na(column_number), NA_character_, with_entry)) %>% # removing trailing digits
+  mutate(new_name = trimws(str_remove(column_name, pattern = '(\\(|\\[).+'))) %>% # removing everything after and including '(' or '[' and trimming whitespaces
+  mutate(unit = str_extract(column_name, pattern = '\\[.+\\]')) %>% # extract text within '[]' from column_name and associate it to unit column
+  mutate(method = str_extract(column_name, pattern = '\\(.+\\)')) %>% # extract text within ( and ) from column_name and assign it to method.
+  mutate(method = str_replace(method, pattern = 'Bacon 2\\.{4}', replacement = 'Bacon 2.2')) %>% # cleaning the given name and replacing it with correct name
   mutate(method = str_replace(method, pattern = 'OxCal 4\\.{4}', replacement = 'OxCal 4.2.4')) %>%
-  mutate(PI = str_remove(str_extract(with_entry, pattern = 'PI.*$'),
+  mutate(PI = str_remove(str_extract(with_entry, pattern = 'PI.*$'), # Extract the substring starting with 'PI'
                          pattern = '((METHOD)|(DEVICE)|(COMMENT)).*$'),
-          METHOD = str_remove(str_extract(with_entry, pattern = 'METHOD.*$'),
+          METHOD = str_remove(str_extract(with_entry, pattern = 'METHOD.*$'), # Extract the substring starting with 'METHOD'
                          pattern = '((PI)|(DEVICE)|(COMMENT)).*$'),
-          DEVICE = str_remove(str_extract(with_entry, pattern = 'DEVICE.*$'),
+          DEVICE = str_remove(str_extract(with_entry, pattern = 'DEVICE.*$'), # Extract the substring starting with 'DEVICE'
                          pattern = '((METHOD)|(PI)|(COMMENT)).*$'),
-          COMMENT = str_remove(str_extract(with_entry, pattern = 'COMMENT.*$'),
+          COMMENT = str_remove(str_extract(with_entry, pattern = 'COMMENT.*$'), # Extract the substring starting with 'COMMENT'
                          pattern = '((METHOD)|(DEVICE)|(PI)).*$')) %>%
-  mutate(method = if_else(is.na(method), METHOD, paste(method, METHOD))) %>%
-  select(table_id = table_name, column_id = new_name, column_name, column_number,
-         unit, description, method, PI, device=DEVICE, comment=COMMENT) %>%
+  mutate(method = if_else(is.na(method), METHOD, paste(method, METHOD))) %>% # if method is NA, use METHOD; otherwise, concatenate method and METHOD.
+  select(doi, table_id = table_name, column_id = new_name, column_name, column_number,
+         unit, description, method, PI, device = DEVICE, comment = COMMENT) %>%
   unique() %>%
-  pivot_longer(cols = all_of(c('unit', 'description', 'method', 'PI', 'device', 'comment')),
-               names_to = 'of_type', values_to = 'with_entry', values_drop_na = TRUE)
+  pivot_longer(cols = all_of(c('unit', 'description', 'method', 'device', 'comment', 'PI')), 
+               names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE)  %>% # 8227 obs with 6 columns
+  select(study_id = doi, table_id, column_id = column_name, of_variable = column_id, column_number, is_type, with_entry) %>% 
+  write_csv('data/full_annotationsCPEAT.csv')
 
-long_extended.df %>%
-  select(table_name, new_name) %>%
+test <- long_extended.df %>%
+  select(table_id, column_id) %>%
   mutate(across(everything(), trimws)) %>%
   unique() %>%
-  arrange(table_name, new_name) %>%
+  arrange(table_id, column_id) %>%
   write_csv('temp/autoAnnotations.csv')
 
-annotations <- read_csv('../data/CPEAT_annotations.csv') %>%
-  mutate(new_name = trimws(str_remove(column_id, pattern = '(\\(|\\[).+'))) %>%
-  select(table_id, new_name, of_variable, of_type, with_entry) %>%
+annotations <- read_csv('./data/CPEAT_annotations.csv') %>%
+  mutate(new_name = trimws(str_remove(column_id, pattern = '(\\(|\\[).+'))) %>% # This effectively strips out any text within parentheses or brackets, as well as the parentheses or brackets themselves & trims any leading or trailing whitespace from the result of str_remove.
+ # select(table_id, new_name, of_variable, of_type, with_entry) %>% 
   unique()
 #Check the names matching
 #setdiff(temp$new_name, long_extended.df$new_name)
 ```
+
+
+```{r}
+# trying to leverage the extended long dataframe above to construct annotations for core table
+temp <- long_extended.df %>% 
+  select(-column_number) # matches the column names of template annotations file; 24,641 obs 
+
+temp2 <- long.df %>% 
+  mutate(of_variable = trimws(str_remove(column_name, pattern = '(\\(|\\[).+'))) %>% 
+  select(study_id = doi, table_id = table_name, column_id = column_name, of_variable, with_entry, row_number, column_number) %>% 
+  bind_rows(temp) %>% 
+  mutate(is_type = if_else(is.na(is_type), 'value', is_type),
+         table_id = if_else(is.na(table_id), 'study', table_id)) # 639,793 obs
+  #select(-c(row_number, column_number))
+```
+
