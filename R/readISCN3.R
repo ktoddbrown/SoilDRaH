@@ -28,7 +28,7 @@ readISCN3 <- function(dataDir,
                       annotationFilename,
                       format = c('original', 'long')[1],
                       verbose = TRUE){
-  
+
   # construct file paths
   # --------------------------------
   # verify that the user specified a file path
@@ -112,10 +112,10 @@ readISCN3 <- function(dataDir,
   # and instead return a named list of them
   if(format == 'original'){
     return(list(original = list(citation = citation.df, 
-                                datasets = dataset.df,
-                                profile = profile.df,
-                                layer = layer.df,
-                                files = download_table),
+                               datasets = dataset.df,
+                               profile = profile.df,
+                               layer = layer.df,
+                               files = download_table),
                 annotation = annotations.df))
   }
   
