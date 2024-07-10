@@ -143,17 +143,17 @@ column_selection <- iscn.ls$annotation %>%
 # Subset the ISCN database
 soc.ls <- iscn.ls$long %>% #nrow 17 967 513
   # remove nrcs data
-  filter(!str_detect(dataset_id, 'NRCS'),
-         !str_detect(soc_id, 'ISCN SOC stock'),
-         !str_detect(soc_id, 'AK DSC Project SOC')) %>% #nrow 1 043 250
+  filter(!str_detect(dataset_name_sub, 'NRCS'),
+         !str_detect(dataset_name_soc, 'ISCN SOC stock'),
+         !str_detect(dataset_name_soc, 'AK DSC Project SOC')) %>% #nrow 1 043 250
   # use the column selection to subset the database
   right_join(column_selection, 
              relationship = "many-to-many",
-  by = join_by(column_id, table_id))  #nrow 454 994
+  by = join_by(column_id))  #nrow 454 994
 
 #spread out the columns
 wide_soc <- soc.ls %>%
-  select(dataset_id, profile_id, layer_id, of_variable, is_type, with_entry) %>%
+  select(dataset_name_sub, profile_name, layer_name, of_variable, is_type, with_entry) %>%
   #drop duplicates entries imposed by different soc calculation methods
   unique() %>%
   pivot_wider(names_from = c(of_variable, is_type), 
@@ -203,7 +203,7 @@ ggplot(plot.df) +
   facet_wrap(~variable, scales = 'free')
 
 ggplot(plot.df %>%
-         select(dataset_id, profile_id, layer_observation_time_date) %>%
+         select(dataset_name_sub, profile_name, layer_observation_time_date) %>%
          unique()) +
   geom_histogram(aes(x=layer_observation_time_date))
 ```
@@ -228,7 +228,8 @@ ggplot(plot.df) +
 world_map <- map_data("world")
 
 plot.df <- wide_soc %>%
-  select(dataset_id, profile_id, latitude_value, longitude_value) %>%
+  select(dataset_name_sub, profile_name, 
+         latitude_value, longitude_value) %>%
   unique()
 
 ggplot(data=world_map) + 
