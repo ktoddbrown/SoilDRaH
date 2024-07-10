@@ -18,12 +18,11 @@
 #' 
 #' @return list of annotation and data tables
 #'
-#' @importFrom data.table rbindlist
 #' @importFrom tibble tribble cols col_character
 #' @importFrom readr read_delim
-#' @importFrom dplyr mutate bind_rows 
+#' @importFrom dplyr mutate bind_rows filter select if_else rename left_join full_join join_by
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect all_of
+#' @importFrom plyr dlply
 #' 
 #' @export
 #' 
