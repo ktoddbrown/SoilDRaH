@@ -35,8 +35,8 @@ readISCN3 <- function(dataDir,
                       verbose = TRUE){
   
   ### dev sets
-  dataDir <- '~/Dropbox (UFL)/Research/Datasets/ISCN3'
-  annotationFilename <- 'data/ISCN3Annotations.csv'
+  #dataDir <- '~/Dropbox (UFL)/Research/Datasets/ISCN3'
+  #annotationFilename <- 'data/ISCN3Annotations.csv'
   
   ### construct file paths ####
   # verify that the user specified a file path
@@ -109,6 +109,21 @@ readISCN3 <- function(dataDir,
                                list(files = download_table)),
                 annotation = annotations.df))
   }
+  
+  #### Modify annotations####
+  ## Modify the annotations to reflect the changes to the profile columns
+  
+  annotations.df <- annotations.df |>
+  #The profile and layer tables share top/bottom layer and soc values _but_
+    #...they refer to different observations (profile summary vs layer).
+  #...Append the table name before these columns
+    dplyr::mutate(
+      column_id = dplyr::if_else(column_id %in%
+          c('layer_top (cm)', 'layer_bot (cm)', 
+            'soc (g cm-2)', 'soc_method', 'soc_carbon_flag') &
+            table_id == 'profile', 
+          paste0('profile::', column_id), 
+          column_id))
   
   #### Combine the profile+layer tables ####
   #The profile and layer tables share 'dataset_name_sub', 'dataset_name_soc', 
