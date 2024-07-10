@@ -24,7 +24,6 @@
 #' @importFrom dplyr mutate bind_rows 
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect all_of
-#' @import magrittr
 #' 
 #' @export
 #' 
