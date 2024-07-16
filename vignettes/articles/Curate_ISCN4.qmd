@@ -70,55 +70,8 @@ We also include an action note but right now these are not tied directly to code
 
 ```{r}
 
-ISCN4map <- tribble(~study_id, ~table_id, ~source_variable, ~target_variable, ~target_method, ~action_note,
-        'ISCN3', 'layer', 'latitude', 'latitude', NA, 'track datum',
-        'ISCN3', 'layer', 'longitude', 'longitude', NA, 'track datum',
-        'ISCN3', 'layer', 'state', 'state', NA, 'check overlap state names',
-        'ISCN3', 'layer','country', 'country', NA, 'rename United States for identified states',
-        'ISCN3', 'layer', 'layer_observation_time', 'observation_year', NA, 'Correct for Excel format',
-        'ISCN3', 'layer', 'upper_depth_bound', 'upper_depth_bound', NA, 'no transformation needed. known issue with ~100 layers having non-unique ids', 
-        'ISCN3', 'layer', 'lower_depth_bound', 'lower_depth_bound', NA, 'no transformation needed. known issue with ~100 layers having non-unique ids',
-        'ISCN3', 'layer', "bulk_density_other", 'bulk_density_unknown', 'unknown', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_sample", 'bulk_density_fine', 'measured', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_total", 'bulk_density_whole', 'measured', 'no transformation needed',
-        'ISCN3', 'layer', "bulk_density_whole", 'bulk_density_whole', 'estimated', 'no transformation needed',
-        'ISCN3', 'layer', 'organic_carbon', 'organic_carbon', NA, 'no transformation needed',
-        'ISCN3', 'layer', 'organic_matter', 'loss_on_ignition', NA, 'no transformation needed',
-        'ISCN3', 'layer', 'total_carbon', 'total_carbon', NA, 'no transformation needed',
-        'ISCN3', 'layer', 'calcium_carbonate', 'inorganic_carbon', NA, 'no transformation needed',
-        'ISCN3', 'layer', 'coarse_fragment', 'coarse_fraction', NA, 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Inventory_year', 'observation_year', NA, 'Correct for Excel format',
-        'FIA', 'ENTIRE_PLOT', 'State', 'state', NA, 'check overlap state names',
-        'FIA', 'ENTIRE_PLOT', 'Longtitude', 'longitude', NA, 'track datum, Pacific Islands non-standard',
-        'FIA', 'ENTIRE_PLOT', 'Latitude', 'latitude', NA, 'track datum, Pacific Islands non-standard',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'upper_depth_bound', NA, 'pull control vocabulary and convert inches to cm',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Layer_type', 'lower_depth_bound', NA, 'pull control vocabulary and convert inches to cm',
-        'FIA', 'ENTIRE_SOILS_LAB', 'Bulk_density', 'bulk_density_whole', 'measured', 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'coarse_fraction', 'coarse_fraction', NA, 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'organic_carbon', 'organic_carbon', NA, 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'inorganic_carbon', 'inorganic_carbon', NA, 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_LAB', 'carbon_fraction', 'carbon_fraction', NA, 'no transformation needed',
-        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Forest_floor_depth_avg', 'depth_to_mineral', NA, 'convert units to cm from tenths of inches',
-        'FIA', 'ENTIRE_SOILS_SAMPLE_LOC', 'Litter_layer_depth_avg', 'depth_litter', NA, 'convert units to cm from tenths of inches',
-        #'NCSS', NA, 'analysis_procedure', , NA, ,
-        #'NCSS', NA, 'NA', , NA, ,
-        #'NCSS', NA, 'region', , NA, ,
-        'NCSS', NA, 'whole_soil_bulk_density', 'bulk_density_whole', NA, NA,
-        'NCSS', NA, 'coarse_fraction', 'coarse_fraction', NA, NA,
-        'NCSS', NA, 'total_carbon', 'total_carbon', NA, NA,
-        'NCSS', NA, 'organic_carbon_estimated', 'organic_carbon', 'estimated', NA,
-        'NCSS', NA, 'organic_carbon_walkley_black', 'organic_carbon', 'measured:walkley_black', NA,
-        'NCSS', NA, 'layer_bottom', 'lower_depth_bound', NA, NA ,
-        #'NCSS', NA, 'horizon_designation', , NA, ,
-        #'NCSS', NA, 'horizon_designation_other', , NA, ,
-        'NCSS', NA, 'layer_top', 'upper_depth_bound', NA, NA,
-        #'NCSS', NA, 'layer_order', , NA, ,
-        'NCSS', NA, 'layer_type', 'depth_bound_defined' , NA, NA,
-        'NCSS', NA, 'observation_date','observation_year', NA, 'Correct for Excel format',
-        #'NCSS', NA, 'sample_preparation', , NA, ,
-        'NCSS', NA, 'mineral_remaining_on_ignition', 'loss_on_ignition', NA, NA,
-        'NCSS', NA, 'longitude', 'longitude', NA, NA,
-        'NCSS', NA, 'latitude', 'latitude', NA, NA)
+ISCN4map <- read_csv(file = file.path(annotationsDir,
+                                      'ISCN4_map.csv'))
 
 ISCN4map |>
   knitr::kable() |>
@@ -158,7 +111,7 @@ ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
 #Pulled up here for ease of reference/review
 ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
   semi_join(ISCN4map,
-            by = join_by(study_id, table_id,
+            by = join_by(study_id, 
                          of_variable == source_variable)) |>
   filter(with_entry == '--') |>
   select(ends_with('_id'), of_variable, is_type)
@@ -175,6 +128,12 @@ ISCN3_column_selection |>
 
 ISCN3_lvl1 <- list(
   primary = ISCN_lvl0.ls$long |> 
+    mutate(study_id = 'ISCN3') |>
+    rename(dataset_id = dataset_name_soc, 
+           site_id = site_name,
+           profile_id = profile_name,
+           layer_id = layer_name
+           ) |>
     ##nrow 17 967 513
     filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
     ##nrow  2 151 476
