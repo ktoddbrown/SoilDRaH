@@ -284,7 +284,7 @@ str(CPEAT.original[1])
 #############################
 ###Shoestring all the data
 
-  long.df <- plyr::ldply(CPEAT.original$orginal, .id = 'doi',
+  long.df <- plyr::ldply(CPEAT.original$original, .id = 'doi',
                              .fun = function(xx, verbose = FALSE) {
     
     if(verbose) print(paste('Processing - ', xx$doi))
