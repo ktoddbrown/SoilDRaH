@@ -544,5 +544,11 @@ temp2 <- long.df %>%
   mutate(is_type = if_else(is.na(is_type), 'value', is_type),
          table_id = if_else(is.na(table_id), 'study', table_id)) # 639,793 obs
   #select(-c(row_number, column_number))
+
+temp2 %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
 ```
 
