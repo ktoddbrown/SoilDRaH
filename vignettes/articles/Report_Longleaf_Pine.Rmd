@@ -1,0 +1,153 @@
+---
+title: "Report_Longleaf"
+output: html_document
+date: "7/17/24"
+---
+
+<style type="text/css">
+.main-container {
+  max-width: 100% !important;
+  margin: auto;
+}
+</style>
+
+<body style="background-color: #ECECEC;">
+
+The purpose of this document is to summarize the portions of the Longleaf Pine Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion. Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+Link to access Longleaf data: https://datadryad.org/stash/dataset/doi:10.5061/dryad.760b3<br/>Link to primary article: https://doi.org/10.1002/eap.1439
+
+Data annotations
+----------------
+This lab's annotation generation process results in a csv file with the following column format: table_id,column_id,of_variable,is_type,with_entry. The table_id is generally the base name of the csv/tsv file that is associated with the column_id, which is an exact match for the names of the columns in the associated tables. Entries in the of_variable column describe the variables that is associated with the id. These are generally observable properties like bulk density, organic carbon, ecotype, or soil color. The is_type entry commonly falls into one of the following {value, definition, unit, method, control_vocabulary}. This describes the kind of information associated with of_variable that is found in the with_entry. The with_entry column is either the entry associated with the variable and type described above or a special notation that indicates you should refer to the data set being described. We currently use -- for data set reference.
+
+The following is the code that generated the Longleaf Pine annotations. 
+```{r annotations, eval=FALSE}
+library(readxl)
+library(tibble)
+library(dplyr)
+library(stringr)
+library(purrr)
+
+#' @param file_dir file path to the directory that stores both your Longleaf Biomass and Longleaf Carbon data sets--both files need to be in the same directory, at the same level
+get_longleaf_annotations <- function(file_dir){
+  # longleaf biomass data annotations
+  # --------------------------------
+  # set file attributes
+  base_file_name <- "Longleaf pine biomass data"
+  file_path <- paste(file_dir, "/", base_file_name, ".xlsx", sep="")
+  
+  # get table-wide note and update list format for column description, units, of_variable, and control vocabulary
+  table_note <- as.list(read_xlsx(file_path, col_names=FALSE, range="Data Description!B20:B20")) 
+  col_desc <- unlist(as.list(t(read_xlsx(file_path, col_names=FALSE, range="Data Description!B4:B17"))))
+  col_units <- unlist(as.list(t(read_xlsx(file_path, col_names=FALSE, range="Data Description!C4:C17"))))
+  col_names <- unlist(as.list(read_xlsx(file_path, col_names=FALSE, range="Harvest Tree Data!A1:N1")))
+  col_of_var <- c("Year", "State", "Base", "Sample_age", "Sample_number", "Tree_species", "Stem_property", "Tree_height", 
+                  "Stem_property", "Foliage_property", "Live_branch_property", "Lateral_root_property", unlist(rep("Taproot_property", 2)))
+  
+  # get column info (description and control vocabulary) for STATE and BASE columns
+  state_info <- col_desc[which(col_names == "STATE")]
+  base_info <- col_desc[which(col_names == "BASE")]
+  
+  # get commonly used indices of metadata type separators
+  state_col_desc_ctrl_vocab_idx <- tail(unlist(gregexpr("\\.", state_info)), 1)
+  base_col_desc_ctrl_vocab_idx <- tail(unlist(gregexpr("\\.", base_info)), 1)
+  
+  # get control vocabulary for STATE and BASE columns
+  state_cv <- str_replace_all(str_replace_all(substr(state_info, state_col_desc_ctrl_vocab_idx+2, nchar(state_info)), "=", "|"), ",", ";")
+  base_cv <- str_replace_all(str_replace_all(str_replace_all(substr(base_info, base_col_desc_ctrl_vocab_idx+3, nchar(base_info)), "=", "|"), ",", ";"), " and ", " ")
+  col_ctrl_vocab = list(STATE = state_cv, BASE = base_cv)
+  
+  # update description for STATE and BASE columns
+  col_desc[which(col_names == "STATE")] <- substr(state_info, 1, state_col_desc_ctrl_vocab_idx-1)
+  col_desc[which(col_names == "BASE")] <- substr(base_info, 1, base_col_desc_ctrl_vocab_idx-1)
+  
+  # default entry value (RHS of =) for each cell with respect to its is type expansion (LHS of =)
+  # by default, of_variable is set to the name of the column
+  is_type_expansions_map <- c("value"="--", "description"=NA, "unit"=NA, "method"=NA, "control_vocabulary"=NA, 
+                              "note"=NA, "identifier"="--", "foreign_key"=NA, "standard_deviation"=NA)
+  
+  # generate the filtered, long-style biomass annotations table
+  type_expansions_cols <- set_names(unname(is_type_expansions_map), names(is_type_expansions_map))
+  # set up wide-style annotation table frame--filled in with all of the default values
+  biomass_annotations.df <- tibble(.rows=length(col_names)) %>% 
+    add_column(base_file_name) %>% 
+    add_column(col_names, .name_repair = "minimal") %>% 
+    add_column(col_names, .name_repair = "minimal") %>% 
+    add_column(!!!type_expansions_cols, .name_repair = "minimal")
+  colnames(biomass_annotations.df) <- c("table_id", "column_id", "of_variable", names(is_type_expansions_map))
+  
+  # modify the aforementioned wide-style annotation table by updating it from some of its default values, pivoting it longer, filtering out with_entry NA 
+  # values, and adding the table-wide annotations
+  biomass_annotations.df <- biomass_annotations.df %>% 
+    mutate(of_variable = col_of_var, description = col_desc, unit = col_units,
+           control_vocabulary = ifelse(col_names[row_number()] %in% names(col_ctrl_vocab), as.character(col_ctrl_vocab[col_names[row_number()]]), control_vocabulary)) %>%
+    
+    tidyr::pivot_longer(names(is_type_expansions_map), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>% 
+    mutate(across(everything(), as.character)) %>%
+    add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(table_note), .before=1)
+
+  # longleaf carbon data annotations
+  # --------------------------------
+  # set file attributes
+  base_file_name <- "Longleaf pine carbon data"
+  file_path <- paste(file_dir, "/", base_file_name, ".xlsx", sep="")
+  
+  # get table-wide note and update list format for column description, units, and of_variable
+  table_note <- as.list(read_xlsx(file_path, col_names=FALSE, range="Data Description!B29:B29")) 
+  col_desc <- unlist(as.list(t(read_xlsx(file_path, col_names=FALSE, range="Data Description!B4:B26"))))
+  col_units <- unlist(as.list(t(read_xlsx(file_path, col_names=FALSE, range="Data Description!C4:C26"))))
+  col_names <- unlist(as.list(read_xlsx(file_path, col_names=FALSE, range="Carbon Data!A1:W1")))
+  col_of_var <- c("Year", "State", "Base", "Sample_age", unlist(rep("Aboveground_carbon_biomass", 2)), unlist(rep("Below-stump_carbon_biomass", 4)), 
+                  unlist(rep("Root_carbon_biomass", 2)), unlist(rep("Aboveground_carbon_biomass", 2)), "Ground_cover_biomass", "Litter_carbon_mass", 
+                  "Duff_carbon_mass", unlist(rep("Woody_debris_carbon_biomass", 2)), "Aboveground_carbon_biomass", "Belowground_carbon_biomass", 
+                  unlist(rep("Root_to_shoot_ratio_biomass", 2)))
+  
+  # get column info (description and control vocabulary) for STATE and BASE columns
+  state_info <- col_desc[which(col_names == "STATE")]
+  base_info <- col_desc[which(col_names == "BASE")]
+  
+  # get commonly used indices of metadata type separators
+  state_col_desc_ctrl_vocab_idx <- tail(unlist(gregexpr("\\.", state_info)), 1)
+  base_col_desc_ctrl_vocab_idx <- tail(unlist(gregexpr("\\.", base_info)), 1)
+  
+  # get control vocabulary for STATE and BASE columns
+  state_cv <- str_replace_all(str_replace_all(substr(state_info, state_col_desc_ctrl_vocab_idx+2, nchar(state_info)), "=", "|"), ",", ";")
+  base_cv <- str_replace_all(str_replace_all(str_replace_all(substr(base_info, base_col_desc_ctrl_vocab_idx+3, nchar(base_info)), "=", "|"), ",", ";"), " and ", " ")
+  col_ctrl_vocab = list(STATE = state_cv, BASE = base_cv)
+  
+  # update description for STATE and BASE columns
+  col_desc[which(col_names == "STATE")] <- substr(state_info, 1, state_col_desc_ctrl_vocab_idx-1)
+  col_desc[which(col_names == "BASE")] <- substr(base_info, 1, base_col_desc_ctrl_vocab_idx-1)
+  
+  # default entry value (RHS of =) for each cell with respect to its is type expansion (LHS of =)
+  # by default, of_variable is set to the name of the column
+  is_type_expansions_map <- c("value"="--", "description"=NA, "unit"=NA, "method"=NA, "control_vocabulary"=NA, 
+                              "note"=NA, "identifier"="--", "foreign_key"=NA, "standard_deviation"=NA)
+  
+  # generate the filtered, long-style carbon annotations table
+  type_expansions_cols <- set_names(unname(is_type_expansions_map), names(is_type_expansions_map))
+  # set up wide-style annotation table frame--filled in with all of the default values
+  carbon_annotations.df <- tibble(.rows=length(col_names)) %>% 
+    add_column(base_file_name) %>% 
+    add_column(col_names, .name_repair = "minimal") %>% 
+    add_column(col_names, .name_repair = "minimal") %>% 
+    add_column(!!!type_expansions_cols, .name_repair = "minimal")
+  colnames(carbon_annotations.df) <- c("table_id", "column_id", "of_variable", names(is_type_expansions_map))
+  
+  # modify the aforementioned wide-style annotation table by updating it from some of its default values, pivoting it longer, filtering out with_entry NA 
+  # values, and adding the table-wide annotations
+  carbon_annotations.df <- carbon_annotations.df %>% 
+    mutate(of_variable = col_of_var, description = col_desc, unit = col_units,
+           control_vocabulary = ifelse(col_names[row_number()] %in% names(col_ctrl_vocab), as.character(col_ctrl_vocab[col_names[row_number()]]), control_vocabulary)) %>%
+    
+    tidyr::pivot_longer(names(is_type_expansions_map), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>% 
+    mutate(across(everything(), as.character)) %>%
+    add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(table_note), .before=1)
+  
+  # join the two sub annotation tables into one and write that result to a csv file
+  write.csv(full_join(biomass_annotations.df, carbon_annotations.df), "Longleaf pine annotations.csv", quote=FALSE, row.names=FALSE)
+}
+```
+
+</body>
