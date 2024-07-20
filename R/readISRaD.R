@@ -35,4 +35,4 @@ original_data <- read_csv("C:\\Users\\kheck\\Documents\\Data\\ISRaD_data_flat_la
 colnames(original_data)
 
 # There are 36,706 observations for 184 variables at the *layer* level
-# NOTE that the csv files served by ISRaD include row numbers as column 1, so will need to ignore the first row when reading in data?
+# NOTE that the csv files served by ISRaD include row numbers as column 1, so will need to ignore the first column when reading in data?
