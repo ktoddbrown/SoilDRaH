@@ -46,17 +46,17 @@ str(sheets)
 ## of_variable = Variable_Name
 ## is_type = some combination of Units/Info, Variable_class, Min, Max, Vocab
 ## some columns are repeated across the different metadata tables (entry_name,
-#        site_name, pro_name, lyr_name)
+#        site_name, pro_name)
 
 #######################################################################
 # Metadata table annotations
 ## Rename columns and select for only columns of interest
 metadata <- sheets$metadata %>% rename(id = Column_Name, of_variable = Variable_Name, 
-                                       value = "Units/Info", description = Description) %>% 
-  select(id, of_variable, value, description)
+                                       unit = "Units/Info", description = Description) %>% 
+  select(id, of_variable, unit, description)
 
 ## Pivot longer
-metadata <- pivot_longer(metadata, c(value, description), names_to = "is_type", values_to = "with_entry",
+metadata <- pivot_longer(metadata, c(unit, description), names_to = "is_type", values_to = "with_entry",
                          values_transform = list(with_entry = as.character))
 
 #######################################################################
@@ -92,6 +92,15 @@ layer <- sheets$layer %>% rename(id = Column_Name, of_variable = Variable_Name,
 ##Pivot longer
 layer <- pivot_longer(layer, c(unit, description, control_vocabularies), names_to = "is_type",
                         values_to = "with_entry", values_drop_na = TRUE, values_transform = list(with_entry = as.character))
+
+#####################################################################
+#Bind tables into one annotation table and remove duplicate rows (there are multiple instances of 'entry_name', 'site_name', and 'pro_name')
+ISRaD_annotations <- bind_rows(metadata, site, profile, layer)
+ISRaD_annotations <- distinct(ISRaD_annotations)
+
+#Write to csv?
+#Not supposed to create csv files until there's a definite final version?
+#write.csv(ISRaD_annotations,"ISRaD_annotations.csv")
 
 #####################################################################
 #How to properly code the controlled vocabularies so they are properly separated into key and value?
