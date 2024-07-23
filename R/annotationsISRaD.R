@@ -100,7 +100,7 @@ ISRaD_annotations <- distinct(ISRaD_annotations)
 
 #Write to csv?
 #Not supposed to create csv files until there's a definite final version?
-#write.csv(ISRaD_annotations,"ISRaD_annotations.csv")
+#write.csv(ISRaD_annotations,"ISRaD_annotations.csv", row.names = FALSE)
 
 #####################################################################
 #How to properly code the controlled vocabularies so they are properly separated into key and value?
