@@ -25,87 +25,63 @@ library(readxl)
 library(tibble)
 library(dplyr)
 library(stringr)
-library(purrr)
 
-#' @param file_dir file path to the directory that stores the Smith2019 data set
-get_smith2019_annotations <- function(file_dir){
-  # set file attributes
-  base_file_name <- "Appendix_3a_Ahorizon_18Sept2013"
-  file_path <- paste0(file_dir, "/", base_file_name, ".xlsx")
-  
-  # read in column names and units, storing them as list
-  col_names <- unlist(as.list(read_xlsx(file_path, col_names=FALSE, range="A_Horizon!A13:CD13")))
-  col_units <- unlist(as.list(read_xlsx(file_path, col_names=FALSE, range="A_Horizon!A14:CD14")))
-  
-  # read in the metadata and remove the square brackets ([]) that surround it
-  metadata.df <- read_xlsx(file_path, col_names=FALSE, range="A_Horizon!A3:A10")
-  metadata.df[1, 1] <- substr(metadata.df[1, 1], 2, nchar(metadata.df[1, 1]))
-  metadata.df[8, 1] <- substr(metadata.df[8, 1], 1, nchar(metadata.df[8, 1])-1)
-  
-  # get commonly used indices of metadata type separators
-  row1_table_note_col_desc_idx <- unlist(gregexpr(";", metadata.df[1, 1]))[1]
-  row1_col_desc_stateid_cv_idx <- unlist(gregexpr(":  A", metadata.df[1, 1]))[1]
-  row7_col_desc_table_cv_idx <- unlist(gregexpr("c; c", metadata.df[7, 1]))[1]
-  
-  # get the table-wide note and control vocabulary
-  table_note <- str_sub(metadata.df[1, 1], 1, row1_table_note_col_desc_idx-1)
-  table_cv <- str_replace_all(paste(substr(metadata.df[7, 1], row7_col_desc_table_cv_idx+3, nchar(metadata.df[7, 1])), metadata.df[8, 1], sep=" "), ", ", "|")
-  
-  # get the descriptions that were given for certain columns
-  col_names_and_descriptions <- unlist(str_split(paste(paste0(substr(metadata.df[1, 1], row1_table_note_col_desc_idx+2, row1_col_desc_stateid_cv_idx-1), ";"), metadata.df[4, 1], 
-                                                       metadata.df[5, 1], metadata.df[6, 1], substr(metadata.df[7, 1], 1, row7_col_desc_table_cv_idx), sep=" "), "; "))
-  
-  col_desc_names <- unlist(lapply(col_names_and_descriptions, function(col_desc){
-    name <- (substr(col_desc, 1, unlist(gregexpr(", ", col_desc))[1]-1))
-    if (name %in% list("SiteID", "StateID", "Latitude", "Longitude", "CollDate", "LandCover1", "LandCover2")) return (name)
-    else return (paste0("A_", name))
-  }))
-  
-  col_descriptions <- unlist(lapply(col_names_and_descriptions, function(col_desc){
-    return (substr(col_desc, unlist(gregexpr(", ", col_desc))[1]+2, nchar(col_desc)))
-  }))
-  
-  names(col_descriptions) <- col_desc_names
-  
-  # get the control vocabulary for the column StateID
-  stateid_cv_temp <- str_replace_all(paste(substr(metadata.df[1, 1], row1_col_desc_stateid_cv_idx+3, nchar(metadata.df[1, 1])), metadata.df[2, 1], metadata.df[3, 1], sep=" "), ", ", "|")
-  stateid_cv <- substr(stateid_cv_temp, 1, nchar(stateid_cv_temp)-1)
-  ctrl_vocab <- list(StateID = stateid_cv)
-  
-  # set the of variable for each column
-  col_of_var = c(unlist(rep("Unique identifier", 2)), "State identifier", "Latitude", "Longitude", "Date sampled", 
-                 unlist(rep("Land classification from NLC Database", 2)), unlist(rep("A horizon property", length(col_names)-8)))
-  
-  # default entry value (RHS of =) for each cell with respect to its is type expansion (LHS of =)
-  # by default, of_variable is set to the name of the column
-  is_type_expansions_map <- c("value"="--", "description"=NA, "unit"=NA, "method"=NA, "control_vocabulary"=NA, 
-                              "note"=NA, "identifier"="A_LabID", "foreign_key"=NA, "standard_deviation"=NA)
-  
-  # generate the filtered, long-style smith2019 annotations table, then write it as a csv file
-  type_expansions_cols <- set_names(unname(is_type_expansions_map), names(is_type_expansions_map))
-  # set up wide-style annotation table frame--filled in with all of the default values
-  smith2019_annotations.df <- tibble(.rows=length(col_names)) %>% 
-    add_column(base_file_name) %>% 
-    add_column(col_names, .name_repair = "minimal") %>% 
-    add_column(col_names, .name_repair = "minimal") %>% 
-    add_column(!!!type_expansions_cols, .name_repair = "minimal")
-  colnames(smith2019_annotations.df) <- c("table_id", "column_id", "of_variable", names(is_type_expansions_map))
-  
-  # modify the aforementioned wide-style annotation table by updating it from some of its default values, pivoting it longer, filtering out with_entry NA 
-  # values and column A_LabID's identifier row, and adding the table-wide annotations
-  smith2019_annotations.df %>%
-    mutate(unit = col_units, of_variable = col_of_var,
-           description = ifelse(col_names[row_number()] %in% names(col_descriptions), as.character(col_descriptions[col_names[row_number()]]), description),
-           control_vocabulary = ifelse(col_names[row_number()] %in% names(ctrl_vocab), as.character(ctrl_vocab[col_names[row_number()]]), control_vocabulary)) %>%
-    
-    tidyr::pivot_longer(names(is_type_expansions_map), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>%
-    mutate(across(everything(), as.character)) %>%
-    filter(!(column_id == "A_LabID" & is_type == "identifier")) %>% 
-    add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(table_note), .before=1) %>%
-    add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="control_vocabulary", with_entry=as.character(table_cv), .before=2) %>% 
-  
-  write.csv("Smith2019 annotations.csv", quote=FALSE, row.names=FALSE)
-}
+# Dev variable to the path of the file directory that stores your Smith2019 data set
+# file_dir <- "C:/Users/gthra/Coding/Research Lab - Summer 2024/Annotations/AHorizons Annotations"
+
+# Set file attributes for smith2019 data set
+base_file_name <- "Appendix_3a_Ahorizon_18Sept2013"
+file_path <- paste0(file_dir, "/", base_file_name, ".xlsx")
+
+# Read in the metadata -- which contains certain column descriptions and control vocabulary, table-wide note and control vocabulary-- and remove 
+# the square brackets ([]) that surround it
+metadata.df <- rename(read_xlsx(file_path, col_names=FALSE, range="A_Horizon!A3:A10"), c("info"=...1))
+metadata.df[1, 1] <- str_extract(metadata.df[1, 1], stringr::regex("[^\\[].*"))
+metadata.df[8, 1] <- str_extract(metadata.df[8, 1], stringr::regex("[^\\]]*"))
+
+# Get the column_id to description "map" table which will be joined with the main annotations table later
+description <- 
+  tribble(~description, paste(paste(str_extract(metadata.df[1, 1], stringr::regex("LabID[^:]*")), metadata.df[4, 1], sep="; "), 
+                              metadata.df[5, 1], metadata.df[6, 1], str_extract(metadata.df[7, 1], stringr::regex("^(?:(?!; cm).)*")), sep=" ")) %>% 
+  tidyr::separate_longer_delim(description, "; ") %>% 
+  tidyr::separate_wider_delim(description, ", ", names=c("column_id", "description")) %>% 
+  mutate(column_id = ifelse(column_id %in% c("SiteID", "StateID", "Latitude", "Longitude", "CollDate", "LandCover1", "LandCover2"), column_id, paste0("A_", column_id)))
+
+# Generate the filtered, long-style carbon annotations table by (1) reading in column names, descriptions, control vocabulary, and units into a wide table format, 
+# (2) adding in the table_id, of_variable, value, and identifier, (3) splitting some descriptions from control vocabulary, (4) then pivoting to a long format while 
+# (5) adding the table-wide note.
+smith2019_annotations <- 
+  rename(as_tibble(t(read_xlsx(file_path, col_names=FALSE, range="A_Horizon!A13:CD14"))), c("column_id"=V1, "unit"=V2)) %>% 
+  mutate(
+    table_id = base_file_name,
+    value = "--",
+    identifier = "--",
+    # Column_id to of_variable map
+    of_variable = case_when(
+      column_id %in% c("A_LabID", "SiteID") ~ "Unique_identifier",
+      column_id %in% c("StateID") ~ "State identifier",
+      column_id %in% c("Latitude") ~ "Latitude",
+      column_id %in% c("Longitude") ~ "Longitude",
+      column_id %in% c("CollDate") ~ "Date_sampled",
+      column_id %in% c("LandCover1", "LandCover2") ~ "NLC_database_land_classification",
+      column_id %in% c("A_Depth") ~ "A_horizon_depth",
+      # column_id involves an element of the periodic table (column_id == 3 or 4 -> column_id is "A_{periodic table element abbreviation}")
+      nchar(column_id) %in% c(3, 4) ~ "A_horizon_element_composition",
+      # True = any column_id not mentioned (mapped from) above 
+      TRUE ~ "A_horizon_soil_composition"),
+    control_vocabulary = ifelse(column_id == "StateID", str_replace_all(str_extract(paste(str_extract(metadata.df[1, 1], stringr::regex("AL.*$")), metadata.df[2, 1], metadata.df[3, 1], sep = " "), stringr::regex(".*(?=;)")), ", ", "|"), NA)
+  ) %>% 
+  # Join the description table with smith2019_annotations table, populating the descriptions of the columns with column_ids given
+  left_join(description) %>% 
+  # Reorder the columns' positions to the lab's is_type order
+  select(table_id, column_id, of_variable, value, description, unit, control_vocabulary, identifier) %>%
+  # Pivot longer and add in the table note and control vocabulary
+  tidyr::pivot_longer(c("value", "description", "unit", "control_vocabulary", "identifier"), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>%
+  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(str_extract(metadata.df[1, 1], stringr::regex("^[^;]*"))), .before=1) %>%
+  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="control_vocabulary", with_entry=as.character(str_replace_all(paste(str_extract(metadata.df[7, 1], stringr::regex("cm.*")), metadata.df[8, 1], sep=" "), ", ", "|")), .before=2)
+
+# Write smith2019_annotations to a csv file
+write.csv(smith2019_annotations, "Smith2019 annotations.csv", quote=FALSE, row.names=FALSE)
 ```
 
 </body>
