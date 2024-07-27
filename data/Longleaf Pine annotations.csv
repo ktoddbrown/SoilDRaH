@@ -1,0 +1,148 @@
+table_id,column_id,of_variable,is_type,with_entry
+Longleaf pine biomass data,NA,NA,note,Data were not collected for cells with "."
+Longleaf pine biomass data,YEAR,Year_collected,value,--
+Longleaf pine biomass data,YEAR,Year_collected,description,Year the data were collected for that site
+Longleaf pine biomass data,YEAR,Year_collected,unit,integer
+Longleaf pine biomass data,YEAR,Year_collected,identifier,--
+Longleaf pine biomass data,STATE,State_collected,value,--
+Longleaf pine biomass data,STATE,State_collected,description,U.S. State in which the data were located
+Longleaf pine biomass data,STATE,State_collected,control_vocabulary,GA|Georgia; LA|Louisiana; NC|North Carolina; FL|Florida
+Longleaf pine biomass data,STATE,State_collected,identifier,--
+Longleaf pine biomass data,BASE,Base_collected,value,--
+Longleaf pine biomass data,BASE,Base_collected,description,Military Installation in which the data were collected
+Longleaf pine biomass data,BASE,Base_collected,control_vocabulary,Benning|US Army Fort Benning; Polk|US Army Fort Polk/Kistachie National Forest; Lejeune|US Marine Corps Camp Lejeune; Eglin|Eglin Air Force Base
+Longleaf pine biomass data,BASE,Base_collected,identifier,--
+Longleaf pine biomass data,AGE,Sample_age,value,--
+Longleaf pine biomass data,AGE,Sample_age,description,Age of stand sampled
+Longleaf pine biomass data,AGE,Sample_age,unit,years
+Longleaf pine biomass data,AGE,Sample_age,identifier,--
+Longleaf pine biomass data,SAMPLE,Sample_number,value,--
+Longleaf pine biomass data,SAMPLE,Sample_number,description,Sample number of the tree harvested
+Longleaf pine biomass data,SAMPLE,Sample_number,unit,integer
+Longleaf pine biomass data,SAMPLE,Sample_number,identifier,--
+Longleaf pine biomass data,SPECIES,Tree_species,value,--
+Longleaf pine biomass data,SPECIES,Tree_species,description,Species of harvested tree
+Longleaf pine biomass data,SPECIES,Tree_species,identifier,--
+Longleaf pine biomass data,DBH,Breast_height_diameter,value,--
+Longleaf pine biomass data,DBH,Breast_height_diameter,description,Diameter at breast height (1.37 m aboveground)
+Longleaf pine biomass data,DBH,Breast_height_diameter,unit,cm
+Longleaf pine biomass data,DBH,Breast_height_diameter,identifier,--
+Longleaf pine biomass data,HEIGHT,Tree_height,value,--
+Longleaf pine biomass data,HEIGHT,Tree_height,description,Total height
+Longleaf pine biomass data,HEIGHT,Tree_height,unit,m
+Longleaf pine biomass data,HEIGHT,Tree_height,identifier,--
+Longleaf pine biomass data,STEM_MASS,Stem_and_bark_dry_mass,value,--
+Longleaf pine biomass data,STEM_MASS,Stem_and_bark_dry_mass,description,Dry mass of stem + bark
+Longleaf pine biomass data,STEM_MASS,Stem_and_bark_dry_mass,unit,kg
+Longleaf pine biomass data,STEM_MASS,Stem_and_bark_dry_mass,identifier,--
+Longleaf pine biomass data,FOLIAGE_MASS,Foliage_dry_mass,value,--
+Longleaf pine biomass data,FOLIAGE_MASS,Foliage_dry_mass,description,Dry mass of foliage
+Longleaf pine biomass data,FOLIAGE_MASS,Foliage_dry_mass,unit,kg
+Longleaf pine biomass data,FOLIAGE_MASS,Foliage_dry_mass,identifier,--
+Longleaf pine biomass data,LIVE_BRANCH_MASS,Live_branch_dry_mass,value,--
+Longleaf pine biomass data,LIVE_BRANCH_MASS,Live_branch_dry_mass,description,Dry mass of live branches
+Longleaf pine biomass data,LIVE_BRANCH_MASS,Live_branch_dry_mass,unit,kg
+Longleaf pine biomass data,LIVE_BRANCH_MASS,Live_branch_dry_mass,identifier,--
+Longleaf pine biomass data,LAT_ROOT_MASS,Lateral_root_mass,value,--
+Longleaf pine biomass data,LAT_ROOT_MASS,Lateral_root_mass,description,Dry mass of all lateral roots (≥5.0 mm diameter) within the excavation pit
+Longleaf pine biomass data,LAT_ROOT_MASS,Lateral_root_mass,unit,kg
+Longleaf pine biomass data,LAT_ROOT_MASS,Lateral_root_mass,identifier,--
+Longleaf pine biomass data,TAPROOT_MASS,Tap_root_dry_mass,value,--
+Longleaf pine biomass data,TAPROOT_MASS,Tap_root_dry_mass,description,Dry mass of entire tap root
+Longleaf pine biomass data,TAPROOT_MASS,Tap_root_dry_mass,unit,kg
+Longleaf pine biomass data,TAPROOT_MASS,Tap_root_dry_mass,identifier,--
+Longleaf pine biomass data,TAPROOT_DEPTH,Tap_root_depth,value,--
+Longleaf pine biomass data,TAPROOT_DEPTH,Tap_root_depth,description,Depth of tap root from soil surface
+Longleaf pine biomass data,TAPROOT_DEPTH,Tap_root_depth,unit,m
+Longleaf pine biomass data,TAPROOT_DEPTH,Tap_root_depth,identifier,--
+Longleaf pine carbon data,NA,NA,note,Data were not collected for cells with "." and were predicted following procedures outlined in the manuscript
+Longleaf pine carbon data,YEAR,Year_collected,value,--
+Longleaf pine carbon data,YEAR,Year_collected,description,year the data were collected
+Longleaf pine carbon data,YEAR,Year_collected,unit,integer
+Longleaf pine carbon data,YEAR,Year_collected,identifier,--
+Longleaf pine carbon data,STATE,State_collected,value,--
+Longleaf pine carbon data,STATE,State_collected,description,U.S. State in which the data were located
+Longleaf pine carbon data,STATE,State_collected,control_vocabulary,GA|Georgia; LA|Louisiana; NC|North Carolina; FL|Florida
+Longleaf pine carbon data,STATE,State_collected,identifier,--
+Longleaf pine carbon data,BASE,Base_collected,value,--
+Longleaf pine carbon data,BASE,Base_collected,description,Military Installation in which the data were collected
+Longleaf pine carbon data,BASE,Base_collected,control_vocabulary,Benning|US Army Fort Benning; Polk|US Army Fort Polk/Kistachie National Forest; Lejeune|US Marine Corps Camp Lejeune; Eglin|Eglin Air Force Base
+Longleaf pine carbon data,BASE,Base_collected,identifier,--
+Longleaf pine carbon data,AGE,Sample_age,value,--
+Longleaf pine carbon data,AGE,Sample_age,description,Age of stand sampled
+Longleaf pine carbon data,AGE,Sample_age,unit,years
+Longleaf pine carbon data,AGE,Sample_age,identifier,--
+Longleaf pine carbon data,OS_LLP,Overstory_aboveground_carbon_biomass,value,--
+Longleaf pine carbon data,OS_LLP,Overstory_aboveground_carbon_biomass,description,Aboveground carbon biomass of overstory (≥1 cm dbh and ≥2.0 m in height) longleaf pine trees
+Longleaf pine carbon data,OS_LLP,Overstory_aboveground_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,OS_LLP,Overstory_aboveground_carbon_biomass,identifier,--
+Longleaf pine carbon data,OS_OTHER,Overstory_aboveground_carbon_biomass,value,--
+Longleaf pine carbon data,OS_OTHER,Overstory_aboveground_carbon_biomass,description,Aboveground carbon biomass of overstory (≥1 cm dbh and ≥2.0 m in height) trees not were not longleaf pine
+Longleaf pine carbon data,OS_OTHER,Overstory_aboveground_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,OS_OTHER,Overstory_aboveground_carbon_biomass,identifier,--
+Longleaf pine carbon data,LLP_BS,Bigger_dbh_below-stump_carbon_biomass,value,--
+Longleaf pine carbon data,LLP_BS,Bigger_dbh_below-stump_carbon_biomass,description,Below-stump carbon biomass (≥3.5 cm dbh) of longleaf pine trees
+Longleaf pine carbon data,LLP_BS,Bigger_dbh_below-stump_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,LLP_BS,Bigger_dbh_below-stump_carbon_biomass,identifier,--
+Longleaf pine carbon data,LLP_BS_ALL,All_below-stump_carbon_biomass,value,--
+Longleaf pine carbon data,LLP_BS_ALL,All_below-stump_carbon_biomass,description,Below-stump carbon biomass (≥1 cm dbh and ≥2.0 m in height) of longleaf pine trees
+Longleaf pine carbon data,LLP_BS_ALL,All_below-stump_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,LLP_BS_ALL,All_below-stump_carbon_biomass,identifier,--
+Longleaf pine carbon data,OTHERPINE_BS,Bigger_dbh_below-stump_carbon_biomass,value,--
+Longleaf pine carbon data,OTHERPINE_BS,Bigger_dbh_below-stump_carbon_biomass,description,Below-stump carbon biomass  (≥3.5 cm dbh) of other pine trees (not longleaf pine)
+Longleaf pine carbon data,OTHERPINE_BS,Bigger_dbh_below-stump_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,OTHERPINE_BS,Bigger_dbh_below-stump_carbon_biomass,identifier,--
+Longleaf pine carbon data,OTHERPINE_BS_ALL,All_below-stump_carbon_biomass,value,--
+Longleaf pine carbon data,OTHERPINE_BS_ALL,All_below-stump_carbon_biomass,description,Below-stump carbon biomass (≥1 cm dbh and ≥2.0 m in height) of other pine trees (not longleaf pine)
+Longleaf pine carbon data,OTHERPINE_BS_ALL,All_below-stump_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,OTHERPINE_BS_ALL,All_below-stump_carbon_biomass,identifier,--
+Longleaf pine carbon data,GPR,Coarse_root_carbon_biomass,value,--
+Longleaf pine carbon data,GPR,Coarse_root_carbon_biomass,description,Coarse (≥2.0 mm diam) root carbon biomass detected by ground penetrating radar
+Longleaf pine carbon data,GPR,Coarse_root_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,GPR,Coarse_root_carbon_biomass,identifier,--
+Longleaf pine carbon data,FINE_ROOTS,Fine_root_carbon_biomass,value,--
+Longleaf pine carbon data,FINE_ROOTS,Fine_root_carbon_biomass,description,Fine (<2.0 mm diam) root carbon biomass
+Longleaf pine carbon data,FINE_ROOTS,Fine_root_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,FINE_ROOTS,Fine_root_carbon_biomass,identifier,--
+Longleaf pine carbon data,US_LLP,Understory_aboveground_carbon_biomass,value,--
+Longleaf pine carbon data,US_LLP,Understory_aboveground_carbon_biomass,description,Aboveground carbon biomass of understory (≥1.0 m and <2.0 m height) longleaf pine trees
+Longleaf pine carbon data,US_LLP,Understory_aboveground_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,US_LLP,Understory_aboveground_carbon_biomass,identifier,--
+Longleaf pine carbon data,US_OTHER,Understory_aboveground_carbon_biomass,value,--
+Longleaf pine carbon data,US_OTHER,Understory_aboveground_carbon_biomass,description,Aboveground carbon biomass of understory (≥1.0 m and <2.0 m height) trees other than longleaf pine
+Longleaf pine carbon data,US_OTHER,Understory_aboveground_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,US_OTHER,Understory_aboveground_carbon_biomass,identifier,--
+Longleaf pine carbon data,GC,Ground_cover_biomass,value,--
+Longleaf pine carbon data,GC,Ground_cover_biomass,description,Ground cover carbon biomass (sum of woody, herbaceous, and all other)
+Longleaf pine carbon data,GC,Ground_cover_biomass,unit,Mg C/ha
+Longleaf pine carbon data,GC,Ground_cover_biomass,identifier,--
+Longleaf pine carbon data,LITTER,Litter_carbon_biomass,value,--
+Longleaf pine carbon data,LITTER,Litter_carbon_biomass,description,Litter carbon biomass
+Longleaf pine carbon data,LITTER,Litter_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,LITTER,Litter_carbon_biomass,identifier,--
+Longleaf pine carbon data,DUFF,Duff_carbon_biomass,value,--
+Longleaf pine carbon data,DUFF,Duff_carbon_biomass,description,Duff carbon biomass
+Longleaf pine carbon data,DUFF,Duff_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,DUFF,Duff_carbon_biomass,identifier,--
+Longleaf pine carbon data,FWD,Fine_woody_debris_carbon_biomass,value,--
+Longleaf pine carbon data,FWD,Fine_woody_debris_carbon_biomass,description,Fine woody debris (<7.6 cm diameter) carbon biomass
+Longleaf pine carbon data,FWD,Fine_woody_debris_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,FWD,Fine_woody_debris_carbon_biomass,identifier,--
+Longleaf pine carbon data,CWD,Coarse_woody_debris_carbon_biomass,value,--
+Longleaf pine carbon data,CWD,Coarse_woody_debris_carbon_biomass,description,Coarse woody debris (≥7.6 cm diameter) carbon biomass
+Longleaf pine carbon data,CWD,Coarse_woody_debris_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,CWD,Coarse_woody_debris_carbon_biomass,identifier,--
+Longleaf pine carbon data,STANDING_DEAD,Standing_dead_tree_aboveground_carbon_biomass,value,--
+Longleaf pine carbon data,STANDING_DEAD,Standing_dead_tree_aboveground_carbon_biomass,description,Aboveground carbon biomass of all standing dead trees (≥1.0 cm dbh and ≥2.0 m in height)
+Longleaf pine carbon data,STANDING_DEAD,Standing_dead_tree_aboveground_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,STANDING_DEAD,Standing_dead_tree_aboveground_carbon_biomass,identifier,--
+Longleaf pine carbon data,SOIL_C,Soil_carbon_biomass,value,--
+Longleaf pine carbon data,SOIL_C,Soil_carbon_biomass,description,Carbon Biomass in soil to a 1 m depth
+Longleaf pine carbon data,SOIL_C,Soil_carbon_biomass,unit,Mg C/ha
+Longleaf pine carbon data,SOIL_C,Soil_carbon_biomass,identifier,--
+Longleaf pine carbon data,RS_LLP,Root_to_shoot_ratio_biomass,value,--
+Longleaf pine carbon data,RS_LLP,Root_to_shoot_ratio_biomass,description,Root to shoot ratio (biomass) of longleaf pine
+Longleaf pine carbon data,RS_LLP,Root_to_shoot_ratio_biomass,identifier,--
+Longleaf pine carbon data,RS_ALL,Root_to_shoot_ratio_biomass,value,--
+Longleaf pine carbon data,RS_ALL,Root_to_shoot_ratio_biomass,description,Root to shoot ratio (biomass) of all trees
+Longleaf pine carbon data,RS_ALL,Root_to_shoot_ratio_biomass,identifier,--
