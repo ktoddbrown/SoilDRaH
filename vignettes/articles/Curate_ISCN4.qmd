@@ -55,12 +55,14 @@ source(file.path(RscriptsDir, databaseReads$ISCN3))
 source(file.path(RscriptsDir, databaseReads$FIA))
 source(file.path(RscriptsDir, databaseReads$NCSS))
 
+verboseFlag <- TRUE
 #knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 ```{r echo=FALSE}
 #Set this to any alternative download directory
 dataDownloadDir <- '~/Dropbox (UFL)/Research/Datasets'
+
 ```
 
 # Data sources
@@ -99,7 +101,7 @@ Finally we subset the observed variables to focus on soil oraganic carbon measur
 ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
                      annotationFilename = file.path(annotationsDir, annotationFiles$ISCN3),
                      format = 'long',
-                     verbose = FALSE)
+                     verbose = verboseFlag)
 
 ```
 
@@ -125,9 +127,16 @@ ISCN3_column_selection |>
 ```{r}
 #| code-summary: "Subset ISCN3 lvl 1 product"
 
+# Reduce the data size
+
+# Take the primary data in the long format and replace the table and column ids
+# ...with the unique study_id-of_variable instead
+
+
 
 ISCN3_lvl1 <- list(
   primary = ISCN_lvl0.ls$long |> 
+    #slice_sample(n=10) |> #make the data smaller for debugging and development
     mutate(study_id = 'ISCN3') |>
     rename(dataset_id = dataset_name_soc, 
            site_id = site_name,
@@ -141,13 +150,13 @@ ISCN3_lvl1 <- list(
     inner_join(ISCN_lvl0.ls$annotation |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
-                           by = join_by(study_id, table_id,
+                           by = join_by(study_id,
                                         of_variable == source_variable)) |>
                  filter(with_entry == '--') |>
                  select(ends_with('_id'), of_variable, target_variable, is_type), 
                relationship = "many-to-many",
-               by = join_by(table_id, column_id)) |>
-    select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
+               by = join_by(study_id, column_id)) |>
+    select(column_id, study_id, dataset_id, profile_id, layer_id, 
            #remove the soc identifier since we are not pulling calculated SOC
            of_variable, target_variable, is_type, with_entry) |>
     #nrow 1 034 386
@@ -160,18 +169,18 @@ ISCN3_lvl1 <- list(
                                 paste(column_id, with_entry, sep = ':'), 
                                 with_entry)) |>
     #### Kick out to wide format for QAQC ####
-  select(study_id, study_id, dataset_id, profile_id, layer_id, #_id are the row identifier
+  select(study_id, dataset_id, profile_id, layer_id, #_id are the row identifier
          target_variable, is_type, with_entry) |>
     pivot_wider(names_from = c(target_variable, is_type), 
                 names_sep = '::',
                 values_from = with_entry,
-                values_fn = function(xx)paste(xx, collapse = ';\n')), 
+                values_fn = function(xx)paste(xx, collapse = ';\n')),
   
   #pull in the meta data that is not now in the primary data
   meta = ISCN_lvl0.ls$annotation |>
     inner_join(ISCN4map |>
                  filter(study_id == 'ISCN3'),
-               by = join_by(study_id, table_id,
+               by = join_by(study_id, 
                             of_variable == source_variable)) |>
     filter(with_entry != '--') |>
     mutate(with_entry = if_else(is_type != 'value', 
@@ -198,7 +207,7 @@ We then run the `readFIA` function to combine the datatables into a single long 
 
 FIA_lvl0.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'), 
                   annotationFilename = file.path(annotationsDir, annotationFiles$FIA), 
-                  verbose = FALSE, #when first running, switch this to true 
+                  verbose = verboseFlag,
                   format = 'long')
 #The FIA data base object is large, 2.3 GB
 ```
@@ -275,7 +284,7 @@ The National Cooperative Soil Survey (USDA-NRCS) holds
 NCSS_lvl0.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
                     annotationFilename = file.path(annotationsDir, 'NCSS_Annotations.csv'),
                    format = 'long',
-                   verbose = FALSE)
+                   verbose = verboseFlag)
 ```
 
 ```{r}
