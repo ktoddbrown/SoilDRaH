@@ -1,6 +1,6 @@
 #' CPEAT data sets
 #' 
-#' This reads in the first 1000 records of the CPEAT project from PANGAEA with search term "project:label:PAGES_C-PEAT", as of 2023-December there are 875 data packages found.
+#' This reads in the first 1000 records of the CPEAT project from PANGAEA with search term "project:label:PAGES_C-PEAT", as of 2024-July there are 878 data packages found.
 #'
 #' @param dataDir filename of the download directory to store the data in
 #' @param annotationFilename filename for the data annotations csv file 
