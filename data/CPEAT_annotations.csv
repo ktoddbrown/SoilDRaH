@@ -1,4 +1,4 @@
-column_id,of_variable,of_type,with_entry,table_id
+column_id,of_variable,is_type,with_entry,table_id
 Activity [pMC],modern_carbon_activity,description,Activity of radiocarbon in percent of modern carbon [pMC] (Activity),core
 Activity [pMC],modern_carbon_activity,unit,modern carbon percent,core
 Activity [pMC],modern_carbon_activity,value,--,core
