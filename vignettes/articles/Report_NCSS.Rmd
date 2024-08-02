@@ -10,11 +10,11 @@ output:
 ---
 
 This data is part of the National Cooperative Soil Survey Soil Characterization Data (Lab Data) and was accessed via [https://ncsslabdatamart.sc.egov.usda.gov/](https://ncsslabdatamart.sc.egov.usda.gov/).
-The NCSS Data (Lab Data) was collected the by the National Cooperative Soil Survey of the United States Department of Agriculture.
+The NCSS Data (Lab Data) was collected by the National Cooperative Soil Survey of the United States Department of Agriculture.
 This dataset contains the measurements across several projects of various purposes.
 
 This data set is quite extensive with over 1,014 columns across 24 tables.
-While we have integrated the available metedata into the data annotations presented here, we have not completed the annotations beyond the description imports for soil carbon stock estimates, bulk density, organic carbon fraction, layer depth, and geo-location.
+While we have integrated the available metadata into the data annotations presented here, we have not completed the annotations beyond the description imports for soil carbon stock estimates, bulk density, organic carbon fraction, layer depth, and geo-location.
 
 **Citation:**
 National Cooperative Soil Survey,
@@ -22,6 +22,7 @@ National Cooperative Soil Survey Soil Characterization Database,
 http://ncsslabdatamart.sc.egov.usda.gov/
 (Accessed September 22, 2023)
 
+Importing all of the necessary libraries and files for the code in this documents to be able to run properly.
 ```{r setup}
 library(tidyverse) #manipulate the data tables
 library(RSQLite) #read in the sqlite file that holds the sample data
@@ -34,7 +35,8 @@ source('../../R/readNCSS.R') #load in the read function
 #knitr::opts_chunk$set()
 ```
 
-```{r warning=FALSE, message=FALSE}
+Read in the appropriate NCSS data bases for later use. The readNCSS function is shown and described in detail in the Read Script section of this document.
+```{r ncss_data_frame, warning=FALSE, message=FALSE}
 ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
                     annotationFilename = '../../data/NCSS_Annotations.csv',
                     format = 'long')
@@ -46,8 +48,9 @@ Below is the description for tables containing soil carbon stocks, layer depth, 
 
 ## Table: `lab_pedon`
 
-```{r}
+```{r lab_pedon_table}
 table_str <- 'lab_pedon'
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_pedon table where the column_id and of_variable columns are itself from the lab_pedon table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -59,9 +62,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_site`
 
-```{r}
+```{r lab_site_table}
 table_str <- 'lab_site'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_site table where the column_id and of_variable columns are itself from the lab_site table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -73,9 +76,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_layer`
 
-```{r}
+```{r lab_layer_table}
 table_str <- 'lab_layer'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_layer table where the column_id and of_variable columns are itself from the lab_layer table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -87,9 +90,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_calculations_including_estimates_and_default_values`
 
-```{r}
+```{r lab_calculations_including_estimates_and_default_values_table}
 table_str <- 'lab_calculations_including_estimates_and_default_values'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_calculations_including_estimates_and_default_values table where the column_id and of_variable columns are itself from the lab_calculations_including_estimates_and_default_values table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -101,9 +104,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_chemical_properties`
 
-```{r}
+```{r lab_chemical_properties_table}
 table_str <- 'lab_chemical_properties'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_chemical_properties table where the column_id and of_variable columns are itself from the lab_chemical_properties table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -113,11 +116,11 @@ knitr::kable(ncss.df$annotations %>%
   scroll_box(width = "100%", height = "300px")
 ```
 
-## Table: `lab_chemical_properties`
+## Table: `lab_physical_properties`
 
-```{r}
+```{r lab_physical_properties_table}
 table_str <- 'lab_physical_properties'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_physical_properties table where the column_id and of_variable columns are itself from the lab_physical_properties table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -129,9 +132,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_area`
 
-```{r}
+```{r lab_area_table}
 table_str <- 'lab_area'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_area table where the column_id and of_variable columns are itself from the lab_area table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -143,9 +146,9 @@ knitr::kable(ncss.df$annotations %>%
 
 ## Table: `lab_combine_nasis_ncss`
 
-```{r}
+```{r lab_combine_nasis_ncss_table}
 table_str <- 'lab_combine_nasis_ncss'
-
+# Generate and display a "pretty" (kable) table with columns column_id, of_variable, and description from the lab_combine_nasis_ncss table where the column_id and of_variable columns are itself from the lab_combine_nasis_ncss table while the description column is the descriptions for each of the column_ids
 knitr::kable(ncss.df$annotations %>%
                filter(is_type == 'description',
                       table_id == table_str) %>%
@@ -157,7 +160,7 @@ knitr::kable(ncss.df$annotations %>%
 
 # Soil organic carbon data processing
 
-
+Generate the soil organic carbon data frame from particular parts of the NCSS data frame (ncss.df). 
 ```{r}
 
 soc.df <- ncss.df$long %>%
@@ -167,7 +170,7 @@ soc.df <- ncss.df$long %>%
 
 ```
 
-
+From the previously created soil organic carbon data frame (soc.df), create the plot data frame (plot.df) which is the underlying frame for every statistical chart in the remainder of this section in this document.
 ```{r}
 
 plot.df <- soc.df %>% 
@@ -218,6 +221,7 @@ ggplot(plot.df) +
 
 ## OC vs BD Scatter
 
+Below is the whole soil bulk density vs organic carbon estimated scatter plot, which reveals... (finish the sentence with scatter plot analysis/takeaways)
 ```{r}
 
 ggplot(plot.df) +
@@ -260,13 +264,15 @@ ggplot(plot.df %>%
 
 # Read script
 
-```{r file = '../../R/readNCSS.R', eval=FALSE}
+Below is the code that generated the NCSS data frame (ncss.df) that was used throughout this document earlier.
+```{r ncss_data_frame_read_function, file = '../../R/readNCSS.R', eval=FALSE}
 
 ```
 
 # Checking format
 
-```{r eval=FALSE}
+The following code is used to verify that the annotations for NCSS was generated properly.
+```{r check_annotations, eval=FALSE}
 
 # read_csv('../../data/FIA_Annotations.csv', 
 #          col_types = cols(.default = col_character())) %>%
@@ -282,15 +288,13 @@ if(checkAnnotations(filename = 'NCSS_Annotations.csv',
 
 
 # Constructing metadata
-
-This is primarily left here for documentation and future updating needs.
-
-```{r eval=FALSE}
+Below is the code that generated the NCSS annotations that was used earlier in this document. (This is primarily left here for documentation and future updating needs.)
+```{r generate_annotations, eval=FALSE}
   
   verbose <- TRUE
   dataDir <- "../../temp/NRCS_NCSS_20230922/"
   
-  
+  # Set the file paths for the NCSS SQL database and all of its metadata
   sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
   
   metadata_dir <- file.path(dataDir,'FederalGeographicDataCommitteeMetadata')
@@ -303,7 +307,7 @@ This is primarily left here for documentation and future updating needs.
   
   #######
   ###Check downloads
-  
+  # Verify that the NCSS SQL database file exist in the proper directory, otherwise prompt the user to download it and store it in the proper directory
   if(!file.exists(sqldb_filename)){
     message(paste('Expected zip file not found. Go here and download the sqlite zip file. https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx and place it in the directory:', file.path(getwd(), dataDir )))
   }
@@ -320,6 +324,7 @@ This is primarily left here for documentation and future updating needs.
   
   if(verbose) message(paste('Trimming SQL tables to:', paste(tableNames$table_name, collapse = ', ')))
   
+  # For each table in tableNames, get the column names of the table; store the resulting table-columns info into meta.df
   meta.df <- plyr::ddply(tableNames, c('table_name'), 
                          .fun = function(xx){
                            headers <- RSQLite::dbListFields(myconnect, xx$table_name)
@@ -338,7 +343,7 @@ This is primarily left here for documentation and future updating needs.
   
   
 #### Fix the descriptions ####
-
+# Get the descriptions for each column into a table, and update the column names to be more accurate/verbose
 givenDescriptions <- read_csv(file = metadata_filenames$col_desc, 
                               col_types = cols(.default = col_character())) %>%
   select(table_name, column_name, 
@@ -411,6 +416,7 @@ givenDescriptions <- read_csv(file = metadata_filenames$col_desc,
                               col_types = cols(.default = col_character())) %>%
       select(table_name, with_entry = table_description) %>%
       mutate(of_type = 'description')) %>%
+  # Update the table names to be more accurate/verbose
   mutate(table_name = case_when(
     table_name == 'lab_major_tr_elements_oxides' ~ 'lab_major_and_trace_elements_and_oxides',
     table_name == 'lab_major_trace_elements_and_oxides'  ~ 'lab_major_and_trace_elements_and_oxides',
@@ -436,6 +442,7 @@ if(FALSE){
     anti_join(curatedAnnotations)
 }
 
+# Pivot the annotations table longer then select (and rename) the appropriate columns to be more in line with this lab's annotation standards
 finalAnnotations <- curatedAnnotations %>%
   pivot_longer(cols = c(identifier, foreign_key, description, value, unit, method, reference, note, abbreviation), 
                names_to = 'is_type', 
@@ -444,6 +451,7 @@ finalAnnotations <- curatedAnnotations %>%
   select(table_id = table_name, column_id = column_name, column_number,
          of_variable, is_type, with_entry)
 
+# Write the previously created annotations table as a semicolon-delineated file called NCSS_Annotations.csv
 write_delim(finalAnnotations, delim = ';',
             file = file.path('../../data', 'NCSS_Annotations.csv'))
 ```
