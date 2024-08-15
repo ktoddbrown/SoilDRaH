@@ -18,13 +18,16 @@
 # Defining CPEAT function
 readCPEAT <- function(dataDir, 
                       annotationFilename, 
-                      format=c('original', 'long')[1], 
+                      format=c('original', 'long')[1],
+                      randomSubset = Inf,
                       verbose=FALSE){
   
   ##Dev sets
-  #dataDir <- 'temp/CPEAT'
-  #verbose <- TRUE
+  dataDir <- 'temp/CPEAT'
+  verbose <- TRUE
+  randomSubset <- 10
   #annotationFilename <- 'data/CPEAT_annotations.csv'
+  annotationFilename <- 'data/annotations_CPEAT2.csv'
   
   #### find CPEAT data ####
   
@@ -39,13 +42,18 @@ readCPEAT <- function(dataDir,
                                          count = 500, offset = 500)) |>
     #Add Pangaea with the doi address to create a full citation
     dplyr::mutate(fullcitation = paste0(citation, 
-                                        ". PANGAEA, https://doi.org/", doi))
+                                        ". PANGAEA, https://doi.org/", doi)) 
   
   if(nrow(pages.df) != 878){
     # Tell the user not to expect the data cleaning to work here 
-    warning("unexpected number of CPEAT core datasets found; 
-            code could behave unexpectedly. Please report to the repository.") 
+    warning("unexpected number of CPEAT core datasets found; code could behave unexpectedly. Please report to the repository.") 
   }
+  
+  #This takes a long time so for dev purposes it can be useful
+  #...to subset the pages
+  
+  pages.df <- pages.df |>
+    dplyr::slice_sample(n = randomSubset)
   
   #### Download and load CPEAT data ####
   
@@ -99,7 +107,7 @@ readCPEAT <- function(dataDir,
   
   primaryAnnotations <- CPEAT.annotations |>
     dplyr::filter(with_entry == '--') |>
-    dplyr::select(column_name = column_id, of_variable, is_type)
+    dplyr::select(-with_entry)
   
   # Combine all metadata and primary data into one long format
   long.df <- plyr::ldply(
@@ -125,7 +133,7 @@ readCPEAT <- function(dataDir,
       if(xx$doi == "10.1594/PANGAEA.934274" &
          #check the length just in case this gets fixed 
          #...by the archive in the future
-         length(xx$metadata$parameters) > nrow(colume_number)){
+         length(xx$metadata$parameters) > length(names(xx$data))){
         
         xx$metadata$parameters[[5]] <- c(xx$metadata$parameters[[5]],
                                          xx$metadata$parameters[[6]])
@@ -139,64 +147,79 @@ readCPEAT <- function(dataDir,
       # To pivot the layers we need to ensure unique 
       #... column names. If they are not unique, then add
       #... a number to the end of them
-      if(length(names(xx$data)) > 
-         length(unique(names(xx$data)))){
-        #TODO make this more elegant, we may need to read 
-        #...in and parse the txt files instead of relying 
-        #...on pangear
-        names(xx$data) <- paste(names(xx$data), 
-                                1:length(names(xx$data)))
-      }
+      #if(length(names(xx$data)) > 
+      #   length(unique(names(xx$data)))){
+      #  #TODO make this more elegant, we may need to read 
+      #  #...in and parse the txt files instead of relying 
+      #  #...on pangear
+      #  names(xx$data) <- paste(names(xx$data), 
+      #                          1:length(names(xx$data)))
+      #}
       
       #track the column name and numbers from the data
-      colume_number <- tibble::tibble(
-        column_name = names(xx$data),
-        column_number = as.character(1:length(names(xx$data))),
+      column.df <- tibble::tibble(
+        header_id = names(xx$data) |>
+          stringr::str_remove(pattern = 
+                                stringr::regex('(\\[|\\().*$')) |>
+          stringr::str_trim(),
+        header_unit = names(xx$data) |>
+          stringr::str_extract(pattern = 
+                                 stringr::regex('(?<=\\[).*(?=\\])')),
+        header_method = names(xx$data) |>
+          stringr::str_extract(pattern = 
+                                 stringr::regex('\\(.*$')),
+        header = names(xx$data),
+        column_number = paste0('V', 1:length(names(xx$data))))
+      
+      
         # Create a description column to the column_number
         #... The formatting here is not consistent so
         #... bind everything together as a human readable
         #... description and add it to the column_number
         #... table
-        description = unlist(
+      parameters.df <- column.df |>
+        mutate(table_name = 'metadata$parameters',
+          with_entry = unlist(
           lapply(xx$metadata$parameters, 
                  function(yy){
                    return(paste(as.character(yy), 
                                 collapse = ' '))
-                 }))) |>
-        dplyr::left_join(primaryAnnotations,
-                         by = dplyr::join_by(column_name))
+                 })
+          )
+          ) |>
+        #Add in the of_variable and is_type from the annotations
+        dplyr::left_join(primaryAnnotations, 
+                          by = dplyr::join_by(header_id, table_name))
+        
       
-      layerData <- xx$data |>
+      # rename the columns by index
+      temp <- xx$data
+      names(temp) <- paste0('V', 1:length(temp))
+      
+      data.df <- temp |>
         #To avoid type conflicts in the pivot, convert
         #...everything to characters
         dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), 
                                     as.character)) |>
         #Add a row number to ensure a unique identifier
-        dplyr::mutate(row_number = 1:dplyr::n()) |>
+        dplyr::mutate(row_number = paste0('R', 1:dplyr::n())) |>
         #Create a general row_id-column_name-with_entry
         #...tuple which is the basis for our general long
         #...format by pivoting
         tidyr::pivot_longer(cols = -row_number, 
-                            names_to = 'column_name',
+                            names_to = 'column_number',
                             values_to = 'with_entry',
                             #keep table small(ish) by dropping NA
                             values_drop_na = TRUE) |>
-        #Add the column number by joining with the table
-        #...we prepped, we do this so that we can track
-        #...metadata via column number since some of the 
-        #...names are non-unique or excel mangled
-        dplyr::left_join(colume_number, 
-                         by = dplyr::join_by(column_name)) |>
         # adding table_name column so that we can keep
         # ...adding information from the metadata later
         dplyr::mutate(table_name = 'data') |>
-        #Shuffle in the description and number from the column_number table
-        tidyr::pivot_wider(names_from = is_type, values_from = with_entry) |>
-        tidyr::pivot_longer(cols = -c(table_name, column_name, row_number,
-                                      of_variable),
-                            names_to = 'is_type',
-                            values_to = 'with_entry',
-                            values_drop_na = TRUE)
+        #Join in the breakdown of the columns
+        dplyr::left_join(column.df,
+                          by = dplyr::join_by(column_number)) |>
+        #Add in the of_variable and is_type from the annotations
+        dplyr::left_join(primaryAnnotations, 
+                          by = dplyr::join_by(header_id, table_name)) 
       
       #### Check primary list entries ####
       
@@ -230,7 +253,7 @@ readCPEAT <- function(dataDir,
         names(xx$metadata), 
         c("citation", "related_to", "further_details",
           "projects" , "coverage", "abstract", "keywords", "status",
-          "license", "size", "comment"))
+          "license", "size", "comment", "change_history"))
       
       if(any( ! (names(xx$metadata) %in% 
                  c(metaNames, 'events', 'parameters')))){
@@ -238,7 +261,7 @@ readCPEAT <- function(dataDir,
           paste('unexpected elements at metadata level:', 
                 xx$doi,
                 setdiff(
-                  names(xx),
+                  names(xx$metadata),
                   c(metaNames, 'events', 'parameters')
                 )
           )
@@ -293,40 +316,59 @@ readCPEAT <- function(dataDir,
       
       # read in the primary, metadata and metadata$events
       #...lists that we just checked above
-      studyData <- tibble::tibble(
-        column_name = c(primaryNames,
+      study.df <- tibble::tibble(
+        table_name = c(rep('.', times = length(primaryNames)),
+                       rep('metadata', times = length(metaNames)),
+                       'metadata$events',
+                       rep('metadata$events', 
+                           times = length(eventsNames))),
+        header = c(primaryNames,
                         metaNames, 
                         'core_name',
                         eventsNames),
         with_entry = c(
-          xx[primaryNames] |> unlist(),
-          xx$metadata[metaNames] |> unlist(),
+          unlist(xx[primaryNames]),
+          unlist(xx$metadata[metaNames]),
           #catch the core name separately since it's in
           #...the key rather then the element itself
           names(xx$metadata$events)[1],
-          xx$metadata$events[eventsNames] |> unlist()
-        ) ) |> 
+          unlist(xx$metadata$events[eventsNames])
+        ) ) |>
+        dplyr::mutate(header_id = 
+                        stringr::str_remove(string = header,
+                                            pattern = stringr::regex('(\\[|\\().*$')) |>
+          stringr::str_trim(),
+        header_unit = stringr::str_extract(string = header,
+                               pattern = stringr::regex('(?<=\\[).*(?=\\])')),
+        header_method = stringr::str_extract(string = header,
+                               pattern = stringr::regex('\\(.*$'))) |>
         dplyr::left_join(primaryAnnotations,
-                         by = dplyr::join_by(column_name),
-                         relationship = "many-to-many") |>
-        dplyr::mutate(table_name = 'study')
+                         by = dplyr::join_by(table_name, header_id),
+                         relationship = "many-to-many") 
       
       ### Stack everything and return as a single table ####
-      return(dplyr::bind_rows(studyData, layerData))
-    }) 
+      return(dplyr::bind_rows(parameters.df, study.df,
+                              data.df))
+    })
   
   ### Clean up long table ####
   #Set the table and column IDs to match the annotations
-  long.df <- long.df |>
+  temp <- long.df |>
     # the column ids are shorter versions of the column names
     #... column names often have units or methods in () or []
     #... remove those as well as any space pads. Save that as a column_id
-    mutate(column_id = trimws(str_remove(column_name, 
-                                         pattern = '(\\(|\\[).+')),
-           # similarly assign the table ID
-           table_id = if_else(is.na(table_name), 'study', 'core')) |>
-    # TODO change the table_id in the function above instead of here
-    select(-table_name)
+    dplyr::select(doi, table_name,  column_number, header,
+                   row_number,
+                   header_id, header_unit, header_method, 
+                   is_type, of_variable, with_entry) |>
+    tidyr::pivot_wider(names_from = is_type,
+                       values_from = with_entry) |>
+    tidyr::pivot_longer(
+      cols = -c(table_name, column_number, row_number, 
+                of_variable, is_type, with_entry),
+      names_to = 'is_type',
+      values_drop_na = TRUE)
+
   
   return(list(long = long.df, 
               annotations = CPEAT.annotations

@@ -10,18 +10,18 @@ output:
 ---
 
 The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
-Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+Here you will find links to documentation from the data provider, links to where you can access the data, data model description, data processing workflows, and visuals for the collection relevant variables.
 
 # What is C-PEAT
 
 The version of the Carbon in Peat on EArth through Time (C-PEAT) Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
 
 > **C-PEAT Database**
-Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
+> Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
 
 Taken from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
 
-The annotations table draws heavily from the parameters list of the original data and also from the point of contact for C-PEAT collection of datasets (Dr. Julie Loisel). 
+The annotations table draws heavily from the parameters described in the orginal metadata and also from the point of contact for C-PEAT collection of datasets (Dr. Julie Loisel). 
 
 # Data processing
 
@@ -38,11 +38,12 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(pangaear)
 
-source("./R/readCPEAT.R", local = knitr::knit_global())
+source("../R/readCPEAT.R", local = knitr::knit_global())
 
 #locate the data locally
-dataDir <- './temp'
-dataAnnotations <- './data/CPEAT_annotations.csv'
+dataDir <- '../temp/CPEAT'
+#dataAnnotations <- '../data/CPEAT_annotations.csv'
+dataAnnotations <- '../data/annotations_CPEAT2.csv'
 ```
 
 ```{r, echo=FALSE}
@@ -55,9 +56,14 @@ To read in the data base use the `readCPEAT` function.
 ```{r, warning=FALSE, message=FALSE}
 CPEAT.ls <- readCPEAT(dataDir, 
                   annotationFilename = dataAnnotations, 
-                  verbose = FALSE, #when first running, switch this to true 
-                  format = 'long')
+                  #when first running, switch this to true 
+                  verbose = FALSE, 
+                  format = 'long',
+                  randomSubset = 100)
 
+#read_csv(file = 'data/annotations_CPEAT2.csv') |>
+#  arrange(header_id, table_name) |>
+#  write_csv(file = 'data/annotations_CPEAT2.csv')
 
 CPEAT.ls$long %>% # tital 615,152 obs with 9 columns
   select(doi, column_id, table_id, with_entry, row_number) %>% 
