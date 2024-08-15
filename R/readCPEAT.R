@@ -23,11 +23,11 @@ readCPEAT <- function(dataDir,
                       verbose=FALSE){
   
   ##Dev sets
-  dataDir <- 'temp/CPEAT'
-  verbose <- TRUE
-  randomSubset <- 10
-  #annotationFilename <- 'data/CPEAT_annotations.csv'
-  annotationFilename <- 'data/annotations_CPEAT2.csv'
+  # dataDir <- 'temp/CPEAT'
+  # verbose <- TRUE
+  # randomSubset <- 10
+  # #annotationFilename <- 'data/CPEAT_annotations.csv'
+  # annotationFilename <- 'data/annotations_CPEAT2.csv'
   
   #### find CPEAT data ####
   
@@ -122,7 +122,15 @@ readCPEAT <- function(dataDir,
       ## - '$metadata' a list of information on the core
       ## - '$metadata$events a list with 
       ##   ...geospatial and sampling information
-      ## - 'metadata$parameter'
+      ## - 'metadata$parameter' a list of lists with parameter 
+      ##  ...name followed by other metadata information that is
+      ##  ...often problematically parsed.
+      ## - 'metadata' also has the following elements (strings):
+      ##  ..."citation", "related_to", "further_details",
+      ##  ..."projects" , "coverage", "abstract", "keywords", 
+      ##  ..."status", "license", "size", "comment", "change_history"
+      ## - other primary level elements include strings: 
+      ##  ...'parent_doi', 'doi', 'citation', 'url', 'path'
       
       #### Correct metadata$parameter ####
       
@@ -135,10 +143,15 @@ readCPEAT <- function(dataDir,
          #...by the archive in the future
          length(xx$metadata$parameters) > length(names(xx$data))){
         
+        #This was manually checked for the specific DOI and is not
+        #...generalizable
         xx$metadata$parameters[[5]] <- c(xx$metadata$parameters[[5]],
                                          xx$metadata$parameters[[6]])
         
         xx$metadata$parameters[6] <- NULL
+      }else if(length(xx$metadata$parameters) != 
+               length(names(xx$data))){
+        stop('parameter description length does not match data columns')
       }
       
       
@@ -158,17 +171,28 @@ readCPEAT <- function(dataDir,
       
       #track the column name and numbers from the data
       column.df <- tibble::tibble(
+        #pull in unique header id out of the column names
+        #...this column names are generally formated as
+        #...'name here [unit] (method)'
         header_id = names(xx$data) |>
+          #remove anything after a ( or [ to get 'name here'
           stringr::str_remove(pattern = 
                                 stringr::regex('(\\[|\\().*$')) |>
+          #clean up whitespaces at the start and end
           stringr::str_trim(),
         header_unit = names(xx$data) |>
+          #extract anything between [ ] to get 'unit'
           stringr::str_extract(pattern = 
                                  stringr::regex('(?<=\\[).*(?=\\])')),
         header_method = names(xx$data) |>
+          #extract anything after the ( to get the 'method)'
+          #TODO this is an imperfect regular expression but many of
+          #...the methods appear truncated anyway. Fix this later
           stringr::str_extract(pattern = 
                                  stringr::regex('\\(.*$')),
         header = names(xx$data),
+        #header names do not match parameters exactly (possible
+        #...spreadsheet truncation), go by position instead
         column_number = paste0('V', 1:length(names(xx$data))))
       
       
@@ -179,6 +203,9 @@ readCPEAT <- function(dataDir,
         #... table
       parameters.df <- column.df |>
         mutate(table_name = 'metadata$parameters',
+               #Take each element of the parameters list, which is
+               #...also a list, and collapse it into a single string
+               #...to treat this as an entry
           with_entry = unlist(
           lapply(xx$metadata$parameters, 
                  function(yy){
@@ -188,11 +215,14 @@ readCPEAT <- function(dataDir,
           )
           ) |>
         #Add in the of_variable and is_type from the annotations
+        #...for the parameter elements
         dplyr::left_join(primaryAnnotations, 
                           by = dplyr::join_by(header_id, table_name))
         
       
-      # rename the columns by index
+      # rename the columns by index, this is done because some
+      #... headers are truncated and don't match the parameters
+      #... exactly. Moving over to an 'V[INDEX]' format instead.
       temp <- xx$data
       names(temp) <- paste0('V', 1:length(temp))
       
@@ -201,9 +231,10 @@ readCPEAT <- function(dataDir,
         #...everything to characters
         dplyr::mutate(dplyr::across(.cols = tidyselect::everything(), 
                                     as.character)) |>
-        #Add a row number to ensure a unique identifier
+        #Add a row number to ensure a unique identifier,
+        #...make sure it is also a character
         dplyr::mutate(row_number = paste0('R', 1:dplyr::n())) |>
-        #Create a general row_id-column_name-with_entry
+        #Create a general row_id-column_number-with_entry
         #...tuple which is the basis for our general long
         #...format by pivoting
         tidyr::pivot_longer(cols = -row_number, 
@@ -215,6 +246,7 @@ readCPEAT <- function(dataDir,
         # ...adding information from the metadata later
         dplyr::mutate(table_name = 'data') |>
         #Join in the breakdown of the columns
+        #...to link in the header ID for that column_number
         dplyr::left_join(column.df,
                           by = dplyr::join_by(column_number)) |>
         #Add in the of_variable and is_type from the annotations
@@ -334,21 +366,28 @@ readCPEAT <- function(dataDir,
           names(xx$metadata$events)[1],
           unlist(xx$metadata$events[eventsNames])
         ) ) |>
-        dplyr::mutate(header_id = 
-                        stringr::str_remove(string = header,
-                                            pattern = stringr::regex('(\\[|\\().*$')) |>
-          stringr::str_trim(),
-        header_unit = stringr::str_extract(string = header,
-                               pattern = stringr::regex('(?<=\\[).*(?=\\])')),
-        header_method = stringr::str_extract(string = header,
-                               pattern = stringr::regex('\\(.*$'))) |>
+        #Similar to processing the parameter list above, 
+        #...pull out the id unit method
+        dplyr::mutate(
+          header_id = stringr::str_remove(string = header,
+                                          pattern = stringr::regex(
+                                            '(\\[|\\().*$')) |>
+            stringr::str_trim(),
+          header_unit = stringr::str_extract(string = header,
+                                             pattern = stringr::regex(
+                                               '(?<=\\[).*(?=\\])')),
+          header_method = stringr::str_extract(string = header,
+                                               pattern = stringr::regex(
+                                                 '\\(.*$'))) |>
         dplyr::left_join(primaryAnnotations,
                          by = dplyr::join_by(table_name, header_id),
                          relationship = "many-to-many") 
       
       ### Stack everything and return as a single table ####
-      return(dplyr::bind_rows(parameters.df, study.df,
-                              data.df))
+      ans <- dplyr::bind_rows(parameters.df, study.df,
+                              data.df)
+      
+      return(ans)
     })
   
   ### Clean up long table ####
@@ -357,20 +396,24 @@ readCPEAT <- function(dataDir,
     # the column ids are shorter versions of the column names
     #... column names often have units or methods in () or []
     #... remove those as well as any space pads. Save that as a column_id
-    dplyr::select(doi, table_name,  column_number, header,
-                   row_number,
-                   header_id, header_unit, header_method, 
+    dplyr::select(doi, table_name,  column_number, row_number, #primary ids
+                  #below are the header_X columns that need to be merged
+                    header, header_id, header_unit, header_method, 
+                  #information columns to be joined with header_X
                    is_type, of_variable, with_entry) |>
+    #first spread things out
     tidyr::pivot_wider(names_from = is_type,
                        values_from = with_entry) |>
+    #then make it longer including the header_X columns
     tidyr::pivot_longer(
-      cols = -c(table_name, column_number, row_number, 
-                of_variable, is_type, with_entry),
+      cols = -c(doi, table_name, column_number, row_number, 
+                of_variable),
       names_to = 'is_type',
+      values_to = 'with_entry',
       values_drop_na = TRUE)
 
   
-  return(list(long = long.df, 
+  return(list(long = temp, 
               annotations = CPEAT.annotations
   ))
 }
