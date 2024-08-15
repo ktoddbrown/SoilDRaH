@@ -51,7 +51,7 @@ dataAnnotations <- '../data/annotations_CPEAT2.csv'
 #dataDir  <- '~/Dropbox (UFL)/Research/Datasets/'
 ```
 
-To read in the data base use the `readCPEAT` function.
+Read in the data use the `readCPEAT` function.
 
 ```{r, warning=FALSE, message=FALSE}
 CPEAT.ls <- readCPEAT(dataDir, 
@@ -66,51 +66,44 @@ CPEAT.ls <- readCPEAT(dataDir,
 #  write_csv(file = 'data/annotations_CPEAT2.csv')
 
 CPEAT.ls$long %>% # tital 615,152 obs with 9 columns
-  select(doi, column_id, table_id, with_entry, row_number) %>% 
   slice_head(n=650) %>%
   knitr::kable() %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
 ```
 
-```{r, eval=FALSE}
-# TODO: Check data integrity of the long format
-# Are all the rows identifiable? Can you match columns to their original rows and reconstruct the original tables?
+
+## CPEAT Data structures
+
+Each core in CPEAT has it's own doi-identified dataset.
+This data set includes a graphica meta-data at the front of a tab separated data table.
+See example below:
+
+```{r echo=FALSE}
+examplefile <- readLines(list.files(file.path(dataDir), 
+                                    full.names = TRUE)[10])
+cat(paste0(examplefile, collapse = '\n'))
+#Figure out how to show a CPEAT file content here
 ```
 
+We currently use XX function in the YY package to process this data into a the metadata portion (list-based data) and associated primary data (table-based data).
 
-There are two tables currently annotated in the C-PEAT data collection.
-This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
-Below are the descriptions of data columns organized by table.
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+singleExample <- readCPEAT(dataDir = dataDir, 
+          annotationFilename = dataAnnotations,
+          format = 'original',
+          randomSubset = 1,
+          verbose = FALSE)
 
-Please note that there is quite a bit more data in the C-PEAT and we welcome interested parties extending these annotations.
-
-## STUDY TABLE 
-
-```{r}
-knitr::kable(CPEAT.ls$annotations %>%
-               filter(of_type == 'description',
-                      table_id == 'study') %>%
-               select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
+str(singleExample$original[[1]])
 ```
 
-## CORE TABLE
+We annotate this metadata information a little differently then is typical for the project.
 
-```{r}
-knitr::kable(CPEAT.ls$annotations %>%
-               filter(of_type %in% c('description', 'unit'),
-                      table_id == 'core') %>%
-               select(column_id, of_variable, of_type, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
+TODO Start here describing the metadata annotations
+TODO Echo the data annotations as an example of the data structure documentation
 
-# test <- CPEAT.ls$annotations %>%
-#                filter(of_type %in% c('description', 'unit'),
-#                       table_id == 'core') %>%
-#               select(column_id, of_variable, description = with_entry)
-```
+# START HERE RECODING EVERYTHING
 
 # Subseting for soil carbon
 
