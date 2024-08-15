@@ -30,8 +30,8 @@ data,Comm,age,note,--
 metadata$parameters,Comm,age,description,--
 data,Comment,age,comment,--
 metadata$parameters,Comment,age,description,--
-data,Corg dens,organic_carbon,value,--
-metadata$parameters,Corg dens,organic_carbon,description,--
+data,Corg dens,organic_carbon_density,value,--
+metadata$parameters,Corg dens,organic_carbon_density,description,--
 data,DBD,bulk_density,value,--
 metadata$parameters,DBD,bulk_density,description,--
 data,Dated material,age,method,--
@@ -51,8 +51,8 @@ data,Method comm,age,method,--
 metadata$parameters,Method comm,age,description,--
 data,OM,organic_matter,value,--
 metadata$parameters,OM,organic_matter,description,--
-data,OM dens,organic_matter,value,--
-metadata$parameters,OM dens,organic_matter,description,--
+data,OM dens,organic_matter_density,value,--
+metadata$parameters,OM dens,organic_matter_density,description,--
 data,Peat type,peat_description,value,--
 metadata$parameters,Peat type,peat_description,description,--
 metadata$events,Penetration,core_penetration,value,--
