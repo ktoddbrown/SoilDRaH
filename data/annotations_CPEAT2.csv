@@ -1,0 +1,90 @@
+table_name,header_id,of_variable,is_type,with_entry
+data,Activity,modern_carbon_activity,value,--
+metadata$parameters,Activity,modern_carbon_activity,description,--
+data,Activity std dev,modern_carbon_activity_standard_deviation,value,--
+metadata$parameters,Activity std dev,modern_carbon_activity_standard_deviation,description,--
+data,Age,age,value,--
+metadata$parameters,Age,age,description,--
+data,Age dated,age_dated,value,--
+metadata$parameters,Age dated,age_dated,description,--
+data,Age dated std dev,age_standard_deviation,value,--
+metadata$parameters,Age dated std dev,age_standard_deviation,description,--
+data,Age e,age_error,value,--
+metadata$parameters,Age e,age_error,description,--
+data,Age model,age_model,value,--
+metadata$parameters,Age model,age_model,description,--
+data,Age std dev,age_standard_deviation,value,--
+metadata$parameters,Age std dev,age_standard_deviation,description,--
+data,Age unc,age_uncertainty,value,--
+metadata$parameters,Age unc,age_uncertainty,description,--
+data,C,organic_carbon,value,--
+metadata$parameters,C,organic_carbon,description,--
+metadata$events,COMMENT,core_comment,note,--
+data,Cal age,age,value,--
+metadata$parameters,Cal age,age,description,--
+data,Cal age max,age_max,value,--
+metadata$parameters,Cal age max,age_max,description,--
+data,Cal age min,age_min,value,--
+metadata$parameters,Cal age min,age_min,description,--
+data,Comm,age,note,--
+metadata$parameters,Comm,age,description,--
+data,Comment,age,comment,--
+metadata$parameters,Comment,age,description,--
+data,Corg dens,organic_carbon,value,--
+metadata$parameters,Corg dens,organic_carbon,description,--
+data,DBD,bulk_density,value,--
+metadata$parameters,DBD,bulk_density,description,--
+data,Dated material,age,method,--
+metadata$parameters,Dated material,age,description,--
+data,Depth sed,layer_mid,value,--
+metadata$parameters,Depth sed,layer_mid,description,--
+metadata$events,ELEVATION,elevation,value,--
+metadata$events,LATITUDE,latitude,value,--
+metadata$events,LOCATION,region,value,--
+data,LOI,loss_on_ignition,value,--
+metadata$parameters,LOI,loss_on_ignition,description,--
+metadata$events,LONGITUDE,longitude,value,--
+data,Lab label,lab_label,id,--
+metadata$parameters,Lab label,lab_label,description,--
+metadata$events,METHOD/DEVICE,sampling_device,value,--
+data,Method comm,age,method,--
+metadata$parameters,Method comm,age,description,--
+data,OM,organic_matter,value,--
+metadata$parameters,OM,organic_matter,description,--
+data,OM dens,organic_matter,value,--
+metadata$parameters,OM dens,organic_matter,description,--
+data,Peat type,peat_description,value,--
+metadata$parameters,Peat type,peat_description,description,--
+metadata$events,Penetration,core_penetration,value,--
+metadata$events,Recovery,core_recovery,value,--
+data,Samp thick,layer_thickness,value,--
+metadata$parameters,Samp thick,layer_thickness,description,--
+data,Samp vol,volume,value,--
+metadata$parameters,Samp vol,volume,description,--
+data,Sample label,lab_label,id,--
+metadata$parameters,Sample label,lab_label,description,--
+data,TC,total_carbon,value,--
+metadata$parameters,TC,total_carbon,description,--
+data,TN,total_nitrogen,value,--
+metadata$parameters,TN,total_nitrogen,description,--
+data,TOC,organic_carbon,value,--
+metadata$parameters,TOC,organic_carbon,description,--
+data,Vol,volume,value,--
+metadata$parameters,Vol,volume,description,--
+metadata,abstract,abstract,value,--
+.,citation,citation,value,--
+metadata,citation,citation,value,--
+metadata$events,core_name,core_name,id,--
+metadata,coverage,bounded_coverage,value,--
+.,doi,data_doi,value,--
+.,doi,doi,value,--
+metadata,further_details,futher_citations,value,--
+metadata,keywords,keywords,value,--
+metadata,license,data_license,value,--
+.,parent_doi,data_doi,value,--
+.,path,data_local_filepath,value,--
+metadata,projects,project,value,--
+metadata,related_to,related_citation,value,--
+metadata,size,observation_size,value,--
+metadata,status,cutation_level,value,--
+.,url,download_url,value,--
