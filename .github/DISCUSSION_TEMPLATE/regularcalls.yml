@@ -1,4 +1,4 @@
-title: "[DD Month YYYY HHMM TimeZone]"
+title: "DD Month YYYY HHMM UTC"
 labels: ["Regular call"]
 body:
   - type: markdown
@@ -9,17 +9,26 @@ body:
         Copy over notes from the meeting at the end of the call and consider writing up a recap as well.
   - type: textarea
     attributes:
-      label: agenda
+      label: Agenda
       description: "What are you going to talk about?"
       value: |
-        ## (5 | 1400) Check ins
-            - Who is here
-            - Note taking?
-            - How are you showing up? <https://feelingswheel.com/>
-        ## (45 | 1405) Issues checkins and stuck to unstuck
-            - Pull up open issues and walk through in reverse order.
-        ## (5 | 1450) Soil-DRaH Wiki
-            - Does anything need to be updated?
-        ## (5 | 1455) Check outs [appreciations, discoveries, and ToDo]
+        These calls are lead by @ktoddbrown and are generally open calls.
+        Please contact them for call in information.
+        The purpose of these meetings are to move forward current issues related to the development of Soil-DRaH.
+        This may include teaching, mutual accountability, code review, paired programming, or other activities.
+        
+        ## (5 | HHMM) Check ins
+        - Who is here
+        - Note taking?
+        - How are you showing up? <https://feelingswheel.com/>
+        
+        ## (45 | HHMM) Issues checkins and stuck to unstuck
+        - *Pull up open issues where do each issue stand?*
+        - *How can we help each other move from stuck to unstuck on a topic?*
+        
+        ## (5 | HHMM) Backlog
+        - *What new issues need to be created?*
+        
+        ## (5 | HHMM) Check outs [appreciations, discoveries, and ToDo]
     validations:
       required: true
