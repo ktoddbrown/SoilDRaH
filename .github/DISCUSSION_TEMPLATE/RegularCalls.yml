@@ -1,3 +1,4 @@
+name: RegularCalls
 title: "[DD Month YYYY HHMM TimeZone]"
 labels: ["Regular call"]
 body:
