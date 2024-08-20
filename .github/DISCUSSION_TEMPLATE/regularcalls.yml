@@ -1,4 +1,4 @@
-name: RegularCalls
+name: regularcalls
 title: "[DD Month YYYY HHMM TimeZone]"
 labels: ["Regular call"]
 description: "This is a default template for a working call."
