@@ -4,6 +4,7 @@ labels: ["New Data"]
 body:
   - type: markdown
     attributes:
+      description: "What does this do?"
       value: |
         This template is for proposed new data contributions. 
         Please refer to the wiki (specifically https://github.com/ktoddbrown/SoilDRaH/wiki/Open-Ticket) for additional guidence.

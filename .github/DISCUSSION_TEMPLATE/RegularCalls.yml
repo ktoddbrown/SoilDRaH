@@ -4,6 +4,7 @@ labels: ["Regular call"]
 body:
   - type: markdown
     attributes:
+      description: "What does this do?"
       value: |
         This template is for regular project calls. 
         These will be generally oriented to project updates and tracking progress on issues.
