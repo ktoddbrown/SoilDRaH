@@ -1,0 +1,27 @@
+name: regularcalls
+title: "[DD Month YYYY HHMM TimeZone]"
+labels: ["Regular call"]
+description: "This is a default template for a working call."
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for regular project calls. 
+        These will be generally oriented to project updates and tracking progress on issues.
+        Copy over notes from the meeting at the end of the call and consider writing up a recap as well.
+  - type: textarea
+    attributes:
+      label: agenda
+      description: "What are you going to talk about?"
+      value: |
+        ## (5 | 1400) Check ins
+            - Who is here
+            - Note taking?
+            - How are you showing up? <https://feelingswheel.com/>
+        ## (45 | 1405) Issues checkins and stuck to unstuck
+            - Pull up open issues and walk through in reverse order.
+        ## (5 | 1450) Soil-DRaH Wiki
+            - Does anything need to be updated?
+        ## (5 | 1455) Check outs [appreciations, discoveries, and ToDo]
+    validations:
+      required: true
