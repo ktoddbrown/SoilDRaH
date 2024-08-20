@@ -1,0 +1,51 @@
+name: NewData
+title: "[AuthorLastYYYY or ShortNameYYYY] "
+labels: ["New Data"]
+description: "Make sure to hit all the main points for a proposed new data contribution"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for proposed new data contributions. 
+        Please refer to the wiki (specifically https://github.com/ktoddbrown/SoilDRaH/wiki/Open-Ticket) for additional guidence.
+  - type: input
+    attributes:
+      label: download_url
+      description: "Where is the data downloaded? Should be a url."
+      placeholder: "https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba"
+  - type: input
+    attributes:
+      label: citation
+      description: "What is the full citation for the dataset?"
+      placeholder: "Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-03)."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: abstract
+      description: "What is the data about? Data abstract is prefered here"
+      placeholder: "The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/."
+  - type: textarea
+    attributes:
+      label: papers
+      description: "List known papers that are associated with this dataset. Generally the first paper or set of papers that use this data."
+      placeholder: "No obvious papers found."
+  - type: textarea
+    attributes:
+      label: mode_of_discovery
+      description: "How did you find this dataset?"
+      placeholder: "Conversation by KTB at workshop in 2017."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: point_of_contact
+      description: "Are there known points of contact for this dataset?"
+      placeholder: "Dr J Doe at XYZ University is listed point of contact. KTB knows them and can facilitate questions."
+  - type: textarea
+    attributes:
+      label: license
+      description: "What is the release license? For example CC-BY. Link or copy exact text where possible."
+      placeholder: "Data use: Use of data assumes that the user has joined the ISCN and will act according to the mission and guidelines stated in the Charter. Phase II data are available to select users on the condition that contributors will be invited to assist with interpretation, presentations, and publications, if these tasks are being performed by a user other than the original contributor of the data (such as a colleague of the contributor). When using Phase III data, users are encouraged to contact original data contributors for questions or clarifications; users agree to cite and/or acknowledge the data contributors and the ISCN in presentations and publications. References of all accepted papers developed from ISCN data products must be sent to the ISCN Coordinator. Although these policies are intended to encourage communication between data contributors and data users, the interpretation of data and adherence to fair use guidelines are ultimately the responsibility of the user of ISCN products."
+    validations:
+      required: true
