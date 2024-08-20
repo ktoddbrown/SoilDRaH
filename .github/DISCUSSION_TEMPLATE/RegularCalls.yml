@@ -1,4 +1,4 @@
-title: "[DD Month YYYY HHMM TimeZone] "
+title: "[DD Month YYYY HHMM TimeZone]"
 labels: ["Regular call"]
 body:
   - type: markdown

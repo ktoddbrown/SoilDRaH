@@ -1,5 +1,5 @@
-title: "[DD Month YYYY HHMM TimeZone] "
-labels: ["Regular call"]
+title: "[AuthorLastYYYY or ShortNameYYYY] "
+labels: ["New Data"]
 body:
   - type: markdown
     attributes:
