@@ -1,10 +1,10 @@
 name: RegularCalls
 title: "[DD Month YYYY HHMM TimeZone]"
 labels: ["Regular call"]
+description: "This is a default template for a working call."
 body:
   - type: markdown
     attributes:
-      description: "What does this do?"
       value: |
         This template is for regular project calls. 
         These will be generally oriented to project updates and tracking progress on issues.

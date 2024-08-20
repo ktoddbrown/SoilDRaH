@@ -1,10 +1,10 @@
 name: NewData
 title: "[AuthorLastYYYY or ShortNameYYYY] "
 labels: ["New Data"]
+description: "Make sure to hit all the main points for a proposed new data contribution"
 body:
   - type: markdown
     attributes:
-      description: "What does this do?"
       value: |
         This template is for proposed new data contributions. 
         Please refer to the wiki (specifically https://github.com/ktoddbrown/SoilDRaH/wiki/Open-Ticket) for additional guidence.
