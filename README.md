@@ -20,7 +20,7 @@ flowchart LR
 -   [License](#license)
 
 
-## Data Sources {#data-sources}
+## Data Sources
 
 Soil-DRaH is currently working with the following data sources:
 
@@ -32,18 +32,18 @@ Soil-DRaH is currently working with the following data sources:
 Additional data sources may be suggested in the Issues.
 Please see [these instructions](https://github.com/ktoddbrown/SoilDRaH/wiki/Open-Ticket) for how to open a new issue to suggest additional data sources.
 
-## Installation {#installation}
+## Installation
 
 This is currently not a functional R package and the scripts must be run directly in R.
 Please fork this repository to work with the functions created here.
 
-## Usage {#usage}
+## Usage
 
 Each data source has an associated `read` function in the R folder.
 In addition there is an article under `vignettes/articles` that gives an example of the use of the `read` function in the context of a data workflow.
 
 The data workflow is further described in the [wiki](https://github.com/ktoddbrown/SoilDRaH/wiki)
 
-## License {#license}
+## License
 
 [MIT License](LICENSE.md)
