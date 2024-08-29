@@ -1,0 +1,69 @@
+---
+title: 'ISRaD: International Soil Radiocarbon Database'
+author: "Kathe Todd-Brown <ktoddbrown@ufl.edu>"
+date: "2024-08-29"
+output: html_document
+---
+
+This markdown document is the code for reading in the International Soil Radiocarbon Database (ISRaD).
+Location of the latest release of the ISRaD database (periodic pushes from GitHub): https://soilradiocarbon.org/
+
+Full database citation for associated manuscript (but not latest release): 
+> Lawrence, C.R., Beem-Miller, J., Hoyt, A.M., Monroe, G., Sierra, C.A., Stoner, S., Heckman, K., Blankinship, J.C., Crow, S.E., McNicol, G. and Trumbore, S., 2020. An open-source database for the synthesis of soil radiocarbon data: International Soil Radiocarbon Database (ISRaD) version 1.0. Earth System Science Data, 12(1), pp.61-76.
+
+```{r setup}
+
+library(tidyverse)
+
+# Download URL for entire ISRaD database
+downloadUrl <- "https://github.com/International-Soil-Radiocarbon-Database/ISRaD/raw/main/ISRaD_data_files/database/ISRaD_database_files.zip"
+
+#make sure to create a temp/ISRaD folder in the project directory, you could
+#... redirect this elsewhere but this will be more flexible for also looking 
+#... at other datasets across different developer computers
+dataDir <- '../../temp/ISRaD'
+
+annotationsFilename <- '../../data/annotations_ISRaD.csv'
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+#Download ISRaD files
+utils::download.file(url = downloadUrl, 
+                     destfile = file.path(dataDir,
+                                          'ISRaD_database_files.zip'))
+
+# Unzip zip folder
+utils::unzip(file.path(dataDir, 'ISRaD_database_files.zip'), 
+             exdir = dataDir, overwrite = FALSE)
+
+# The names of the data files reflect the version of ISRaD used and the date on which the database was compiled.
+# Names are constructed in the format (data name)_(vX).(date).(format), where data name tells what data this is (ie. ISRaD_extra_flat_layer), vX refers to the official ISRaD version number (e.g. “v1.2.3”), date gives the date when the data were compiled (yyyy-mm-dd), and format is the file type.
+
+
+# What name is the downloaded file for *layer-level* data?
+# NOTE that the meta-data and site level tables are already joined to any files with data at a finer resolution (i.e. "layer", "fraction", "flux", "interstitial")
+# This matters for how annotations are put together... one "table" or several tables of annotations? Currently just one annotation table
+
+filename <- list.files(dataDir, full.names = TRUE)[
+  str_detect(list.files(dataDir), 
+             'ISRaD_data_flat_layer_v [\\d\\.\\-]+\\.csv$')]
+# this should look like "ISRaD_data_flat_layer_v 2.6.6.2024-01-25.csv"
+
+
+# Read the CSV file with all columns as characters
+original_data <- read_csv(filename,
+                          col_types = cols(.default = col_character())) |>
+  dplyr::rename(row_index = '...1')
+# There are 36,706 observations for 184 variables at the *layer* level
+
+annotations <- read_csv(file=annotationsFilename,
+                          col_types = cols(.default = col_character()))
+
+```
+
+```{r}
+
+```
