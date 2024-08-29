@@ -1,10 +1,10 @@
 "id","of_variable","is_type","with_entry"
 "entry_name","Dataset (entry) Name","unit","author_year"
-"entry_name","Dataset (entry) Name","description","Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis."
-"doi","Digital Object Identifier (DOI)","unit","do not use ""http://doi.org"" prefix"
-"doi","Digital Object Identifier (DOI)","description","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org"""
-"compilation_doi","DOI of Published Compiliation","unit","do not use ""http://doi.org"" prefix"
-"compilation_doi","DOI of Published Compiliation","description","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include ""http://doi.org"""
+"entry_name","Dataset (entry) Name","description","Standardized dataset name: 'first author_ publication year.' Synthesis studies  should report multiple entries for each dataset in the synthesis."
+"doi","Digital Object Identifier (DOI)","unit","do not use 'http://doi.org' prefix"
+"doi","Digital Object Identifier (DOI)","description","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include 'http://doi.org'"
+"compilation_doi","DOI of Published Compiliation","unit","do not use 'http://doi.org' prefix"
+"compilation_doi","DOI of Published Compiliation","description","Digital Object Identifier. Please look this number up at journal webpage even if it is not reported in PDF. Alphanumeric string only. Do not include 'http://doi.org'"
 "curator_name","Curator Name","unit","Your name (person entering data)"
 "curator_name","Curator Name","description","Name of person completing template or, in the case of synthesis efforts, the author of the synthesis."
 "curator_organization","Curator Organization","unit","Your organization"
@@ -31,10 +31,10 @@
 "associated_datasets","Datasets associated with the primary entry","description","List any associated datasets that may report the same data contained in the primary entry"
 "template_version","Template version date","unit","yyyymmddhh"
 "template_version","Template version date","description","DO NOT EDIT (year, month, day, hour of template version (UTC))"
-"entry_name","Dataset (entry) Name","description","Standardized dataset name: ""first author_ publication year."" Synthesis studies  should report multiple entries for each dataset in the synthesis. Values must match across levels."
+"entry_name","Dataset (entry) Name","description","Standardized dataset name: 'first author_ publication year.' Synthesis studies  should report multiple entries for each dataset in the synthesis. Values must match across levels."
 "entry_name","Dataset (entry) Name","control_vocabularies","must match across levels"
 "site_name","Site Name","unit","alphanumeric"
-"site_name","Site Name","description","A unique name for a site. See ""general information"" for details on what qualifies as a Site. Values must match across levels."
+"site_name","Site Name","description","A unique name for a site. See 'general information' for details on what qualifies as a Site. Values must match across levels."
 "site_name","Site Name","control_vocabularies","must match across levels"
 "site_lat","Latitude","unit","dec. deg"
 "site_lat","Latitude","description","Latitude of site reported as decimal degrees. The precision of the coordinates reported are up the user. For conversion of degree minute second values to decimal degrees, please see the following resource: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees"
@@ -84,9 +84,9 @@
 "pro_usda_soil_order","Soil Order in USDA Taxonomy","description","The soil order in USDA soil taxonomy"
 "pro_usda_soil_order","Soil Order in USDA Taxonomy","control_vocabularies","Alfisols, Andisols, Aridisols, Entisols, Gelisols, Histosols, Inceptisols, Mollisols, Oxisols, Spodosols, Ultisols, Vertisols"
 "pro_soil_series","Soil Series Name","description","The soil series name of the profile in USDA soil taxonomy"
-"pro_soil_taxon","Additonal Soil Taxonomic Descriptors (e.g. more specific USDA or WRB)","description","Use this field in combination with ""pro_soil_taxon_sys"" to record non-USDA soil taxonomy or additional USDA soil taxonomic descriptors"
+"pro_soil_taxon","Additonal Soil Taxonomic Descriptors (e.g. more specific USDA or WRB)","description","Use this field in combination with 'pro_soil_taxon_sys' to record non-USDA soil taxonomy or additional USDA soil taxonomic descriptors"
 "pro_soil_taxon_sys","Soil Taxonomic System (use for text in pro_soil_taxon field)","unit","(pro_taxon_sys)"
-"pro_soil_taxon_sys","Soil Taxonomic System (use for text in pro_soil_taxon field)","description","The relevant soil taxonomic classification system for data entered in the ""pro_soil_taxon"" column"
+"pro_soil_taxon_sys","Soil Taxonomic System (use for text in pro_soil_taxon field)","description","The relevant soil taxonomic classification system for data entered in the 'pro_soil_taxon' column"
 "pro_soil_taxon_sys","Soil Taxonomic System (use for text in pro_soil_taxon field)","control_vocabularies","USDA, WRB, other"
 "pro_chrono_name","Denote Chronosequence Grouping","description","Group name assigned to a particular chronosequence"
 "pro_soil_age","Soil Age","unit","Ky"
@@ -163,7 +163,7 @@
 "pro_name","Profile Name","description","see profile tab for description"
 "pro_name","Profile Name","control_vocabularies","must match across levels"
 "lyr_name","Layer Name","unit","alphanumeric"
-"lyr_name","Layer Name","description","A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: ""profile1_0-10"""
+"lyr_name","Layer Name","description","A unqiue layer identifier. Most commonly a concatination of the profile name and layer depth range is used. For example: 'profile1_0-10'"
 "lyr_name","Layer Name","control_vocabularies","must match across levels"
 "lyr_obs_date_y","Observation Date Year","unit","yyyy"
 "lyr_obs_date_y","Observation Date Year","description","Year when sample was collected"
@@ -209,26 +209,41 @@
 "lyr_coarse_density","Density of Coarse Fraction","description","Measured or estimated density of coarse fraction"
 "lyr_texture_class","Texture Class","unit","(texture_class)"
 "lyr_texture_class","Texture Class","description","The soil textural classification (USDA categories)"
-"lyr_texture_class","Texture Class","control_vocabularies","sand,
-loamy sand,
-sandy loam,
-loam,
-silt,
-silty loam,
-sandy clay loam,
-clay loam,
-silty clay loam,
-sandy clay,
-silty clay,
-clay,
-gravelly loam,
-fibric,
-sapric,
+"lyr_texture_class","Texture Class","control_vocabularies","sand,
+
+loamy sand,
+
+sandy loam,
+
+loam,
+
+silt,
+
+silty loam,
+
+sandy clay loam,
+
+clay loam,
+
+silty clay loam,
+
+sandy clay,
+
+silty clay,
+
+clay,
+
+gravelly loam,
+
+fibric,
+
+sapric,
+
 hemic"
 "lyr_bet_surface_area","Bulk Layer Surface Area Measured By BET","unit","m2/ g-1"
 "lyr_bet_surface_area","Bulk Layer Surface Area Measured By BET","description","Bulk surface area of sample as measured using the Brunauer–Emmett–Teller (BET) method"
 "lyr_basal","Flag if basal layer of peat profile","unit","(yes or blank)"
-"lyr_basal","Flag if basal layer of peat profile","description","Applicable to peatland sites. ""Yes"" if the layer represents the bottom of a peat profile, i.e. the interface with the mineral horizon. Otherwise, leave blank."
+"lyr_basal","Flag if basal layer of peat profile","description","Applicable to peatland sites. 'Yes' if the layer represents the bottom of a peat profile, i.e. the interface with the mineral horizon. Otherwise, leave blank."
 "lyr_basal","Flag if basal layer of peat profile","control_vocabularies","yes"
 "lyr_ph_cacl","Soil pH CaCl2","description","1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio."
 "lyr_ph_h2o","Soil pH 1:1","description","1:1 distilled water and soil paste. If pH was done by a different method, then enter it into one of the other soil pH fields."
@@ -350,38 +365,38 @@ hemic"
 "lyr_si_dith","Dithionite Extractable Si","description","Mass of element (Fe, Al, Si, or C) extracted from soil with hydroxylamine  reported per gram of soil extracted."
 "lyr_dith_notes","Dithionite Notes: Concentration, Extraction Time, Sequential or Parallel","unit","alphanumeric"
 "lyr_dith_notes","Dithionite Notes: Concentration, Extraction Time, Sequential or Parallel","description","Notes on dithionite extraction including concentration of extractant, solid  to solution ration, and sequential or parallel extraction design (if other extractions were also performed)."
-"lyr_quartz","Quartz Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_quartz","Quartz Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_alkali_feldspar","Alkali Feldspar Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_alkali_feldspar","Alkali Feldspar Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_plag_feldspar","Plagioclase Feldspar Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_plag_feldspar","Plagioclase Feldspar Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_mica_chlorite","Mica + Chlorite Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_mica_chlorite","Mica + Chlorite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_amphibole","Amphibole (Hornblende)","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_amphibole","Amphibole (Hornblende)","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_pyroxine","Enstatite + Augite + Diopside","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_pyroxine","Enstatite + Augite + Diopside","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_olivine","Olivine Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_olivine","Olivine Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_volc_glass","Volcanic Glass Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_volc_glass","Volcanic Glass Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_kaol_halloy","Kaolinite + Halloysite","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_kaol_halloy","Kaolinite + Halloysite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_smect_vermic","Smectite (Montmorillonite) + Vermincullite","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_smect_vermic","Smectite (Montmorillonite) + Vermincullite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_gibbsite","Gibbsite Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_gibbsite","Gibbsite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_fe_oxides","Goethite + Hematite + Magnetite + Lepidocrocite","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_fe_oxides","Goethite + Hematite + Magnetite + Lepidocrocite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_imog_alloph","Imogolite + Allophane","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_imog_alloph","Imogolite + Allophane","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_ferrihydrite","Ferrihydrite Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_ferrihydrite","Ferrihydrite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_calcite_dolomite","Calcite + Dolomite Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_calcite_dolomite","Calcite + Dolomite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
-"lyr_zeolite","zeolite Abundance","unit","% or 101/102/102 for ""+/++/+++"""
-"lyr_zeolite","zeolite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to ""+/++/+++"" notation"
+"lyr_quartz","Quartz Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_quartz","Quartz Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_alkali_feldspar","Alkali Feldspar Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_alkali_feldspar","Alkali Feldspar Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_plag_feldspar","Plagioclase Feldspar Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_plag_feldspar","Plagioclase Feldspar Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_mica_chlorite","Mica + Chlorite Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_mica_chlorite","Mica + Chlorite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_amphibole","Amphibole (Hornblende)","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_amphibole","Amphibole (Hornblende)","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_pyroxine","Enstatite + Augite + Diopside","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_pyroxine","Enstatite + Augite + Diopside","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_olivine","Olivine Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_olivine","Olivine Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_volc_glass","Volcanic Glass Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_volc_glass","Volcanic Glass Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_kaol_halloy","Kaolinite + Halloysite","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_kaol_halloy","Kaolinite + Halloysite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_smect_vermic","Smectite (Montmorillonite) + Vermincullite","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_smect_vermic","Smectite (Montmorillonite) + Vermincullite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_gibbsite","Gibbsite Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_gibbsite","Gibbsite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_fe_oxides","Goethite + Hematite + Magnetite + Lepidocrocite","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_fe_oxides","Goethite + Hematite + Magnetite + Lepidocrocite","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_imog_alloph","Imogolite + Allophane","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_imog_alloph","Imogolite + Allophane","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_ferrihydrite","Ferrihydrite Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_ferrihydrite","Ferrihydrite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_calcite_dolomite","Calcite + Dolomite Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_calcite_dolomite","Calcite + Dolomite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
+"lyr_zeolite","zeolite Abundance","unit","% or 101/102/102 for '+/++/+++'"
+"lyr_zeolite","zeolite Abundance","description","Quantitative or qualitative  mineral abundance. When quantitative measurements are reported, use %. Otherwise, qualitative measurements use the 101/102/103 as equivalent to '+/++/+++' notation"
 "lyr_bd_samp_fill_extra","Expert Estimated Bulk Density, Coarse Fragments Removed","unit","g cm-3"
 "lyr_bd_samp_fill_extra","Expert Estimated Bulk Density, Coarse Fragments Removed","description","Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater than 1 cm diameter removed."
 "lyr_c_org_fill_extra","Expert Estimated Organic Carbon","unit","%"
