@@ -17,8 +17,8 @@ data,Age std dev,age_standard_deviation,value,--
 metadata$parameters,Age std dev,age_standard_deviation,description,--
 data,Age unc,age_uncertainty,value,--
 metadata$parameters,Age unc,age_uncertainty,description,--
-data,C,organic_carbon,value,--
-metadata$parameters,C,organic_carbon,description,--
+data,C,carbon,value,--
+metadata$parameters,C,carbon,description,--
 metadata$events,COMMENT,core_comment,note,--
 data,Cal age,age,value,--
 metadata$parameters,Cal age,age,description,--
@@ -67,8 +67,8 @@ data,TC,total_carbon,value,--
 metadata$parameters,TC,total_carbon,description,--
 data,TN,total_nitrogen,value,--
 metadata$parameters,TN,total_nitrogen,description,--
-data,TOC,organic_carbon,value,--
-metadata$parameters,TOC,organic_carbon,description,--
+data,TOC,total_organic_carbon,value,--
+metadata$parameters,TOC,total_organic_carbon,description,--
 data,Vol,volume,value,--
 metadata$parameters,Vol,volume,description,--
 metadata,abstract,abstract,value,--
