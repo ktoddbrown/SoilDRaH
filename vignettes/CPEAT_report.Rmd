@@ -140,7 +140,7 @@ CPEAT_soc <- CPEAT.ls$long %>%
     "doi",
     "data_doi",
     "download_url",
-    "organic_carbon",
+    "carbon",
     "bulk_density",
     "layer_mid",
     "layer_thickness",
@@ -154,19 +154,13 @@ CPEAT_soc <- CPEAT.ls$long %>%
     "organic_matter",
     "organic_matter_density",
     "total_carbon",
+    "total_organic_carbon",
     "inorganic_carbon"),
     #limit these to tables since some of them are duplicates
     table_name %in% c('.', 'metadata$events', 'data')) %>%
   #only take the values, just incase there are any methods or units in the table
   filter(is_type == 'value', is.na(is_type) | is_type != 'description') %>%
-  unique() %>%
-  #make a single row ID
-  #tidyr::unite(col = core_id, doi, sep = '::') %>%
-  #group_by(doi, column_name) %>% 
-  pivot_wider(names_from = column_number,
-               values_from = with_entry) %>% # 62024 obs
-  unique() %>% 
-  dplyr::mutate(across(-doi, as.numeric))
+  unique()
 
 ```
 
@@ -210,10 +204,13 @@ site.df <- CPEAT_soc %>%
 
 #just renaming the object to maintain uniformity in naming across datasets
 layer.df <- CPEAT_soc %>% 
-  select(doi_primary = doi, table_name, row_number, of_variable, with_entry) %>% # 303, 742 obs of 7 variables
+  select(doi_primary = doi, table_name, row_number, of_variable, with_entry) %>%
+  filter(!is.na(with_entry)) %>%
   pivot_wider(names_from = of_variable,
-              values_from = with_entry,
-              names_repair = "unique")
+    values_from = with_entry,
+    values_fn = list(with_entry = ~ paste(., collapse = "; "))) %>% 
+  mutate(across(-c(doi_primary, table_name, row_number), as.numeric))
+
 ```
 
 ## Figures and Report
@@ -223,7 +220,7 @@ Below are some general figures that might be of interest if you are evaluating t
 # Plotting Layer histograms!
 
 ```{r}
-ggplot(layer.df %>%
+ggplot(CPEAT_soc %>%
          pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
   geom_histogram(aes(x=value)) +
   facet_wrap(~of_variable, scales='free')
@@ -232,15 +229,15 @@ ggplot(layer.df %>%
 # Bulk density vs Organic carbon %
 
 ```{r}
-ggplot(layer.df) +
-  geom_point(aes(x = bulk_density, y = organic_carbon), alpha = 0.1)
+ggplot(layer.2) +
+  geom_point(aes(x = bulk_density, y = carbon), alpha = 0.1)
 ```
 
 # Bulk density vs Total organic carbon %
 
 ```{r}
-ggplot(layer.df) +
-  geom_point(aes(x = bulk_density, y = `TOC [%]`), alpha = 0.1)
+ggplot(layer.2) +
+  geom_point(aes(x = bulk_density, y = total_organic_carbon), alpha = 0.1)
 ```
 
 # Geolocations
