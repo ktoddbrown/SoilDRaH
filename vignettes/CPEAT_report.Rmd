@@ -162,23 +162,11 @@ CPEAT_soc <- CPEAT.ls$long %>%
   filter(is_type == 'value', is.na(is_type) | is_type != 'description') %>%
   unique()
 
-```
-
-## Casting values
-
-Finally make sure that the numbers are actually numbers.
-
-```{r}
-# changing the structure of the column variables except doi
-CPEAT_soc <- CPEAT_soc %>% 
-  dplyr::mutate(across(with_entry, as.numeric))
-
 CPEAT_soc %>%
   slice_head(n=100) %>%
   knitr::kable() %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
-
 ```
 
 ## Make small tables
@@ -190,7 +178,7 @@ We given an example below of how this might be organized.
 # site level info
 site.df <- CPEAT_soc %>%
   filter(of_variable %in% c(
-    "doi",
+    #"doi",
     "latitude",
     "longitude",
     "region",
@@ -209,7 +197,44 @@ layer.df <- CPEAT_soc %>%
   pivot_wider(names_from = of_variable,
     values_from = with_entry,
     values_fn = list(with_entry = ~ paste(., collapse = "; "))) %>% 
-  mutate(across(-c(doi_primary, table_name, row_number), as.numeric))
+  select(-doi) %>% 
+  rename(doi = 'doi_primary')  # 98,596 obs of 18 variables
+
+```
+
+## Casting values
+
+Finally make sure that the numbers are actually numbers.
+
+```{r}
+# changing the structure of the column variables except doi and other character variables
+site.df <- site.df %>% 
+  dplyr::mutate(across(c(latitude, longitude, elevation), as.numeric),
+                region = factor(region))
+
+layer.df <- layer.df %>%  
+  mutate(across(-c(doi, table_name, row_number, data_doi, 
+                   download_url, region), as.numeric)) # 98,596 obs of 18 variables
+
+```
+
+# Factor tables  
+
+```{r}
+# count of regions for CPEAT layer level data
+site.df %>% 
+  group_by(region) %>% 
+  tally() %>%
+  knitr::kable(caption = 'CPEAT layer-level catagorical regions') %>% 
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+
+layer_site <- site.df %>% 
+  mutate(has_lat_long = is.finite(latitude + longitude)) %>% 
+  group_by(doi, has_lat_long, region) %>% 
+  tally() %>% 
+  mutate(location_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer")) %>% 
+  ungroup() # 870 obs of 5 variables
 
 ```
 
@@ -229,25 +254,35 @@ ggplot(CPEAT_soc %>%
 # Bulk density vs Organic carbon %
 
 ```{r}
-ggplot(layer.2) +
+ggplot(layer.df) +
   geom_point(aes(x = bulk_density, y = carbon), alpha = 0.1)
 ```
 
 # Bulk density vs Total organic carbon %
 
 ```{r}
-ggplot(layer.2) +
+ggplot(layer.df) +
   geom_point(aes(x = bulk_density, y = total_organic_carbon), alpha = 0.1)
 ```
 
 # Geolocations
 
 ```{r}
+# plotting geolocations with lat and long values 
 ggplot(site.df) +
   geom_polygon(data = map_data('world'),
                aes(x = long, y = lat, group = group), 
                fill = NA, color = 'lightgrey') +
-  geom_point(aes(x=longitude, y = latitude), alpha = .1, color = 'darkorange')+
+  geom_point(aes(x=longitude, y = latitude), alpha = .1, color = 'darkorange') + 
+  labs(x = NULL, y = NULL)
+
+# categorizing the geolocations using region factor
+ggplot(site.df) +
+  geom_polygon(data = map_data('world'),
+               aes(x = long, y = lat, group = group), 
+               fill = NA, color = 'lightgrey') +
+  geom_point(aes(x=longitude, y = latitude,
+                 fill = region, color = region), size = 1.0) +
+  #theme(legend.position = "bottom")  +
   labs(x = NULL, y = NULL)
 ```
-
