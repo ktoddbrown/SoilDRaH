@@ -74,7 +74,7 @@ CPEAT.original <- readCPEAT(dataDir,
 #  arrange(header_id, table_name) |>
 #  write_csv(file = 'data/annotations_CPEAT2.csv')
 
-CPEAT.ls$long %>% # tital 615,152 obs with 9 columns
+CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
   slice_head(n=650) %>%
   knitr::kable() %>%
   kable_paper() %>%
