@@ -286,3 +286,24 @@ ggplot(site.df) +
   #theme(legend.position = "bottom")  +
   labs(x = NULL, y = NULL)
 ```
+
+```{r}
+install.packages("plotly")
+library(plotly)
+
+# Create the interactive ggplot 
+plot_cpeat <- ggplot(site.df) +
+  geom_polygon(data = map_data('world'),
+               aes(x = long, y = lat, group = group), 
+               fill = NA, color = 'lightgrey') +
+  geom_point(aes(x = longitude, y = latitude, text = region), 
+             alpha = 0.2, size = 0.4, color = 'darkblue') +
+  labs(title = 'Geolocation for 870 CPEAT cores',
+       x = NULL, y = NULL) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+
+# Convert to plotly for interactivity
+ggplotly(plot_cpeat, tooltip = "text")
+```
+
