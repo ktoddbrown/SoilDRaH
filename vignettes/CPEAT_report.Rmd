@@ -155,7 +155,8 @@ CPEAT_soc <- CPEAT.ls$long %>%
     "organic_matter_density",
     "total_carbon",
     "total_organic_carbon",
-    "inorganic_carbon"),
+    "inorganic_carbon",
+    "peat_description"),
     #limit these to tables since some of them are duplicates
     table_name %in% c('.', 'metadata$events', 'data')) %>%
   #only take the values, just incase there are any methods or units in the table
@@ -197,6 +198,8 @@ layer.df <- CPEAT_soc %>%
   pivot_wider(names_from = of_variable,
     values_from = with_entry,
     values_fn = list(with_entry = ~ paste(., collapse = "; "))) %>% 
+  separate(peat_description, into = c("peat_description", "peat_description_ref"), 
+           sep = ";", fill = "left") %>% 
   select(-doi) %>% 
   rename(doi = 'doi_primary')  # 98,596 obs of 18 variables
 
@@ -214,7 +217,8 @@ site.df <- site.df %>%
 
 layer.df <- layer.df %>%  
   mutate(across(-c(doi, table_name, row_number, data_doi, 
-                   download_url, region), as.numeric)) # 98,596 obs of 18 variables
+                   download_url, region, peat_description, peat_description_ref), as.numeric),
+         peat_description = factor(peat_description)) # 98,596 obs of 18 variables
 
 ```
 
@@ -236,6 +240,14 @@ layer_site <- site.df %>%
   mutate(location_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer")) %>% 
   ungroup() # 870 obs of 5 variables
 
+layer_taxa <- layer.df %>% 
+  group_by(peat_description) %>% 
+  tally() 
+
+layer_taxa %>%
+  knitr::kable(caption = 'CPEAT layer-level species taxa categories') %>% 
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px") # 92 categories
 ```
 
 ## Figures and Report
@@ -245,7 +257,10 @@ Below are some general figures that might be of interest if you are evaluating t
 # Plotting Layer histograms!
 
 ```{r}
-ggplot(CPEAT_soc %>%
+CPEAT_soc_plot <- CPEAT_soc %>% 
+  dplyr::mutate(across(with_entry, as.numeric))
+
+ggplot(CPEAT_soc_plot %>%
          pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
   geom_histogram(aes(x=value)) +
   facet_wrap(~of_variable, scales='free')
@@ -263,6 +278,13 @@ ggplot(layer.df) +
 ```{r}
 ggplot(layer.df) +
   geom_point(aes(x = bulk_density, y = total_organic_carbon), alpha = 0.1)
+```
+
+# Organic matter content across different taxa
+
+```{r}
+ggplot(layer.df) +
+  geom_histogram(aes(x = organic_matter, fill = peat_description))
 ```
 
 # Geolocations
