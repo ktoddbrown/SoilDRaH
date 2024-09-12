@@ -40,20 +40,64 @@ library(knitr) # make prettier tables
 library(kableExtra) #make tables scrollable
 library(pangaear)
 
-source("./R/readCPEAT.R", local = knitr::knit_global())
+#locate the read script
+readCPEAT_file <- 'readCPEAT.R'
 
-#locate the data locally
-dataDir <- './temp/CPEAT'
-#dataAnnotations <- '../data/CPEAT_annotations.csv'
-dataAnnotations <- './data/annotations_CPEAT2.csv'
+#locate the data directory we will download to
+dataDir <- 'CPEAT'
+dataAnnotations <- 'annotations_CPEAT2.csv'
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval = TRUE}
 #Change this file to run locally for you
-#dataDir  <- '~/Dropbox (UFL)/Research/Datasets/'
+dataDir  <- '../temp/CPEAT'
+
+readCPEAT_file <- file.path('../R', readCPEAT_file)
+dataAnnotations <- file.path('../data', dataAnnotations)
 ```
 
-Read in the data use the `readCPEAT` function.
+```{r}
+source(readCPEAT_file, local = knitr::knit_global())
+```
+
+
+## Orginal Pangaea data structure
+
+Each core in CPEAT has it's own doi-identified data package with it's own entry on the Pangaea repository.
+Each data package includes graphical metadata at the front of a tab separated data table.
+The graphical metadata is listed between `/*` and `*/`.
+Identifiers in this graphical format are followed by `:` with aspects of this item shown inline with a ` * `-separation followed by another `:`-denoted key-vale, and child items are preceded by a tab.
+See the example below.
+
+
+```{r echo=FALSE, comment='>'}
+examplefile <- readLines(list.files(file.path(dataDir), 
+                                    full.names = TRUE)[10])
+cat(paste0(examplefile, collapse = '\n'))
+```
+
+This can be represented as a graph (without the value entries) as follows:
+
+TODO Fill in the rest of the diagram
+
+```{mermaid}
+flowchart LR
+  A[Citation]
+  B[Related to]
+  C[Further details]
+  D["Project(s)"]
+  E[Coverage] --> EA[LATITUDE] & EB[LONGITUDE] & EC["MINIMUM DEPTH, sediment/rock"] & I["MAXIMUM DEPTH, sediment/rock"]
+  J["Events(s)"] --> K[" "] & L[LATITUDE] & M[LONGITUDE] & N[Recovery] & O[Location] & P["METHOD/DEVISE"] & Q[COMMENT]
+  Q --> QA["Coring year"] & S["core length"] & T["peatland type"] & U[basal age depth] & V[basal age] & W[basal age] & X[n dates] & Y[core microtopography] & Z[carbon rate site] & AA[peat properties site]
+```
+
+We found this format challenging to parse ourselves and instead relied on `pangaear::pg_data`, which we then further processed into a long data format.
+
+```{r file= '../R/readCPEAT.R'}
+
+
+```
+
 
 ```{r, warning=FALSE, message=FALSE}
 CPEAT.ls <- readCPEAT(dataDir, 
@@ -62,13 +106,18 @@ CPEAT.ls <- readCPEAT(dataDir,
                   verbose = FALSE, 
                   format = 'long',
                   randomSubset = Inf) # 2,640,892 obs for all datasets
+```
 
+
+
+
+```{r}
 CPEAT.original <- readCPEAT(dataDir, 
                   annotationFilename = dataAnnotations, 
                   #when first running, switch this to true 
                   verbose = FALSE, 
                   format = 'original',
-                  randomSubset = Inf)
+                  randomSubset = 2)
 
 #read_csv(file = 'data/annotations_CPEAT2.csv') |>
 #  arrange(header_id, table_name) |>
@@ -84,16 +133,7 @@ CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
 
 ## CPEAT Data structures
 
-Each core in CPEAT has it's own doi-identified dataset.
-This data set includes a graphical meta-data at the front of a tab separated data table.
-See example below:
 
-```{r echo=FALSE}
-examplefile <- readLines(list.files(file.path(dataDir), 
-                                    full.names = TRUE)[10])
-cat(paste0(examplefile, collapse = '\n'))
-#Figure out how to show a CPEAT file content here
-```
 
 We currently use XX function in the YY package to process this data into a the metadata portion (list-based data) and associated primary data (table-based data).
 
@@ -309,7 +349,7 @@ ggplot(site.df) +
   labs(x = NULL, y = NULL)
 ```
 
-```{r}
+```{r eval=FALSE}
 install.packages("plotly")
 library(plotly)
 
