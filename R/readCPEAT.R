@@ -7,7 +7,7 @@
 #' @param format character flag to either return a list of cores or the cores as a set of tables
 #' @param verbose boolean status to print out updates
 #'
-#' @importFrom pangaear pg_search pg_cache
+#' @importFrom pangaear pg_search pg_cache pg_data
 #' @importFrom plyr dlply ldply 
 #' @importFrom dplyr mutate across reframe
 #' @importFrom tidyr pivot_longer
