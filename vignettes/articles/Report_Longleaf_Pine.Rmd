@@ -4,47 +4,69 @@ output: html_document
 date: "7/17/24"
 ---
 
-<style type="text/css">
-.main-container {
-  max-width: 100% !important;
-  margin: auto;
-}
-</style>
+```{r setup}
 
-<body style="background-color: #ECECEC;">
-
-The purpose of this document is to summarize the portions of the Longleaf Pine Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion. Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
-
-Link to access Longleaf data: https://datadryad.org/stash/dataset/doi:10.5061/dryad.760b3<br/>Link to primary article: https://doi.org/10.1002/eap.1439
-
-## Data annotations
-This lab's annotation generation process results in a csv file with the following column format: table_id,column_id,of_variable,is_type,with_entry. The table_id is generally the base name of the csv/tsv file that is associated with the column_id, which is an exact match for the names of the columns in the associated tables. Entries in the of_variable column describe the variables that is associated with the id. These are generally observable properties like bulk density, organic carbon, ecotype, or soil color. The is_type entry commonly falls into one of the following {value, definition, unit, method, control_vocabulary}. This describes the kind of information associated with of_variable that is found in the with_entry. The with_entry column is either the entry associated with the variable and type described above or a special notation that indicates you should refer to the data set being described. We currently use -- for data set reference.
-
-The following is the code that generated the Longleaf Pine annotations. 
-```{r annotations, eval=FALSE}
-library(readxl)
-library(tibble)
+library(readxl) # For reading in excel files
+library(tibble) # 
 library(dplyr)
 library(stringr)
 
 # Dev variable to the path of the file directory that stores your biomass and carbon data sets
 # file_dir <- "C:/Users/gthra/Coding/Research Lab - Summer 2024/Annotations/Longleaf Annotations"
 
+dataDir <- "temp"
+
 ## Longleaf biomass data set annotations
 # Set file attributes for biomass data set
+# Dev Note: add file name for carbon data as well
 base_file_name <- "Longleaf pine biomass data"
-file_path <- paste(file_dir, "/", base_file_name, ".xlsx", sep="")
+
+# Dev Note: search and replace "file_path" with "biomass_file_path" and "carbon_file_path"
+file_path <- file.path(dataDir, paste0(base_file_name, ".xlsx"))
+biomass_download_url <- "https://datadryad.org/stash/downloads/file_stream/65747"
+carbon_download_url <- "https://datadryad.org/stash/downloads/file_stream/65746"
+# Dev Note: see if they have an automated API for data ingestion
+# Dev Note: figure out how to scrape citation info from dryad (download title, authors, and abstract when we pull data)
+
+```
+
+The purpose of this document is to summarize the portions of the Longleaf Pine Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion. Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+Link to access Longleaf data: https://datadryad.org/stash/dataset/doi:10.5061/dryad.760b3<br/>Link to primary article: https://doi.org/10.1002/eap.1439
+
+## Data Download
+
+```{r}
+
+# download the data
+if(!file.exists(file.path(dataDir, paste0(base_file_name, ".xlsx")))){
+  stop("Download data manually from https://datadryad.org/stash/dataset/doi:10.5061/dryad.760b3#citations")
+}
+
+```
+
+
+## Data annotations
+This lab's annotation generation process results in a csv file with the following column format: table_id,column_id,of_variable,is_type,with_entry. The table_id is generally the base name of the csv/tsv file that is associated with the column_id, which is an exact match for the names of the columns in the associated tables. Entries in the of_variable column describe the variables that is associated with the id. These are generally observable properties like bulk density, organic carbon, ecotype, or soil color. The is_type entry commonly falls into one of the following {value, definition, unit, method, control_vocabulary}. This describes the kind of information associated with of_variable that is found in the with_entry. The with_entry column is either the entry associated with the variable and type described above or a special notation that indicates you should refer to the data set being described. We currently use -- for data set reference.
+
+The following is the code that generated the Longleaf Pine annotations. 
+```{r annotations, eval=FALSE}
+
 
 # Generate the filtered, long-style biomass annotations table by (1) reading in column names, descriptions, control vocabulary, and units into a wide table format, 
 # (2) adding in the table_id, of_variable, value, and identifier, (3) splitting some descriptions from control vocabulary, (4) then pivoting to a long format while 
 # (5) adding the table-wide note.
 biomass_annotations <- 
   # Read in given metadata (column names, descriptions, control vocabulary, and units) from excel 
-  rename(read_xlsx(file_path, col_names=FALSE, range="Data Description!A4:C17"), c("column_id"=...1, "info"=...2, "unit"=...3)) %>% 
+  read_xlsx(file_path, col_names=c("column_id","info", "unit"), range="Data Description!A4:C17") %>% 
   mutate(
     table_id = base_file_name,
     value = "--",
-    identifier = "--",
+    # Flag identifier columns, these columns were determined
+    # using a manual data inspection
+    identifier = case_when(
+      column_id %in% c("YEAR", "STATE", "BASE", "AGE", "SAMPLE") ~ "--",
+                           TRUE ~ NA_character_),
     # Column_id to of_variable map
     of_variable = case_when(
       column_id %in% c("YEAR") ~ "Year_collected",
@@ -63,13 +85,17 @@ biomass_annotations <-
       column_id %in% c("TAPROOT_DEPTH") ~ "Tap_root_depth"),
     # If a "=" is present in a cell in the info column, that means that cell contains both a column description and control vocabulary; else, just a column description
     description = ifelse(grepl("=", info), str_extract(info, stringr::regex(".*(?=\\.)")), info),
-    control_vocabulary = ifelse(grepl("=", info), str_replace_all(str_replace_all(str_replace_all(str_trim(str_extract(info, stringr::regex("([^.]*)$"))), "=", "|"), ",", ";"), " and", ""), NA)
+    control_vocabulary = ifelse(grepl("=", info), str_replace_all(str_replace_all(str_replace_all(str_trim(str_extract(info, stringr::regex("([^.]*)$"))), "=", "|"), ",", ";"), " and", ""), NA),
+    # Correct units of YEAR columns
+    unit = case_when(column_id == "YEAR" ~ "year (CE)", TRUE ~ unit)
+    # Dev Note: also correct unit for RS_LLP and RS_ALL. 
+    # Should be "mass ratio"
   ) %>%
   # Drop the now-unneeded info column (as the new description and control vocabulary columns properly store and categorize its data) and reorder columns' positions to the lab's is_type order
   select(table_id, column_id, of_variable, value, description, unit, control_vocabulary, identifier) %>% 
   # Pivot longer and add in the table note
   tidyr::pivot_longer(c("value", "description", "unit", "control_vocabulary", "identifier"), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>% 
-  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(file_path, col_names=FALSE, range="Data Description!B20")), .before=1)
+  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(file_path, col_names="with_entry", range="Data Description!B20")), .before=1)
 
 ## Longleaf carbon data set annotations
 # Set file attributes for carbon data set
