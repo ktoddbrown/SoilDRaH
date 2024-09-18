@@ -23,11 +23,11 @@ readCPEAT <- function(dataDir,
                       verbose=FALSE){
   
   ##Dev sets
-  # dataDir <- 'temp/CPEAT'
+  #dataDir <- 'temp/CPEAT'
   # verbose <- TRUE
-  # randomSubset <- 10
+  #randomSubset <- 10
   # #annotationFilename <- 'data/CPEAT_annotations.csv'
-  # annotationFilename <- 'data/annotations_CPEAT2.csv'
+  #annotationFilename <- 'data/annotations_CPEAT2.csv'
   
   #### find CPEAT data ####
   
@@ -44,7 +44,7 @@ readCPEAT <- function(dataDir,
     dplyr::mutate(fullcitation = paste0(citation, 
                                         ". PANGAEA, https://doi.org/", doi)) 
   
-  if(nrow(pages.df) != 878){
+  if(nrow(pages.df) > 870){
     # Tell the user not to expect the data cleaning to work here 
     warning("unexpected number of CPEAT core datasets found; code could behave unexpectedly. Please report to the repository.") 
   }
