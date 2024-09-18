@@ -2,11 +2,14 @@
 title: "Carbon in Peat on EArth through Time"
 author: "Vaasuki Marupaka"
 date: "Summer 2024"
-output: 
-  html_document: 
-    toc: true
-    number_sections: true
-    code_folding: show
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    R.options:
+      knitr.graphics.auto_pdf: true
+toc: true
+toc-depth: 2
 ---
 
 The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
@@ -37,8 +40,8 @@ library(tidyr) # work with data table pivots
 library(ggplot2) # make plots
 library(stringr) # extract text from descriptions
 library(knitr) # make prettier tables
-library(kableExtra) #make tables scrollable
-library(pangaear)
+library(kableExtra) # make tables scrollable
+library(pangaear) # read in data from p
 
 #locate the read script
 readCPEAT_file <- 'readCPEAT.R'
@@ -48,7 +51,9 @@ dataDir <- 'CPEAT'
 dataAnnotations <- 'annotations_CPEAT2.csv'
 ```
 
-```{r, echo=FALSE, eval = TRUE}
+```{r filenames}
+#| echo: FALSE
+#| eval: TRUE
 #Change this file to run locally for you
 dataDir  <- '../temp/CPEAT'
 
@@ -60,6 +65,21 @@ dataAnnotations <- file.path('../data', dataAnnotations)
 source(readCPEAT_file, local = knitr::knit_global())
 ```
 
+```{r longCPEAT_read}
+#| cache: TRUE
+#| warning: FALSE
+#| message: FALSE
+
+CPEAT.ls <- readCPEAT(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  #when first running, switch this to true 
+                  verbose = FALSE, 
+                  format = 'long',
+                  randomSubset = Inf) # 2,640,892 obs for all datasets
+
+#read the same example we take below
+singleCPEAT <- pangaear::pg_data(doi = '10.1594/PANGAEA.890203')[[1]]
+```
 
 ## Orginal Pangaea data structure
 
@@ -67,10 +87,14 @@ Each core in CPEAT has it's own doi-identified data package with it's own entry 
 Each data package includes graphical metadata at the front of a tab separated data table.
 The graphical metadata is listed between `/*` and `*/`.
 Identifiers in this graphical format are followed by `:` with aspects of this item shown inline with a ` * `-separation followed by another `:`-denoted key-vale, and child items are preceded by a tab.
+
 See the example below.
 
-
-```{r echo=FALSE, comment='>'}
+```{r showDataStr}
+#| echo: false
+#| code-fold: true
+#| code-summary: 'Example Pangaea File'
+#| comment: ''
 examplefile <- readLines(list.files(file.path(dataDir), 
                                     full.names = TRUE)[10])
 cat(paste0(examplefile, collapse = '\n'))
@@ -91,44 +115,212 @@ flowchart LR
   Q --> QA["Coring year"] & S["core length"] & T["peatland type"] & U[basal age depth] & V[basal age] & W[basal age] & X[n dates] & Y[core microtopography] & Z[carbon rate site] & AA[peat properties site]
 ```
 
-We found this format challenging to parse ourselves and instead relied on `pangaear::pg_data`, which we then further processed into a long data format.
 
-```{r file= '../R/readCPEAT.R'}
-
-
-```
-
-
-```{r, warning=FALSE, message=FALSE}
-CPEAT.ls <- readCPEAT(dataDir, 
-                  annotationFilename = dataAnnotations, 
-                  #when first running, switch this to true 
-                  verbose = FALSE, 
-                  format = 'long',
-                  randomSubset = Inf) # 2,640,892 obs for all datasets
-```
-
-
+# Reading the data
+This read function is a bit longer and more complicated then others in this collection.
+Here we choose to walk through key parts of the code base and explain our approach.
+Broadly we used `pangaear` to find, then download and load the data into R.
+For the long format, then walked through the list of individual cores using 
+`dlply` and generated a single data table in our long format.
+Note that the data annotations for this collection are minimal because much of 
+the data traditionally encoded as metadata is encoded in the downloaded data.
 
 
 ```{r}
-CPEAT.original <- readCPEAT(dataDir, 
-                  annotationFilename = dataAnnotations, 
-                  #when first running, switch this to true 
-                  verbose = FALSE, 
-                  format = 'original',
-                  randomSubset = 2)
+#| echo: false
+CPEAT_code <- read_lines(readCPEAT_file)
+```
 
-#read_csv(file = 'data/annotations_CPEAT2.csv') |>
-#  arrange(header_id, table_name) |>
-#  write_csv(file = 'data/annotations_CPEAT2.csv')
+First we find the data on the Pangaea repository using `pangaear::pg_search`.
+Search results are limited to the top 500 so we need to repeat this to get the total 876.
+Note that if the number of cores in this collection change we need to revisit 
+this function to ensure we still have the correct cleaning algorithms.
 
+```{r}
+#| eval: true
+#| echo: false
+#| class-output: R
+#| filename: "ln 34-45: readCPEAT.R"
+#| comment: ''
+cat(paste0(CPEAT_code[34:45], collapse = '\n'))
+```
+
+
+We then download the data and read it in at the same time using the 
+`pangaear::pg_data` function.
+According to the documentation we should be able to pass a list of doi's but
+this does not appear to work right now -- instead we load each doi separately and then piece them back together as a list
+using the `plyr::dlply` function.
+We also were unable to stop fresh downloads at each run -- as a result
+we recommend that you cache the results when possible instead of rerunning this
+read function.
+ 
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 69-89: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[69:89], collapse = '\n'))
+```
+
+If the original format is requested we then load in the annotations file and
+return the results here.
+This results in a list of lists as structured below.
+
+```{r readSingle}
+#| cache: true
+#| echo: false
+str(singleCPEAT)
+```
+
+Otherwise we move onto transforming this list of lists into a single long data table by iterating through using `plyr::ldply` after filtering the annotations for those
+that apply to the primary data (denoted by `--` in the `with_entry` column).
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 108-117: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[108:117], collapse = '\n'))
+```
+
+### Processing pg_read lists
+
+To each of `pg_read` lists items we apply the following:
+
+First we pull the headers used in the associated data and apply an ordering to them using a `V`-index pattern.
+This was done because not all the headers match those documented in the 
+parameter descriptions, likely due to an export truncation at some point.
+We are instead relying on ordering to match up the column names with the 
+parameter descriptions.
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 172-197: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[172:197], collapse = '\n'))
+```
+
+Then we add the descriptions from the `parameter` and combin that with
+`of_variable` tag
+from the annotations table.
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 199-220: readCPEAT.R"
+#| comment: ''
+#| code-output: R
+# code-block-border-left: true
+cat(paste0(CPEAT_code[199:220], collapse = '\n'))
+```
+
+Next the `data` element contains the layer level observations.
+The column names have been truncated in some cases, so first we replace them using a column number with a `V` prepend and rely on the ordering to match these up with the column descriptions and other information constructed above.
+There is no clear row/observation identifier (some tables contain multiple observations for the same layer), so we add a row number with a `R` prepend here to create a unique ID.
+Then the table is joined to prior information and pivoted to create a long format.
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 223-254: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[223:254], collapse = '\n'))
+```
+
+Finally we construct the secondary information about the study stored in elements which are not `parameters` nor `data` that we have not worked with yet
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 347-385: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[347:385], collapse = '\n'))
+```
+
+
+The extrated data frames are then bound the rows together.
+And then returned to the `plyr::ldply` function to be appended to other core data sets.
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 387-388: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[387:388], collapse = '\n'))
+```
+
+### Long format output
+
+We then clean up the output and return the resulting long format.
+
+```{r}
+#| eval: true
+#| echo: false
+#| filename: "ln 393-413: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[393:413], collapse = '\n'))
+```
+
+This long format has the following structure.
+
+```{r}
 CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
-  slice_head(n=650) %>%
+  slice_head(n=100) %>%
   knitr::kable() %>%
   kable_paper() %>%
   scroll_box(width = "100%", height = "300px")
 ```
+
+## `table_name`
+
+Often `table_name` will reflect the file name in a set of inter-related csv files, in this case we use it to refer to what `list` the data was extracted from in the `pangaear::pg_data` return.
+
+```{r}
+sort(unique(CPEAT.ls$long$table_name))
+```
+
+## `is_type`
+
+The `is_type` entry usually falls into one of the following categories: {`value`, `definition`, `unit`, `method`, `control_vocabulary`}. 
+This entry describes the type of information associated with `of_variable` found in `with_entry`. 
+Note that we use `value` as a general term for simplicity, regardless of whether the data is numerical or text. 
+
+```{r}
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = is_type) |>
+  arrange(desc(count))
+```
+
+## `of_variable`
+
+The of\_variable column describes the variables linked to the column\_id, such as bulk density, organic carbon, vegetation, other covariates. It's important to maintain the original intent of the data providers when creating these annotations. While the of\_variable entries are highly dependent on the dataset, is\_type should have a more restricted range of entries.
+
+```{r}
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = of_variable)
+```
+
+
 
 
 ## CPEAT Data structures
@@ -137,15 +329,6 @@ CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
 
 We currently use XX function in the YY package to process this data into a the metadata portion (list-based data) and associated primary data (table-based data).
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-singleExample <- readCPEAT(dataDir = dataDir, 
-          annotationFilename = dataAnnotations,
-          format = 'original',
-          randomSubset = 1,
-          verbose = FALSE)
-
-str(singleExample$original[[1]])
-```
 
 We annotate this metadata information a little differently then is typical for the project.
 
@@ -161,9 +344,8 @@ In the final output, the long table consists of the columns: $doi$, $table\_name
 
 The table names for this database include: primary study information (denoted by . in the long table), metadata, metadata\$events, metadata\$parameters, and data tables. 
 
-The of\_variable column describes the variables linked to the column\_id, such as bulk density, organic carbon, vegetation, other covariates. It's important to maintain the original intent of the data providers when creating these annotations. While the of\_variable entries are highly dependent on the dataset, is\_type should have a more restricted range of entries.
 
-The is\_type entry usually falls into one of the following categories: {value, definition, unit, method, control\_vocabulary}. This entry describes the type of information associated with of\_variable found in with\_entry. Note that we use 'value' as a general term for simplicity, regardless of whether the data is numerical or text. 
+
 
 The with\_entry column contains either the specific entry associated with the variable and type described or a special notation indicating a reference to the dataset being described. We currently use -- to denote a dataset reference.
 
@@ -367,5 +549,16 @@ plot_cpeat <- ggplot(site.df) +
 
 # Convert to plotly for interactivity
 ggplotly(plot_cpeat, tooltip = "text")
+```
+
+# Appendix
+
+## readCPEAT.R
+
+```{r}
+#| file: '../R/readCPEAT.R'
+#| code-line-numbers: TRUE
+#| echo: TRUE
+#| eval: FALSE
 ```
 
