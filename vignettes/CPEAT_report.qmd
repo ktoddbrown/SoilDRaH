@@ -279,6 +279,8 @@ We then clean up the output and return the resulting long format.
 cat(paste0(CPEAT_code[393:413], collapse = '\n'))
 ```
 
+# CPEAT long format
+
 This long format has the following structure.
 
 ```{r}
@@ -294,7 +296,10 @@ CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
 Often `table_name` will reflect the file name in a set of inter-related csv files, in this case we use it to refer to what `list` the data was extracted from in the `pangaear::pg_data` return.
 
 ```{r}
-sort(unique(CPEAT.ls$long$table_name))
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = table_name) |>
+  arrange(desc(count))
 ```
 
 ## `is_type`
@@ -304,6 +309,7 @@ This entry describes the type of information associated with `of_variable` found
 Note that we use `value` as a general term for simplicity, regardless of whether the data is numerical or text. 
 
 ```{r}
+# TODO Track down where the `NA` is coming from in is_type processing
 CPEAT.ls$long |>
   reframe(count = n(),
           .by = is_type) |>
@@ -315,39 +321,12 @@ CPEAT.ls$long |>
 The of\_variable column describes the variables linked to the column\_id, such as bulk density, organic carbon, vegetation, other covariates. It's important to maintain the original intent of the data providers when creating these annotations. While the of\_variable entries are highly dependent on the dataset, is\_type should have a more restricted range of entries.
 
 ```{r}
+#TODO Track down NA is of_variable and resolve, this probably linked to is_type NA
 CPEAT.ls$long |>
   reframe(count = n(),
           .by = of_variable)
 ```
 
-
-
-
-## CPEAT Data structures
-
-
-
-We currently use XX function in the YY package to process this data into a the metadata portion (list-based data) and associated primary data (table-based data).
-
-
-We annotate this metadata information a little differently then is typical for the project.
-
-The readCPEAT function performs the task of downloading, processing, and transforming datasets related to the CPEAT (PAGES C-PEAT) project. It interacts with the Pangaea data repository using default functions provided by pangaear package, process their nested structures, and transform them into a more uniform, relational data table format that can be manipulated and analyzed more easily. Here’s a breakdown of the function, what it's doing, and why it is structured this way:
-
-The function begins by searching the Pangaea repository ($pg\_search$) for datasets labeled with the CPEAT project. It includes metadata about these datasets (e.g., DOIs, citations, parameters and events related information). Each dataset (using function $pg\_data$) is downloaded as a structured list from Pangaea, and the function needs to retain this structure temporarily to parse and process it later.
-
-The parameters list is nested under metadata which includes the metadata; description, method, unit, and any additional information aligned with the data table variables. This metadata is often inconsistently formatted (e.g., mismatch of the the length of columns), so the function cleans and standardizes it by ensuring that parameter descriptions match the data columns. The function creates columns out of data table variables/headers by extracting the id, unit, method information using regular expressions ($str\_extract$).
-
-Firstly, the nested lists are transformed into a single wide table with all the columns. For better handling and data manipulation, the function transforms into a long table format ($pivot\_longer$) along with unique column numbers and row ids grouped by specific doi. The long format helps in data analysis, making it easier to perform operations like filtering, aggregating, and visualizing the data. 
-
-In the final output, the long table consists of the columns: $doi$, $table\_name$, $column\_number$, $row\_number$, $of\_variable$, $is\_type$, $with\_entry$ that resemble the typical annotations template we follow for data harmonization efforts. 
-
-The table names for this database include: primary study information (denoted by . in the long table), metadata, metadata\$events, metadata\$parameters, and data tables. 
-
-
-
-
-The with\_entry column contains either the specific entry associated with the variable and type described or a special notation indicating a reference to the dataset being described. We currently use -- to denote a dataset reference.
 
 # Subseting for soil carbon
 

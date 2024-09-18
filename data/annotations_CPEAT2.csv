@@ -39,6 +39,8 @@ metadata$parameters,Dated material,age,description,--
 data,Depth sed,layer_mid,value,--
 metadata$parameters,Depth sed,layer_mid,description,--
 metadata$events,ELEVATION,elevation,value,--
+metadata$events,ELEVATION START,elevation_start,value,--
+metadata$events,ELEVATION END,elevation_end,value,--
 metadata$events,LATITUDE,latitude,value,--
 metadata$events,LOCATION,region,value,--
 data,LOI,loss_on_ignition,value,--
