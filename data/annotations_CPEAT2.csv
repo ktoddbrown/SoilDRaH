@@ -90,3 +90,33 @@ metadata,related_to,related_citation,value,--
 metadata,size,observation_size,value,--
 metadata,status,cutation_level,value,--
 .,url,download_url,value,--
+data,F14C,fraction_14C,value,--
+data,SR,unknown2,value,--
+data,Water wm,water,value,--
+data,Cum mass,cumulative_mass,value,--
+data,PCAR,unknown5,value,--
+data,Sample ID,sample_id,value,--
+data,F14C e,fraction_14C_error,value,--
+data,Δ14C,delta_14C,value,--
+data,Δ14C std dev,delta_14C_std_dev,value,--
+data,TIC,total_inorganic_carbon,value,--
+data,Cal age std e,calendar_age_std_error,value,--
+data,Depth top,depth_top,value,--
+data,Depth bot,depth_bottom,value,--
+data,Cal age std dev,calendar_age_std_dev,value,--
+metadata,comment,comment,comment,--
+metadata,change_history,change_history,comment,--
+metadata$parameters,F14C,fraction_14C,description,--
+metadata$parameters,SR,unknown2,description,--
+metadata$parameters,Water wm,water,description,--
+metadata$parameters,Cum mass,cumulative_mass,description,--
+metadata$parameters,PCAR,unknown5,description,--
+metadata$parameters,Sample ID,sample_id,description,--
+metadata$parameters,F14C e,fraction_14C_error,description,--
+metadata$parameters,Δ14C,delta_14C,description,--
+metadata$parameters,Δ14C std dev,delta_14C_std_dev,description,--
+metadata$parameters,TIC,total_inorganic_carbon,description,--
+metadata$parameters,Cal age std e,calendar_age_std_error,description,--
+metadata$parameters,Depth top,depth_top,description,--
+metadata$parameters,Depth bot,depth_bottom,description,--
+metadata$parameters,Cal age std dev,calendar_age_std_dev,description,--
