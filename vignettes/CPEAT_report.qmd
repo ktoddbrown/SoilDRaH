@@ -138,7 +138,7 @@ CPEAT_code <- read_lines(readCPEAT_file)
 ```
 
 First we find the data on the Pangaea repository using `pangaear::pg_search`.
-Search results are limited to the top 500 so we need to repeat this to get the total 876.
+Search results are limited to the top 500 so we need to repeat this to get the total 870.
 Note that if the number of cores in this collection change we need to revisit 
 this function to ensure we still have the correct cleaning algorithms.
 
@@ -364,32 +364,28 @@ Note that we are NOT checking any of the quality control flags here which you wo
 ```{r}
 CPEAT_soc <- CPEAT.ls$long %>% 
   #identify the variables that we are interested in
-  filter(of_variable %in% c(
-    "doi",
-    "data_doi",
-    "download_url",
-    "carbon",
-    "bulk_density",
-    "layer_mid",
-    "layer_thickness",
-    "latitude",
-    "longitude",
-    "region",
-    "elevation",
-    "elevation_end",
-    "elevation_start",
-    "loss_on_ignition",
-    "organic_matter",
-    "organic_matter_density",
-    "total_carbon",
-    "total_organic_carbon",
-    "inorganic_carbon",
-    "peat_description"),
-    #limit these to tables since some of them are duplicates
-    table_name %in% c('.', 'metadata$events', 'data')) %>%
-  #only take the values, just incase there are any methods or units in the table
-  filter(is_type == 'value', is.na(is_type) | is_type != 'description') %>%
-  unique()
+  filter(of_variable %in% 
+           c(#variables that identify the source data
+             'doi', "data_doi", "download_url", "data_local_filepath",
+             "project", "related_citation", "core_name", "citation",
+             "core_comment", "comment", "data_license",
+             #geolocation of the core
+             "latitude", "longitude", "region", "elevation", "elevation_end",
+             "elevation_start", "bounded_coverage",
+             # related to the sampling of the core
+            "sampling_device",
+            "core_penetration", "core_recovery",
+            "peat_description",
+             #depth related variables 
+             "layer_mid", "layer_thickness",
+             "depth_top", "depth_bottom",
+            #related to the carbon content
+            "carbon", "total_carbon",
+            "organic_carbon_density", "total_organic_carbon",
+            "organic_matter", "organic_matter_density", "loss_on_ignition",
+            "total_inorganic_carbon", "inorganic_carbon",
+            #related to bulk density
+            "bulk_density"))
 
 CPEAT_soc %>%
   slice_head(n=100) %>%
@@ -404,49 +400,37 @@ Often this data is presented in three tables: a site level table with lat/lon an
 We given an example below of how this might be organized.
 
 ```{r}
-# site level info
-site.df <- CPEAT_soc %>%
-  filter(of_variable %in% c(
-    #"doi",
-    "latitude",
-    "longitude",
-    "region",
-    "elevation",
-    "elevation_end",
-    "elevation_start")) %>%
-  filter(!is.na(with_entry)) %>% 
-  unique() %>% 
-  pivot_wider(names_from = of_variable,
-               values_from = with_entry)
+CPEAT_study <- CPEAT.ls$long %>% 
+  #identify the variables that we are interested in
+  filter(of_variable %in% 
+           c(#variables that identify the source data
+             'doi', "data_doi", "download_url", "data_local_filepath",
+             "project", "related_citation", "core_name", "citation",
+             "core_comment", "comment", "data_license"))
 
-#just renaming the object to maintain uniformity in naming across datasets
-layer.df <- CPEAT_soc %>% 
-  select(doi_primary = doi, table_name, row_number, of_variable, with_entry) %>%
-  filter(!is.na(with_entry)) %>%
-  pivot_wider(names_from = of_variable,
-    values_from = with_entry,
-    values_fn = list(with_entry = ~ paste(., collapse = "; "))) %>% 
-  separate(peat_description, into = c("peat_description", "peat_description_ref"), 
-           sep = ";", fill = "left") %>% 
-  select(-doi) %>% 
-  rename(doi = 'doi_primary')  # 98,596 obs of 18 variables
+CPEAT_profile <- CPEAT.ls$long %>%
+  filter(of_variable %in% 
+             #geolocation of the core
+             "latitude", "longitude", "region", "elevation", "elevation_end",
+             "elevation_start", "bounded_coverage",
+             # related to the sampling of the core
+            "sampling_device",
+            "core_penetration", "core_recovery",
+            "peat_description")
 
-```
+CPEAT_layer <- CPEAT.ls$long %>%
+  filter(of_variable %in%
+           #depth related variables 
+             "layer_mid", "layer_thickness",
+             "depth_top", "depth_bottom",
+            #related to the carbon content
+            "carbon", "total_carbon",
+            "organic_carbon_density", "total_organic_carbon",
+            "organic_matter", "organic_matter_density", "loss_on_ignition",
+            "total_inorganic_carbon", "inorganic_carbon",
+            #related to bulk density
+            "bulk_density"))
 
-## Casting values
-
-Finally make sure that the numbers are actually numbers.
-
-```{r}
-# changing the structure of the column variables except doi and other character variables
-site.df <- site.df %>% 
-  dplyr::mutate(across(c(latitude, longitude, elevation), as.numeric),
-                region = factor(region))
-
-layer.df <- layer.df %>%  
-  mutate(across(-c(doi, table_name, row_number, data_doi, 
-                   download_url, region, peat_description, peat_description_ref), as.numeric),
-         peat_description = factor(peat_description)) # 98,596 obs of 18 variables
 
 ```
 
