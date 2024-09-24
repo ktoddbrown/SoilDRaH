@@ -18,11 +18,12 @@ dataDir <- "temp"
 
 ## Longleaf biomass data set annotations
 # Set file attributes for biomass data set
-# Dev Note: add file name for carbon data as well
-base_file_name <- "Longleaf pine biomass data"
+biomass_file_name <- "Longleaf pine biomass data"
+carbon_file_name <- "Longleaf pine carbon data"
 
-# Dev Note: search and replace "file_path" with "biomass_file_path" and "carbon_file_path"
-file_path <- file.path(dataDir, paste0(base_file_name, ".xlsx"))
+biomass_file_path <- file.path(dataDir, paste0(biomass_file_name, ".xlsx"))
+carbon_file_path <- file.path(dataDir, paste0(carbon_file_name, ".xlsx"))
+
 biomass_download_url <- "https://datadryad.org/stash/downloads/file_stream/65747"
 carbon_download_url <- "https://datadryad.org/stash/downloads/file_stream/65746"
 # Dev Note: see if they have an automated API for data ingestion
@@ -39,7 +40,8 @@ Link to access Longleaf data: https://datadryad.org/stash/dataset/doi:10.5061/dr
 ```{r}
 
 # download the data
-if(!file.exists(file.path(dataDir, paste0(base_file_name, ".xlsx")))){
+if(!file.exists(file.path(dataDir, paste0(biomass_file_name, ".xlsx"))) ||
+   !file.exists(file.path(dataDir, paste0(carbon_file_name, ".xlsx")))){
   stop("Download data manually from https://datadryad.org/stash/dataset/doi:10.5061/dryad.760b3#citations")
 }
 
@@ -58,9 +60,9 @@ The following is the code that generated the Longleaf Pine annotations.
 # (5) adding the table-wide note.
 biomass_annotations <- 
   # Read in given metadata (column names, descriptions, control vocabulary, and units) from excel 
-  read_xlsx(file_path, col_names=c("column_id","info", "unit"), range="Data Description!A4:C17") %>% 
+  read_xlsx(biomass_file_path, col_names=c("column_id","info", "unit"), range="Data Description!A4:C17") %>% 
   mutate(
-    table_id = base_file_name,
+    table_id = biomass_file_name,
     value = "--",
     # Flag identifier columns, these columns were determined
     # using a manual data inspection
@@ -88,30 +90,28 @@ biomass_annotations <-
     control_vocabulary = ifelse(grepl("=", info), str_replace_all(str_replace_all(str_replace_all(str_trim(str_extract(info, stringr::regex("([^.]*)$"))), "=", "|"), ",", ";"), " and", ""), NA),
     # Correct units of YEAR columns
     unit = case_when(column_id == "YEAR" ~ "year (CE)", TRUE ~ unit)
-    # Dev Note: also correct unit for RS_LLP and RS_ALL. 
-    # Should be "mass ratio"
   ) %>%
   # Drop the now-unneeded info column (as the new description and control vocabulary columns properly store and categorize its data) and reorder columns' positions to the lab's is_type order
   select(table_id, column_id, of_variable, value, description, unit, control_vocabulary, identifier) %>% 
   # Pivot longer and add in the table note
   tidyr::pivot_longer(c("value", "description", "unit", "control_vocabulary", "identifier"), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>% 
-  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(file_path, col_names="with_entry", range="Data Description!B20")), .before=1)
+  add_row(table_id=biomass_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(biomass_file_path, col_names="with_entry", range="Data Description!B20")), .before=1)
 
 ## Longleaf carbon data set annotations
-# Set file attributes for carbon data set
-base_file_name <- "Longleaf pine carbon data"
-file_path <- paste(file_dir, "/", base_file_name, ".xlsx", sep="")
 
 # Generate the filtered, long-style carbon annotations table by (1) reading in column names, descriptions, control vocabulary, and units into a wide table format, 
 # (2) adding in the table_id, of_variable, value, and identifier, (3) splitting some descriptions from control vocabulary, (4) then pivoting to a long format while 
 # (5) adding the table-wide note.
 carbon_annotations <- 
   # Read in given metadata (column names, descriptions, control vocabulary, and units) from excel 
-  rename(read_xlsx(file_path, col_names=FALSE, range="Data Description!A4:C26"), c("column_id"=...1, "info"=...2, "unit"=...3)) %>% 
+  read_xlsx(biomass_file_path, col_names=c("column_id","info", "unit"), range="Data Description!A4:C26") %>% 
   mutate(
-    table_id = base_file_name,
+    table_id = carbon_file_name,
     value = "--",
-    identifier = "--",
+    # Dev Note: Are these the right columns to flag as identifiers?
+    identifier = case_when(
+      column_id %in% c("YEAR", "STATE", "BASE", "AGE", "SAMPLE") ~ "--",
+                           TRUE ~ NA_character_),
     # Column_id to of_variable map
     of_variable = case_when(
       column_id %in% c("YEAR") ~ "Year_collected",
@@ -134,13 +134,17 @@ carbon_annotations <-
       column_id %in% c("RS_LLP", "RS_ALL") ~ "Root_to_shoot_ratio_biomass"),
     # If a "=" is present in a cell in the info column, that means that cell contains both a column description and control vocabulary; else, just a column description
     description = ifelse(grepl("=", info), str_extract(info, stringr::regex(".*(?=\\.)")), info),
-    control_vocabulary = ifelse(grepl("=", info), str_replace_all(str_replace_all(str_replace_all(str_trim(str_extract(info, stringr::regex("([^.]*)$"))), "=", "|"), ",", ";"), " and", ""), NA)
+    control_vocabulary = ifelse(grepl("=", info), str_replace_all(str_replace_all(str_replace_all(str_trim(str_extract(info, stringr::regex("([^.]*)$"))), "=", "|"), ",", ";"), " and", ""), NA),
+    # Correct units of YEAR columns, add units to LLP_BS and RS_LLP columns
+    unit = case_when(column_id == "YEAR" ~ "year (CE)", TRUE ~ unit),
+    unit = case_when(column_id == "RS_LLP" ~ "mass ratio", TRUE ~ unit),
+    unit = case_when(column_id == "RS_ALL" ~ "mass ratio", TRUE ~ unit)
   ) %>%
   # Drop the now-unneeded info column (as the new description and control vocabulary columns properly store and categorize its data) and reorder columns' positions to the lab's is_type order
   select(table_id, column_id, of_variable, value, description, unit, control_vocabulary, identifier) %>% 
   # Pivot longer and add in the table note
   tidyr::pivot_longer(c("value", "description", "unit", "control_vocabulary", "identifier"), names_to = "is_type", values_to = "with_entry", values_drop_na=TRUE) %>% 
-  add_row(table_id=base_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(file_path, col_names=FALSE, range="Data Description!B29")), .before=1)
+  add_row(table_id=carbon_file_name, column_id=NA, of_variable=NA, is_type="note", with_entry=as.character(read_xlsx(carbon_file_path, col_names="with_entry", range="Data Description!B29")), .before=1)
 
 # Bind the two sub annotation tables into one and write that result to a csv file
 write.csv(bind_rows(biomass_annotations, carbon_annotations), "Longleaf Pine annotations.csv", quote=FALSE, row.names=FALSE)
