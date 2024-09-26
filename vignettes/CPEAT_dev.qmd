@@ -56,7 +56,8 @@ read_CPEATfile <- function(filename,
        str_detect(xx[1], 'Keyword') |
        str_detect(xx[1], 'Status') |
        str_detect(xx[1], 'Comment') |
-       str_detect(xx[1], 'Further details')){
+       str_detect(xx[1], 'Further details') |
+       str_detect(xx[1], 'Change history')){
       ans <- paste(ans, collapse = '; ')
       return(ans)
     }
@@ -157,6 +158,50 @@ read_CPEATfile <- function(filename,
   
   return(bind_rows(meta.df, data.df))
 }
+
+```
+
+# Mock main function
+
+```{r}
+dataDir <- '../temp/CPEAT'
+annotationFilename <- '../data/annotations_CPEAT3.csv'
+format <- c('original', 'long')[1]
+verbose <- TRUE
+
+
+### download files from url
+
+download_urls <- read_delim(file = annotationFilename, 
+                            delim = ';', show_col_types = FALSE) |>
+  filter(of_variable == 'download_url') |>
+  select(download_url = with_entry) |>
+  mutate(doi = str_extract(download_url, '10.1594.*\\d')) |>
+  mutate(filename = file.path(dataDir, 
+                              sprintf('%s.txt', str_replace_all(doi, '/', '_'))))
+
+if(verbose) message(sprintf('Downloading %d of %d files ...',
+                            sum(!file.exists(download_urls$filename)),
+                            nrow(download_urls)))
+
+for(ii in 1:nrow(download_urls)){
+  if(ii %% 50 == 1 & verbose) cat(paste(ii, '... '))
+  
+  if(!file.exists(download_urls$filename[ii])){
+    download.file(download_urls$downloadURL[ii],
+                  download_urls$filename[ii],
+                  quiet=TRUE)
+  }
+}
+
+if(verbose) message('Downloads done.')
+
+inputFiles <- list.files(path = dataDir, full.names = TRUE) |>
+  as.list()
+names(inputFiles) <- str_remove(basename(unlist(inputFiles)), '.txt')
+
+orgData <- llply(inputFiles, .fun = read_CPEATfile, format = 'original')
+longData <- ldply(inputFiles, .id = 'doi', .fun = read_CPEATfile, format = 'long')
 
 ```
 
