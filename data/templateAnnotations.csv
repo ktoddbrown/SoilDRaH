@@ -1,1 +1,1 @@
-study_id; table_id; column_id; of_variable; is_type; with_entry
+study_id, table_id, column_id, of_variable, is_type, with_entry
