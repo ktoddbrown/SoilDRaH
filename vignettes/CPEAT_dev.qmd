@@ -180,5 +180,28 @@ tester2 <- ldply(inputFiles, .id = 'doi', .fun = read_CPEATfile, format = 'long'
 #https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
 #doi: 10.1594/PANGAEA.929654
 
+temp <- tester2 |>
+  filter(!str_detect(table_name,'data'),
+         !str_detect(table_name, 'Parameter')) |>
+  select(table_name, header_name, is_type) |>
+  mutate(with_entry = '--') |>
+  unique() |>
+  bind_rows(tibble(of_variable = 'doi',
+                   is_type = 'value',
+                   with_entry = pangaear_search$doi))
 
+temp2 <- tester2 |>
+  filter(str_detect(table_name, 'Parameter'),
+         str_detect(is_type, 'description')) |>
+  select(string_id = with_entry) |>
+  unique() |>
+  mutate(description = str_extract(string_id, 
+                                  pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')),
+         unit = str_extract(string_id,
+                            pattern = regex('(?<=\\[).*(?=\\])')),
+         name = str_extract(string_id,
+                            pattern = regex('(?<=\\().*(?=\\))')))
+
+#replace the VN notation with the Parameter.description text
+#add the unit, name, and VN to the parameter table information
 ```
