@@ -10,56 +10,13 @@ verbose <- TRUE
 
 ```
 
-# pull pangaear search dois
-
-```{r}
-#searching the repo using the CPEAT project label
-pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
-
-# Pangaear only returns top 500 results as a hard max.
-# ...coding this up explicitly and then repeating.
-pangaear_search <- pangaear::pg_search(pangaearSearchTerm, count = 500) |>  
-  #This should only get a total of 876, calling for the entire 500 just incase
-  dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, 
-                                       count = 500, offset = 500)) |>
-  #https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
-  mutate(downloadURL = sprintf('https://doi.pangaea.de/%s?format=textfile',
-                               doi),
-         filename = file.path('..', 'temp', 'CPEAT', 
-                              sprintf('%s.txt', str_replace_all(doi, '/', '_'))))
-
-```
-
-```{r}
-# download files from url
-
-if(verbose) message(sprintf('Downloading %d of %d files ...',
-                            sum(!file.exists(pangaear_search$filename)),
-                            nrow(pangaear_search)))
-
-for(ii in 1:nrow(pangaear_search)){
-  if(ii %% 50 == 1 & verbose) cat(paste(ii, '... '))
-  
-  if(!file.exists(pangaear_search$filename[ii])){
-    download.file(pangaear_search$downloadURL[ii],
-                  pangaear_search$filename[ii],
-                  quiet=TRUE)
-  }
-}
-
-if(verbose) message('Downloads done.')
-
-```
-
-# process local files
+# Single read function
 
 ```{r}
 
-inputFiles <- list.files(path = 'temp/CPEAT', full.names = TRUE) |>
-  as.list()
-names(inputFiles) <- str_remove(basename(unlist(inputFiles)), '.txt')
-
-read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
+read_CPEATfile <- function(filename, 
+                           format = c('original', 'long')[1],
+                           verbose = FALSE){
   fileread <- read_lines(filename) |>
     paste(collapse = '\n')
   
@@ -176,16 +133,7 @@ read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
       unique()
   }
   
-  # parameter_renaming <- meta.df |>
-  #   filter(str_detect(header_name, '^V\\d+$' )) |>
-  #   pivot_wider(names_from = is_type, values_from = with_entry) |>
-  #   mutate(name_long = str_extract(description, 
-  #                                    pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')),
-  #          unit = str_extract(description,
-  #                             pattern = regex('(?<=\\[).*(?=\\])')),
-  #          abreviation = str_extract(description,
-  #                             pattern = regex('(?<=\\().*(?=\\))')))
-  # 
+ 
   ## add in the column and row IDs
   temp <- primaryData
   
@@ -209,6 +157,60 @@ read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
   
   return(bind_rows(meta.df, data.df))
 }
+
+```
+
+# pull pangaear search dois
+
+```{r}
+
+#searching the repo using the CPEAT project label
+pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
+
+# Pangaear only returns top 500 results as a hard max.
+# ...coding this up explicitly and then repeating.
+pangaear_search <- pangaear::pg_search(pangaearSearchTerm, count = 500) |>  
+  #This should only get a total of 876, calling for the entire 500 just incase
+  dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, 
+                                       count = 500, offset = 500)) |>
+  #https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
+  mutate(downloadURL = sprintf('https://doi.pangaea.de/%s?format=textfile',
+                               doi),
+         filename = file.path('..', 'temp', 'CPEAT', 
+                              sprintf('%s.txt', str_replace_all(doi, '/', '_'))))
+
+
+
+```
+
+```{r}
+# download files from url
+
+if(verbose) message(sprintf('Downloading %d of %d files ...',
+                            sum(!file.exists(pangaear_search$filename)),
+                            nrow(pangaear_search)))
+
+for(ii in 1:nrow(pangaear_search)){
+  if(ii %% 50 == 1 & verbose) cat(paste(ii, '... '))
+  
+  if(!file.exists(pangaear_search$filename[ii])){
+    download.file(pangaear_search$downloadURL[ii],
+                  pangaear_search$filename[ii],
+                  quiet=TRUE)
+  }
+}
+
+if(verbose) message('Downloads done.')
+
+```
+
+# process local files
+
+```{r}
+
+inputFiles <- list.files(path = 'temp/CPEAT', full.names = TRUE) |>
+  as.list()
+names(inputFiles) <- str_remove(basename(unlist(inputFiles)), '.txt')
 
 #tester1 <- llply(inputFiles, .fun = read_CPEATfile, format = 'original')
 tester2 <- ldply(inputFiles, .id = 'doi', .fun = read_CPEATfile, format = 'long')
@@ -290,11 +292,7 @@ long.df <- tester2 |>
   bind_rows(parameters_wide) |>
   mutate(header_name = if_else(is.na(header_name), column_id, header_name)) |>
   mutate(column_id = if_else(header_name == column_id, NA_character_, column_id)) |>
-  select(doi, table_name, header_name, column_id, observation_id, is_type, with_entry) |>
-  bind_rows(pangaear_search |>
-              select(doi, with_entry = downloadURL) |>
-              mutate(header_name = 'download_url',
-                     is_type = 'value'))
+  select(doi, table_name, header_name, column_id, observation_id, is_type, with_entry) 
 
 
 ###annotation files
@@ -304,15 +302,86 @@ coreMeta <- long.df |>
   #look for collection wide metadata
   reframe(org_count = n(),
           unique_count = length(unique(with_entry)),
-          tables = paste(unique(table_name), collapse = ';'),
-          .by = c(header_name, is_type)) |>
+          #tables = paste(unique(table_name), collapse = ';'),
+          .by = c(table_name, header_name, is_type)) |>
   #filter(unique_count == 1) |>
-  select(tables, header_name, is_type) |>
+  select(table_name, header_name, is_type) |>
   #mutate(present = '--') |>
   unique() |>
-  pivot_wider(names_from = is_type, values_from = tables)
+  #pivot_wider(names_from = is_type, values_from = tables) |>
+  mutate(of_variable = 
+           case_when(header_name %in% "Citation" ~ "citation",
+                     header_name %in% "Related to" ~ "related_objects",
+                     header_name %in% "Project(s)" ~ "project",
+                     header_name %in% "LATITUDE" ~ "latitude",
+                     header_name %in% "LONGITUDE" ~ "longitude",
+                     header_name %in% "MINIMUM DEPTH, sediment/rock" ~ "core_minimum_depth",#Events
+                     header_name %in% "MAXIMUM DEPTH, sediment/rock" ~ "core_maximum_depth",#Events
+                     header_name %in% "NAME" ~ "core_name",
+                     header_name %in% "LOCATION" ~ "location_name",
+                     header_name %in% "METHOD/DEVICE" ~ "core_method",
+                     header_name %in% "COMMENT" ~ "core_comment",
+                     header_name %in% "License" ~ "data_license",
+                     header_name %in% "Size" ~ "data_size",
+                     header_name %in% "Depth, sediment/rock" ~ "depth_mid",
+                     header_name %in% "Age" ~ "age",
+                     header_name %in% "Density, dry bulk" ~ "bulk_density",
+                     header_name %in% "Organic matter" ~ "organic_matter",
+                     header_name %in% "Density, organic matter" ~ "organic_matter_density",
+                     header_name %in% "Density, organic carbon" ~ "organic_carbon_density",
+                     header_name %in% "Peat type" ~ "peat_type",
+                     header_name %in% "Age, comment" ~ "age",
+                     header_name %in% "Sample thickness" ~ "depth_thickness",
+                     header_name %in% "Age, dated" ~ "age",
+                     header_name %in% "Age, uncertainty" ~ "age_uncertainty",
+                     header_name %in% "Age, dated material" ~ "age_material",
+                     header_name %in% "Laboratory code/label" ~ "lab_label",
+                     header_name %in% "Further details" ~ "core_further_details",
+                     header_name %in% "ELEVATION" ~ "elevation",
+                     header_name %in% "Recovery" ~ "core_recovery_length",
+                     header_name %in% "Carbon, total" ~ "carbon_total",
+                     header_name %in% "Penetration" ~ "core_penetration_length",
+                     header_name %in% "Nitrogen, total" ~ "nitrogen_total",
+                     header_name %in% "ELEVATION START" ~ "elevation_start",
+                     header_name %in% "ELEVATION END" ~ "elevation_end",
+                     header_name %in% "Activity of radiocarbon in percent of modern carbon" ~ "radiocabon_activity",
+                     header_name %in% "Fraction modern carbon" ~ "fraction_modern_carbon",
+                     header_name %in% "Calendar age" ~ "age",
+                     header_name %in% "Calendar age, maximum/old" ~ "age_maximum",
+                     header_name %in% "Calendar age, minimum/young" ~ "age_minimum",
+                     header_name %in% "Age, dated standard deviation" ~ "age_standard_deviation",
+                     header_name %in% "Age, standard deviation" ~ "age_standard_deviation",
+                     header_name %in% "Method comment" ~ "method_comment",
+                     header_name %in% "Abstract" ~ "abstract",
+                     header_name %in% "Keyword(s)" ~ "keyword",
+                     header_name %in% "Status" ~ "curation_status",
+                     header_name %in% "Comment" ~ "comment",
+                     header_name %in% "Carbon, organic, total" ~ "organic_carbon_total",
+                     header_name %in% "Loss on ignition" ~ "loss_on_ignition",
+                     header_name %in% "Carbon" ~ "carbon",
+                     header_name %in% "Volume" ~ "volume",
+                     header_name %in% "Sample volume" ~ "volume",
+                     header_name %in% "Sedimentation rate per year" ~ "sedimentation_rate",
+                     header_name %in% "Water content, wet mass" ~ "water_content",
+                     header_name %in% "Cumulative mass" ~ "cumulative_mass",
+                     header_name %in% "Peat carbon accumulation rate per year" ~ "peat_accumulation_rate",
+                     header_name %in% "Carbon, inorganic, total" ~ "inorganic_carbon",
+                     header_name %in% "Calendar age, standard error" ~ "age_standard_error", 
+                     header_name %in% "Sample code/label" ~ "sample_label",
+                     header_name %in% "Age model" ~ "age_model",
+                     header_name %in% "Age, error" ~ "age_error",
+                     header_name %in% "Activity of radiocarbon in percent of modern carbon, standard deviation" ~ "radiocabon_activity_standard_deviation",
+                     header_name %in% "Depth, top/min" ~ "depth_top",
+                     header_name %in% "Depth, bottom/max" ~ "depth_bottom",
+                     header_name %in% "Calendar age, standard deviation" ~ "age_calendar",
+                     header_name %in% "Age, relative, number of years" ~ "age_relative",
+                     header_name %in% "download_url" ~ "download_url")) |>
+  arrange(table_name, of_variable) |>
+  mutate(with_entry = '--') |>
+  bind_rows(pangaear_search |>
+              select(with_entry = downloadURL) |>
+              mutate(of_variable = 'download_url',
+                     is_type = 'value'))
 
-
-#replace the VN notation with the Parameter.description text
-#add the unit, name, and VN to the parameter table information
+write_delim(coreMeta, file = '../data/annotations_CPEAT3.csv', delim = ';')
 ```
