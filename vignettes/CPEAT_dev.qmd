@@ -5,6 +5,9 @@ format: html
 
 ```{r}
 library(tidyverse)
+
+verbose <- TRUE
+
 ```
 
 # pull pangaear search dois
@@ -18,15 +21,39 @@ pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
 pangaear_search <- pangaear::pg_search(pangaearSearchTerm, count = 500) |>  
   #This should only get a total of 876, calling for the entire 500 just incase
   dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, 
-                                       count = 500, offset = 500))
+                                       count = 500, offset = 500)) |>
+  #https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
+  mutate(downloadURL = sprintf('https://doi.pangaea.de/%s?format=textfile',
+                               doi),
+         filename = file.path('..', 'temp', 'CPEAT', 
+                              sprintf('%s.txt', str_replace_all(doi, '/', '_'))))
+
+```
+
+```{r}
+# download files from url
+
+if(verbose) message(sprintf('Downloading %d of %d files ...',
+                            sum(!file.exists(pangaear_search$filename)),
+                            nrow(pangaear_search)))
+
+for(ii in 1:nrow(pangaear_search)){
+  if(ii %% 50 == 1 & verbose) cat(paste(ii, '... '))
+  
+  if(!file.exists(pangaear_search$filename[ii])){
+    download.file(pangaear_search$downloadURL[ii],
+                  pangaear_search$filename[ii],
+                  quiet=TRUE)
+  }
+}
+
+if(verbose) message('Downloads done.')
+
 ```
 
 # process local files
 
 ```{r}
-
-verbose <- TRUE
-
 
 inputFiles <- list.files(path = 'temp/CPEAT', full.names = TRUE) |>
   as.list()
@@ -194,7 +221,7 @@ tester2 <- ldply(inputFiles, .id = 'doi', .fun = read_CPEATfile, format = 'long'
 #https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
 #doi: 10.1594/PANGAEA.929654
 
-temp <- tester2 |>
+parameter.meta <- tester2 |>
   filter(!str_detect(table_name,'data'),
          !str_detect(table_name, 'Parameter')) |>
   select(table_name, header_name, is_type) |>
@@ -204,35 +231,87 @@ temp <- tester2 |>
                    is_type = 'value',
                    with_entry = pangaear_search$doi))
 
-temp2 <- tester2 |>
+parameters_wide <- tester2 |>
   filter(str_detect(table_name, 'Parameter'),
          str_detect(header_name, '^V\\d+$' )) |>
   select(-observation_id) |>
-    pivot_wider(names_from = is_type, values_from = with_entry) |>
-    mutate(name_long = str_extract(description,
-                                     pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')) |>
-             trimws(),
-           unit = str_extract(description,
-                              pattern = regex('(?<=\\[).*(?=\\])'))|>
-             trimws(),
-           abreviation = str_extract(description,
-                              pattern = regex('(?<=\\().*(?=\\))'))|>
-             trimws()) |>
-  mutate(name_long = case_when(
-    str_detect(`METHOD/DEVICE`, 'OxCal') ~ paste(name_long, '(OxCal 4.2.4)'),
-    str_detect(`METHOD/DEVICE`, 'Bacon') ~ paste(name_long, '(Bacon 2.2)'),
-    str_detect(name_long, 'Peat type') & !is.na(COMMENT) ~ paste0(name_long, ' (',  COMMENT, ')'),
-    str_detect(name_long, 'Method comment') ~ COMMENT,
-    str_detect(name_long, 'Age, uncertainty') &
-      str_detect(COMMENT, 'Lab uncertainty') ~ paste0(name_long, ' (',  COMMENT, ')'),
-    str_detect(name_long, 'Age, uncertainty') &
-      str_detect(COMMENT, '(14C age)|(Age AD)') ~ paste0(name_long, ' (',  COMMENT, ')'),
-    str_detect(name_long, 'DEPTH') &
-      str_detect(COMMENT, '(LOI)|(Age)') ~ paste0(name_long, ' (',  COMMENT, ')'),
-    .default = name_long)) |>
+  dplyr::rename(column_id = header_name) |>
+  pivot_wider(names_from = is_type, values_from = with_entry) |>
+  mutate(header_name = str_extract(description,
+                                 pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')) |>
+           trimws() |>
+           stringr::str_to_sentence(),
+         unit = str_extract(description,
+                            pattern = regex('(?<=\\[).*(?=\\])'))|>
+           trimws(),
+         abreviation = str_extract(description,
+                                   pattern = regex('(?<=\\().*(?=\\))'))|>
+           trimws()) |>
+  #mutate(header_name = case_when(
+  #   str_detect(`METHOD/DEVICE`, 'OxCal') ~ paste(header_name, '(OxCal 4.2.4)'),
+  #   str_detect(`METHOD/DEVICE`, 'Bacon') ~ paste(header_name, '(Bacon 2.2)'),
+  #   str_detect(header_name, '^AGE$') ~ 'Age',
+  #   str_detect(header_name, 'Peat type') & !is.na(COMMENT) ~ paste0(header_name, ' (',  COMMENT, ')'),
+  #   str_detect(header_name, 'Method comment') ~ COMMENT,
+  #   str_detect(header_name, 'Age, uncertainty') &
+  #     str_detect(COMMENT, 'Lab uncertainty') ~ paste0(header_name, ' (',  COMMENT, ')'),
+  #   str_detect(header_name, 'Age, uncertainty') &
+  #     str_detect(COMMENT, '(14C age)|(Age AD)') ~ paste0(header_name, ' (',  COMMENT, ')'),
+  #   str_detect(header_name, 'DEPTH') &
+  #     str_detect(COMMENT, '(LOI)|(Age)') ~ paste0(header_name, ' (',  COMMENT, ')'),
+  #   str_detect(header_name, 'Age') & str_detect(`METHOD/DEVICE`, '210Pb') ~ paste0(header_name, '(210Pb)'),
+  #   str_detect(header_name, 'Age') & str_detect(`METHOD/DEVICE`, 'tephra-chronostratigraphy') ~ paste0(header_name, '(tephra-chronostratigraphy)'), 
+  #   .default = header_name)) |>
   #where is description text non-unique in the tables
-  filter(n() > 1, .by = c(doi, name_long))
-  
+  #filter(n() > 1, .by = c(doi, header_name))
+  unique() |>
+  pivot_longer(cols = c(description,
+                        GEOCODE, COMMENT, `METHOD/DEVICE`, unit, abreviation),
+               names_to = 'is_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE)
+
+# column.key <- parameters_wide |>
+#   select(doi, header_name, column_id) |>
+#   unique()
+
+###data files actions
+#remove the parameter table
+#join the column.key 
+#replace the Parameter table with the processed file
+long.df <- tester2 |>
+  filter(!str_detect(table_name, 'Parameter')) |>
+  dplyr::rename(column_id = header_name) |>
+  full_join(parameters_wide |>
+              select(doi, header_name, column_id) |>
+              unique(), 
+            by = join_by(doi, column_id),
+            relationship = "many-to-many") |>
+  bind_rows(parameters_wide) |>
+  mutate(header_name = if_else(is.na(header_name), column_id, header_name)) |>
+  mutate(column_id = if_else(header_name == column_id, NA_character_, column_id)) |>
+  select(doi, table_name, header_name, column_id, observation_id, is_type, with_entry) |>
+  bind_rows(pangaear_search |>
+              select(doi, with_entry = downloadURL) |>
+              mutate(header_name = 'download_url',
+                     is_type = 'value'))
+
+
+###annotation files
+#identify consistent variables across the project
+#append the download urls
+coreMeta <- long.df |>
+  #look for collection wide metadata
+  reframe(org_count = n(),
+          unique_count = length(unique(with_entry)),
+          tables = paste(unique(table_name), collapse = ';'),
+          .by = c(header_name, is_type)) |>
+  #filter(unique_count == 1) |>
+  select(tables, header_name, is_type) |>
+  #mutate(present = '--') |>
+  unique() |>
+  pivot_wider(names_from = is_type, values_from = tables)
+
 
 #replace the VN notation with the Parameter.description text
 #add the unit, name, and VN to the parameter table information
