@@ -121,7 +121,8 @@ read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
   primaryData <- str_extract(fileread, 
                              pattern = regex('(?<=\\*/\n).*', dotall = TRUE)) |>
     read_tsv(col_types = cols(.default = col_character()),
-             name_repair = 'unique_quiet') 
+             name_repair = 'unique_quiet') |>
+    mutate(across(.cols = everything(), .fns = trimws))
   
   #### Return orginal format ####
   
@@ -138,16 +139,29 @@ read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
                          too_few = 'align_start') |>
     mutate(header_name = if_else(is.na(header_name), table_name, header_name),
            is_type = if_else(is.na(is_type), 'value', is_type)) |>
-    mutate(table_name = if_else(table_name == header_name, '.', table_name))
+    mutate(table_name = if_else(table_name == header_name, '.', table_name)) |>
+    mutate(across(.cols = everything(), .fns = trimws))
   
+  #if there is only one PI then move that information up from the column level
   if(length(unique(meta.df$with_entry[meta.df$is_type == 'PI'])) == 1){
     meta.df <- meta.df |>
       mutate(header_name = if_else(is_type == 'PI', NA_character_, header_name)) |>
       unique()
   }
   
+  # parameter_renaming <- meta.df |>
+  #   filter(str_detect(header_name, '^V\\d+$' )) |>
+  #   pivot_wider(names_from = is_type, values_from = with_entry) |>
+  #   mutate(name_long = str_extract(description, 
+  #                                    pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')),
+  #          unit = str_extract(description,
+  #                             pattern = regex('(?<=\\[).*(?=\\])')),
+  #          abreviation = str_extract(description,
+  #                             pattern = regex('(?<=\\().*(?=\\))')))
+  # 
   ## add in the column and row IDs
   temp <- primaryData
+  
   #use the traditional R 'V' notation for vertical columns
   column_name.key <- tibble(with_entry = names(primaryData),
                             is_type = 'name',
@@ -192,15 +206,33 @@ temp <- tester2 |>
 
 temp2 <- tester2 |>
   filter(str_detect(table_name, 'Parameter'),
-         str_detect(is_type, 'description')) |>
-  select(string_id = with_entry) |>
-  unique() |>
-  mutate(description = str_extract(string_id, 
-                                  pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')),
-         unit = str_extract(string_id,
-                            pattern = regex('(?<=\\[).*(?=\\])')),
-         name = str_extract(string_id,
-                            pattern = regex('(?<=\\().*(?=\\))')))
+         str_detect(header_name, '^V\\d+$' )) |>
+  select(-observation_id) |>
+    pivot_wider(names_from = is_type, values_from = with_entry) |>
+    mutate(name_long = str_extract(description,
+                                     pattern = regex('[^(\\[|\\()]*(?=\\[|\\()')) |>
+             trimws(),
+           unit = str_extract(description,
+                              pattern = regex('(?<=\\[).*(?=\\])'))|>
+             trimws(),
+           abreviation = str_extract(description,
+                              pattern = regex('(?<=\\().*(?=\\))'))|>
+             trimws()) |>
+  mutate(name_long = case_when(
+    str_detect(`METHOD/DEVICE`, 'OxCal') ~ paste(name_long, '(OxCal 4.2.4)'),
+    str_detect(`METHOD/DEVICE`, 'Bacon') ~ paste(name_long, '(Bacon 2.2)'),
+    str_detect(name_long, 'Peat type') & !is.na(COMMENT) ~ paste0(name_long, ' (',  COMMENT, ')'),
+    str_detect(name_long, 'Method comment') ~ COMMENT,
+    str_detect(name_long, 'Age, uncertainty') &
+      str_detect(COMMENT, 'Lab uncertainty') ~ paste0(name_long, ' (',  COMMENT, ')'),
+    str_detect(name_long, 'Age, uncertainty') &
+      str_detect(COMMENT, '(14C age)|(Age AD)') ~ paste0(name_long, ' (',  COMMENT, ')'),
+    str_detect(name_long, 'DEPTH') &
+      str_detect(COMMENT, '(LOI)|(Age)') ~ paste0(name_long, ' (',  COMMENT, ')'),
+    .default = name_long)) |>
+  #where is description text non-unique in the tables
+  filter(n() > 1, .by = c(doi, name_long))
+  
 
 #replace the VN notation with the Parameter.description text
 #add the unit, name, and VN to the parameter table information
