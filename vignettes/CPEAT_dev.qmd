@@ -7,6 +7,22 @@ format: html
 library(tidyverse)
 ```
 
+# pull pangaear search dois
+
+```{r}
+#searching the repo using the CPEAT project label
+pangaearSearchTerm <- "project:label:PAGES_C-PEAT"
+
+# Pangaear only returns top 500 results as a hard max.
+# ...coding this up explicitly and then repeating.
+pangaear_search <- pangaear::pg_search(pangaearSearchTerm, count = 500) |>  
+  #This should only get a total of 876, calling for the entire 500 just incase
+  dplyr::bind_rows(pangaear::pg_search(pangaearSearchTerm, 
+                                       count = 500, offset = 500))
+```
+
+# process local files
+
 ```{r}
 
 verbose <- TRUE
@@ -16,8 +32,8 @@ inputFiles <- list.files(path = 'temp/CPEAT', full.names = TRUE) |>
   as.list()
 names(inputFiles) <- str_remove(basename(unlist(inputFiles)), '.txt')
 
-read_oneFile <- function(zz, format = c('original', 'long')[1]){
-  fileread <- read_lines(zz) |>
+read_CPEATfile <- function(filename, format = c('original', 'long')[1]){
+  fileread <- read_lines(filename) |>
     paste(collapse = '\n')
   
   
@@ -97,7 +113,7 @@ read_oneFile <- function(zz, format = c('original', 'long')[1]){
     }
     
     print(xx)
-    stop('New case!')
+    stop('Parser flag is not recognized.')
   })
   
   #### Read primary data ####
@@ -153,7 +169,16 @@ read_oneFile <- function(zz, format = c('original', 'long')[1]){
   return(bind_rows(meta.df, data.df))
 }
 
-tester <- llply(inputFiles, .fun = read_oneFile, format = 'original')
-tester <- ldply(inputFiles, .id = 'doi', .fun = read_oneFile, format = 'long')
+#tester1 <- llply(inputFiles, .fun = read_CPEATfile, format = 'original')
+tester2 <- ldply(inputFiles, .id = 'doi', .fun = read_CPEATfile, format = 'long')
+
+```
+
+# create meta data
+
+```{r}
+#https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
+#doi: 10.1594/PANGAEA.929654
+
 
 ```
