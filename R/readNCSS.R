@@ -121,7 +121,7 @@ readNCSS <- function(dataDir,
     #link all the tables together
     key.df <- originalTables$lab_layer |>
                   select('site_key', 'pedon_key', 'layer_key') |>
-      mutate(across(everything(), as.character))
+      dplyr::mutate(across(everything(), as.character))
     
     #pull in the two tables to define the state/country
     #...non-standard cross references here so processing separately
@@ -193,8 +193,8 @@ readNCSS <- function(dataDir,
                          nforest_type = area_type, 
                          nforest_name = area_name),
                 by = join_by(nforest_key == area_key)) |>
-      mutate(across(ends_with('_type'), as.factor)) |>
-      mutate(across(everything(), as.character)) |>
+      dplyr::mutate(across(ends_with('_type'), as.factor)) |>
+      dplyr::mutate(across(everything(), as.character)) |>
       pivot_longer(cols = -c('site_key', 'pedon_key'),
                    #apply the headers to the variable name instead of a column id
                    names_to = 'of_variable',
