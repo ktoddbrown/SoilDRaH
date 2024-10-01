@@ -9,6 +9,7 @@ table_name;header_name;is_type;of_variable;with_entry
 .;Keyword(s);value;keyword;--
 .;Project(s);value;project;--
 .;Related to;value;related_objects;--
+.;Change history;value;change_log;--
 Coverage;MAXIMUM DEPTH, sediment/rock;value;core_maximum_depth;--
 Coverage;MINIMUM DEPTH, sediment/rock;value;core_minimum_depth;--
 Coverage;LATITUDE;value;latitude;--
@@ -63,6 +64,7 @@ data;Depth, top/min;value;depth_top;--
 data;Depth, top/min;name;depth_top;--
 data;Fraction modern carbon;value;fraction_modern_carbon;--
 data;Fraction modern carbon;name;fraction_modern_carbon;--
+data;Fraction modern carbon, error;value;fraction_modern_carbon_error;--
 data;Carbon, inorganic, total;value;inorganic_carbon;--
 data;Carbon, inorganic, total;name;inorganic_carbon;--
 data;Laboratory code/label;value;lab_label;--
@@ -95,10 +97,13 @@ data;Sedimentation rate per year;value;sedimentation_rate;--
 data;Sedimentation rate per year;name;sedimentation_rate;--
 data;Volume;value;volume;--
 data;Volume;name;volume;--
+data;Sample id;value;sample_id;--
 data;Sample volume;value;volume;--
 data;Sample volume;name;volume;--
 data;Water content, wet mass;value;water_content;--
 data;Water content, wet mass;name;water_content;--
+data;Δ14c;value;delta_14C;--
+data;Δ14c, standard deviation;value;delta_14C;--
 Event(s);COMMENT;value;core_comment;--
 Event(s);METHOD/DEVICE;value;core_method;--
 Event(s);NAME;value;core_name;--
@@ -207,6 +212,7 @@ Parameter(s);Depth, top/min;unit;depth_top;--
 Parameter(s);Depth, top/min;abreviation;depth_top;--
 Parameter(s);Fraction modern carbon;description;fraction_modern_carbon;--
 Parameter(s);Fraction modern carbon;abreviation;fraction_modern_carbon;--
+Parameter(s);Fraction modern carbon, error;description;fraction_modern_carbon_error;--
 Parameter(s);Carbon, inorganic, total;description;inorganic_carbon;--
 Parameter(s);Carbon, inorganic, total;COMMENT;inorganic_carbon;--
 Parameter(s);Carbon, inorganic, total;unit;inorganic_carbon;--
@@ -256,6 +262,8 @@ Parameter(s);Activity of radiocarbon in percent of modern carbon, standard devia
 Parameter(s);Activity of radiocarbon in percent of modern carbon, standard deviation;abreviation;radiocabon_activity_standard_deviation;--
 Parameter(s);Sample code/label;description;sample_label;--
 Parameter(s);Sample code/label;abreviation;sample_label;--
+Parameter(s);Sample id;description;sample_id;--
+Parameter(s);Sample id;COMMENT;sample_id;--
 Parameter(s);Sedimentation rate per year;description;sedimentation_rate;--
 Parameter(s);Sedimentation rate per year;COMMENT;sedimentation_rate;--
 Parameter(s);Sedimentation rate per year;unit;sedimentation_rate;--
@@ -270,6 +278,9 @@ Parameter(s);Sample volume;abreviation;volume;--
 Parameter(s);Water content, wet mass;description;water_content;--
 Parameter(s);Water content, wet mass;unit;water_content;--
 Parameter(s);Water content, wet mass;abreviation;water_content;--
+Parameter(s);PI;value;principle_investigator;--
+Parameter(s);Δ14c;description;delta_14C;--
+Parameter(s);Δ14c, standard deviation;description;delta_14C;--
 NA;NA;value;download_url;https://doi.pangaea.de/10.1594/PANGAEA.929654?format=textfile
 NA;NA;value;download_url;https://doi.pangaea.de/10.1594/PANGAEA.935061?format=textfile
 NA;NA;value;download_url;https://doi.pangaea.de/10.1594/PANGAEA.935094?format=textfile

@@ -48,7 +48,7 @@ readCPEAT_file <- 'readCPEAT.R'
 
 #locate the data directory we will download to
 dataDir <- 'CPEAT'
-dataAnnotations <- 'annotations_CPEAT2.csv'
+dataAnnotations <- 'annotations_CPEAT3.csv'
 ```
 
 ```{r maintainer_filenames}
@@ -67,7 +67,7 @@ readCPEAT_file <- file.path('../R', readCPEAT_file)
 dataAnnotations <- file.path('../data', dataAnnotations)
 ```
 
-```{r}
+```{r sourceReadFunction}
 source(readCPEAT_file, local = knitr::knit_global())
 ```
 
@@ -80,14 +80,19 @@ CPEAT.ls <- readCPEAT(dataDir,
                   annotationFilename = dataAnnotations, 
                   #when first running, switch this to true 
                   verbose = FALSE, 
-                  format = 'long',
-                  randomSubset = Inf) # 2,640,892 obs for all datasets
+                  #fileCount = 10,
+                  format = 'long') # 2,640,892 obs for all datasets
 
 #read the same example we take below
-singleCPEAT <- pangaear::pg_data(doi = '10.1594/PANGAEA.890203')[[1]]
+singleCPEAT <- readCPEAT(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  #when first running, switch this to true 
+                  verbose = FALSE, 
+                  fileCount = 1,
+                  format = 'orginal')
 ```
 
-## Orginal Pangaea data structure
+## Orginal data structure
 
 Each core in CPEAT has it's own doi-identified data package with it's own entry on the Pangaea repository.
 Each data package includes graphical metadata at the front of a tab separated data table.
@@ -108,9 +113,7 @@ cat(paste0(examplefile, collapse = '\n'))
 
 This can be represented as a graph (without the value entries) as follows:
 
-TODO Fill in the rest of the diagram
-
-```{mermaid}
+```{mermaid CPEAT_diagram}
 flowchart LR
   A[Citation]
   B[Related to]
@@ -123,16 +126,19 @@ flowchart LR
 
 
 # Reading the data
+
+**TODO This entire section needs to be rewritten for the new algorithm**
+
 This read function is a bit longer and more complicated then others in this collection.
 Here we choose to walk through key parts of the code base and explain our approach.
-Broadly we used `pangaear` to find, then download and load the data into R.
+Broadly we use the data DOIs in the annotation file to download the data then load this into R using our own parser.
 For the long format, then walked through the list of individual cores using 
 `dlply` and generated a single data table in our long format.
 Note that the data annotations for this collection are minimal because much of 
 the data traditionally encoded as metadata is encoded in the downloaded data.
 
 
-```{r}
+```{r loadReferenceCode}
 #| echo: false
 CPEAT_code <- read_lines(readCPEAT_file)
 ```
@@ -142,8 +148,8 @@ Search results are limited to the top 500 so we need to repeat this to get the t
 Note that if the number of cores in this collection change we need to revisit 
 this function to ensure we still have the correct cleaning algorithms.
 
-```{r}
-#| eval: true
+```{r seach_Pangaear}
+#| eval: false
 #| echo: false
 #| class-output: R
 #| filename: "ln 34-45: readCPEAT.R"
@@ -161,8 +167,8 @@ We also were unable to stop fresh downloads at each run -- as a result
 we recommend that you cache the results when possible instead of rerunning this
 read function.
  
-```{r}
-#| eval: true
+```{r load_Pangaear}
+#| eval: false
 #| echo: false
 #| filename: "ln 69-89: readCPEAT.R"
 #| comment: ''
@@ -185,8 +191,8 @@ Otherwise we move onto transforming this list of lists into a single long data t
 that apply to the primary data (denoted by `--` in the `with_entry` column).
 
 
-```{r}
-#| eval: true
+```{r transformLong}
+#| eval: false
 #| echo: false
 #| filename: "ln 108-117: readCPEAT.R"
 #| comment: ''
@@ -195,7 +201,7 @@ that apply to the primary data (denoted by `--` in the `with_entry` column).
 cat(paste0(CPEAT_code[108:117], collapse = '\n'))
 ```
 
-### Processing pg_read lists
+### Lists to table
 
 To each of `pg_read` lists items we apply the following:
 
@@ -205,8 +211,8 @@ parameter descriptions, likely due to an export truncation at some point.
 We are instead relying on ordering to match up the column names with the 
 parameter descriptions.
 
-```{r}
-#| eval: true
+```{r parseHeader}
+#| eval: false
 #| echo: false
 #| filename: "ln 172-197: readCPEAT.R"
 #| comment: ''
@@ -219,8 +225,8 @@ Then we add the descriptions from the `parameter` and combin that with
 `of_variable` tag
 from the annotations table.
 
-```{r}
-#| eval: true
+```{r parseParameter}
+#| eval: false
 #| echo: false
 #| filename: "ln 199-220: readCPEAT.R"
 #| comment: ''
@@ -234,8 +240,8 @@ The column names have been truncated in some cases, so first we replace them usi
 There is no clear row/observation identifier (some tables contain multiple observations for the same layer), so we add a row number with a `R` prepend here to create a unique ID.
 Then the table is joined to prior information and pivoted to create a long format.
 
-```{r}
-#| eval: true
+```{r parseDataTable}
+#| eval: false
 #| echo: false
 #| filename: "ln 223-254: readCPEAT.R"
 #| comment: ''
@@ -247,8 +253,8 @@ cat(paste0(CPEAT_code[223:254], collapse = '\n'))
 Finally we construct the secondary information about the study stored in elements which are not `parameters` nor `data` that we have not worked with yet
 
 
-```{r}
-#| eval: true
+```{r parseOther}
+#| eval: false
 #| echo: false
 #| filename: "ln 347-385: readCPEAT.R"
 #| comment: ''
@@ -261,8 +267,8 @@ cat(paste0(CPEAT_code[347:385], collapse = '\n'))
 The extrated data frames are then bound the rows together.
 And then returned to the `plyr::ldply` function to be appended to other core data sets.
 
-```{r}
-#| eval: true
+```{r bindTables}
+#| eval: false
 #| echo: false
 #| filename: "ln 387-388: readCPEAT.R"
 #| comment: ''
@@ -275,8 +281,8 @@ cat(paste0(CPEAT_code[387:388], collapse = '\n'))
 
 We then clean up the output and return the resulting long format.
 
-```{r}
-#| eval: true
+```{r finalCleaningLong}
+#| eval: FALSE
 #| echo: false
 #| filename: "ln 393-413: readCPEAT.R"
 #| comment: ''
@@ -289,8 +295,10 @@ cat(paste0(CPEAT_code[393:413], collapse = '\n'))
 
 This long format has the following structure.
 
-```{r}
-CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
+```{r exampleLong}
+
+
+CPEAT.df$long %>%  # 2,640,892 entries, 7 total columns
   slice_head(n=100) %>%
   knitr::kable() %>%
   kable_paper() %>%
@@ -301,7 +309,7 @@ CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
 
 Often `table_name` will reflect the file name in a set of inter-related csv files, in this case we use it to refer to what `list` the data was extracted from in the `pangaear::pg_data` return.
 
-```{r}
+```{r listTables}
 CPEAT.ls$long |>
   reframe(count = n(),
           .by = table_name) |>
@@ -314,7 +322,7 @@ The `is_type` entry usually falls into one of the following categories: {`value`
 This entry describes the type of information associated with `of_variable` found in `with_entry`. 
 Note that we use `value` as a general term for simplicity, regardless of whether the data is numerical or text. 
 
-```{r}
+```{r listTypes}
 
 CPEAT.ls$long |>
   reframe(count = n(),
@@ -326,7 +334,7 @@ CPEAT.ls$long |>
 
 The of\_variable column describes the variables linked to the column\_id, such as bulk density, organic carbon, vegetation, other covariates. It's important to maintain the original intent of the data providers when creating these annotations. While the of\_variable entries are highly dependent on the dataset, is\_type should have a more restricted range of entries.
 
-```{r}
+```{r listVariables}
 CPEAT.ls$long |>
   reframe(count = n(),
           .by = of_variable) |>
@@ -340,19 +348,8 @@ CPEAT.ls$long |>
 
 #Check to see if there are NA variables implying that the annotations is incomplete
 
-CPEAT.ls$long |>
-  filter(is.na(of_variable) & is_type == 'header_id') |>
-  select(table_name, header_id = with_entry) |>
-  unique() |>
-  arrange(table_name) |>
-  mutate(of_variable = paste0('unknown', 1:n()),
-         is_type=case_when(table_name == 'data' ~ 'value',
-                           table_name == 'metadata$parameters' ~ 'description',
-                           table_name == 'metadata' ~ 'comment',
-                           TRUE~NA_character_),
-         with_entry = '--') |>
-  format_csv() |>
-  cat()
+badReads <- CPEAT.ls$long |>
+  filter(is.na(of_variable))
 ```
 
 # Subseting for soil carbon
