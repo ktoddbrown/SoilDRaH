@@ -1,7 +1,7 @@
 ---
 title: "Carbon in Peat on EArth through Time"
-author: "Vaasuki Marupaka"
-date: "Summer 2024"
+author: "Kathe Todd-Brown, Vaasuki Marupaka"
+date: "2024"
 knitr:
   opts_chunk: 
     collapse: true
@@ -361,28 +361,39 @@ Note that we are NOT checking any of the quality control flags here which you wo
 ```{r}
 CPEAT_soc <- CPEAT.ls$long %>% 
   #identify the variables that we are interested in
-  filter(of_variable %in% 
-           c(#variables that identify the source data
+  mutate(new_table = case_when(
+    of_variable %in% c(#variables that identify the source data
              'doi', "data_doi", "download_url", "data_local_filepath",
-             "project", "related_citation", "core_name", "citation",
+             "project", "core_name", "citation",
+             "related_objects", "related_citation", 
+             "core_further_details", "current_status",
+             "curation_status", "change_log",
+             "keyword",
              "core_comment", "comment", "data_license",
-             #geolocation of the core
+             "principle_investigator") ~ 'data_source',
+    of_variable %in% c(#geolocation of the core
              "latitude", "longitude", "region", "elevation", "elevation_end",
-             "elevation_start", "bounded_coverage",
-             # related to the sampling of the core
-            "sampling_device",
+             "elevation_start", "bounded_coverage") ~ 'geolocation',
+    of_variable %in% c(# related to the sampling of the core
+            "sampling_device", 
+            "core_minimum_depth", "core_maximum_depth",
             "core_penetration", "core_recovery",
-            "peat_description",
-             #depth related variables 
-             "layer_mid", "layer_thickness",
-             "depth_top", "depth_bottom",
-            #related to the carbon content
+            "peat_description") ~ 'sample_collection',
+    of_variable %in% c(#depth related variables 
+             "layer_mid", "layer_thickness", "depth_thickness",
+             "depth_mid","depth_top", "depth_bottom") ~ 'soil_depth',
+    of_variable %in% c(#related to the carbon content
             "carbon", "total_carbon",
             "organic_carbon_density", "total_organic_carbon",
             "organic_matter", "organic_matter_density", "loss_on_ignition",
-            "total_inorganic_carbon", "inorganic_carbon",
-            #related to bulk density
-            "bulk_density"))
+            "total_inorganic_carbon", "inorganic_carbon") ~ 'soil_carbon',
+    of_variable %in% c(#related to bulk density
+            "bulk_density") ~ 'bulk_density')) |>
+  filter(!is.na(new_table)) |>
+  mutate(of_variable = case_when(str_detect(doi, '10.1594_PANGAEA.927849') &
+                                   str_detect(of_variable, 'depth_mid') 
+                                   ~ paste0(of_variable, '_', column_id),
+                                 TRUE ~ of_variable))
 
 CPEAT_soc %>%
   slice_head(n=100) %>%
@@ -397,66 +408,57 @@ Often this data is presented in three tables: a site level table with lat/lon an
 We given an example below of how this might be organized.
 
 ```{r}
-CPEAT_study <- CPEAT.ls$long %>% 
+CPEAT_study <- CPEAT_soc %>% 
   #identify the variables that we are interested in
-  filter(of_variable %in% 
-           c(#variables that identify the source data
-             'doi', "data_doi", "download_url", "data_local_filepath",
-             "project", "related_citation", "core_name", "citation",
-             "core_comment", "comment", "data_license"))
+  filter(new_table == 'data_source',
+         !is.na(with_entry),
+         #description only holds Comment (Comment), removing
+         !str_detect(is_type, pattern = 'description')) |>
+  select(doi, of_variable, is_type, with_entry) |>
+  pivot_wider(names_from = of_variable, values_from = with_entry,
+              values_fn = ~ paste(.x, collapse = '; ')) |>
+  select(-is_type) 
 
-CPEAT_profile <- CPEAT.ls$long %>%
-  filter(of_variable %in% 
-             #geolocation of the core
-             "latitude", "longitude", "region", "elevation", "elevation_end",
-             "elevation_start", "bounded_coverage",
-             # related to the sampling of the core
-            "sampling_device",
-            "core_penetration", "core_recovery",
-            "peat_description")
+CPEAT_profile <- CPEAT_soc |>
+  filter(new_table %in% c('geolocation', 'sample_collection')) |>
+  select(doi, of_variable, with_entry) |>
+  unique()  #remove duplicate lat/lon
+  
+CPEAT_units <- CPEAT_profile |>
+  mutate(unit = str_extract(with_entry, '(?<=\\d)\\D+$')) |>
+  filter(!is.na(unit)) |>
+  select(doi, of_variable, unit) |>
+  reframe(unit = unique(unit),
+          .by = of_variable) #double check that we can drop the dois
 
-CPEAT_layer <- CPEAT.ls$long %>%
-  filter(of_variable %in%
-           #depth related variables 
-             "layer_mid", "layer_thickness",
-             "depth_top", "depth_bottom",
-            #related to the carbon content
-            "carbon", "total_carbon",
-            "organic_carbon_density", "total_organic_carbon",
-            "organic_matter", "organic_matter_density", "loss_on_ignition",
-            "total_inorganic_carbon", "inorganic_carbon",
-            #related to bulk density
-            "bulk_density"))
+CPEAT_profile <- CPEAT_profile |>
+  mutate(with_entry = str_remove(with_entry, '\\D+$') |>
+           as.numeric()) |>
+  pivot_wider(names_from = of_variable, values_from = with_entry)
 
+
+CPEAT_layer <- CPEAT_soc |>
+  filter(new_table %in% c("soil_depth", "bulk_density", "soil_carbon")) |>
+  filter(!is.na(observation_id)) |>
+  select(doi, observation_id, of_variable, with_entry) |>
+  #filter(str_detect(with_entry, '[^(\\d|\\.|\\-)]'))
+  mutate(with_entry = as.numeric(with_entry)) |> #two entries '?0' being replaced with NA
+  pivot_wider(names_from=of_variable, values_from=with_entry) 
+
+  
+
+CPEAT_layer.meta <- CPEAT_soc |>
+  filter(new_table %in% c("soil_depth", "bulk_density", "soil_carbon")) |>
+  filter(is.na(observation_id)) |>
+  select(doi, of_variable, is_type, with_entry) |>
+  pivot_wider(names_from=is_type, values_from=with_entry) 
 
 ```
 
 # Factor tables  
 
 ```{r}
-# count of regions for CPEAT layer level data
-site.df %>% 
-  group_by(region) %>% 
-  tally() %>%
-  knitr::kable(caption = 'CPEAT layer-level catagorical regions') %>% 
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
 
-layer_site <- site.df %>% 
-  mutate(has_lat_long = is.finite(latitude + longitude)) %>% 
-  group_by(doi, has_lat_long, region) %>% 
-  tally() %>% 
-  mutate(location_label = if_else(has_lat_long, "geolocated_layer", "unlocated_layer")) %>% 
-  ungroup() # 870 obs of 5 variables
-
-layer_taxa <- layer.df %>% 
-  group_by(peat_description) %>% 
-  tally() 
-
-layer_taxa %>%
-  knitr::kable(caption = 'CPEAT layer-level species taxa categories') %>% 
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px") # 92 categories
 ```
 
 ## Figures and Report
@@ -466,76 +468,31 @@ Below are some general figures that might be of interest if you are evaluating t
 # Plotting Layer histograms!
 
 ```{r}
-CPEAT_soc_plot <- CPEAT_soc %>% 
-  dplyr::mutate(across(with_entry, as.numeric))
 
-ggplot(CPEAT_soc_plot %>%
-         pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
-  geom_histogram(aes(x=value)) +
-  facet_wrap(~of_variable, scales='free')
 ```
 
 # Bulk density vs Organic carbon %
 
 ```{r}
-ggplot(layer.df) +
-  geom_point(aes(x = bulk_density, y = carbon), alpha = 0.1)
+
 ```
 
 # Bulk density vs Total organic carbon %
 
 ```{r}
-ggplot(layer.df) +
-  geom_point(aes(x = bulk_density, y = total_organic_carbon), alpha = 0.1)
+
 ```
 
 # Organic matter content across different taxa
 
 ```{r}
-ggplot(layer.df) +
-  geom_histogram(aes(x = organic_matter, fill = peat_description))
+
 ```
 
 # Geolocations
 
 ```{r}
-# plotting geolocations with lat and long values 
-ggplot(site.df) +
-  geom_polygon(data = map_data('world'),
-               aes(x = long, y = lat, group = group), 
-               fill = NA, color = 'lightgrey') +
-  geom_point(aes(x=longitude, y = latitude), alpha = .1, color = 'darkorange') + 
-  labs(x = NULL, y = NULL)
 
-# categorizing the geolocations using region factor
-ggplot(site.df) +
-  geom_polygon(data = map_data('world'),
-               aes(x = long, y = lat, group = group), 
-               fill = NA, color = 'lightgrey') +
-  geom_point(aes(x=longitude, y = latitude,
-                 fill = region, color = region), size = 1.0) +
-  #theme(legend.position = "bottom")  +
-  labs(x = NULL, y = NULL)
-```
-
-```{r eval=FALSE}
-install.packages("plotly")
-library(plotly)
-
-# Create the interactive ggplot 
-plot_cpeat <- ggplot(site.df) +
-  geom_polygon(data = map_data('world'),
-               aes(x = long, y = lat, group = group), 
-               fill = NA, color = 'lightgrey') +
-  geom_point(aes(x = longitude, y = latitude, text = region), 
-             alpha = 0.2, size = 0.4, color = 'darkblue') +
-  labs(title = 'Geolocation for 870 CPEAT cores',
-       x = NULL, y = NULL) +
-  theme(axis.text = element_blank(),
-        axis.title = element_blank())
-
-# Convert to plotly for interactivity
-ggplotly(plot_cpeat, tooltip = "text")
 ```
 
 # Appendix
