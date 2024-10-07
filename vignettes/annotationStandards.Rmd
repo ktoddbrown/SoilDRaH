@@ -1,0 +1,70 @@
+---
+title: "Annotations files"
+author: "Kathe Todd-Brown"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Annotations files}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+annotationsCheckFile <- 'selfDocumentAnnotations.csv'
+
+annotationsDirectory = '../data'
+  
+selfDoc <- readr::read_delim(file.path(annotationsDirectory, 'selfDocumentAnnotations.csv'), 
+                               delim = ';',
+                               col_types = readr::cols(.default = readr::col_character()),)
+  
+  expectedHeaders <- selfDoc$column_id |>
+    unique()
+  
+  data_ref <- '--' #string for reference to annotated data to appear in the `with_entry` column
+  
+  control_vocab.df <- selfDoc |>
+    dplyr::filter(column_id == 'is_type', is_type == 'control_vocabulary') |>
+    dplyr::select(with_entry) |>
+    tidyr::separate_longer_delim(cols = with_entry, delim = ';') |>
+    tidyr::separate_wider_delim(cols = with_entry, delim = '|', names = c('vocabulary', 'definition')) |>
+    dplyr::mutate(dplyr::across(.cols = dplyr::everything(), .fns = trimws))
+```
+
+The annotations for ingested data files is expected to adhere to the following standards.
+
+# Column names
+
+Column names must contain the following columns and may contain additional columns as needed to provide unique identification.
+
+```{r}
+print(expectedHeaders)
+```
+
+# Deliminator
+
+Annotations are expected to be `;` deliniated so that it will be comparable with R package data standards.
+
+# Control vocabulary
+
+Control vocabulary entries should be quoted as "term1|human readable definition;term2|second readable definition".
+This is currently unenforced by `checkAnnotations`
+
+# data reference
+
+Reference to entries in the primary data set should be noted as `--`.
+This is currently unenforced.
+
+# `is_type`
+
+Is type is expected to adhere to the following control vocabulary.
+
+```{r}
+knitr::kable(control_vocab.df |>
+               dplyr::arrange(vocabulary))
+```
