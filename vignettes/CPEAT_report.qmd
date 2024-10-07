@@ -41,7 +41,7 @@ library(ggplot2) # make plots
 library(stringr) # extract text from descriptions
 library(knitr) # make prettier tables
 library(kableExtra) # make tables scrollable
-library(pangaear) # read in data from p
+#library(pangaear) # read in data from p
 
 #locate the read script
 readCPEAT_file <- 'readCPEAT.R'
@@ -80,7 +80,7 @@ CPEAT.ls <- readCPEAT(dataDir,
                   annotationFilename = dataAnnotations, 
                   #when first running, switch this to true 
                   verbose = FALSE, 
-                  #fileCount = 10,
+                  fileCount = Inf,
                   format = 'long') # 2,640,892 obs for all datasets
 
 #read the same example we take below
@@ -298,7 +298,7 @@ This long format has the following structure.
 ```{r exampleLong}
 
 
-CPEAT.df$long %>%  # 2,640,892 entries, 7 total columns
+CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
   slice_head(n=100) %>%
   knitr::kable() %>%
   kable_paper() %>%
@@ -381,7 +381,7 @@ CPEAT_soc <- CPEAT.ls$long %>%
             "peat_description") ~ 'sample_collection',
     of_variable %in% c(#depth related variables 
              "layer_mid", "layer_thickness", "depth_thickness",
-             "depth_mid","depth_top", "depth_bottom") ~ 'soil_depth',
+             "depth_mid", "depth_mid_loi", "depth_top", "depth_bottom") ~ 'soil_depth',
     of_variable %in% c(#related to the carbon content
             "carbon", "total_carbon",
             "organic_carbon_density", "total_organic_carbon",
@@ -391,8 +391,9 @@ CPEAT_soc <- CPEAT.ls$long %>%
             "bulk_density") ~ 'bulk_density')) |>
   filter(!is.na(new_table)) |>
   mutate(of_variable = case_when(str_detect(doi, '10.1594_PANGAEA.927849') &
-                                   str_detect(of_variable, 'depth_mid') 
-                                   ~ paste0(of_variable, '_', column_id),
+                                   str_detect(of_variable, 'depth_mid') &
+                                   str_detect(column_id, '^V3$')
+                                   ~ 'depth_mid_loi',
                                  TRUE ~ of_variable))
 
 CPEAT_soc %>%
@@ -443,7 +444,8 @@ CPEAT_layer <- CPEAT_soc |>
   select(doi, observation_id, of_variable, with_entry) |>
   #filter(str_detect(with_entry, '[^(\\d|\\.|\\-)]'))
   mutate(with_entry = as.numeric(with_entry)) |> #two entries '?0' being replaced with NA
-  pivot_wider(names_from=of_variable, values_from=with_entry) 
+  pivot_wider(names_from=of_variable, values_from=with_entry) |>
+  mutate(depth_mid = if_else(is.na(depth_mid), (depth_top + depth_bottom)/2, depth_mid))
 
   
 
@@ -471,17 +473,12 @@ Below are some general figures that might be of interest if you are evaluating t
 
 ```
 
-# Bulk density vs Organic carbon %
+# Bulk density vs carbon %
 
 ```{r}
-
+#facet oc vs ic vs total C
 ```
 
-# Bulk density vs Total organic carbon %
-
-```{r}
-
-```
 
 # Organic matter content across different taxa
 
