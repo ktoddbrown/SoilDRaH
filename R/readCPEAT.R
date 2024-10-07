@@ -22,10 +22,10 @@ readCPEAT <- function(dataDir,
                       verbose=FALSE){
   
   ##Dev sets
-  # dataDir <- 'temp/CPEAT'
-  # verbose <- TRUE
-  # fileCount <- 10
-  # annotationFilename <- 'data/annotations_CPEAT3.csv'
+  #dataDir <- 'temp/CPEAT'
+  #verbose <- TRUE
+  #fileCount <- 10
+  #annotationFilename <- 'data/annotations_CPEAT3.csv'
   # 
   
   readSingleFile <- function(filename, 
@@ -206,7 +206,8 @@ readCPEAT <- function(dataDir,
     mutate(doi = str_extract(download_url, '10.1594.*\\d')) |>
     mutate(filename = file.path(dataDir, 
                                 sprintf('%s.txt', 
-                                        str_replace_all(doi, '/', '_'))))
+                                        str_replace_all(doi, '/', '_')))) |>
+    head(n = fileCount)
   
   if(verbose) message(sprintf('Downloading %d of %d files ...',
                               sum(!file.exists(download_urls$filename)),
@@ -216,7 +217,7 @@ readCPEAT <- function(dataDir,
     if(ii %% 50 == 1 & verbose) cat(paste(ii, '... '))
     
     if(!file.exists(download_urls$filename[ii])){
-      download.file(download_urls$downloadURL[ii],
+      download.file(download_urls$download_url[ii],
                     download_urls$filename[ii],
                     quiet=TRUE)
     }
