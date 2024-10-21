@@ -13,7 +13,7 @@ body:
       label: "Name"
       description: "What should we call this data collection?"
       placeholder: "Internatinal Soil Carbon Network vs 3"
-      validations:
+    validations:
         required: true
   - type: input
     attributes:
