@@ -55,4 +55,8 @@ temp/*
 */temp/*
 
 #MacOS files
-*DS_Store
+.DS_Store
+*.DS_Store
+
+*.Rproj
+

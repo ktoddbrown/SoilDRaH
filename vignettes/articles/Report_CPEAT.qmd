@@ -1,0 +1,602 @@
+---
+title: "Carbon in Peat on EArth through Time"
+author: "Kathe Todd-Brown, Vaasuki Marupaka"
+date: "2024"
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    R.options:
+      knitr.graphics.auto_pdf: true
+toc: true
+toc-depth: 2
+---
+
+The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, data model description, data processing workflows, and visuals for the collection relevant variables.
+
+# What is C-PEAT
+
+The version of the Carbon in Peat on EArth through Time (C-PEAT) Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
+
+> **C-PEAT Database**
+> Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
+
+Taken from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
+
+The annotations table draws heavily from the parameters described in the orginal metadata and also from the point of contact for C-PEAT collection of datasets (Dr. Julie Loisel). 
+
+The C-PEAT database on pangaea is presented in a complex nested format with the primary study level and metadata information presented as a graphical database structure while the layer level information or the data table are presented in regular relational database format. We have worked with merging this complex data structure and collapsing it into one single table format. For example, when you call the function $str$ to find out the structure of the object, the data is presented in a nested list format for the original CPEAT database structure. Our goal is to shoestring this data into one long table along with the annotations. 
+
+# Data processing
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) # make tables scrollable
+#library(pangaear) # read in data from p
+
+#locate the read script
+readCPEAT_file <- 'readCPEAT.R'
+
+#locate the data directory we will download to
+dataDir <- 'CPEAT'
+dataAnnotations <- 'annotations_CPEAT.csv'
+```
+
+```{r maintainer_filenames}
+#| echo: FALSE
+#| eval: TRUE
+
+#These maintainer_X chunks are intended for folks maintaining this document, 
+#  updating the workflow to modify annotations or include more cores, or
+#  running this locally. All maintainer chunks except for this one are set to
+#. eval and echo FALSE
+
+#Change this file to run locally for you
+dataDir  <- '../../temp/CPEAT'
+
+readCPEAT_file <- file.path('../../R', readCPEAT_file)
+dataAnnotations <- file.path('../../data', dataAnnotations)
+```
+
+```{r sourceReadFunction}
+source(readCPEAT_file, local = knitr::knit_global())
+```
+
+```{r longCPEAT_read}
+#| cache: TRUE
+#| warning: FALSE
+#| message: FALSE
+
+CPEAT.ls <- readCPEAT(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  #when first running, switch this to true 
+                  verbose = FALSE, 
+                  fileCount = Inf,
+                  format = 'long') # 2,640,892 obs for all datasets
+
+#read the same example we take below
+singleCPEAT <- readCPEAT(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  #when first running, switch this to true 
+                  verbose = FALSE, 
+                  fileCount = 1,
+                  format = 'original')
+```
+
+## Orginal data structure
+
+Each core in CPEAT has it's own doi-identified data package with it's own entry on the Pangaea repository.
+Each data package includes graphical metadata at the front of a tab separated data table.
+The graphical metadata is listed between `/*` and `*/`.
+Identifiers in this graphical format are followed by `:` with aspects of this item shown inline with a ` * `-separation followed by another `:`-denoted key-vale, and child items are preceded by a tab.
+
+See the example below.
+
+```{r showDataStr}
+#| echo: false
+#| code-fold: true
+#| code-summary: 'Example Pangaea File'
+#| comment: ''
+examplefile <- readLines(list.files(file.path(dataDir), 
+                                    full.names = TRUE)[10])
+cat(paste0(examplefile, collapse = '\n'))
+```
+
+This can be represented as a graph (without the value entries) as follows:
+
+```{mermaid CPEAT_diagram}
+flowchart LR
+  A[Citation]
+  B[Related to]
+  C[Further details]
+  D["Project(s)"]
+  E[Coverage] --> EA[LATITUDE] & EB[LONGITUDE] & EC["MINIMUM DEPTH, sediment/rock"] & I["MAXIMUM DEPTH, sediment/rock"]
+  J["Events(s)"] --> K[" "] & L[LATITUDE] & M[LONGITUDE] & N[Recovery] & O[Location] & P["METHOD/DEVISE"] & Q[COMMENT]
+  Q --> QA["Coring year"] & S["core length"] & T["peatland type"] & U[basal age depth] & V[basal age] & W[basal age] & X[n dates] & Y[core microtopography] & Z[carbon rate site] & AA[peat properties site]
+```
+
+
+# Reading the data
+
+**TODO This entire section needs to be rewritten for the new algorithm**
+
+This read function is a bit longer and more complicated then others in this collection.
+Here we choose to walk through key parts of the code base and explain our approach.
+Broadly we use the data DOIs in the annotation file to download the data then load this into R using our own parser.
+For the long format, then walked through the list of individual cores using 
+`dlply` and generated a single data table in our long format.
+Note that the data annotations for this collection are minimal because much of 
+the data traditionally encoded as metadata is encoded in the downloaded data.
+
+
+```{r loadReferenceCode}
+#| echo: false
+CPEAT_code <- read_lines(readCPEAT_file)
+```
+
+First we find the data on the Pangaea repository using `pangaear::pg_search`.
+Search results are limited to the top 500 so we need to repeat this to get the total 870.
+Note that if the number of cores in this collection change we need to revisit 
+this function to ensure we still have the correct cleaning algorithms.
+
+```{r seach_Pangaear}
+#| eval: false
+#| echo: false
+#| class-output: R
+#| filename: "ln 34-45: readCPEAT.R"
+#| comment: ''
+cat(paste0(CPEAT_code[34:45], collapse = '\n'))
+```
+
+
+We then download the data and read it in at the same time using the 
+`pangaear::pg_data` function.
+According to the documentation we should be able to pass a list of doi's but
+this does not appear to work right now -- instead we load each doi separately and then piece them back together as a list
+using the `plyr::dlply` function.
+We also were unable to stop fresh downloads at each run -- as a result
+we recommend that you cache the results when possible instead of rerunning this
+read function.
+ 
+```{r load_Pangaear}
+#| eval: false
+#| echo: false
+#| filename: "ln 69-89: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[69:89], collapse = '\n'))
+```
+
+If the original format is requested we then load in the annotations file and
+return the results here.
+This results in a list of lists as structured below.
+
+```{r readSingle}
+#| cache: true
+#| echo: false
+str(singleCPEAT)
+```
+
+Otherwise we move onto transforming this list of lists into a single long data table by iterating through using `plyr::ldply` after filtering the annotations for those
+that apply to the primary data (denoted by `--` in the `with_entry` column).
+
+
+```{r transformLong}
+#| eval: false
+#| echo: false
+#| filename: "ln 108-117: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[108:117], collapse = '\n'))
+```
+
+### Lists to table
+
+To each of `pg_read` lists items we apply the following:
+
+First we pull the headers used in the associated data and apply an ordering to them using a `V`-index pattern.
+This was done because not all the headers match those documented in the 
+parameter descriptions, likely due to an export truncation at some point.
+We are instead relying on ordering to match up the column names with the 
+parameter descriptions.
+
+```{r parseHeader}
+#| eval: false
+#| echo: false
+#| filename: "ln 172-197: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[172:197], collapse = '\n'))
+```
+
+Then we add the descriptions from the `parameter` and combin that with
+`of_variable` tag
+from the annotations table.
+
+```{r parseParameter}
+#| eval: false
+#| echo: false
+#| filename: "ln 199-220: readCPEAT.R"
+#| comment: ''
+#| code-output: R
+# code-block-border-left: true
+cat(paste0(CPEAT_code[199:220], collapse = '\n'))
+```
+
+Next the `data` element contains the layer level observations.
+The column names have been truncated in some cases, so first we replace them using a column number with a `V` prepend and rely on the ordering to match these up with the column descriptions and other information constructed above.
+There is no clear row/observation identifier (some tables contain multiple observations for the same layer), so we add a row number with a `R` prepend here to create a unique ID.
+Then the table is joined to prior information and pivoted to create a long format.
+
+```{r parseDataTable}
+#| eval: false
+#| echo: false
+#| filename: "ln 223-254: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[223:254], collapse = '\n'))
+```
+
+Finally we construct the secondary information about the study stored in elements which are not `parameters` nor `data` that we have not worked with yet
+
+
+```{r parseOther}
+#| eval: false
+#| echo: false
+#| filename: "ln 347-385: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[347:385], collapse = '\n'))
+```
+
+
+The extrated data frames are then bound the rows together.
+And then returned to the `plyr::ldply` function to be appended to other core data sets.
+
+```{r bindTables}
+#| eval: false
+#| echo: false
+#| filename: "ln 387-388: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[387:388], collapse = '\n'))
+```
+
+### Long format output
+
+We then clean up the output and return the resulting long format.
+
+```{r finalCleaningLong}
+#| eval: FALSE
+#| echo: false
+#| filename: "ln 393-413: readCPEAT.R"
+#| comment: ''
+#| class-output: R
+#| code-block-border-left: true
+cat(paste0(CPEAT_code[393:413], collapse = '\n'))
+```
+
+# CPEAT long format
+
+This long format has the following structure.
+
+```{r exampleLong}
+
+
+CPEAT.ls$long %>%  # 2,640,892 entries, 7 total columns
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## `table_name`
+
+Often `table_name` will reflect the file name in a set of inter-related csv files, in this case we use it to refer to what `list` the data was extracted from in the `pangaear::pg_data` return.
+
+```{r listTables}
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = table_name) |>
+  arrange(desc(count))
+```
+
+## `is_type`
+
+The `is_type` entry usually falls into one of the following categories: {`value`, `definition`, `unit`, `method`, `control_vocabulary`}. 
+This entry describes the type of information associated with `of_variable` found in `with_entry`. 
+Note that we use `value` as a general term for simplicity, regardless of whether the data is numerical or text. 
+
+```{r listTypes}
+
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = is_type) |>
+  arrange(desc(count))
+```
+
+## `of_variable`
+
+The of\_variable column describes the variables linked to the column\_id, such as bulk density, organic carbon, vegetation, other covariates. It's important to maintain the original intent of the data providers when creating these annotations. While the of\_variable entries are highly dependent on the dataset, is\_type should have a more restricted range of entries.
+
+```{r listVariables}
+CPEAT.ls$long |>
+  reframe(count = n(),
+          .by = of_variable) |>
+  arrange(desc(count))
+```
+
+
+```{r maintainer_annotationComplete}
+#| eval: FALSE
+#| echo: FALSE
+
+#Check to see if there are NA variables implying that the annotations is incomplete
+
+badReads <- CPEAT.ls$long |>
+  filter(is.na(of_variable))
+```
+
+# Subseting for soil carbon
+
+There is a lot of data here but not all of it is of interest for all purposes.
+In this example we are interested in layer-level soil carbon related measurements and the geolocation.
+Note that we are NOT checking any of the quality control flags here which you would want to do if using this for research purposes.
+
+```{r}
+CPEAT_soc <- CPEAT.ls$long %>% 
+  #identify the variables that we are interested in
+  mutate(new_table = case_when(
+    of_variable %in% c(#variables that identify the source data
+             'doi', "data_doi", "download_url", "data_local_filepath",
+             "project", "core_name", "citation",
+             "related_objects", "related_citation", 
+             "core_further_details", "current_status",
+             "curation_status", "change_log",
+             "keyword",
+             "core_comment", "comment", "data_license",
+             "principle_investigator") ~ 'data_source',
+    of_variable %in% c(#geolocation of the core
+             "latitude", "longitude", "region", "elevation", "elevation_end",
+             "elevation_start", "bounded_coverage") ~ 'geolocation',
+    of_variable %in% c(# related to the sampling of the core
+            "sampling_device", 
+            "core_minimum_depth", "core_maximum_depth",
+            "core_penetration", "core_recovery",
+            "peat_description") ~ 'sample_collection',
+    of_variable %in% c(#depth related variables 
+             "layer_mid", "layer_thickness", "depth_thickness",
+             "depth_mid", "depth_mid_loi", "depth_top", "depth_bottom") ~ 'soil_depth',
+    of_variable %in% c(#related to the carbon content
+            "carbon", "total_carbon",
+            "organic_carbon_density", "total_organic_carbon",
+            "organic_matter", "organic_matter_density", "loss_on_ignition",
+            "total_inorganic_carbon", "inorganic_carbon") ~ 'soil_carbon',
+    of_variable %in% c(#related to bulk density
+            "bulk_density") ~ 'bulk_density')) |>
+  filter(!is.na(new_table)) |>
+  mutate(of_variable = case_when(str_detect(doi, '10.1594_PANGAEA.927849') &
+                                   str_detect(of_variable, 'depth_mid') &
+                                   str_detect(column_id, '^V3$')
+                                   ~ 'depth_mid_loi',
+                                 TRUE ~ of_variable))
+
+CPEAT_soc %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Make small tables
+
+Often this data is presented in three tables: a site level table with lat/lon and year, a layer level table with the depth and physiochemical information, and a meta table with information on the units and descriptions.
+We given an example below of how this might be organized.
+
+### Study information
+
+```{r}
+CPEAT_study <- CPEAT_soc %>% 
+  #identify the variables that we are interested in
+  filter(new_table == 'data_source',
+         !is.na(with_entry),
+         #description only holds Comment (Comment), removing
+         !str_detect(is_type, pattern = 'description')) |>
+  select(doi, of_variable, is_type, with_entry) |>
+  pivot_wider(names_from = of_variable, values_from = with_entry,
+              values_fn = ~ paste(.x, collapse = '; ')) |>
+  select(-is_type) |>
+  select(core_name, doi, everything()) |>
+  dplyr::mutate(across(all_of(c( "core_name", "principle_investigator",
+                                 "project", "data_license", 'keyword', 
+                                 'curation_status')), as.factor)) |>
+  arrange(core_name)
+```
+
+```{r}
+CPEAT_study |>
+  knitr::kable() |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+
+
+```{r}
+CPEAT_study |>
+  select(!c(doi, core_name)) |>
+  select(where(is.factor)) |>
+  dplyr::mutate(across(everything(), as.character)) |>
+  pivot_longer(cols = everything(), 
+               names_to = 'of_variable', values_to = 'with_entry') |>
+  reframe(count = n(),
+          .by = c(of_variable, with_entry)) |>
+  arrange(-count, of_variable, with_entry) |>
+  knitr::kable() |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+
+### Profile information
+
+```{r}
+CPEAT_profile <- CPEAT_soc |>
+  filter(new_table %in% c('geolocation', 'sample_collection') |
+           of_variable %in% c('doi', 'core_name')) |>
+  select(doi, of_variable, with_entry) |>
+  unique() |> #remove duplicate lat/lon generated by metadata
+  pivot_wider(names_from = of_variable, values_from= with_entry) |>
+  pivot_longer(cols = !c(doi, core_name), 
+               names_to = 'of_variable', values_to = 'with_entry') |>
+  mutate(value = str_remove(with_entry, '\\s\\D+$'),
+         unit = str_extract(with_entry, '(?<=\\d\\s)\\D+$')) |>
+  filter(!is.na(value)) |>
+  mutate(value=as.numeric(value)) |>
+  select(core_name, doi, of_variable, value, unit)
+
+```
+
+```{r}
+ggplot(CPEAT_profile) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~of_variable, scales = 'free')
+```
+
+```{r}
+
+world_map <- map_data("world")
+
+plot.df <- CPEAT_profile |>
+  filter(of_variable %in% c('latitude', 'longitude')) |>
+  select(core_name, doi, of_variable, value) |>
+  pivot_wider(names_from = of_variable, values_from = value)
+
+
+
+ggplot(data=world_map) + 
+   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
+  geom_point(data = plot.df, 
+             aes(x=longitude, y = latitude),
+             color = 'blue', alpha = .1) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+```
+
+### Layer information
+
+```{r}
+
+
+#we want to extract the units from the `descriptions` that are between '[]'
+CPEAT_units <- CPEAT_soc |>
+  filter(new_table %in% c("soil_depth", "bulk_density", "soil_carbon")|
+           of_variable %in% c('doi', 'core_name'),
+         is_type == 'description') |>
+  select(of_variable, description = with_entry) |>
+  unique() |>
+  mutate(unit = str_extract(description, '(?<=\\[).*(?=\\])')) |>
+  mutate(description = if_else(of_variable == 'depth_mid_loi',
+                               'DEPTH, sediment/rock for loi [m] (Depth sed loi)',
+                               description))
+  
+
+CPEAT_layer <- CPEAT_soc |>
+  filter(new_table %in% c("soil_depth", "bulk_density", "soil_carbon")) |>
+  filter(!is.na(observation_id)) |>
+  #if there is anything in the doi that is not depth, keep that doi
+  filter(any(!str_detect(of_variable, 'depth' )), .by = doi) |>
+  select(doi, observation_id, of_variable, with_entry) |>
+  mutate(value = as.numeric(with_entry)) |> #two entries '?0' being replaced with NA
+  left_join(CPEAT_units, by = join_by(of_variable)) |>
+  left_join(CPEAT_study |>
+              select(doi, core_name) |>
+              unique(), by = join_by(doi)) 
+```
+
+#### Sample of table
+
+```{r}
+CPEAT_layer |>
+  select(core_name, doi, observation_id, description, value) |>
+  pivot_wider(names_from = description, values_from = value) |>
+  slice_head(n = 100) |>
+  knitr::kable() |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+  
+
+```
+
+#### Measured histograms
+
+```{r}
+
+ggplot(CPEAT_layer) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~description, scales='free', ncol = 2)
+
+```
+
+#### Bulk density vs carbon %
+
+```{r}
+
+plot.df <- CPEAT_layer |>
+         filter(of_variable %in% c('bulk_density', 'organic_matter')) |>
+         select(doi, observation_id, of_variable, value) |>
+         pivot_wider(names_from = of_variable, values_from = value)
+
+ggplot(plot.df) +
+  geom_point(aes(x=bulk_density, y = organic_matter))
+
+```
+
+#### Geolocations of OC
+
+```{r}
+world_map <- map_data("world")
+
+plot.df <- CPEAT_profile |>
+  filter(of_variable %in% c('latitude', 'longitude')) |>
+  select(core_name, doi, of_variable, value) |>
+  filter(doi %in% CPEAT_layer$doi) |>
+  pivot_wider(names_from = of_variable, values_from = value)
+
+
+
+ggplot(data=world_map) + 
+   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
+  geom_point(data = plot.df, 
+             aes(x=longitude, y = latitude),
+             color = 'blue', alpha = .3) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank())
+```
+
+# Appendix
+
+## readCPEAT.R
+
+```{r}
+#| file: '../R/readCPEAT.R'
+#| code-line-numbers: TRUE
+#| echo: TRUE
+#| eval: FALSE
+```
+
