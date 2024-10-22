@@ -89,7 +89,7 @@ singleCPEAT <- readCPEAT(dataDir,
                   #when first running, switch this to true 
                   verbose = FALSE, 
                   fileCount = 1,
-                  format = 'orginal')
+                  format = 'original')
 ```
 
 ## Orginal data structure
