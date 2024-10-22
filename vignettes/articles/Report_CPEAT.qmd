@@ -48,7 +48,7 @@ readCPEAT_file <- 'readCPEAT.R'
 
 #locate the data directory we will download to
 dataDir <- 'CPEAT'
-dataAnnotations <- 'annotations_CPEAT3.csv'
+dataAnnotations <- 'annotations_CPEAT.csv'
 ```
 
 ```{r maintainer_filenames}
@@ -61,10 +61,10 @@ dataAnnotations <- 'annotations_CPEAT3.csv'
 #. eval and echo FALSE
 
 #Change this file to run locally for you
-dataDir  <- '../temp/CPEAT'
+dataDir  <- '../../temp/CPEAT'
 
-readCPEAT_file <- file.path('../R', readCPEAT_file)
-dataAnnotations <- file.path('../data', dataAnnotations)
+readCPEAT_file <- file.path('../../R', readCPEAT_file)
+dataAnnotations <- file.path('../../data', dataAnnotations)
 ```
 
 ```{r sourceReadFunction}
