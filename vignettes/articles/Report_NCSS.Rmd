@@ -1,0 +1,413 @@
+---
+title: "NRCS-NCSS Report"
+author: "Katherine Todd-Brown <ktoddbrown@ufl.edu>"
+date: "2024-05-28"
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
+---
+
+This data is part of the National Cooperative Soil Survey Soil Characterization Data (Lab Data) and was accessed via [https://ncsslabdatamart.sc.egov.usda.gov/](https://ncsslabdatamart.sc.egov.usda.gov/).
+The NCSS Data (Lab Data) was collected the by the National Cooperative Soil Survey of the United States Department of Agriculture.
+This dataset contains the measurements across several projects of various purposes.
+
+This data set is quite extensive with over 1,014 columns across 24 tables.
+While we have integrated the available metedata into the data annotations presented here, we have not completed the annotations beyond the description imports for soil carbon stock estimates, bulk density, organic carbon fraction, layer depth, and geo-location.
+
+**Citation:**
+National Cooperative Soil Survey,
+National Cooperative Soil Survey Soil Characterization Database,
+http://ncsslabdatamart.sc.egov.usda.gov/
+(Accessed September 22, 2023)
+
+```{r setup}
+library(tidyverse) #manipulate the data tables
+library(RSQLite) #read in the sqlite file that holds the sample data
+library(knitr) #make pretty reports
+library(kableExtra) #make pretty scrollable tables
+
+source('../../R/checkAnnotations.R') #load in the check function for annotations
+source('../../R/readNCSS.R') #load in the read function
+
+#knitr::opts_chunk$set()
+```
+
+```{r warning=FALSE, message=FALSE}
+ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
+                    annotationFilename = '../../data/NCSS_Annotations.csv',
+                    format = 'long')
+```
+
+# Data descriptions
+
+Below is the description for tables containing soil carbon stocks, layer depth, and geolocation information.
+
+## Table: `lab_pedon`
+
+```{r}
+table_str <- 'lab_pedon'
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_site`
+
+```{r}
+table_str <- 'lab_site'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_layer`
+
+```{r}
+table_str <- 'lab_layer'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_calculations_including_estimates_and_default_values`
+
+```{r}
+table_str <- 'lab_calculations_including_estimates_and_default_values'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_chemical_properties`
+
+```{r}
+table_str <- 'lab_chemical_properties'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `lab_chemical_properties`
+
+```{r}
+table_str <- 'lab_physical_properties'
+
+knitr::kable(ncss.df$annotations %>%
+               filter(is_type == 'description',
+                      table_id == table_str) %>%
+               arrange(as.numeric(column_number)) %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Soil organic carbon data processing
+
+
+```{r}
+
+soc.df <- ncss.df$long %>%
+  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
+```
+
+
+```{r}
+
+plot.df <- soc.df %>% 
+  select(-method) %>%
+  filter(!is.na(value)) %>%
+  pivot_wider(names_from = 'of_variable', values_from = 'value') %>%
+  mutate(across(.cols = one_of(c('longitude', 'latitude', 'observation_date',
+                                 'layer_top', 'layer_bottom',
+                                 'layer_order', 'mineral_remaining_on_ignition',
+                                 'total_carbon', 'organic_carbon_estimated',
+                                 'organic_carbon_walkley_black', 'coarse_fraction',
+                                 'whole_soil_bulk_density')),
+                as.numeric)) %>%
+  mutate(across(.cols = one_of(c('horizon_designation', 'layer_type',
+                                 'horizon_designation_other')),
+                as.factor)) %>%
+  mutate(observation_date = lubridate::as_date(observation_date,
+                                               origin = lubridate::ymd('1900-01-01')))
+
+```
+
+## Histograms
+
+```{r fig.width = 9, fig.height=6}
+
+hist.df <- plot.df %>%
+  pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)
+
+
+ggplot(hist.df) + 
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scale= 'free', nrow=4)
+```
+
+### Observational date
+
+```{r}
+ggplot(plot.df) +
+  geom_histogram(aes(x=observation_date))
+```
+
+## OC vs BD Scatter
+
+```{r}
+
+ggplot(plot.df) +
+  geom_point(aes(x=whole_soil_bulk_density, y = organic_carbon_estimated))
+
+```
+
+## Calculate SOC
+
+```{r}
+plot2.df <- plot.df %>%
+  filter(coarse_fraction < 100, organic_carbon_estimated > 0) %>%
+  mutate(soc = whole_soil_bulk_density * (1-coarse_fraction/100) * organic_carbon_estimated) %>%
+  filter(is.finite(soc))
+
+ggplot(plot2.df) +
+  geom_histogram(aes(x=soc)) +
+  labs(x='Soil organic carbon (g cm-3)') +
+  scale_x_log10()
+```
+
+## Location over time
+
+```{r}
+ggplot(plot.df %>%
+         select(longitude, latitude, site_key, pedon_key, observation_date) %>%
+         filter(is.finite(longitude + latitude)) %>%
+         unique() %>%
+         mutate(decade = floor(year(round_date(observation_date, unit = 'year'))/10) * 10)) +
+  geom_polygon(colour="grey", fill="white",
+               aes(x=long, y=lat, group=group),
+               data = map_data("world")) +
+  geom_point(aes(x=longitude, y = latitude), alpha = .1) +
+  facet_wrap(~decade) +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank())
+```
+
+
+# Read script
+
+```{r file = '../../R/readNCSS.R', eval=FALSE}
+
+```
+
+# Checking format
+
+```{r eval=FALSE}
+
+# read_csv('../../data/FIA_Annotations.csv', 
+#          col_types = cols(.default = col_character())) %>%
+#   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
+
+#temp %>% filter(with_entry == '--') %>% View()
+if(checkAnnotations(filename = 'NCSS_Annotations.csv',
+                      annotationsDirectory = '../../data') == 0){
+  print('Annotations check out!')
+}
+
+```
+
+
+# Constructing metadata
+
+This is primarily left here for documentation and future updating needs.
+
+```{r eval=FALSE}
+  
+  verbose <- TRUE
+  dataDir <- "../../temp/NRCS_NCSS_20230922/"
+  
+  
+  sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
+  
+  metadata_dir <- file.path(dataDir,'FederalGeographicDataCommitteeMetadata')
+  
+  metadata_filenames <- lapply(list(col_desc = "NCSS Columns Description.csv", 
+                                    table_desc = "NCSS Table Description.csv", 
+                                    table_relation = "Relationships.csv", 
+                                    table_unique = "Unique Constraints.csv"),
+                               function(xx) file.path(metadata_dir, xx))
+  
+  #######
+  ###Check downloads
+  
+  if(!file.exists(sqldb_filename)){
+    message(paste('Expected zip file not found. Go here and download the sqlite zip file. https://ncsslabdatamart.sc.egov.usda.gov/database_download.aspx and place it in the directory:', file.path(getwd(), dataDir )))
+  }
+  
+  #### Connect the SQL database ####
+  
+  myconnect <- RSQLite::dbConnect( drv = RSQLite::SQLite(), dbname = sqldb_filename)
+  
+  if(verbose) message(paste('SQL tables in the database:', paste(RSQLite::dbListTables(myconnect), collapse = ', ')))
+  
+  
+  tableNames <- tibble(table_name = dbListTables(myconnect)) %>%
+    filter(grepl('^lab_', table_name)) #remove GIS tables(?) that start with st_ and the sqlite_sequence table
+  
+  if(verbose) message(paste('Trimming SQL tables to:', paste(tableNames$table_name, collapse = ', ')))
+  
+  meta.df <- plyr::ddply(tableNames, c('table_name'), 
+                         .fun = function(xx){
+                           headers <- RSQLite::dbListFields(myconnect, xx$table_name)
+                           return(data.frame(column_name = headers ))
+                         }) %>%
+    unique()
+
+##This is large but if you need to load everything all at once you can do so here
+# OrgData.df <- plyr::dlply(tableNames, c('table_name'), 
+#             .fun = function(xx){
+#               return(list(RSQLite::dbReadTable(myconnect, xx$table_name)))
+#             }) 
+
+  ### Clean up the connection ####
+  dbDisconnect(myconnect)
+  
+  
+#### Fix the descriptions ####
+
+givenDescriptions <- read_csv(file = metadata_filenames$col_desc, 
+                              col_types = cols(.default = col_character())) %>%
+  select(table_name, column_name, 
+         description = column_description, column_number = field_sequence) %>%
+  mutate(given_table_name = table_name,
+         given_column_name = column_name) %>%
+  pivot_longer(cols = c(description, column_number), 
+               names_to = 'of_type', values_to = 'with_entry') %>%
+  mutate(column_name = case_when(
+    column_name == 'bulk_density_saturated_whole_s' ~
+      'bulk_density_saturated_whole_soil',
+    column_name == 'aggregate_stability_05_2_metho' ~ 'aggregate_stability_05_2_method',
+    column_name == 'aluminum_na_pyro_phosphate_met' ~ 'aluminum_na_pyro_phosphate_method',
+    column_name == 'aluminum_plus_half_iron_oxalat' ~ 'aluminum_plus_half_iron_oxalate',
+    column_name == 'bd_thirdbar_reconstitut_method' ~ 'bd_thirdbar_reconstituted_method',
+    column_name == 'bulk_density_saturated_whole_s' ~
+      'bulk_density_saturated_whole_soil',
+    column_name == 'bulk_de_odreconstituted_method' ~
+      'bulk_density_odreconstituted_method',
+    column_name == 'bulk_den_rewet_oven_dry_method' ~ 'bulk_density_rewet_oven_dry_method',
+    column_name == 'bulk_density_field_moist_methd' ~ 'bulk_density_field_moist_method',
+    column_name == 'carbon_sodium_pyro_phospate' ~ 'carbon_sodium_pyro_phosphate',
+    column_name == 'cumulative_curve_lt_1_fourthmm' ~ 'cumulative_curve_lt_1_fourth_mm', 
+    column_name == 'cumulative_curve_lt_5_hundredt' ~ 'cumulative_curve_lt_5_hundredths',
+    column_name == 'le_third_ovendry_whole_soi' ~ 'le_third_ovendry_whole_soil',
+    column_name == 'particle_density_calc_sour' ~ 'particle_density_calc_source',
+    column_name == 'percent_passing_20_micron_siev' ~ 'percent_passing_20_micron_sieve',
+    column_name == 'void_ratio_third_bar_whole_soi' ~ 'void_ratio_third_bar_whole_soil',
+    column_name == 'volume_pct_20_to_75_mm_third_w' ~
+      'volume_pct_20_to_75_mm_third_ws',
+    column_name == 'volume_pct_75_to_250_mm_third' ~ 'volume_pct_75_to_250_mm_third_ws', 
+    column_name == 'volume_pct_gt_2_mm_thirdbarws' ~ 'volume_pct_gt_2_mm_thirdbar_ws',
+    column_name == 'chromium_water_extractabe' ~ 'chromium_water_extractable',
+    column_name == 'color_pyrophosphate_extract' ~ 'color_pyrophosphate_extractable',
+    column_name == 'copper_water_extracable' ~ 'copper_water_extractable',
+    column_name == 'ec_water_extract' ~ 'ec_water_extractable',
+    column_name == 'fe_dithionite_citrate_extract' ~ 'fe_dithionite_citrate_extractable',
+    column_name == 'frag_2_20_mm_wt_pct_lt_75' ~ 'frag__2_20_mm_wt_pct_lt_75', #typo in data not meta
+    column_name == 'wt_pct_clay_clay_free_2mmbase' ~ 'wt_pct_clay_clay_free_2mm_base',
+    column_name == 'water_retention_thirdbar_metho' ~ 'water_retention_thirdbar_method',
+    column_name == 'water_retention_10th_bar_meth' ~ 'water_retention_10th_bar_method',
+    column_name == 'volume_pct_gt_250_mm_thirdbarw' ~ 'volume_pct_gt_250_mm_thirdbar_ws',
+    column_name == 'GC_Glass_Coated_Grain_Glass_Count ' ~ 'GC_Glass_Coated_Grain_Glass_Count', #extra space
+    column_name == 'HG_Glass_Coated_Hornblende_Glass_Count ' ~ 'HG_Glass_Coated_Hornblende_Glass_Count', #extra space
+    column_name == 'le_field_moist_to_oven_dry' ~ 'le_field_moist_to_oben_dry', # typo in data
+    column_name == 'le_third_fifteen_lt_2_mm' ~ 'le_third_fifteen_lt2_mm',
+    column_name == 'le_third_ovendry_lt_2_mm_metho' ~ 'le_third_ovendry_lt_2_mm_method',
+    column_name == 'molybdenum_mehlich3_extractabl' ~ 'molybdenum_mehlich3_extractable',
+    column_name == 'ph_water_extract' ~ 'ph_water_extractable',
+    column_name == 'phosphorous_nh4_oxalate_method' ~ 'phosphorus_ammonium_oxalate_method',
+    column_name == 'phosphorus_anion_resin_capacit' ~ 'phosphorus_anion_resin_capacity',
+    column_name == 'phosphorus_mehlich3_extractabl' ~ 'phosphorus_mehlich3_extractable',
+    column_name == 'h2o_dispersible_fraction_metod' ~ 'water_dispersible_fraction_method',
+    column_name == 'le_to_clay_third_bar_to_ovendr' ~ 'le_to_clay_third_bar_to_ovendry',
+    column_name == 'mineral_content_loi_method' ~ 'mineral_content_loss_ignition_method',
+    column_name == 'mineral_content_loss_on_igniti' ~ 'mineral_content_loss_on_ignition',
+    column_name == 'sand_coarse_ethanol_dispersibl' ~ 'sand_coarse_ethanol_dispersible',
+    column_name == 'sand_medium_ethanol_dispersibl' ~ 'sand_medium_ethanol_dispersible',
+    column_name == 'sand_very_coarse_ethanol_disp' ~ 'sand_very_coarse_ethanol_dispersible',
+    column_name == 'sand_very_fine_ethanol_dispers' ~ 'sand_very_fine_ethanol_dispersible',
+    column_name == 'Pedon_Description_Report' ~ 'pedon_Description_Report',
+    (column_name == 'pedon_key') & (table_name == 'lab_webmap') ~ 'pedon_Key',
+    column_name == 'Soil_Web' ~ 'Soil_web',
+    (column_name == 'user_pedon_id') & (table_name == 'lab_webmap')  ~ 'User_pedon_ID',
+    column_name == 'column_desc' ~ 'column_description',
+    #add in other corrections here
+    TRUE ~ column_name)) %>%
+  bind_rows(
+    read_csv(file = metadata_filenames$table_desc, 
+                              col_types = cols(.default = col_character())) %>%
+      select(table_name, with_entry = table_description) %>%
+      mutate(of_type = 'description')) %>%
+  mutate(table_name = case_when(
+    table_name == 'lab_major_tr_elements_oxides' ~ 'lab_major_and_trace_elements_and_oxides',
+    table_name == 'lab_major_trace_elements_and_oxides'  ~ 'lab_major_and_trace_elements_and_oxides',
+    table_name == 'lab_calculations_and_estimates' ~
+      'lab_calculations_including_estimates_and_default_values',
+    table_name == 'lab_mir_wavelength_string_d' ~ 'lab_mir_wavelength',
+    table_name == 'lab_dd_table_column' ~ 'lab_column_descriptions',
+    table_name == 'lab_dd_table' ~ 'lab_table_descriptions',
+    TRUE ~ table_name)) %>%
+    pivot_wider(names_from = of_type, values_from = with_entry)
+
+# This was manually compiled by Vaasuki Marupaka and others in the Todd-Brown Lab
+# https://docs.google.com/spreadsheets/d/1mllMhm2V2kMv6KvPSnuXDEBWAS-2okWK2F4mXbSjphU/edit?usp=sharing
+curatedAnnotations <- read_csv(file = '../../temp/[DRAFT] ISCN datakeys temp - NCSS_May2024.csv',
+         col_types = cols(.default = col_character()))
+
+# Manually reviewed diff between currated and auto and 5 rows were determed to be corrections
+if(FALSE){
+  diff_curated.df <- curatedAnnotations %>%
+    anti_join(givenDescriptions)
+  
+  diff_auto.df <- givenDescriptions %>%
+    anti_join(curatedAnnotations)
+}
+
+finalAnnotations <- curatedAnnotations %>%
+  pivot_longer(cols = c(identifier, foreign_key, description, value, unit, method, reference, note, abbreviation), 
+               names_to = 'is_type', 
+               values_to = 'with_entry', 
+               values_drop_na = TRUE) %>%
+  select(table_id = table_name, column_id = column_name, column_number,
+         of_variable, is_type, with_entry)
+
+write_delim(finalAnnotations, delim = ';',
+            file = file.path('../../data', 'NCSS_Annotations.csv'))
+```

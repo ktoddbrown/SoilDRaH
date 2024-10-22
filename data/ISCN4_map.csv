@@ -1,0 +1,42 @@
+study_id,source_variable,target_variable,target_method,action_note
+ISCN3,latitude,latitude,NA,track datum
+ISCN3,longitude,longitude,NA,track datum
+ISCN3,state,state,NA,check overlap state names
+ISCN3,country,country,NA,rename United States for identified states
+ISCN3,layer_observation_time,observation_year,NA,Correct for Excel format
+ISCN3,upper_depth_bound,upper_depth_bound,NA,no transformation needed. known issue with ~100 layers having non-unique ids
+ISCN3,lower_depth_bound,lower_depth_bound,NA,no transformation needed. known issue with ~100 layers having non-unique ids
+ISCN3,bulk_density_other,bulk_density_unknown,unknown,no transformation needed
+ISCN3,bulk_density_sample,bulk_density_fine,measured,no transformation needed
+ISCN3,bulk_density_total,bulk_density_whole,measured,no transformation needed
+ISCN3,bulk_density_whole,bulk_density_whole,estimated,no transformation needed
+ISCN3,organic_carbon,organic_carbon,NA,no transformation needed
+ISCN3,organic_matter,loss_on_ignition,NA,no transformation needed
+ISCN3,total_carbon,total_carbon,NA,no transformation needed
+ISCN3,calcium_carbonate,inorganic_carbon,NA,no transformation needed
+ISCN3,coarse_fragment,coarse_fraction,NA,no transformation needed
+FIA,Inventory_year,observation_year,NA,Correct for Excel format
+FIA,State,state,NA,check overlap state names
+FIA,Longtitude,longitude,NA,"track datum, Pacific Islands non-standard"
+FIA,Latitude,latitude,NA,"track datum, Pacific Islands non-standard"
+FIA,Layer_type,upper_depth_bound,NA,pull control vocabulary and convert inches to cm
+FIA,Layer_type,lower_depth_bound,NA,pull control vocabulary and convert inches to cm
+FIA,Bulk_density,bulk_density_whole,measured,no transformation needed
+FIA,coarse_fraction,coarse_fraction,NA,no transformation needed
+FIA,organic_carbon,organic_carbon,NA,no transformation needed
+FIA,inorganic_carbon,inorganic_carbon,NA,no transformation needed
+FIA,carbon_fraction,carbon_fraction,NA,no transformation needed
+FIA,Forest_floor_depth_avg,depth_to_mineral,NA,convert units to cm from tenths of inches
+FIA,Litter_layer_depth_avg,depth_litter,NA,convert units to cm from tenths of inches
+NCSS,whole_soil_bulk_density,bulk_density_whole,NA,NA
+NCSS,coarse_fraction,coarse_fraction,NA,NA
+NCSS,total_carbon,total_carbon,NA,NA
+NCSS,organic_carbon_estimated,organic_carbon,estimated,NA
+NCSS,organic_carbon_walkley_black,organic_carbon,measured:walkley_black,NA
+NCSS,layer_bottom,lower_depth_bound,NA,NA
+NCSS,layer_top,upper_depth_bound,NA,NA
+NCSS,layer_type,depth_bound_defined,NA,NA
+NCSS,observation_date,observation_year,NA,Correct for Excel format
+NCSS,mineral_remaining_on_ignition,loss_on_ignition,NA,NA
+NCSS,longitude,longitude,NA,NA
+NCSS,latitude,latitude,NA,NA
