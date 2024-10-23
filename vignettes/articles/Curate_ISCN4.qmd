@@ -131,8 +131,10 @@ ISCN3_column_selection |>
 
 ISCN3_lvl1 <- list(
   primary = ISCN_lvl0.ls$long |> 
+    filter(!str_detect(dataset_name_sub, 'NRCS')) |> # added this here since the NRCS dataset name is under 
+    ## dataset_name_sub variable
     mutate(study_id = 'ISCN3') |>
-    rename(dataset_id = dataset_name_soc, 
+    dplyr::rename(dataset_id = dataset_name_soc, 
            site_id = site_name,
            profile_id = profile_name,
            layer_id = layer_name
