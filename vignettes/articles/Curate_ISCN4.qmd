@@ -32,6 +32,7 @@ This code uses the `tidyverse` and `RSQLite` packages with additional formating 
 ```{r setup, message=FALSE, warning=FALSE}
 #| code-summary: "Setup"
 
+library(plyr) #TODO: readCPEAT add package call
 library(tidyverse) #data structure manipulation
 library(RSQLite) #accessing the NCSS sql library
 library(knitr) # make prettier tables
