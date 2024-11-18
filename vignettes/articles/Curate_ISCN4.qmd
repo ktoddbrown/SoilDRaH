@@ -61,7 +61,7 @@ source(file.path(RscriptsDir, databaseReads$CPEAT))
 #knitr::opts_chunk$set(collapse = TRUE)
 ```
 
-```{r echo=FALSE}
+```{r setDownloadDir echo=FALSE}
 #Set this to any alternative download directory
 dataDownloadDir <- '~/Dropbox (UFL)/Research/Datasets'
 ```
@@ -71,7 +71,7 @@ dataDownloadDir <- '~/Dropbox (UFL)/Research/Datasets'
 Map the source table and variables to common ones for common ones with ISCN4.
 We also include an action note but right now these are not tied directly to code.
 
-```{r}
+```{r readVariableMapping}
 
 ISCN4map <- read_csv(file = file.path(annotationsDir,
                                       'ISCN4_map.csv'))
@@ -224,7 +224,7 @@ FIA_lvl1 <- list(
     right_join(FIA_lvl0.ls$annotation |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
-                            by = join_by(study_id, table_id,
+                            by = join_by(study_id,
                                          of_variable == source_variable),
                             relationship = "many-to-many") |>
                  filter(with_entry == '--') |>
@@ -250,7 +250,7 @@ FIA_lvl1 <- list(
   meta = FIA_lvl0.ls$annotations |>
     #pull the annotations for the primary data entries
     right_join(ISCN4map,
-               by = join_by(study_id, table_id,
+               by = join_by(study_id,
                             of_variable == source_variable),
                relationship = "many-to-many")  |>
     filter(is_type != 'control_vocabulary') |>
@@ -276,6 +276,8 @@ The National Cooperative Soil Survey (USDA-NRCS) holds
 
 ```{r warning=FALSE}
 #| code-fold: false
+#| warning: false
+#| code-summary: 'Read in the NCSS data'
 
 NCSS_lvl0.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_20230922'),
                     annotationFilename = file.path(annotationsDir, 'NCSS_Annotations.csv'),
@@ -284,7 +286,7 @@ NCSS_lvl0.ls <- readNCSS(dataDir = file.path(dataDownloadDir, 'NRCS_NCSS_2023092
 ```
 
 ```{r}
-#| code-summary: "Subset NCSS lvl 1 product"
+#| code-summary: "Subset NCSS to lvl 1 product"
 
 NCSS_lvl1 <- list(
   primary =  NCSS_lvl0.ls$long |> 
@@ -357,85 +359,59 @@ CPEAT_lvl0.ls <- readCPEAT(dataDir = file.path(dataDownloadDir, '/CPEAT'),
 ```
 
 ```{r}
-#| code-summary: "ID columns"
-
-# #Use the annotations to set up the column selection
-# #Pulled up here for ease of reference/review
-# ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
-#   semi_join(ISCN4map,
-#             by = join_by(study_id, 
-#                          of_variable == source_variable)) |>
-#   filter(with_entry == '--') |>
-#   select(ends_with('_id'), of_variable, is_type)
-# 
-# ISCN3_column_selection |>
-#   knitr::kable() |>
-#   kable_paper() |>
-#   scroll_box(width = "100%", height = "300px")
-```
-
-```{r}
-#| code-summary: "Subset ISCN3 lvl 1 product"
+#| code-summary: "Subset CPEAT into lvl 1 product"
 
 
-# ISCN3_lvl1 <- list(
-#   primary = ISCN_lvl0.ls$long |> 
-#     mutate(study_id = 'ISCN3') |>
-#     rename(dataset_id = dataset_name_soc, 
-#            site_id = site_name,
-#            profile_id = profile_name,
-#            layer_id = layer_name
-#            ) |>
-#     ##nrow 17 967 513
-#     filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
-#     ##nrow  2 151 476
-#     # use the column selection to subset the database
-#     inner_join(ISCN_lvl0.ls$annotation |>
-#                  #pull the annotations for the primary data entries
-#                  right_join(ISCN4map,
-#                            by = join_by(study_id, table_id,
-#                                         of_variable == source_variable)) |>
-#                  filter(with_entry == '--') |>
-#                  select(ends_with('_id'), of_variable, target_variable, is_type), 
-#                relationship = "many-to-many",
-#                by = join_by(table_id, column_id)) |>
-#     select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
-#            #remove the soc identifier since we are not pulling calculated SOC
-#            of_variable, target_variable, is_type, with_entry) |>
-#     #nrow 1 034 386
-#     #### Remove duplicate observations from ISCN3 ####
-#    unique() |> #some entries repeated due to soc_id replication of non SOC variables
-#     #nrow 973 621
-#     ### Pull the column id into a non-value with_entry and collapse
-#     ### This takes care of observations with multiple methods
-#     mutate(with_entry = if_else(is_type != 'value', 
-#                                 paste(column_id, with_entry, sep = ':'), 
-#                                 with_entry)) |>
-#     #### Kick out to wide format for QAQC ####
-#   select(study_id, study_id, dataset_id, profile_id, layer_id, #_id are the row identifier
-#          target_variable, is_type, with_entry) |>
-#     pivot_wider(names_from = c(target_variable, is_type), 
-#                 names_sep = '::',
-#                 values_from = with_entry,
-#                 values_fn = function(xx)paste(xx, collapse = ';\n')), 
-#   
-#   #pull in the meta data that is not now in the primary data
-#   meta = ISCN_lvl0.ls$annotation |>
-#     inner_join(ISCN4map |>
-#                  filter(study_id == 'ISCN3'),
-#                by = join_by(study_id, table_id,
-#                             of_variable == source_variable)) |>
-#     filter(with_entry != '--') |>
-#     mutate(with_entry = if_else(is_type != 'value', 
-#                                 paste(column_id, with_entry, sep = ':'), 
-#                                 with_entry)) |>
-#     mutate(column_id = paste0(target_variable, is_type, sep = '::')) |>
-#     select(study_id, column_id, with_entry, method_class = target_method, action_note)
-# )
+# Columns in ISCN4 map to be used in subsetting
+#...note that the CPEAT "metadata" is held in the primary data so there is
+#...no use of the '--' notation in the annotation file
+
+CPEAT_column_selection <- ISCN4map |>
+  filter(study_id == 'CPEAT') |>
+  select(study_id, of_variable = source_variable, target_variable)
+
+temp <- CPEAT_lvl0.ls$long |> 
+    mutate(study_id = 'CPEAT') |>
+    #doesn't seem to be any loi depths in here not sure where they went, leaving
+    #...clever code for when they do crop up
+    #Looks like doi '10.1594_PANGAEA.927849' is the problem core, pinning for later
+    # dplyr::mutate(observation_id = ifelse(any('depth_mid_loi' %in% of_variable),
+    #                                 if_else(of_variable %in% c('depth_mid_loi', 'loss_on_ignition'),
+    #                                         paste0(observation_id, 'LOI'), observation_id),
+    #                                 observation_id), .by = c(doi)) 
+    ##nrow 663 401
+    # use the column selection to subset the database
+    inner_join(CPEAT_column_selection, 
+               relationship = "many-to-many",
+               by = join_by(study_id, of_variable)) |>
+    ##nrow 306 262
+    select(doi, observation_id, 
+           is_type, with_entry, target_variable) |>
+    unique() |>
+  #dplyr::summarise(n = dplyr::n(), .by = c(doi, observation_id, target_variable, is_type)) |>
+  #dplyr::filter(n > 1L) #Looks like doi '10.1594_PANGAEA.927849' is the problem core, pinning for later
+    filter(!str_detect(doi, '10.1594_PANGAEA.927849')) #|>
+     # pivot_wider(names_from = c(target_variable, is_type),
+     #             names_sep = '::',
+     #             values_from = with_entry)
+
+CPEAT_lvl1 <- list(
+  primary = temp |>
+    filter(is_type == 'value') |>
+      pivot_wider(names_from = c(target_variable, is_type),
+                  names_sep = '::',
+                  values_from = with_entry),
+    
+  meta = temp |>
+    filter(is_type != 'value') |>
+    select(target_variable, is_type, with_entry) |>
+    unique()
+)
+
 # 
 # #memory management
-# primary_variables <- c(primary_variables, 'ISCN_lvl0.ls',  'ISCN3_lvl1')
-# rm(list = setdiff(ls(), primary_variables)) 
+ primary_variables <- c(primary_variables, 'CPEAT_lvl0.ls',  'CPEAT_lvl1')
+ rm(list = setdiff(ls(), primary_variables)) 
 ```
 
 
