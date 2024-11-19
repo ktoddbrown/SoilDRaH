@@ -22,9 +22,9 @@ readNCSS <- function(dataDir,
                      verbose = TRUE){
   
   ##Dev variables
-  #format <- 'long'
-  #dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
-  #annotationFilename <- "data/NCSS_Annotations.csv" #debugging
+  # format <- 'long'
+  # dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
+  # annotationFilename <- "data/NCSS_Annotations.csv" #debugging
    
   #### Set up the file names ####
   sqldb_filename <- file.path(dataDir,'ncss_labdata.sqlite')
@@ -73,7 +73,7 @@ readNCSS <- function(dataDir,
                             function(xx) {RSQLite::dbReadTable(myconnect, xx)})
     
     ### Clean up the connection ####
-    dbDisconnect(myconnect)
+    RSQLite::dbDisconnect(myconnect)
     
     return(list(annotations = annotations.df, original = orginalTables))
   }else{
@@ -91,31 +91,43 @@ readNCSS <- function(dataDir,
     
     if(verbose) message('Reading in all tables, this takes some time and results in 1.3 GB data object')
     orginalTables <- lapply(setNames(object = as.list(annotatedTables), annotatedTables),
-                            function(xx) {RSQLite::dbReadTable(myconnect, xx)})
+                            function(xx) {
+                              RSQLite::dbReadTable(myconnect, xx)
+                              })
     
         
     ### Clean up the connection ####
-    dbDisconnect(myconnect)
+    RSQLite::dbDisconnect(myconnect)
     
     ### Make the tables that we are interested in longer ###
     
-    #Only thse tables have been varified for the soc, obs time, and geolocation variables
+    #Only thse tables have been verified for the soc, obs time, and geo-location variables
     verified_tables <- list('lab_physical_properties' = 'lab_physical_properties',
                'lab_chemical_properties' = 'lab_chemical_properties',
                'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
                lab_layer = 'lab_layer',
                lab_site = 'lab_site',
-               lab_pedon = 'lab_pedon')
+               lab_pedon = 'lab_pedon',
+               #country, state, county information below
+               lab_area = 'lab_area',
+               lab_combine_nasis_ncss = 'lab_combine_nasis_ncss')
     
     message("This function only reads the annotated information from the following tables:")
-    message(names(verified_tables))
+    message(paste(names(verified_tables), collapse = ', '))
     
     #link all the tables together
     key.df <- orginalTables$lab_layer |>
-                  select('site_key', 'pedon_key', 'layer_key') |>
-      mutate(across(everything(), as.character))
+                  dplyr::select('site_key', 'pedon_key', 'layer_key') |>
+      dplyr::mutate(
+        dplyr::across(
+          tidyselect::everything(), as.character))
     
-    ans.df <- plyr::ldply(verified_tables,
+    
+    regional_area <- orginalTables$lab_combine_nasis_ncss
+    
+    ans.df <- plyr::ldply(
+      #lab area is key'ed differently
+      setdiff(verified_tables,c('lab_area', 'lab_combine_nasis_ncss')), 
                           function(tableName.str){
                             temp_key <- reducedAnnotations |>
                               dplyr::filter(table_id == tableName.str,

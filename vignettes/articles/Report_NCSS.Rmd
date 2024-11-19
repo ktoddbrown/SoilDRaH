@@ -35,9 +35,12 @@ source('../../R/readNCSS.R') #load in the read function
 ```
 
 ```{r warning=FALSE, message=FALSE}
+
 ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
                     annotationFilename = '../../data/NCSS_Annotations.csv',
                     format = 'long')
+#                    format = 'original')
+
 ```
 
 # Data descriptions
