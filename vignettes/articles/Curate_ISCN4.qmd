@@ -224,7 +224,7 @@ FIA_lvl1 <- list(
     right_join(FIA_lvl0.ls$annotation |>
                  #pull the annotations for the primary data entries
                  right_join(ISCN4map,
-                            by = join_by(study_id, table_id,
+                            by = join_by(study_id, #table_id,
                                          of_variable == source_variable),
                             relationship = "many-to-many") |>
                  filter(with_entry == '--') |>
