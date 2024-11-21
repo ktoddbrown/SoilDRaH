@@ -37,6 +37,28 @@ NCSS,layer_bottom,lower_depth_bound,NA,NA
 NCSS,layer_top,upper_depth_bound,NA,NA
 NCSS,layer_type,depth_bound_defined,NA,NA
 NCSS,observation_date,observation_year,NA,Correct for Excel format
-NCSS,mineral_remaining_on_ignition,loss_on_ignition,NA,NA
+NCSS,mineral_remaining_on_ignition,mineral_remaining_on_ignition,NA,NA
 NCSS,longitude,longitude,NA,NA
 NCSS,latitude,latitude,NA,NA
+CPEAT,doi,doi,NA,NA
+CPEAT,citation,citation,NA,NA
+CPEAT,latitude,latitude,NA,NA
+CPEAT,longitude,longitude,NA,NA
+CPEAT,region,region,NA,NA
+CPEAT,layer_mid,middle_depth_bound,NA,NA
+CPEAT,layer_thickness,tickness_depth_bound,NA,NA
+CPEAT,depth_thickness,tickness_depth_bound,NA,NA
+CPEAT,depth_mid,middle_depth_bound,NA,NA
+CPEAT,depth_mid_loi,middle_depth_bound,NA,NA
+CPEAT,depth_top,upper_depth_bound,NA,NA
+CPEAT,depth_bottom,lower_depth_bound,NA,NA
+CPEAT,bulk_density,bulk_density_whole,assumed no coarse fraction,NA
+CPEAT,carbon,total_carbon,NA,NA
+CPEAT,total_carbon,total_carbon,NA,NA
+CPEAT,organic_carbon_density,soil_organic_carbon,NA,NA
+CPEAT,total_organic_carbon,total_carbon,NA,NA
+CPEAT,organic_matter,organic_matter,NA,NA
+CPEAT,organic_matter_density,organic_matter_density,NA,NA
+CPEAT,loss_on_ignition,loss_on_ignition,NA,NA
+CPEAT,total_inorganic_carbon,inorganic_carbon,NA,NA
+CPEAT,inorganic_carbon,inorganic_carbon,NA,NA

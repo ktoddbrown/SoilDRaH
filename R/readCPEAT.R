@@ -54,7 +54,7 @@ readCPEAT <- function(dataDir,
     
     names(temp) <- tempNames
     
-    metaList <- llply(temp, .fun = function(xx){
+    metaList <- plyr::llply(temp, .fun = function(xx){
       ans <- xx[-1] #remove name
       
       if(str_detect(xx[1], 'DATA DESCRIPTION') |
@@ -132,7 +132,7 @@ readCPEAT <- function(dataDir,
     
     ### Convert to tuple format
     
-    temp.df <- as.tibble(as.list(unlist(metaList))) |>
+    temp.df <- as_tibble(as.list(unlist(metaList))) |>
       pivot_longer(cols=everything(), values_to = 'with_entry') |>
       separate_wider_delim(cols = name, delim = '.',
                            names = c('table_name', 'header_name', 'is_type'),
@@ -235,12 +235,12 @@ readCPEAT <- function(dataDir,
                               delim = ';', show_col_types = FALSE)
   
   if(format =='original'){
-    orgData <- llply(inputFiles, .fun = readSingleFile, format = 'original')
+    orgData <- plyr::llply(inputFiles, .fun = readSingleFile, format = 'original')
     return(list(annotations=metaData,
                 orginial = orgData))
   }else{
     
-    longData <- ldply(inputFiles, 
+    longData <- plyr::ldply(inputFiles, 
                       .id = 'doi', .fun = readSingleFile, 
                       format = 'long') |>
       full_join(metaData |>
