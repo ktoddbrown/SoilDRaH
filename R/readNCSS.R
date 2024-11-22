@@ -22,9 +22,10 @@ readNCSS <- function(dataDir,
                      verbose = TRUE){
   
   ##Dev variables
-  #format <- 'long'
-  #dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
-  #annotationFilename <- "data/NCSS_Annotations.csv" #debugging
+  # format <- 'long'
+  # dataDir <- "temp/NRCS_NCSS_20230922/" # debugging
+  # dataDir <- '~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922'
+  # annotationFilename <- "data/NCSS_Annotations.csv" #debugging
    
   #### Set up the file names ####
   # Set the file paths for the NCSS SQL database and all of its metadata
@@ -112,11 +113,12 @@ readNCSS <- function(dataDir,
                'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
                lab_layer = 'lab_layer',
                lab_site = 'lab_site',
-               lab_pedon = 'lab_pedon')
+               lab_pedon = 'lab_pedon', 
+               lab_combine_nasis_ncss = 'lab_combine_nasis_ncss')
     
     message("This function only reads the annotated information from the following tables:")
     message(paste(paste(names(verified_tables), collapse = ', '),
-              'lab_area', 'lab_combine_nasis_ncss', sep = ', '))
+              'lab_area', sep = ', '))
     
     #link all the tables together
     key.df <- originalTables$lab_layer |>
@@ -124,86 +126,36 @@ readNCSS <- function(dataDir,
       dplyr::mutate(across(everything(), as.character))
     
     #pull in the two tables to define the state/country
-    #...non-standard cross references here so processing separately
+    #...control vocabulary style cross references here so processing separately
     #lab_area_crosswalk = 'lab_combine_nasis_ncss',
     #lab_area_key = 'lab_area'
     location_names <- originalTables$lab_combine_nasis_ncss |>
-      select('site_key', 'pedon_key',
-             #'lab_area::site_observation_date' = 'site_obsdate',
-             'lab_area::latitude' = "latitude_decimal_degrees",
-             'lab_area::longitude' = "longitude_decimal_degrees",
+      select('site_key', 'pedon_key', #table ids
              "country_key", "state_key", 
              "county_key", "mlra_key", 
              "ssa_key", "npark_key", "nforest_key") |>
-      # Append country_type and country_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding country_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         country_type = area_type, 
-                         country_name = area_name),
-                by = join_by(country_key == area_key)) |>
-      # Append state_type and state_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding state_name's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  mutate(state_type = 
-                           paste(area_type, area_sub_type)) |>
-                  select(area_key,
-                         state_type,
-                         state_name = area_name),
-                by = join_by(state_key == area_key)) |>
-      # Append county_type and county_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding county_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         county_type = area_type, 
-                         county_name = area_name),
-                by = join_by(county_key == area_key)) |>
-      # Append mlra_type and mlra_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding mlra_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         mlra_type = area_type, 
-                         mlra_name = area_name),
-                by = join_by(mlra_key == area_key)) |>
-      # Append ssa_type and ssa_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding ssa_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         ssa_type = area_type, 
-                         ssa_name = area_name),
-                by = join_by(ssa_key == area_key))|>
-      # Append npark_type and npark_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding npark_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         npark_type = area_type, 
-                         npark_name = area_name),
-                by = join_by(npark_key == area_key)) |>
-      # Append nforest_type and nforest_name columns to the preceding table result, where each new columns' cell value in any given row depends on the 
-      # following: if for said row's corresponding nforest_key's cell value there exist a originalTables' lab_area table's area_key's cell value that 
-      # equals it, then the new columns' cell value is set to that of the appropriate lab_area table column's cell value; else set the cell value to NA
-      left_join(originalTables$lab_area |>
-                  select(area_key, 
-                         nforest_type = area_type, 
-                         nforest_name = area_name),
-                by = join_by(nforest_key == area_key)) |>
-      dplyr::mutate(across(ends_with('_type'), as.factor)) |>
-      dplyr::mutate(across(everything(), as.character)) |>
-      pivot_longer(cols = -c('site_key', 'pedon_key'),
-                   #apply the headers to the variable name instead of a column id
-                   names_to = 'of_variable',
-                   values_to = 'with_entry',
+      #all of these are area_key which are unique in the lab_area table
+      #...making this a long table for a join
+      pivot_longer(cols = c("country_key", "state_key", 
+                            "county_key", "mlra_key", 
+                            "ssa_key", "npark_key", "nforest_key"),
+                   names_to = 'column_id', values_to = 'area_key',
                    values_drop_na = TRUE) |>
-      #remove the lab_area keys from the variables
-      filter(!stringr::str_detect(of_variable, regex('_key$'))) |>
-      mutate(is_type = 'value') |> #Dev: Consider coming back to this with the name/type separation
-      left_join(key.df, by = join_by(site_key, pedon_key) )
+      #joining the table
+      left_join(originalTables$lab_area |>
+                  mutate(area_type = #combine the area_type and sub_type
+                           if_else(is.na(area_sub_type),
+                                   area_type,
+                                   paste0(area_type, '::', area_sub_type))) |>
+                  select(area_key, area_name, area_type),
+                by = join_by(area_key)) |>
+      select(site_key, pedon_key,
+             column_id,
+             of_variable = area_type,
+             with_entry = area_name) |>
+      mutate(table_id = 'lab_area',
+             is_type = 'value') |>
+      mutate(across(everything(), as.character))
     
     # Get all of the data from the verified tables and pivot it long to be bound with the location_names table later
     ans.df <- plyr::ldply(verified_tables,

@@ -378,8 +378,9 @@ lab_combine_nasis_ncss;samp_taxsuborder;14;NA;description;samp_taxsuborder
 lab_combine_nasis_ncss;samp_taxtempcl;21;NA;description;samp_taxtempcl
 lab_combine_nasis_ncss;samp_taxtempregime;23;NA;description;samp_taxtempregime
 lab_combine_nasis_ncss;site_key;2;NA;description;An integer number that uniquely identifies a particular site
-lab_combine_nasis_ncss;site_key;2;NA;foreign_key;--
-lab_combine_nasis_ncss;site_obsdate;65;NA;description;site_obsdate
+lab_combine_nasis_ncss;site_key;2;NA;identifier;--
+lab_combine_nasis_ncss;site_obsdate;65;site_observation_date;value;--
+lab_combine_nasis_ncss;site_obsdate;65;site_observation_date;description;site_obsdate
 lab_combine_nasis_ncss;siteiid;63;NA;description;siteiid
 lab_combine_nasis_ncss;siteobjupdate;80;NA;description;siteobjupdate
 lab_combine_nasis_ncss;ssa_key;72;NA;description;key for the lab_area table that is associated with a SSA area type
@@ -431,8 +432,10 @@ lab_combine_nasis_ncss;country_key;68;country;foreign_key;--
 lab_combine_nasis_ncss;county_key;70;county;description;key for the lab_area table that is associated with a county area type
 lab_combine_nasis_ncss;county_key;70;county;foreign_key;--
 lab_combine_nasis_ncss;labdatadescflag;6;NA;description;labdatadescflag
-lab_combine_nasis_ncss;latitude_decimal_degrees;66;NA;description;latitude_decimal_degrees
-lab_combine_nasis_ncss;longitude_decimal_degrees;67;NA;description;longitude_decimal_degrees
+lab_combine_nasis_ncss;latitude_decimal_degrees;66;latitude_decimal_degrees;value;--
+lab_combine_nasis_ncss;latitude_decimal_degrees;66;latitude_decimal_degrees;description;latitude_decimal_degrees
+lab_combine_nasis_ncss;longitude_decimal_degrees;67;longitude_decimal_degrees;description;longitude_decimal_degrees
+lab_combine_nasis_ncss;longitude_decimal_degrees;67;longitude_decimal_degrees;value;--
 lab_combine_nasis_ncss;mlra_key;71;mlra;description;key for the lab_area table that is associated with a major land resource area (MLRA) area type
 lab_combine_nasis_ncss;mlra_key;71;mlra;foreign_key;--
 lab_combine_nasis_ncss;nforest_key;74;national_forest;description;key for the lab_area table that is associated with a National Forest System Land(?) area type
