@@ -32,12 +32,18 @@ library(kableExtra) #make pretty scrollable tables
 source('../../R/checkAnnotations.R') #load in the check function for annotations
 source('../../R/readNCSS.R') #load in the read function
 
+dataDirectory <- '../../temp/NRCS_NCSS_20230922'
+
 #knitr::opts_chunk$set()
+```
+
+```{r echo=FALSE}
+dataDirectory <- '~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922'
 ```
 
 Read in the appropriate NCSS data bases for later use. The readNCSS function is shown and described in detail in the Read Script section of this document.
 ```{r ncss_data_frame, warning=FALSE, message=FALSE}
-ncss.df <- readNCSS(dataDir = '../../temp/NRCS_NCSS_20230922',
+ncss.df <- readNCSS(dataDir = dataDirectory,
                     annotationFilename = '../../data/NCSS_Annotations.csv',
                     format = 'long')
 ```
@@ -164,9 +170,16 @@ Generate the soil organic carbon data frame from particular parts of the NCSS da
 ```{r}
 
 soc.df <- ncss.df$long %>%
-  select(ends_with('_key'), of_variable, is_type, with_entry) %>%
-  filter(!is_type == 'foreign_key') %>%
-  pivot_wider(names_from = is_type, values_from = with_entry)
+  select(ends_with('_key'), of_variable, is_type, with_entry) |>
+  unique() |>
+  filter(!is_type == 'foreign_key') |>
+  pivot_wider(names_from = is_type, values_from = with_entry,
+              values_fn = function(xx){paste(xx, collapse = ' :: ')})
+  # TODO there are 15 observations with conflicting location names, track these down and fix
+  #dplyr::summarise(n = dplyr::n(), 
+  #                 entry = paste(with_entry, collapse = '\\n '),
+  #                 .by = c(layer_key, site_key, pedon_key, of_variable, is_type)) |>
+  #dplyr::filter(n > 1L)
 
 ```
 
@@ -176,22 +189,21 @@ From the previously created soil organic carbon data frame (soc.df), create the 
 plot.df <- soc.df %>% 
   select(-method) %>%
   filter(!is.na(value)) %>%
+  unique() |>
   pivot_wider(names_from = 'of_variable', values_from = 'value') %>%
   mutate(across(.cols = one_of(c('longitude', 'latitude',
-                                 "lab_area::longitude", 
-                                 'lab_area::latitude',
                                  'observation_date',
-                                 #"lab_area::site_observation_date",
                                  'layer_top', 'layer_bottom',
                                  'layer_order', 'mineral_remaining_on_ignition',
                                  'total_carbon', 'organic_carbon_estimated',
                                  'organic_carbon_walkley_black', 'coarse_fraction',
                                  'whole_soil_bulk_density')),
                 as.numeric)) %>%
-  mutate(across(.cols = one_of(c('layer_key', 'site_key', 'pedon_key',
-    'horizon_designation', 'layer_type',
-                                 'horizon_designation_other',
-                                 'country_name', 'state_name')),
+  mutate(across(.cols = 
+                  one_of(c('layer_key', 'site_key', 'pedon_key',
+                           'horizon_designation', 'layer_type',
+                           'horizon_designation_other',
+                           'country', 'state_admin_div::state', 'county')),
                 as.factor)) %>%
   mutate(observation_date = lubridate::as_date(observation_date,
                                                origin = lubridate::ymd('1900-01-01'))) %>%
@@ -261,6 +273,32 @@ ggplot(plot.df %>%
         axis.title = element_blank())
 ```
 
+```{r}
+
+regionalCounts <- plot.df |> 
+  select(site_key, 
+         country, state = `state_admin_div::state`, county) |>
+  unique()
+
+regionalCounts |> 
+  reframe(count = n(),
+          .by = country) |>
+  arrange(desc(count))
+
+
+regionalCounts |>
+  filter(country == 'United States') |>
+  reframe(count = n(),
+          .by = state) |>
+  arrange(desc(count))
+
+regionalCounts |>
+  filter(country == 'United States') |>
+  reframe(missing_state_percent = sum(is.na(state))/n()*100,
+          missing_county_percent = sum(is.na(county)/n()*100),
+          total = n(),
+          .by = country)
+```
 
 # Read script
 
