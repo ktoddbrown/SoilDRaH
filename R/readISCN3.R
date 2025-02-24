@@ -119,15 +119,11 @@ readISCN3 <- function(dataDir,
     #... to correct for repeated id's
     #... this was probably caused by Excel dropping the tailing 0's form
     #... a digit-based identifier
+    #Do this across all the layer_names
     dplyr::mutate(
-      layer_name = 
-        dplyr::if_else(
-          dataset_name_sub %in% 
-            c('Worldwide soil carbon and nitrogen data', 
-              'Northern Circumpolar Soil Carbon Database (NCSCD)'),
-          paste0(layer_name, '::interval ', 
-                 `layer_top (cm)`, '-', 
-                 `layer_bot (cm)`), layer_name))
+      layer_name = paste0(layer_name, '::interval ', 
+                          `layer_top (cm)`, '-', 
+                          `layer_bot (cm)`))
   
   if(format == 'long'){
     
@@ -239,4 +235,73 @@ readISCN3 <- function(dataDir,
     return(list(long =  ans.df,
                 annotation = annotations.df))
   }
+  
+  if(format == 'pivot-bind'){
+    #replace '--' with NA in annotation table
+    temp_annotation <- annotations.df |>
+      mutate(across(.cols = everything(), ~na_if(., '--')))
+    
+    
+    
+    
+    #identify id columns or observation id
+    id_cols <- temp_annotation |>
+      filter(is_type == 'identifier')
+    
+    
+    #pivot (non id columns) and bind all tables
+    pivotBind.df <- data.frame()
+    for(table_name in names(orginalTables)){
+      col_id <- id_cols |>
+        filter(table_id %in% table_name)
+      
+      #If we are in the profile or layer table, then remove any rows
+      # where the dataset_name_sub and dataset_name_soc do not match
+      if(table_name %in% c("profile", "layer")){
+        temp <- orginalTables[[table_name]] |>
+          filter(dataset_name_sub != dataset_name_soc) |>
+          filter(length(dataset_name_sub) > 1,
+                 .by = c(dataset_name_sub, site_name, profile_name))
+      } else {
+        temp <- orginalTables[[table_name]]
+      }
+      temp <- temp |>
+        mutate(row_index = paste0('R', 1:n())) |>
+        pivot_longer(cols = !all_of(c(col_id$column_id,'row_index')),
+                   names_to = 'column_id', values_to = 'with_entry',
+                   values_drop_na = TRUE) |>
+        mutate(table_id = table_name)
+      
+      
+      pivotBind.df <- bind_rows(pivotBind.df,
+                                temp)
+    }
+    
+    
+    ## separate the SOC with unique dataset_name_soc
+    dataset_name_soc.df <- orginalTables$profile |>
+      filter(dataset_name_sub != dataset_name_soc) |>
+      filter(length(dataset_name_sub) > 1,
+             .by = c(dataset_name_sub, site_name, profile_name)) |>
+      bind_rows(orginalTables$layer |>
+                  filter(dataset_name_sub != dataset_name_soc) |>
+                  filter(length(dataset_name_sub) > 1,
+                         .by = c(dataset_name_sub, site_name, 
+                                 profile_name, layer_name))) |>
+      mutate(across(.cols = 
+                      !any_of(c('dataset_name_sub', 'site_name', 
+                                'profile_name', 'layer_name')),
+                    function(xx){
+                      if(length(unique(xx)) == 1){
+                        return(rep(NA, times = length(xx)))
+                      }else{
+                        return(xx)
+                      }
+                    }),
+             .by = c(dataset_name_sub, site_name, profile_name, layer_name)) |>
+      select(where(~ !all(is.na(.x))))
+    #pivot and bind the soc and sub dataset table that we isolated before
+  }
+  
+  stop("format option unknown")
 }
