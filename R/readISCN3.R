@@ -2,12 +2,16 @@
 #'
 #' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database into 4 distinct data frames.
 #' It also loads in the annotation table for ISCN3 into a data frame.
-#' Depending on the requested format (original or long) it changes the appropriate data frames into said format and then returns a named list the requested format and annotations.
 #' 
 #' Generally QA/QC is not done in this read function.
 #' However there are data model relevant currents that need to be imposed in the long table
 #'    1) layer names are expanded to include upper/lower interval bounds for two datasets which appear to have trailing zeros dropped from a digit identifier
 #'    2) shared soc column_id between the profile and layer tables refer to the entire profile or layer level soc values respectively. We add a `profile` to the column_id to distinguish these columns.
+#'
+#' There are three return formats
+#' 1) original - this option preserves the source tables and does not change the data model.
+#' 2) long - this returns one table with the id-of_variable-is_type-with_entry. Some of the tables here are pivot-bind and others are join-pivot (see discussion #60) in an attempt to balance memory size with ease of working with the data downstream. This option should be sunset in the future.
+#' 3) pivot-bind - this option only uses the pivot-bind table append and returns one table with the id-of_variable-is_type-with_entry tuple. This should use less memory then the hybrid long option above.
 #'
 #' Database citation: Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
 #'
@@ -29,7 +33,7 @@
 
 readISCN3 <- function(dataDir,
                       annotationFilename,
-                      format = c('original', 'long')[1],
+                      format = c('original', 'long', 'pivot-bind')[1],
                       verbose = TRUE){
   
   ### dev sets
@@ -108,6 +112,25 @@ readISCN3 <- function(dataDir,
                 annotation = annotations.df))
   }
   
+  #### Correct non-unique layer identifies
+  orginalTables$layer <- orginalTables$layer |>
+  #temp <- orginalTables$layer |> #debugging code
+        #Modify the layer_name for World Soils and Northern Circumpolar
+        #... to correct for repeated id's
+        #... this was probably caused by Excel dropping the tailing 0's form
+        #... a digit-based identifier
+        dplyr::mutate(
+          layer_name = 
+            dplyr::if_else(
+              dataset_name_sub %in% 
+                c('Worldwide soil carbon and nitrogen data', 
+                  'Northern Circumpolar Soil Carbon Database (NCSCD)'),
+              paste0(layer_name, '::interval ', 
+                     `layer_top (cm)`, '-', 
+                     `layer_bot (cm)`), layer_name))
+  
+  if(format == 'long'){
+  
   #### Modify annotations####
   ## Modify the annotations to reflect the changes to the profile columns
   
@@ -146,20 +169,7 @@ readISCN3 <- function(dataDir,
         `state (state_province)`, `country (country)`,
         `observation_date (YYYY-MM-DD)`, site_name, profile_name, 
         soil_taxon, soil_series,
-        vegclass_local, locator_parent_alias)) |>
-        #Modify the layer_name for World Soils and Northern Circumpolar
-        #... to correct for repeated id's
-        #... this was probably caused by Excel dropping the tailing 0's form
-        #... a digit-based identifier
-        dplyr::mutate(
-          layer_name = 
-            dplyr::if_else(
-              dataset_name_sub %in% 
-                c('Worldwide soil carbon and nitrogen data', 
-                  'Northern Circumpolar Soil Carbon Database (NCSCD)'),
-              paste0(layer_name, '::interval ', 
-                     `layer_top (cm)`, '-', 
-                     `layer_bot (cm)`), layer_name)) |>
+        vegclass_local, locator_parent_alias))  |>
     tidyr::pivot_longer(cols = -c(dataset_name_sub, dataset_name_soc,
                                   site_name, profile_name, layer_name),
                         names_to = 'column_id',
@@ -228,4 +238,5 @@ readISCN3 <- function(dataDir,
   
   return(list(long =  ans.df,
               annotation = annotations.df))
+  }
 }
