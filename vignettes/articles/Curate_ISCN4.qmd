@@ -17,21 +17,29 @@ Soil carbon stocks are critical components of the land carbon balance.
 In a Earth system model context digital soil maps are often used to benchmark and/or parameterize models that simulate the Earth climate over the next 100 years.
 Underlying these digital soil maps are large soil survey databases with geo-located soil organic carbon area-densities, further derived from layer-resolved soil carbon volumentric-density profiles.
 
-We have focused on harmonizing two major US soil surveys: USDA-FS-FIA Database (site: 6 071, layers: 23 155), and the USDA-NRCS-NCSS Web of Soil Database (site:115 611, layers:465 897).
+We have focused on harmonizing two major US soil surveys, one academic-led peat core collection, and one academic-led data compilation:
+
+  + USDA-FS-FIA Database (site: 6 071, layers: 23 155, database access date: 2023 May 23),
+  + USDA-NRCS-NCSS Web of Soil Database (site: 115 611, layers: 465 897, database access date: 2023 January 13),
+  + CPEAT (site: 169, layers: 99 000, database access date: 2024)
+  + ISCN3 data collection (site: 10 312, layer: 54 190, database date: 2015).
+  
 We developed meta-data annotations to describe the relevant location, observation time, organic carbon fraction, coarse fraction, and bulk density observations.
 These meta-data annotations are then combined with data downloaded from public web-servers and this information used to generate a harmonized data base.
-In addition to these two large survey data collections we also harmonize the ISCN3 data collection (site: 10 312, layer: 54 190).
 This process is documented here.
 
 A brief word of warning, the size of these databases can be considerable for some computers (<10 GBs).
 This code is designed to be run locally on a machine that has the capasity to download and work with this file size.
 If your computer is primarily scoped for working with text documents and a few spreadsheets, you may not be able to run this code.
-This code uses the `tidyverse` and `RSQLite` packages with additional formating support from `knitr` and `kableExtra`.
+This code uses the `plyr`, `tidyverse`, and `RSQLite` packages with additional formatting support from `knitr`, `kableExtra`, and `maps`.
 
 
 ```{r setup, message=FALSE, warning=FALSE}
 #| code-summary: "Setup"
 
+#TODO: cite the packages
+
+library(plyr) #TODO: readCPEAT ensure package is installed and package::function call formats used see #55
 library(tidyverse) #data structure manipulation
 library(RSQLite) #accessing the NCSS sql library
 library(knitr) # make prettier tables
@@ -42,7 +50,7 @@ RscriptsDir <- '../../R'
 annotationsDir <- '../../data'
 dataDownloadDir <- '../../temp'
 
-#Note that if these change you should also go down and update the appedix read chunks
+#Note that if these change you should also go down and update the appendix read chunks
 databaseReads <- list(FIA = 'readFIA.R',
                       ISCN3 = 'readISCN3.R',
                       NCSS = 'readNCSS.R',
@@ -53,6 +61,8 @@ annotationFiles <- list(FIA = 'FIA_Annotations.csv',
                         NCSS = 'NCSS_Annotations.csv',
                         CPEAT = 'annotations_CPEAT.csv')
 
+mapFile <- 'ISCN4_map.csv'
+
 source(file.path(RscriptsDir, databaseReads$ISCN3))
 source(file.path(RscriptsDir, databaseReads$FIA))
 source(file.path(RscriptsDir, databaseReads$NCSS))
@@ -62,7 +72,7 @@ source(file.path(RscriptsDir, databaseReads$CPEAT))
 ```
 
 ```{r setDownloadDir echo=FALSE}
-#Set this to any alternative download directory
+#Set this to any alternative download directory, this will change if you are running this file
 dataDownloadDir <- '~/Dropbox (UFL)/Research/Datasets'
 ```
 
@@ -73,8 +83,9 @@ We also include an action note but right now these are not tied directly to code
 
 ```{r readVariableMapping}
 
-ISCN4map <- read_csv(file = file.path(annotationsDir,
-                                      'ISCN4_map.csv'))
+ISCN4map <- read_csv(file = file.path(annotationsDir, mapFile),
+                     col_types = cols(.default = col_character()),
+                     show_col_types = FALSE)
 
 ISCN4map |>
   knitr::kable() |>
@@ -82,9 +93,11 @@ ISCN4map |>
   scroll_box(width = "100%", height = "300px")
 ```
 
-```{r}
+```{r recordBaseVars}
 
 #list of primary data objects to carry forward
+#...this is for memory management. 
+#...All current variatbles should be carried forward.
 primary_variables <- c(ls() , 'primary_variables')
 
 ```
@@ -94,10 +107,10 @@ primary_variables <- c(ls() , 'primary_variables')
 The International Soil Carbon Network (vs3) Data base is a collection of single studies and an earlier version of the NCSS database.
 In this workflow we use the `readISCN3` function ready in the version of ISCN3 [archived on EDI](https://portal.edirepository.org/nis/mapbrowse?scope=edi&identifier=1160&revision=1).
 We then remove the NRCS NCSS database (vs 2015) so that we can later replace it with our updated version (vs 2024 - Web of Science).
-Finally we subset the observed variables to focus on soil oraganic carbon measurements.
+Finally we subset the observed variables to focus on soil organic carbon measurements.
 
 ```{r readISCN3}
-#| code-fold: false
+#| code-summary: "Read in ISCN3 using readISCN function"
 
 ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
                      annotationFilename = file.path(annotationsDir, annotationFiles$ISCN3),
@@ -106,28 +119,17 @@ ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
 
 ```
 
-
-```{r}
-#| code-summary: "ID columns"
-
-#Use the annotations to set up the column selection
-#Pulled up here for ease of reference/review
-ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
-  semi_join(ISCN4map,
-            by = join_by(study_id, 
-                         of_variable == source_variable)) |>
-  filter(with_entry == '--') |>
-  select(ends_with('_id'), of_variable, is_type)
-
-ISCN3_column_selection |>
-  knitr::kable() |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
 ```{r}
 #| code-summary: "Subset ISCN3 lvl 1 product"
 
+
+ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
+  #pull the annotations for the primary data entries
+  right_join(ISCN4map,
+             by = join_by(study_id,# table_id,
+                          of_variable == source_variable)) |>
+  filter(with_entry == '--') |>
+  select(ends_with('_id'), of_variable, target_variable, is_type)
 
 ISCN3_lvl1 <- list(
   primary = ISCN_lvl0.ls$long |> 
@@ -143,13 +145,7 @@ ISCN3_lvl1 <- list(
     filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
     ##nrow  2 151 476
     # use the column selection to subset the database
-    right_join(ISCN_lvl0.ls$annotation |>
-                 #pull the annotations for the primary data entries
-                 right_join(ISCN4map,
-                           by = join_by(study_id,# table_id,
-                                        of_variable == source_variable)) |>
-                 filter(with_entry == '--') |>
-                 select(ends_with('_id'), of_variable, target_variable, is_type), 
+    right_join(ISCN3_column_selection, 
                relationship = "many-to-many",
                by = join_by(study_id, column_id)) |>
     select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
@@ -170,11 +166,11 @@ ISCN3_lvl1 <- list(
     pivot_wider(names_from = c(target_variable, is_type), 
                 names_sep = '::',
                 values_from = with_entry,
-                values_fn = function(xx)paste(xx, collapse = ';\n')), 
+                values_fn = function(xx)paste(unique(xx), collapse = ';\n')), 
   
   #pull in the meta data that is not now in the primary data
   meta = ISCN_lvl0.ls$annotation |>
-    inner_join(ISCN4map |>
+    right_join(ISCN4map |>
                  filter(study_id == 'ISCN3'),
                by = join_by(study_id, #table_id,
                             of_variable == source_variable)) |>
@@ -217,6 +213,8 @@ FIA_controlVocab <- FIA_lvl0.ls$annotations |>
   tidyr::separate_wider_delim(with_entry, delim = '|', 
                               names = c('with_entry', 'keyed_value')) %>%
   mutate(is_type = 'value')
+
+FIA_column_selection <- 
 
 FIA_lvl1 <- list(
   primary =  FIA_lvl0.ls$long |>

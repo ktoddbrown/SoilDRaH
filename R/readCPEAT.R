@@ -20,7 +20,8 @@ readCPEAT <- function(dataDir,
                       format=c('original', 'long')[1],
                       fileCount = Inf,
                       verbose=FALSE){
-  
+  #TODO: Add package calls
+
   ##Dev sets
   #dataDir <- 'temp/CPEAT'
   #verbose <- TRUE
