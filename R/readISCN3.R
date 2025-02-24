@@ -88,7 +88,7 @@ readISCN3 <- function(dataDir,
     .fun = function(xx){
       return(
         readr::read_delim(file = xx$file_name, delim = ';', 
-          col_types = readr::cols(.default = readr::col_character())))
+                          col_types = readr::cols(.default = readr::col_character())))
     }
   )
   
@@ -108,135 +108,135 @@ readISCN3 <- function(dataDir,
   # ... data tables, download documentation, and the annotations.
   if(format == 'original'){
     return(list(original = c(orginalTables, 
-                               list(files = download_table)),
+                             list(files = download_table)),
                 annotation = annotations.df))
   }
   
   #### Correct non-unique layer identifies
   orginalTables$layer <- orginalTables$layer |>
-  #temp <- orginalTables$layer |> #debugging code
-        #Modify the layer_name for World Soils and Northern Circumpolar
-        #... to correct for repeated id's
-        #... this was probably caused by Excel dropping the tailing 0's form
-        #... a digit-based identifier
-        dplyr::mutate(
-          layer_name = 
-            dplyr::if_else(
-              dataset_name_sub %in% 
-                c('Worldwide soil carbon and nitrogen data', 
-                  'Northern Circumpolar Soil Carbon Database (NCSCD)'),
-              paste0(layer_name, '::interval ', 
-                     `layer_top (cm)`, '-', 
-                     `layer_bot (cm)`), layer_name))
+    #temp <- orginalTables$layer |> #debugging code
+    #Modify the layer_name for World Soils and Northern Circumpolar
+    #... to correct for repeated id's
+    #... this was probably caused by Excel dropping the tailing 0's form
+    #... a digit-based identifier
+    dplyr::mutate(
+      layer_name = 
+        dplyr::if_else(
+          dataset_name_sub %in% 
+            c('Worldwide soil carbon and nitrogen data', 
+              'Northern Circumpolar Soil Carbon Database (NCSCD)'),
+          paste0(layer_name, '::interval ', 
+                 `layer_top (cm)`, '-', 
+                 `layer_bot (cm)`), layer_name))
   
   if(format == 'long'){
-  
-  #### Modify annotations####
-  ## Modify the annotations to reflect the changes to the profile columns
-  
-  annotations.df <- annotations.df |>
-  #The profile and layer tables share top/bottom layer and soc values _but_
-    #...they refer to different observations (profile summary vs layer).
-  #...Append the table name before these columns
-    dplyr::mutate(
-      column_id = dplyr::if_else(column_id %in%
-          c('layer_top (cm)', 'layer_bot (cm)', 
-            'soc (g cm-2)', 'soc_method', 'soc_carbon_flag') &
-            table_id == 'profile', 
-          paste0('profile::', column_id), 
-          column_id))
-  
-  #### Combine the profile+layer tables ####
-  #The profile and layer tables share 'dataset_name_sub', 'dataset_name_soc', 
-  #...'site_name', 'profile_name'. Merge these two tables first and then 
-  #...shoe-string them 
-  long.df <- orginalTables$profile |>
-    #The profile and layer tables share top/bottom layer and soc values _but_
-    #...they refer to different observations (profile summary vs layer).
-    #...Append the table name before these columns
-    dplyr::rename(`profile::layer_top (cm)` = `layer_top (cm)`,
-           `profile::layer_bot (cm)` = `layer_bot (cm)`,
-           `profile::soc (g cm-2)` = `soc (g cm-2)`,
-           `profile::soc_method` = `soc_method`, 
-           `profile::soc_carbon_flag` = soc_carbon_flag) |>
-    dplyr::full_join(
-      #join the tables together to get the profile information distributed
-      orginalTables$layer,
-      by = dplyr::join_by(
-        `ISCN 1-1 (2015-12-10)`, 
-        dataset_name_sub, dataset_name_soc, 
-        `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
-        `state (state_province)`, `country (country)`,
-        `observation_date (YYYY-MM-DD)`, site_name, profile_name, 
-        soil_taxon, soil_series,
-        vegclass_local, locator_parent_alias))  |>
-    tidyr::pivot_longer(cols = -c(dataset_name_sub, dataset_name_soc,
-                                  site_name, profile_name, layer_name),
-                        names_to = 'column_id',
-                        values_to = 'with_entry',
-                        values_drop_na = TRUE) |> #nrow 20 269 712
-    #remove duplicates
-    unique() #nrow 20 229 958
-  
-  
-  #### Combine citation+dataset tables ####
-  #The citation and the dataset share a common key 'dataset_name'
-  #...in addition they are hybrid formats where each row is not
-  #...uniquely identified. We first make these tables long and then
-  #...stack them.
-  dataset_name.df <- orginalTables$citation |>
-    tidyr::pivot_longer(cols = -dataset_name,
-                        names_to = 'column_id',
-                        values_to = 'with_entry',
-                        values_drop_na = TRUE) |>
-    dplyr::bind_rows(
-      orginalTables$dataset |>
-        tidyr::pivot_longer(cols = -dataset_name,
-                            names_to = 'column_id',
-                            values_to = 'with_entry',
-                            values_drop_na = TRUE) ) |>
-    unique()
-  
-  #### Populate dataset information at layer level ####
-  ##There are two foreign key dataset citations with both the sub and soc
-  ##Cross references them here with the key columns from the profile+layer 
-  ##tables
-  
-  ##Pull the unique identifiers to cross reference the citation and dataset
-  # ... tables
-  key.df <- long.df |>
-    dplyr::select(dataset_name_soc, dataset_name_sub, site_name, profile_name,
-                  layer_name) |>
-    unique() #nrow 470 578
-  
-  dataset.df <- key.df |>
-    dplyr::left_join(dataset_name.df,
-                     by = dplyr::join_by(dataset_name_sub == dataset_name),
-                     relationship = "many-to-many") |> #nrow 1 427 130
-    dplyr::bind_rows( key.df |>
-                        dplyr::left_join(
-                          dataset_name.df,
-                          by = dplyr::join_by(
-                            dataset_name_soc == dataset_name),
-                          relationship = "many-to-many")  #nrow 1 299 471
-                      ) |>
-    unique()
-  
-  ####Stack the two tables####
-  ##Stack the data and minimize memory using factors
-  ans.df <- dataset.df |>
-    dplyr::bind_rows(long.df) |> #1.8 Gb
-    dplyr::mutate(across(c(dataset_name_sub, dataset_name_soc, 
-                           site_name, profile_name, layer_name, 
-                           column_id), as.factor))
-  #1.06 Gb; nrow 32 905 350
-  
-  # make sure that the user knows this is a lot of data
-  if(verbose) message('Returning long data (>1Gb).')
-  
-  #### Return long ####
-  
-  return(list(long =  ans.df,
-              annotation = annotations.df))
+    
+    #### Modify annotations####
+    ## Modify the annotations to reflect the changes to the profile columns
+    
+    annotations.df <- annotations.df |>
+      #The profile and layer tables share top/bottom layer and soc values _but_
+      #...they refer to different observations (profile summary vs layer).
+      #...Append the table name before these columns
+      dplyr::mutate(
+        column_id = dplyr::if_else(column_id %in%
+                                     c('layer_top (cm)', 'layer_bot (cm)', 
+                                       'soc (g cm-2)', 'soc_method', 'soc_carbon_flag') &
+                                     table_id == 'profile', 
+                                   paste0('profile::', column_id), 
+                                   column_id))
+    
+    #### Combine the profile+layer tables ####
+    #The profile and layer tables share 'dataset_name_sub', 'dataset_name_soc', 
+    #...'site_name', 'profile_name'. Merge these two tables first and then 
+    #...shoe-string them 
+    long.df <- orginalTables$profile |>
+      #The profile and layer tables share top/bottom layer and soc values _but_
+      #...they refer to different observations (profile summary vs layer).
+      #...Append the table name before these columns
+      dplyr::rename(`profile::layer_top (cm)` = `layer_top (cm)`,
+                    `profile::layer_bot (cm)` = `layer_bot (cm)`,
+                    `profile::soc (g cm-2)` = `soc (g cm-2)`,
+                    `profile::soc_method` = `soc_method`, 
+                    `profile::soc_carbon_flag` = soc_carbon_flag) |>
+      dplyr::full_join(
+        #join the tables together to get the profile information distributed
+        orginalTables$layer,
+        by = dplyr::join_by(
+          `ISCN 1-1 (2015-12-10)`, 
+          dataset_name_sub, dataset_name_soc, 
+          `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
+          `state (state_province)`, `country (country)`,
+          `observation_date (YYYY-MM-DD)`, site_name, profile_name, 
+          soil_taxon, soil_series,
+          vegclass_local, locator_parent_alias))  |>
+      tidyr::pivot_longer(cols = -c(dataset_name_sub, dataset_name_soc,
+                                    site_name, profile_name, layer_name),
+                          names_to = 'column_id',
+                          values_to = 'with_entry',
+                          values_drop_na = TRUE) |> #nrow 20 269 712
+      #remove duplicates
+      unique() #nrow 20 229 958
+    
+    
+    #### Combine citation+dataset tables ####
+    #The citation and the dataset share a common key 'dataset_name'
+    #...in addition they are hybrid formats where each row is not
+    #...uniquely identified. We first make these tables long and then
+    #...stack them.
+    dataset_name.df <- orginalTables$citation |>
+      tidyr::pivot_longer(cols = -dataset_name,
+                          names_to = 'column_id',
+                          values_to = 'with_entry',
+                          values_drop_na = TRUE) |>
+      dplyr::bind_rows(
+        orginalTables$dataset |>
+          tidyr::pivot_longer(cols = -dataset_name,
+                              names_to = 'column_id',
+                              values_to = 'with_entry',
+                              values_drop_na = TRUE) ) |>
+      unique()
+    
+    #### Populate dataset information at layer level ####
+    ##There are two foreign key dataset citations with both the sub and soc
+    ##Cross references them here with the key columns from the profile+layer 
+    ##tables
+    
+    ##Pull the unique identifiers to cross reference the citation and dataset
+    # ... tables
+    key.df <- long.df |>
+      dplyr::select(dataset_name_soc, dataset_name_sub, site_name, profile_name,
+                    layer_name) |>
+      unique() #nrow 470 578
+    
+    dataset.df <- key.df |>
+      dplyr::left_join(dataset_name.df,
+                       by = dplyr::join_by(dataset_name_sub == dataset_name),
+                       relationship = "many-to-many") |> #nrow 1 427 130
+      dplyr::bind_rows( key.df |>
+                          dplyr::left_join(
+                            dataset_name.df,
+                            by = dplyr::join_by(
+                              dataset_name_soc == dataset_name),
+                            relationship = "many-to-many")  #nrow 1 299 471
+      ) |>
+      unique()
+    
+    ####Stack the two tables####
+    ##Stack the data and minimize memory using factors
+    ans.df <- dataset.df |>
+      dplyr::bind_rows(long.df) |> #1.8 Gb
+      dplyr::mutate(across(c(dataset_name_sub, dataset_name_soc, 
+                             site_name, profile_name, layer_name, 
+                             column_id), as.factor))
+    #1.06 Gb; nrow 32 905 350
+    
+    # make sure that the user knows this is a lot of data
+    if(verbose) message('Returning long data (>1Gb).')
+    
+    #### Return long ####
+    
+    return(list(long =  ans.df,
+                annotation = annotations.df))
   }
 }
