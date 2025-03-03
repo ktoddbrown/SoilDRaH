@@ -33,7 +33,7 @@
 
 readISCN3 <- function(dataDir,
                       annotationFilename,
-                      format = c('original', 'long', 'pivot-bind')[1],
+                      format = c('original', 'long', 'pivotBind')[1],
                       verbose = TRUE){
   
   ### dev sets
@@ -236,71 +236,38 @@ readISCN3 <- function(dataDir,
                 annotation = annotations.df))
   }
   
-  if(format == 'pivot-bind'){
-    #replace '--' with NA in annotation table
-    temp_annotation <- annotations.df |>
-      mutate(across(.cols = everything(), ~na_if(., '--')))
-    
-    
-    
-    
-    #identify id columns or observation id
-    id_cols <- temp_annotation |>
-      filter(is_type == 'identifier')
-    
+  if(format == 'pivotBind'){
     
     #pivot (non id columns) and bind all tables
     pivotBind.df <- data.frame()
     for(table_name in names(orginalTables)){
-      col_id <- id_cols |>
+      if(verbose) message(paste('pivot and binding table', table_name))
+      id_cols <- annotations.df |>
+        #replace '--' with NA in annotation table
+        mutate(across(.cols = everything(), ~na_if(., '--'))) |>
+        #identify id columns or observation id
+        filter(is_type == 'identifier') |>
         filter(table_id %in% table_name)
       
-      #If we are in the profile or layer table, then remove any rows
-      # where the dataset_name_sub and dataset_name_soc do not match
-      if(table_name %in% c("profile", "layer")){
-        temp <- orginalTables[[table_name]] |>
-          filter(dataset_name_sub != dataset_name_soc) |>
-          filter(length(dataset_name_sub) > 1,
-                 .by = c(dataset_name_sub, site_name, profile_name))
-      } else {
-        temp <- orginalTables[[table_name]]
-      }
-      temp <- temp |>
-        mutate(row_index = paste0('R', 1:n())) |>
-        pivot_longer(cols = !all_of(c(col_id$column_id,'row_index')),
-                   names_to = 'column_id', values_to = 'with_entry',
-                   values_drop_na = TRUE) |>
-        mutate(table_id = table_name)
-      
-      
-      pivotBind.df <- bind_rows(pivotBind.df,
-                                temp)
+      pivotBind.df <- orginalTables[[table_name]] |>
+        # TODO - We tried to be clever and remove duplicate (by *_name) entries 
+        # ... but ran into the fact that (*_name) is not a unique identifer, even
+        # ... for the non-SOC columns due to some of the "Worldwide soil carbon and
+        # ... nitrogen data" entries.
+        # ... the solution here generates a longer larger dataframe but is more
+        # ... straight-forward.
+        mutate(row_id  = paste0('R', 1:n())) |>
+        pivot_longer(cols = -one_of(c(id_cols$column_id, 'row_id')),
+                     names_to = 'column_id',
+                     values_to = 'with_entry',
+                     values_drop_na = TRUE) |>
+        mutate(table_id = table_name) |>
+        bind_rows(pivotBind.df)
     }
     
-    
-    ## separate the SOC with unique dataset_name_soc
-    dataset_name_soc.df <- orginalTables$profile |>
-      filter(dataset_name_sub != dataset_name_soc) |>
-      filter(length(dataset_name_sub) > 1,
-             .by = c(dataset_name_sub, site_name, profile_name)) |>
-      bind_rows(orginalTables$layer |>
-                  filter(dataset_name_sub != dataset_name_soc) |>
-                  filter(length(dataset_name_sub) > 1,
-                         .by = c(dataset_name_sub, site_name, 
-                                 profile_name, layer_name))) |>
-      mutate(across(.cols = 
-                      !any_of(c('dataset_name_sub', 'site_name', 
-                                'profile_name', 'layer_name')),
-                    function(xx){
-                      if(length(unique(xx)) == 1){
-                        return(rep(NA, times = length(xx)))
-                      }else{
-                        return(xx)
-                      }
-                    }),
-             .by = c(dataset_name_sub, site_name, profile_name, layer_name)) |>
-      select(where(~ !all(is.na(.x))))
-    #pivot and bind the soc and sub dataset table that we isolated before
+    #pivotBind.df is 1.1 Gb
+    return(list('pivotBind' = pivotBind.df,
+                annotations = annotations.df))
   }
   
   stop("format option unknown")
