@@ -1,0 +1,34 @@
+title: "DD Month YYYY HHMM UTC"
+labels: ["Regular call"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This template is for regular project calls. 
+        These will be generally oriented to project updates and tracking progress on issues.
+        Copy over notes from the meeting at the end of the call and consider writing up a recap as well.
+  - type: textarea
+    attributes:
+      label: Agenda
+      description: "What are you going to talk about?"
+      value: |
+        These calls are lead by @ktoddbrown and are generally open calls.
+        Please contact them for call in information.
+        The purpose of these meetings are to move forward current issues related to the development of Soil-DRaH.
+        This may include teaching, mutual accountability, code review, paired programming, or other activities.
+        
+        ## (5 | HHMM) Check ins
+        - Who is here
+        - Note taking?
+        - How are you showing up? <https://feelingswheel.com/>
+        
+        ## (45 | HHMM) Issues checkins and stuck to unstuck
+        - *Pull up open issues where do each issue stand?*
+        - *How can we help each other move from stuck to unstuck on a topic?*
+        
+        ## (5 | HHMM) Backlog
+        - *What new issues need to be created?*
+        
+        ## (5 | HHMM) Check outs [appreciations, discoveries, and ToDo]
+    validations:
+      required: true
