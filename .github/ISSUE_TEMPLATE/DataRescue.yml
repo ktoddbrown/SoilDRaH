@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         This template is for data that requires translation into a non-machine readable (typically PDF) form to one that is machine readable (typically csv or md). 
- - type: input
+  - type: input
     attributes:
       label: Citation
       description: "What is the full citation for the dataset with url?"
