@@ -1,7 +1,7 @@
 name: NewData
 title: "[AuthorLastYYYY or ShortNameYYYY] "
 labels: ["New Data"]
-description: "Make sure to hit all the main points for a proposed new data contribution"
+description: "Make sure to hit all the main points for a data harmonization taking data from it's orginal format (data model) to a common format."
 body:
   - type: markdown
     attributes:
