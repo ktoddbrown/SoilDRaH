@@ -1,12 +1,13 @@
 name: DataRescue
 title: "[AuthorLastYYYY or ShortNameYYYY]"
+labels: ["DataRescue"]
 description: "Make sure to hit all the main points for a data data rescue taking data from a non-machine readable format to a machine readable format."
 body:
   - type: markdown
     attributes:
       value: |
         This template is for data that requires translation into a non-machine readable (typically PDF) form to one that is machine readable (typically csv or md). 
- - type: input
+  - type: input
     attributes:
       label: Citation
       description: "What is the full citation for the dataset with url?"
