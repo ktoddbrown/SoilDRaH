@@ -1,6 +1,5 @@
 name: DataRescue
-title: "[AuthorLastYYYY or ShortNameYYYY] "
-labels: ["DataRescue"]
+title: "[AuthorLastYYYY or ShortNameYYYY]"
 description: "Make sure to hit all the main points for a data data rescue taking data from a non-machine readable format to a machine readable format."
 body:
   - type: markdown
