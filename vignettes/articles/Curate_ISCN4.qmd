@@ -114,14 +114,15 @@ Finally we subset the observed variables to focus on soil organic carbon measure
 
 ISCN_lvl0.ls <- readISCN3(dataDir = file.path(dataDownloadDir, '/ISCN3'),
                      annotationFilename = file.path(annotationsDir, annotationFiles$ISCN3),
-                     format = 'long',
+                     format = 'pivotBind',
                      verbose = FALSE)
 
+kable(ISCN_lvl0.ls$pivotBind |>
+        slice(500:510))
 ```
 
 ```{r}
-#| code-summary: "Subset ISCN3 lvl 1 product"
-
+#| code-summary: "Create ISCN3 lvl 1 product (with subset)"
 
 ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
   #pull the annotations for the primary data entries
@@ -131,59 +132,39 @@ ISCN3_column_selection <- ISCN_lvl0.ls$annotation |>
   filter(with_entry == '--') |>
   select(ends_with('_id'), of_variable, target_variable, is_type)
 
-ISCN3_lvl1 <- list(
-  primary = ISCN_lvl0.ls$long |> 
+ISCN3_column_meta <- ISCN_lvl0.ls$annotation |>
+  #pull the annotations for the primary data entries
+  right_join(ISCN4map,
+             by = join_by(study_id,# table_id,
+                          of_variable == source_variable)) |>
+  filter(with_entry != '--') |>
+  select(ends_with('_id'), of_variable, target_variable, is_type, with_entry)
+
+ISCN3_lvl1_pivotBind <- ISCN_lvl0.ls$pivotBind |> 
     filter(!str_detect(dataset_name_sub, 'NRCS')) |> # added this here since the NRCS dataset name is under 
     ## dataset_name_sub variable
     mutate(study_id = 'ISCN3') |>
-    dplyr::rename(dataset_id = dataset_name_soc, 
+    dplyr::rename(dataset_id = dataset_name_sub, 
            site_id = site_name,
            profile_id = profile_name,
            layer_id = layer_name
            ) |>
-    ##nrow 17 967 513
-    filter(!str_detect(dataset_id, 'NRCS')) |> #remove the old NCSS data, using update later in code
-    ##nrow  2 151 476
+    ##nrow 1 797 299
     # use the column selection to subset the database
-    right_join(ISCN3_column_selection, 
+    inner_join(ISCN3_column_selection, 
                relationship = "many-to-many",
-               by = join_by(study_id, column_id)) |>
-    select(table_id, column_id, study_id, dataset_id, profile_id, layer_id, 
-           #remove the soc identifier since we are not pulling calculated SOC
-           of_variable, target_variable, is_type, with_entry) |>
-    #nrow 1 034 386
-    #### Remove duplicate observations from ISCN3 ####
-   unique() |> #some entries repeated due to soc_id replication of non SOC variables
-    #nrow 973 621
-    ### Pull the column id into a non-value with_entry and collapse
-    ### This takes care of observations with multiple methods
-    mutate(with_entry = if_else(is_type != 'value', 
-                                paste(column_id, with_entry, sep = ':'), 
-                                with_entry)) |>
-    #### Kick out to wide format for QAQC ####
-  select(study_id, dataset_id, profile_id, layer_id, #_id are the row identifier
-         target_variable, is_type, with_entry) |>
-    pivot_wider(names_from = c(target_variable, is_type), 
-                names_sep = '::',
-                values_from = with_entry,
-                values_fn = function(xx)paste(unique(xx), collapse = ';\n')), 
-  
-  #pull in the meta data that is not now in the primary data
-  meta = ISCN_lvl0.ls$annotation |>
-    right_join(ISCN4map |>
-                 filter(study_id == 'ISCN3'),
-               by = join_by(study_id, #table_id,
-                            of_variable == source_variable)) |>
-    filter(with_entry != '--') |>
-    mutate(with_entry = if_else(is_type != 'value', 
-                                paste(column_id, with_entry, sep = ':'), 
-                                with_entry)) |>
-    mutate(column_id = paste0(target_variable, is_type, sep = '::')) |>
-    select(study_id, column_id, with_entry, method_class = target_method, action_note)
-)
+               by = join_by(study_id, table_id, column_id)) |>
+    ##nrow 1 092 475
+    select(study_id, dataset_id, table_id,
+           profile_id, layer_id, column_id, row_id,
+           of_variable, target_variable, 
+           is_type, with_entry) |>
+    ##nrow 1 092 546
+    bind_rows(ISCN3_column_meta)
 
 #memory management
-primary_variables <- c(primary_variables, 'ISCN_lvl0.ls',  'ISCN3_lvl1')
+primary_variables <- c(primary_variables, 
+                       'ISCN3_lvl0.ls',  'ISCN3_lvl1_pivotBind')
 rm(list = setdiff(ls(), primary_variables)) 
 ```
 
@@ -442,6 +423,38 @@ Examining the contextual metadata above we need to do the following:
     * All: convert units to mass-percent
     * All: move over method notes to primary data
     * CPEAT: Check for backing out organic carbon from density 
+
+```{r}
+
+# TODO go back and pull the citations, references and other study information
+#ISCN4_study <- 
+#
+ISCN4_geolocation <- ISCN3_lvl1_pivotBind |>
+  filter(of_variable %in% c('latitude', 'longitude', 'datum', 
+                            'state', 'country', 'observation_year'))
+
+temp_annotations <- ISCN3_lvl1_pivotBind |>
+  filter(of_variable %in% c('latitude', 'longitude', 'datum', 
+                            'state', 'country', 'observation_year'),
+         is.na(dataset_id)) |>
+  select(-one_of(c('dataset_id', 'study_id', 'profile_id', 'layer_id', 'row_id')))
+
+temp_site <- ISCN3_lvl1_pivotBind |>
+  filter(of_variable %in% c('latitude', 'longitude', 'datum', 
+                            'state', 'country', 'observation_year'),
+         is.na(layer_id)) |>
+  select(-'layer_id') |>
+  rename(site_row_id = row_id)
+
+temp <- full_join(temp_annotations |>
+                    filter(table_id == 'site'), temp_site)
+
+temp_layer <- ISCN3_lvl1_pivotBind |>
+  filter(!is.na(layer_id)) |>
+  rename(layer_row_id = row_id)
+
+```
+
 
 ```{r makeISCN4primary}
 
