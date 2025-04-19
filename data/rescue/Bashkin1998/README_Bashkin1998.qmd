@@ -25,8 +25,8 @@ author:
         - "Transcription"
         - "Review"
   - name:
-      given: Jane
-      family: Gator
+      given: Layla
+      family: Kalandjian
       affiliation:
         - id: UF
           name: University of Florida
@@ -44,6 +44,8 @@ library(kableExtra)
 methods.file <- 'Bashkin1998_Method.md'
 table1.file <- 'Bashkin1998_Table1.csv'
 table2.file <- 'Bashkin1998_Table3.csv'
+pirmaryCitation.file <- 'Bashkin1998.bib'
+methodsCitation.file <- 'Bashkin1998_Method.bib'
 ```
 
 This documents the data transcription for @Bashkin1998 .
@@ -119,7 +121,7 @@ read_csv(file = filename,
 {{< include Bashkin1998_Method.md >}}
 
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, echo=FALSE}
 # Transcription comparison
 diff --strip-trailing-cr Bashkin1998_Method.md Bashkin1998_Methods_LK.md
 
@@ -181,5 +183,216 @@ Below are the citation notes from the methods section.
   + SAS. 1987. SAS guide, volume 4. Sixth edition. Cary, North Carolina, USA.
   + manual entry as manual
 
+# Level 0 to 1: data reads
 
+```{r}
+lvl0_read <- list(citation = list(primary = '', methods = ''),
+                  method = read_lines(file = methods.file),
+                  data = list(table1 = '', table2 = ''))
+
+table1Caption <- read_csv(file = table1.file,
+                  col_types = cols(.default = col_character()),
+                  n_max = 1, col_names = FALSE)$X1[1]
+
+# data table 1
+
+temp <- read_csv(file = table1.file,
+                 col_types = cols(.default = col_character()),
+                 skip = 1) |>
+# split up cane yield to upper and lower bound
+    separate_wider_delim(cols = `Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)`,
+                        
+                         delim = '-',
+                         names = c("Minimum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)",
+                                   "Maximum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)"))
+```
+
+# Data annotations
+
+```{r}
+methods.arr <- readLines(methods.file)
+
+#### location, obs year, soil type, and citation ####
+location <- tribble(~of_variable, ~value, ~unit, ~method, ~source,
+        'latitude', '19.5', 'degree N', 'unknown', paste('Methods, ln5:', methods.arr[5]),
+        'longitude', '155.25', 'degree W', 'unknown', paste('Methods, ln5:', methods.arr[5]),
+        'geopercision', '17', 'km', NA, paste('Methods, ln20:', methods.arr[20]),
+#obs year
+                'observation year', '1995', 'CE', 'In the discussion section @Bashkin1998 talks about expected TC changes over the 10-13 years of the study not being meet and since the sites were planted in 1982-1985, we assume samples were taken in 1995.', '@Bashkin1998',
+        'citation', read_file('Bashkin1998.bib'), NA, NA, 'journal provided bibtex',
+        'soil classification', 'isothermic Typic Hydrudands of the Akaka and Kaiwiki series', NA, 'USDA', paste('Methods, ln8:', methods.arr[8]),
+        'minerology', 'amorphous noncrystalline hydrous alumina and iron oxides', NA, NA, paste('Methods, ln9:', methods.arr[9]),
+    'parent material', 'volcanic ash', NA, NA, paste('Methods, ln9:', methods.arr[9])
+) |>
+  bind_rows(tribble(~of_variable, ~method, ~source,
+                    'sample_design', 'paired transect', paste('Methods, ln24-25:', methods.arr[24:25], collapse = '\n'),
+                    'core_description', 'cylinder 6cm x 1m', paste('Methods, ln26:', methods.arr[26], collapse = '\n'),
+                    'sample prep', 'oven dried at 70 C, sieved <2mm', paste('Methods, ln27,29:', methods.arr[c(27, 29)], collapse = '\n'),
+                    'bulk_density', 'fine earth mass divided by corer volume calculated, n=3', paste('Methods, ln29-31:', methods.arr[29:31], collapse = '\n'),
+                    'organic_fraction', 'composit sample n=3, acidified soil, CHZ analyizer by dry combustion', paste('Methods, ln35-43:', methods.arr[35:43], collapse = '\n'))
+  ) |>
+  pivot_longer(cols = c(value, unit, method),
+               values_to = 'with_entry', names_to = 'is_type',
+               values_drop_na = TRUE)
+
+captions <- list(table1 = unname(read_csv(table1.file, show_col_types = FALSE,
+                                          n_max = 1, col_names = FALSE)$X1),
+                 table2 = unname(read_csv(table2.file, show_col_types = FALSE,
+                                          n_max = 1, col_names = FALSE)$X1))
+
+#### Landuse ####
+landuse <- read_csv(table1.file,
+                    skip = 1, 
+                    col_types = cols(.default = col_character()),
+                    na = '-') |>
+  mutate(management_history = str_extract(captions$table1, '†.*(?=\\r\\n)'),
+         paired_wildland = ifelse(str_detect(`Site †`, '‡'),
+                              str_extract(captions$table1, '‡.*(?=\\r\\n)'),
+                              NA_character_),
+         Eucalyptus_established = ifelse(str_detect(`Site †`, '§'),
+                              str_extract(captions$table1, '§.*$'),
+                              NA_character_)) |>
+    #only keep the year and drop the § symbol which is captured in the line above
+    mutate(`*Eucalyptus* planted` = str_extract(`*Eucalyptus* planted`, '\\d{4}')) |>
+  pivot_longer(cols = -starts_with('Site'), 
+               names_to = 'column_name',
+               values_to = 'with_entry',
+                values_drop_na = TRUE) |>
+  mutate(of_variable = case_when(
+           column_name %in% c('management_history', 'paired_wildland', 'Eucalyptus_established') ~ column_name,
+           str_detect(column_name, 'Elevation') ~ 'elevation',
+                                 str_detect(column_name, 'Y|yield') ~ 'sugar cane yield',
+                                 str_detect(column_name, 'C|cane cultivation') ~ 'sugar cane cultivation',
+                                 str_detect(column_name, 'Eucalyptus') ~ 'Eucalyptus plantation',
+                                 .default = NA),
+         is_type = case_when(str_detect(column_name, 'Start') ~ 'start',
+                             str_detect(column_name, 'End') ~ 'end',
+                             str_detect(column_name, 'planted') ~ 'start',
+                             str_detect(column_name, 'yield') ~ 'range',
+                             column_name %in% c('management_history', 'paired_wildland', 'Eucalyptus_established') ~ 'note',
+                             .default = 'value')) 
+
+temp.df <- landuse |>
+  select(`Site †`, column_name, of_variable) |>
+  unique() |>
+  mutate(with_entry = str_extract(column_name, '\\(.*\\)'),
+         is_type = 'unit') |>
+  mutate(with_entry = if_else(
+    is.na(with_entry) & str_detect(column_name, '(Start)|(End)|(planted)'), 
+    'year CE', with_entry)) |>
+  filter(!is.na(with_entry))
+
+landuse <- landuse |>
+  bind_rows(temp.df) |>
+  mutate(source = 'Table 1') |>
+  rename('Site' = "Site †")
+
+#### soil carbon ####
+
+soilObs <- read_csv(table2.file,
+                    skip = 1, 
+                    col_types = cols(.default = col_character())) |>
+  mutate(`Depth (cm)` = ifelse(`Depth (cm)` == 'Total', '0-55', `Depth (cm)`)) |>
+  pivot_longer(-`Depth (cm)`,
+               names_to = 'column_name',
+               values_to = 'value') |>
+  separate_wider_delim(cols = value, names = c('mean', 'standard deviation'),
+                       delim = '+-', too_few='align_start') |>
+  mutate(note = ifelse(str_detect(column_name, '†'), 
+                       str_extract(captions$table2, '†.*\\.(?= ‡)'),
+                       ifelse(str_detect(column_name, '‡'), 
+                              str_extract(captions$table2, '‡.*\\.$'),
+                              NA_character_))) |>
+  mutate(sample_size = case_when(str_detect(note, 'two sites') ~ '2',
+                                 str_detect(note, 'five sites') ~ '5',
+                                 .default = NA_character_),
+         of_variable = ifelse(str_detect(column_name, 'TC'),
+                              'total_carbon', NA_character_)) |>
+  pivot_longer(cols = c(mean, `standard deviation`, note, sample_size),
+               values_to = 'with_entry',
+               names_to = 'is_type',
+               values_drop_na = TRUE)
+
+layers.df <- soilObs |>
+  select(`Depth (cm)`, column_name) |>
+  unique() |>
+  separate_wider_delim(`Depth (cm)`, delim = '-', cols_remove = FALSE, names = c('upper_bound', 'lower_bound')) |>
+  pivot_longer(cols = c(upper_bound, lower_bound),
+               names_to = 'of_variable',
+               values_to = 'value') |>
+  mutate(unit = 'cm') |>
+  pivot_longer(cols = c(value, unit),
+               names_to = 'is_type',
+               values_to = 'with_entry')
+
+soilObs.methods <- soilObs |>
+  filter(of_variable == 'total_carbon') |>
+  select("Depth (cm)",  "column_name", of_variable) |>
+  mutate(is_type = 'method',
+    with_entry = 'layer depth times organic carbon fraction times fine earth bulk density, no coarse fraction correction', 
+         source = paste('Methods, ln44:', methods.arr[44], collapse = '\n'))
+  
+soilObs <- soilObs |>
+  bind_rows(layers.df) |>
+  mutate(source = 'Table 2') |>
+  bind_rows(soilObs.methods)
+
+pivotBind <- landuse |>
+  bind_rows(soilObs) |>
+  bind_rows(location) |>
+  mutate(study_id = 'Bashkin1998')
+
+```
+
+## Hawaii SOC DB
+
+```{r}
+# soil type, geolocation with obs time and precision
+# 
+temp <- pivotBind |>
+  filter(of_variable %in% c('minerology', 'parent material',
+                            'soil classification',
+                            'latitude', 'longitude', 
+                            'geopercision', 'observation year',
+                            'citation')) |>
+  select(where(function(xx){all(!is.na(xx))})) 
+
+sources <- temp |>
+  select(source, is_type, of_variable) |>
+  unique()
+
+wideTable <- temp |>
+  select(-source)|>
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+# 
+# average land use history
+temp <- pivotBind |>
+  filter(of_variable %in% c('elevation', 
+                            'sugar cane cultivation', 'sugar cane yield',
+                            'Eucalyptus plantation', 
+                            'management_history', 'Eucalyptus_established')) |>
+  
+  select(-c(source, column_name))|>
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::', values_fn = unique) |>
+  select("Eucalyptus planting::value" = 'Eucalyptus plantation::start',
+         "sugar cane cultivation::start", "sugar cane cultivation::end") |>
+  mutate(across(everything(), as.numeric)) |>
+  mutate(duration_Euculyptus =
+           as.numeric(wideTable$`observation year::value`) - `Eucalyptus planting::value`,
+         duration_sugarCane = `sugar cane cultivation::end` - `sugar cane cultivation::start`) |>
+  reframe(`Euculyptus_duration::min` = min(duration_Euculyptus, na.rm = TRUE),
+          `Euculyptus_duration::med` = median(duration_Euculyptus, na.rm = TRUE),
+          `Euculyptus_duration::max` = max(duration_Euculyptus, na.rm = TRUE),
+          `Cane_duration::min` = min(duration_sugarCane, na.rm=TRUE),
+          `Cane_duration::med` = median(duration_sugarCane, na.rm=TRUE),
+          `Cane_duration::max` = max(duration_sugarCane, na.rm=TRUE))
+
+
+
+# composition sample values sampling strategy
+```
 
