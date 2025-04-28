@@ -268,6 +268,61 @@ readISCN3 <- function(dataDir,
     #pivotBind.df is 1.1 Gb
     return(list('pivotBind' = pivotBind.df,
                 annotations = annotations.df))
+  }if(format == 'joinPivot' | format == 'wide'){
+    temp1 <- orginalTables$citation |>
+      #fill down the curator name, org, and email by dataset to resolve NA's
+      mutate(curator_name = curator_name[1],
+             curator_organization = curator_organization[1],
+             curator_email = curator_email[1],
+        .by = dataset_name) |>
+      full_join(orginalTables$dataset, 
+                by = join_by(`ISCN 1-1 (2015-12-10)`, dataset_name,
+                             `dataset_type (dataset_type)`, curator_name,
+                             curator_organization, curator_email),
+                suffix = c('curation', 'dataset'))
+    
+    temp2 <- orginalTables$profile |>
+      full_join(orginalTables$layer, 
+                by = join_by(`ISCN 1-1 (2015-12-10)`, 
+                             dataset_name_sub, dataset_name_soc,
+                             `lat (dec. deg)`, `long (dec. deg)`,
+                             `datum (datum)`, `state (state_province)`, 
+                             `country (country)`, 
+                             `observation_date (YYYY-MM-DD)`, 
+                             site_name, profile_name, 
+                             soil_taxon, soil_series, vegclass_local,
+                             locator_parent_alias),
+suffix = c('::layer', '::profile'))
+    
+    wide <- temp2 |>
+      left_join(temp1,
+                by = join_by(`ISCN 1-1 (2015-12-10)`, 
+                             dataset_name_sub == dataset_name),
+                suffix = c('::profile_layer', '::citation_dataset')) |>
+      left_join(temp1,
+                by =join_by(`ISCN 1-1 (2015-12-10)`,
+                            dataset_name_soc == dataset_name),
+                suffix = c('', '::soc'))
+    #wide table is 0.7 Gb
+    #489107 observation of 170 variables
+    
+    if(verbose) print('returning the wide format of size 0.7 Gb.')
+    
+    if(format == 'wide'){
+      ##TODO need to mutate the annotations to match what is in the table
+      ##
+      newAnnotations <- annotations.df
+      return(list(wide = wide,
+                  annotations = newAnnotations))
+    }
+    joinPivot <- wide |>
+      mutate(row_id = paste0('R', 1:n())) |>
+      pivot_longer(cols = -c(`ISCN 1-1 (2015-12-10)`, dataset_name_sub,
+                             site_name, profile_name, layer_name),
+                   values_drop_na = TRUE)
+    
+      return(list(joinPivot = joinPivot,
+                  annotations = newAnnotations))
   }
   
   stop("format option unknown")
