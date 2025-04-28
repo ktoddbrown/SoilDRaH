@@ -181,7 +181,7 @@ We then run the `readFIA` function to combine the datatables into a single long 
 FIA_lvl0.ls <- readFIA(file.path(dataDownloadDir, 'FS_FIA'), 
                   annotationFilename = file.path(annotationsDir, annotationFiles$FIA), 
                   verbose = FALSE, #when first running, switch this to true 
-                  format = 'long')
+                  format = 'joinPivot')
 #The FIA data base object is large, 2.3 GB
 ```
 
@@ -195,38 +195,16 @@ FIA_controlVocab <- FIA_lvl0.ls$annotations |>
                               names = c('with_entry', 'keyed_value')) %>%
   mutate(is_type = 'value')
 
-FIA_column_selection <- 
+FIA_column_selection <- FIA_lvl0.ls$annotation |>
+  #pull the annotations for the primary data entries
+  right_join(ISCN4map,
+             by = join_by(study_id,
+                          of_variable == source_variable),
+             relationship = "many-to-many") |>
+  filter(with_entry == '--') |>
+  select(ends_with('_id'), of_variable, target_variable, is_type)
 
-FIA_lvl1 <- list(
-  primary =  FIA_lvl0.ls$long |>
-    #### pull in the target variable that we want to map ####
-    right_join(FIA_lvl0.ls$annotation |>
-                 #pull the annotations for the primary data entries
-                 right_join(ISCN4map,
-                            by = join_by(study_id,
-                                         of_variable == source_variable),
-                            relationship = "many-to-many") |>
-                 filter(with_entry == '--') |>
-                 select(ends_with('_id'), of_variable, target_variable, is_type),
-               relationship = "many-to-many",
-               by = join_by(column_id, table_id)) |>
-    #### replace the control vocab with the provided text values ####
-    left_join(FIA_controlVocab,
-              by = join_by(study_id, table_id, column_id, 
-                           of_variable, is_type, with_entry)) |>
-    mutate(with_entry = if_else(is.na(keyed_value), with_entry, keyed_value)) |>
-    select(-keyed_value) |>
-    #### Kick out to wide format for QAQC ####
-    select(study_id, 
-           profile_id = `CN.ENTIRE_PLOT`,
-           layer_id = `CN.ENTIRE_SOILS_LAB`, #starts_with('CN.'), #CN is the row identifier
-           target_variable, is_type, with_entry) |>
-  unique() |>
-  pivot_wider(names_from = c(target_variable, is_type), names_sep = '::',
-                values_from = with_entry,
-                values_fn = function(xx)paste(xx, collapse = '::')),
-  
-  meta = FIA_lvl0.ls$annotations |>
+FIA_meta <- FIA_lvl0.ls$annotations |>
     #pull the annotations for the primary data entries
     right_join(ISCN4map,
                by = join_by(study_id,
@@ -236,16 +214,34 @@ FIA_lvl1 <- list(
     filter(with_entry != '--') |>
     mutate(with_entry = if_else(is_type != 'value', 
                                 paste(column_id, with_entry, sep = ':'), 
-                                with_entry)) |>
-    #### Construct the column names ####
-    mutate(column_id = paste0(target_variable, "::", is_type)) |>
-    select(study_id, column_id, 
-           with_entry, method_class = target_method, action_note)
-    
-)
+                                with_entry))
+
+FIA_lvl1_pivotBind <- FIA_lvl0.ls$joinPivot |>
+    #### pull in the target variable that we want to map ####
+    right_join(FIA_column_selection,
+               relationship = "many-to-many",
+               by = join_by(column_id, table_id)) |>
+    #### replace the control vocab with the provided text values ####
+    left_join(FIA_controlVocab,
+              by = join_by(study_id, table_id, column_id, 
+                           of_variable, is_type, with_entry)) |>
+    mutate(with_entry = if_else(is.na(keyed_value), 
+                                with_entry, keyed_value)) |>
+    select(-keyed_value) |>
+    #### Kick out to wide format for QAQC ####
+    select(study_id, 
+           profile_id = `CN.ENTIRE_PLOT`,
+           layer_id = `CN.ENTIRE_SOILS_LAB`, #starts_with('CN.'), #CN is the row identifier
+           target_variable, is_type, with_entry) |>
+    #nrow 7644100
+  unique() |> # removing duplications from table joins
+    #nrow 364253,
+  bind_rows(FIA_meta)
 
 #memory management
-primary_variables <- c(primary_variables, 'FIA_lvl0.ls', 'FIA_lvl1')
+primary_variables <- c(primary_variables, 
+                       'FIA_lvl0.ls',
+                       'FIA_lvl1_pivotBind')
 rm(list = setdiff(ls(), primary_variables)) 
 ```
 
