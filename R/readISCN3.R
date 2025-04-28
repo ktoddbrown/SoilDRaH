@@ -33,7 +33,8 @@
 
 readISCN3 <- function(dataDir,
                       annotationFilename,
-                      format = c('original', 'long', 'pivotBind')[1],
+                      format = c('original', 'long', 'pivotBind',
+                                 'wide', 'joinPivot')[1],
                       verbose = TRUE){
   
   ### dev sets
@@ -268,7 +269,7 @@ readISCN3 <- function(dataDir,
     #pivotBind.df is 1.1 Gb
     return(list('pivotBind' = pivotBind.df,
                 annotations = annotations.df))
-  }if(format == 'joinPivot' | format == 'wide'){
+  }else if(format == 'joinPivot' | format == 'wide'){
     temp1 <- orginalTables$citation |>
       #fill down the curator name, org, and email by dataset to resolve NA's
       mutate(curator_name = curator_name[1],
