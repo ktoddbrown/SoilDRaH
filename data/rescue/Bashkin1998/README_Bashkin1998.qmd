@@ -1,0 +1,398 @@
+---
+title: "Data Rescue: Bashkin 1998"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Bashkin1998_Method.bib
+  - Bashkin1998.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Bashkin1998_Method.md'
+table1.file <- 'Bashkin1998_Table1.csv'
+table2.file <- 'Bashkin1998_Table3.csv'
+pirmaryCitation.file <- 'Bashkin1998.bib'
+methodsCitation.file <- 'Bashkin1998_Method.bib'
+```
+
+This documents the data transcription for @Bashkin1998 .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/79.
+
+> Bashkin, M.A. and Binkley, D. (1998), CHANGES IN SOIL CARBON FOLLOWING AFFORESTATION IN HAWAII. Ecology, 79: 828-833. https://doi.org/10.1890/0012-9658(1998)079[0828:CISCFA]2.0.CO;2
+
+# Data Summary
+
+This paper looks at changes in soil organic carbon stock following afforestation of sugarcane fields across a gradient of elevations and cane yields during time of cultivation.
+They use this data to estimate the role of cane agriculture and Eucalyptus plantations in the total change of soil carbon.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: The exact lat/lon location is given in the methods.
+- Soil carbon stock: Total soil carbon stock is given and it appears that there was no coarse correction applied
+- Soil type: Soil types are well described in the methods section.
+- Land use: Land use history is well described in the methods section.
+
+# Tables and figures
+
+- Table 
+  1) Site history and characteristics of afforested study plots in Hawaii.
+  2) Average 13C values for wildland forest, cane, and Eucalyptus soils, and percentage SOC4 and percentage SOC3 carbon calculated from Eqs. 2 and 3 for cane and Eucalyptus plantations.
+  3) Mean soil carbon (Mg/ha) as total soil carbon (TC), SOC4, and SOC3, by depth, in wildland forest, Eucalyptus, and cane plantations.
+  4) P values for effects of land use and the interaction of land use depth on TC, SOC4, and SOC3, detected by paired t test and split-plot ANOVA.
+
+- Figure 
+  1) The 13C values, by depth, of wildland forest (n = 2), cane fields (n = 5), and Eucalyptus plantations (n = 5) in Hawaii; bars indicate the standard error of the mean. The starred Eucalyptus plantation ( ) was established on wildland forest with no former cane cultivation.
+  2) (A) Total soil carbon (TC) by depth for native wildland forest (n 2), cane fields (n 5), and Eucalyptus plantations (n 5) in Hawaii; bars indicate the standard error of the mean. (B) SOC4 in cane fields and after 10–13 years of afforestation with Eucalyptus. (C) SOC3 in cane fields and after 10–13 years of afforestation with Eucalyptus.
+
+### Table 1
+
+Table 1 was modified to include the footer in the caption.
+Blank entries were replaced with `-`.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3
+
+Table 3 was modified to include the footer in the caption.
+The subheader was merged into the primary header.
+We replaced the $\pm$ with `+-`
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Bashkin1998_Method.md >}}
+
+
+```{bash eval=FALSE, echo=FALSE}
+# Transcription comparison
+diff --strip-trailing-cr Bashkin1998_Method.md Bashkin1998_Methods_LK.md
+
+# Transcription comparison
+diff --strip-trailing-cr Bashkin1998_Table1.csv Bashkin1998_Table1_LK.csv
+
+# Transcription comparison
+diff --strip-trailing-cr Bashkin1998_Table3.csv Bashkin1998_Table3_LK.csv
+```
+
+# Files
+
+These files are in the @Bashkin1998 data rescue.
+
+- [Readme](README_Bashkin1998.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Bashkin1998.bib](Bashkin1998.bib)
+  + citation for article transcribed
+- [Bashkin1998_Methods.bib](Bashkin1998_Methods.bib)
+  + citations for the methods section of the article
+- [Bashkin1998_Methods.md](Bashkin1998_Methods.md)
+  + methods transcribed from primary article
+- [Bashkin1998_Table1.csv](Bashkin1998_Table1.csv)
+  + Table 1 from primary article with site description.
+- [Bashkin1998_Table3.csv](Bashkin1998_Table3.csv)
+  + table 3 from primary article with soil organic carbon measurements.
+
+# Working notes
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+
+- [x] (Debell et al. 1989). @DeBell1989
+  + DeBell, D. S., C. D. Whitesell, and T. H. Schubert. 1989. Using N2-fixing Albizia to increase growth of Eucalyptus plantations in Hawaii. Forest Science 35:64–75.
+  + direct export
+- [x] (USDA Soil Conservation Service 1973) @USDA1973
+  + USDA (U.S. Department of Agriculture) Soil Conservation Service. 1973. Soil survey of island of Hawaii, state of Hawaii. U.S. Government Printing Office, Washington, D.C., USA.
+  + authorship found and added `\cite{Sato1973}`
+- [x] (Mizota and van Reeuwijk 1989). @Mizota1989
+  + Mizota, C., and L. P. Van Reeuwijk. 1989. Clay mineralogy and chemistry of soils formed in volcanic materials in diverse climatic regions. Soil Monographs 2. International Soil Reference and Information Centre, Wageningen, The Netherlands.
+  + expanded export
+- [x] (Wada and Wada 1976). @Wada1976
+  + Wada, K., and S. Wada. 1976. Clay mineralogy of the B horizons of two hydrandepts, a torrox and a humitropept in Hawaii. Geoderma 16:139–157.
+  + direct export
+- [x] (Whitesell et al. 1992). @Whitesell1992
+  + Whitesell, C. D., D. S. DeBell, T. H. Schubert, R. F. Strand, and T. B. Crabb. 1992. Short-rotation management of Eucalyptus: guidelines for plantations in Hawaii. Pacific Southwest Research Station, Albany, California, USA.
+  + Manual entry
+- [x] (Vitorello et al. 1989): @Vitorello1989
+  + Vitorello, V. A., C. C. Cerri, F. Andreux, C. Feller, and R. L. Victoria. 1989. Organic matter and natural carbon-13 distribution in forested and cultivated oxisols. Soil Science Society of America Journal 53:773–778.
+  + direct export
+- [x] (Veldkamp 1994) @Veldkamp1994
+  + Veldkamp, E. 1994. Organic carbon turnover in three tropical soils under pasture after deforestation. Soil Science Society of America Journal 58:175–180.
+  + direct export
+- [x] Detwiler (1986) @Detwiler
+  + Detwiler, R. P. 1986. Land use change and the global carbon cycle: the role of tropical soils. Biogeochemistry 2:67–93.
+  + direct export
+- [x] (SAS 1987). @SAS1987
+  + SAS. 1987. SAS guide, volume 4. Sixth edition. Cary, North Carolina, USA.
+  + manual entry as manual
+
+# Level 0 to 1: data reads
+
+```{r}
+lvl0_read <- list(citation = list(primary = '', methods = ''),
+                  method = read_lines(file = methods.file),
+                  data = list(table1 = '', table2 = ''))
+
+table1Caption <- read_csv(file = table1.file,
+                  col_types = cols(.default = col_character()),
+                  n_max = 1, col_names = FALSE)$X1[1]
+
+# data table 1
+
+temp <- read_csv(file = table1.file,
+                 col_types = cols(.default = col_character()),
+                 skip = 1) |>
+# split up cane yield to upper and lower bound
+    separate_wider_delim(cols = `Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)`,
+                        
+                         delim = '-',
+                         names = c("Minimum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)",
+                                   "Maximum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)"))
+```
+
+# Data annotations
+
+```{r}
+methods.arr <- readLines(methods.file)
+
+#### location, obs year, soil type, and citation ####
+location <- tribble(~of_variable, ~value, ~unit, ~method, ~source,
+        'latitude', '19.5', 'degree N', 'unknown', paste('Methods, ln5:', methods.arr[5]),
+        'longitude', '155.25', 'degree W', 'unknown', paste('Methods, ln5:', methods.arr[5]),
+        'geopercision', '17', 'km', NA, paste('Methods, ln20:', methods.arr[20]),
+#obs year
+                'observation year', '1995', 'CE', 'In the discussion section @Bashkin1998 talks about expected TC changes over the 10-13 years of the study not being meet and since the sites were planted in 1982-1985, we assume samples were taken in 1995.', '@Bashkin1998',
+        'citation', read_file('Bashkin1998.bib'), NA, NA, 'journal provided bibtex',
+        'soil classification', 'isothermic Typic Hydrudands of the Akaka and Kaiwiki series', NA, 'USDA', paste('Methods, ln8:', methods.arr[8]),
+        'minerology', 'amorphous noncrystalline hydrous alumina and iron oxides', NA, NA, paste('Methods, ln9:', methods.arr[9]),
+    'parent material', 'volcanic ash', NA, NA, paste('Methods, ln9:', methods.arr[9])
+) |>
+  bind_rows(tribble(~of_variable, ~method, ~source,
+                    'sample_design', 'paired transect', paste('Methods, ln24-25:', methods.arr[24:25], collapse = '\n'),
+                    'core_description', 'cylinder 6cm x 1m', paste('Methods, ln26:', methods.arr[26], collapse = '\n'),
+                    'sample prep', 'oven dried at 70 C, sieved <2mm', paste('Methods, ln27,29:', methods.arr[c(27, 29)], collapse = '\n'),
+                    'bulk_density', 'fine earth mass divided by corer volume calculated, n=3', paste('Methods, ln29-31:', methods.arr[29:31], collapse = '\n'),
+                    'organic_fraction', 'composit sample n=3, acidified soil, CHZ analyizer by dry combustion', paste('Methods, ln35-43:', methods.arr[35:43], collapse = '\n'))
+  ) |>
+  pivot_longer(cols = c(value, unit, method),
+               values_to = 'with_entry', names_to = 'is_type',
+               values_drop_na = TRUE)
+
+captions <- list(table1 = unname(read_csv(table1.file, show_col_types = FALSE,
+                                          n_max = 1, col_names = FALSE)$X1),
+                 table2 = unname(read_csv(table2.file, show_col_types = FALSE,
+                                          n_max = 1, col_names = FALSE)$X1))
+
+#### Landuse ####
+landuse <- read_csv(table1.file,
+                    skip = 1, 
+                    col_types = cols(.default = col_character()),
+                    na = '-') |>
+  mutate(management_history = str_extract(captions$table1, '†.*(?=\\r\\n)'),
+         paired_wildland = ifelse(str_detect(`Site †`, '‡'),
+                              str_extract(captions$table1, '‡.*(?=\\r\\n)'),
+                              NA_character_),
+         Eucalyptus_established = ifelse(str_detect(`Site †`, '§'),
+                              str_extract(captions$table1, '§.*$'),
+                              NA_character_)) |>
+    #only keep the year and drop the § symbol which is captured in the line above
+    mutate(`*Eucalyptus* planted` = str_extract(`*Eucalyptus* planted`, '\\d{4}')) |>
+  pivot_longer(cols = -starts_with('Site'), 
+               names_to = 'column_name',
+               values_to = 'with_entry',
+                values_drop_na = TRUE) |>
+  mutate(of_variable = case_when(
+           column_name %in% c('management_history', 'paired_wildland', 'Eucalyptus_established') ~ column_name,
+           str_detect(column_name, 'Elevation') ~ 'elevation',
+                                 str_detect(column_name, 'Y|yield') ~ 'sugar cane yield',
+                                 str_detect(column_name, 'C|cane cultivation') ~ 'sugar cane cultivation',
+                                 str_detect(column_name, 'Eucalyptus') ~ 'Eucalyptus plantation',
+                                 .default = NA),
+         is_type = case_when(str_detect(column_name, 'Start') ~ 'start',
+                             str_detect(column_name, 'End') ~ 'end',
+                             str_detect(column_name, 'planted') ~ 'start',
+                             str_detect(column_name, 'yield') ~ 'range',
+                             column_name %in% c('management_history', 'paired_wildland', 'Eucalyptus_established') ~ 'note',
+                             .default = 'value')) 
+
+temp.df <- landuse |>
+  select(`Site †`, column_name, of_variable) |>
+  unique() |>
+  mutate(with_entry = str_extract(column_name, '\\(.*\\)'),
+         is_type = 'unit') |>
+  mutate(with_entry = if_else(
+    is.na(with_entry) & str_detect(column_name, '(Start)|(End)|(planted)'), 
+    'year CE', with_entry)) |>
+  filter(!is.na(with_entry))
+
+landuse <- landuse |>
+  bind_rows(temp.df) |>
+  mutate(source = 'Table 1') |>
+  rename('Site' = "Site †")
+
+#### soil carbon ####
+
+soilObs <- read_csv(table2.file,
+                    skip = 1, 
+                    col_types = cols(.default = col_character())) |>
+  mutate(`Depth (cm)` = ifelse(`Depth (cm)` == 'Total', '0-55', `Depth (cm)`)) |>
+  pivot_longer(-`Depth (cm)`,
+               names_to = 'column_name',
+               values_to = 'value') |>
+  separate_wider_delim(cols = value, names = c('mean', 'standard deviation'),
+                       delim = '+-', too_few='align_start') |>
+  mutate(note = ifelse(str_detect(column_name, '†'), 
+                       str_extract(captions$table2, '†.*\\.(?= ‡)'),
+                       ifelse(str_detect(column_name, '‡'), 
+                              str_extract(captions$table2, '‡.*\\.$'),
+                              NA_character_))) |>
+  mutate(sample_size = case_when(str_detect(note, 'two sites') ~ '2',
+                                 str_detect(note, 'five sites') ~ '5',
+                                 .default = NA_character_),
+         of_variable = ifelse(str_detect(column_name, 'TC'),
+                              'total_carbon', NA_character_)) |>
+  pivot_longer(cols = c(mean, `standard deviation`, note, sample_size),
+               values_to = 'with_entry',
+               names_to = 'is_type',
+               values_drop_na = TRUE)
+
+layers.df <- soilObs |>
+  select(`Depth (cm)`, column_name) |>
+  unique() |>
+  separate_wider_delim(`Depth (cm)`, delim = '-', cols_remove = FALSE, names = c('upper_bound', 'lower_bound')) |>
+  pivot_longer(cols = c(upper_bound, lower_bound),
+               names_to = 'of_variable',
+               values_to = 'value') |>
+  mutate(unit = 'cm') |>
+  pivot_longer(cols = c(value, unit),
+               names_to = 'is_type',
+               values_to = 'with_entry')
+
+soilObs.methods <- soilObs |>
+  filter(of_variable == 'total_carbon') |>
+  select("Depth (cm)",  "column_name", of_variable) |>
+  mutate(is_type = 'method',
+    with_entry = 'layer depth times organic carbon fraction times fine earth bulk density, no coarse fraction correction', 
+         source = paste('Methods, ln44:', methods.arr[44], collapse = '\n'))
+  
+soilObs <- soilObs |>
+  bind_rows(layers.df) |>
+  mutate(source = 'Table 2') |>
+  bind_rows(soilObs.methods)
+
+pivotBind <- landuse |>
+  bind_rows(soilObs) |>
+  bind_rows(location) |>
+  mutate(study_id = 'Bashkin1998')
+
+```
+
+## Hawaii SOC DB
+
+```{r}
+# soil type, geolocation with obs time and precision
+# 
+temp <- pivotBind |>
+  filter(of_variable %in% c('minerology', 'parent material',
+                            'soil classification',
+                            'latitude', 'longitude', 
+                            'geopercision', 'observation year',
+                            'citation')) |>
+  select(where(function(xx){all(!is.na(xx))})) 
+
+sources <- temp |>
+  select(source, is_type, of_variable) |>
+  unique()
+
+wideTable <- temp |>
+  select(-source)|>
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::')
+# 
+# average land use history
+temp <- pivotBind |>
+  filter(of_variable %in% c('elevation', 
+                            'sugar cane cultivation', 'sugar cane yield',
+                            'Eucalyptus plantation', 
+                            'management_history', 'Eucalyptus_established')) |>
+  
+  select(-c(source, column_name))|>
+  pivot_wider(names_from = c(of_variable, is_type),
+              values_from = with_entry,
+              names_sep = '::', values_fn = unique) |>
+  select("Eucalyptus planting::value" = 'Eucalyptus plantation::start',
+         "sugar cane cultivation::start", "sugar cane cultivation::end") |>
+  mutate(across(everything(), as.numeric)) |>
+  mutate(duration_Euculyptus =
+           as.numeric(wideTable$`observation year::value`) - `Eucalyptus planting::value`,
+         duration_sugarCane = `sugar cane cultivation::end` - `sugar cane cultivation::start`) |>
+  reframe(`Euculyptus_duration::min` = min(duration_Euculyptus, na.rm = TRUE),
+          `Euculyptus_duration::med` = median(duration_Euculyptus, na.rm = TRUE),
+          `Euculyptus_duration::max` = max(duration_Euculyptus, na.rm = TRUE),
+          `Cane_duration::min` = min(duration_sugarCane, na.rm=TRUE),
+          `Cane_duration::med` = median(duration_sugarCane, na.rm=TRUE),
+          `Cane_duration::max` = max(duration_sugarCane, na.rm=TRUE))
+
+
+
+# composition sample values sampling strategy
+```
+
