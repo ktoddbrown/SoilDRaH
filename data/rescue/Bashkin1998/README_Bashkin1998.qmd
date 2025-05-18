@@ -40,6 +40,7 @@ author:
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(bibtex) #read in the bib file to dataframe
 
 methods.file <- 'Bashkin1998_Method.md'
 table1.file <- 'Bashkin1998_Table1.csv'
@@ -183,74 +184,115 @@ Below are the citation notes from the methods section.
   + SAS. 1987. SAS guide, volume 4. Sixth edition. Cary, North Carolina, USA.
   + manual entry as manual
 
-# Level 0 to 1: data reads
+# Level 0: raw data reads
 
-```{r}
-lvl0_read <- list(citation = list(primary = '', methods = ''),
+The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = pirmaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
                   method = read_lines(file = methods.file),
-                  data = list(table1 = '', table2 = ''))
-
-table1Caption <- read_csv(file = table1.file,
-                  col_types = cols(.default = col_character()),
-                  n_max = 1, col_names = FALSE)$X1[1]
-
-# data table 1
-
-temp <- read_csv(file = table1.file,
-                 col_types = cols(.default = col_character()),
-                 skip = 1) |>
-# split up cane yield to upper and lower bound
-    separate_wider_delim(cols = `Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)`,
-                        
-                         delim = '-',
-                         names = c("Minimum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)",
-                                   "Maximum Cane yield (Mg ha<sup>-1</sup> yr<sup>-1</sup>)"))
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ), 
+                              Table3 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
 ```
 
-# Data annotations
+# Level 1: cleaned data
+
+Create the data from the methods and tables here using fundamental processing and recast the data model.
+This will eventually go into the read function.
+Since there is no machine readable data download, all of this will be treated as an 'annotation' (Still struggling with this decision. -KTB).
+
+```{r compileStudyData}
+#### Study information including sample design and observation methods
+#### Pull out the information from the methods and citation manually with reference
+study.df <- meta.df <- tribble(
+  ## put in the variable, value, unit, method, and reference source
+  ~of_variable, ~value, ~source,
+  ## Document the primary citation for the dataset
+  'citation', format(data.lvl0.df$citation$primary), 'journal provided bibtex') |>
+  ##Pull methods of observation and sample design
+  bind_rows(tribble(~of_variable, ~method, ~source,
+                    ##Say something about the sample design if you can
+                    'sample_design', 'paired transect', paste('Methods, ln24-25:', paste( data.lvl0.df$method[24:25], collapse = '\n')),
+                    ##What was the core device since it's there
+                    'core_description', 'cylinder 6cm x 1m', paste('Methods, ln26:', paste( data.lvl0.df$method[26], collapse = '\n')),
+                    ##How were the samples prep-ed
+                    'sample prep', 'oven dried at 70 C, sieved <2mm', paste('Methods, ln27,29:', paste( data.lvl0.df$method[c(27, 29)], collapse = '\n')),
+                    ##How was the bulk desnity calculated
+                    'bulk_density', 'fine earth mass divided by corer volume calculated, n=3', paste('Methods, ln29-31:', paste(data.lvl0.df$method[29:31], collapse = '\n')),
+                    ##Organic fraction methods
+                    'organic_fraction', 'composit sample n=3, acidified soil, CHZ analyizer by dry combustion', paste('Methods, ln35-43:', paste(data.lvl0.df$method[35:43], collapse = '\n')))
+  )
+
+```
 
 ```{r}
-methods.arr <- readLines(methods.file)
+kable(study.df) |>
+  kable_paper()
+```
 
-#### location, obs year, soil type, and citation ####
-location <- tribble(~of_variable, ~value, ~unit, ~method, ~source,
-        'latitude', '19.5', 'degree N', 'unknown', paste('Methods, ln5:', methods.arr[5]),
-        'longitude', '155.25', 'degree W', 'unknown', paste('Methods, ln5:', methods.arr[5]),
-        'geopercision', '17', 'km', NA, paste('Methods, ln20:', methods.arr[20]),
-#obs year
-                'observation year', '1995', 'CE', 'In the discussion section @Bashkin1998 talks about expected TC changes over the 10-13 years of the study not being meet and since the sites were planted in 1982-1985, we assume samples were taken in 1995.', '@Bashkin1998',
-        'citation', read_file('Bashkin1998.bib'), NA, NA, 'journal provided bibtex',
-        'soil classification', 'isothermic Typic Hydrudands of the Akaka and Kaiwiki series', NA, 'USDA', paste('Methods, ln8:', methods.arr[8]),
-        'minerology', 'amorphous noncrystalline hydrous alumina and iron oxides', NA, NA, paste('Methods, ln9:', methods.arr[9]),
-    'parent material', 'volcanic ash', NA, NA, paste('Methods, ln9:', methods.arr[9])
-) |>
-  bind_rows(tribble(~of_variable, ~method, ~source,
-                    'sample_design', 'paired transect', paste('Methods, ln24-25:', methods.arr[24:25], collapse = '\n'),
-                    'core_description', 'cylinder 6cm x 1m', paste('Methods, ln26:', methods.arr[26], collapse = '\n'),
-                    'sample prep', 'oven dried at 70 C, sieved <2mm', paste('Methods, ln27,29:', methods.arr[c(27, 29)], collapse = '\n'),
-                    'bulk_density', 'fine earth mass divided by corer volume calculated, n=3', paste('Methods, ln29-31:', methods.arr[29:31], collapse = '\n'),
-                    'organic_fraction', 'composit sample n=3, acidified soil, CHZ analyizer by dry combustion', paste('Methods, ln35-43:', methods.arr[35:43], collapse = '\n'))
-  ) |>
-  pivot_longer(cols = c(value, unit, method),
-               values_to = 'with_entry', names_to = 'is_type',
-               values_drop_na = TRUE)
+```{r compileSiteData}
+#### location, obs year, soil type
+#### Pull out the information from the methods and citation manually with reference
+site.df <- tribble(
+  ## put in the variable, value, unit, method, and reference source
+  ~of_variable, ~value, ~unit, ~method, ~source,
+  ##Lat and long location was in the methods section
+  'latitude', '19.5', 'degree N', 'unknown', paste('Methods, ln5:', data.lvl0.df$method[5]),
+  'longitude', '155.25', 'degree W', 'unknown', paste('Methods, ln5:', data.lvl0.df$method[5]),
+  ## There was an implied geopercision
+  'geopercision', '17', 'km', NA, paste('Methods, ln20:', data.lvl0.df$method[20]),
+  ## Observation year inferred from a comment in the discussion
+  'observation year', '1995', 'CE', 'In the discussion section @Bashkin1998 talks about expected total carbon changes over the 10-13 years of the study not being meet and since the sites were planted in 1982-1985, we assume samples were taken in 1995.', '@Bashkin1998',
+  ## Pull in the site descriptions
+  'soil classification', 'isothermic Typic Hydrudands of the Akaka and Kaiwiki series', NA, 'USDA', paste('Methods, ln8:', data.lvl0.df$method[8]),
+  'minerology', 'amorphous noncrystalline hydrous alumina and iron oxides', NA, NA, paste('Methods, ln9:', data.lvl0.df$method[9]),
+  'parent material', 'volcanic ash', NA, NA, paste('Methods, ln9:', data.lvl0.df$method[9])
+) 
 
-captions <- list(table1 = unname(read_csv(table1.file, show_col_types = FALSE,
-                                          n_max = 1, col_names = FALSE)$X1),
-                 table2 = unname(read_csv(table2.file, show_col_types = FALSE,
-                                          n_max = 1, col_names = FALSE)$X1))
+```
+
+```{r}
+kable(site.df) |>
+  kable_paper()
+```
+
+```{r}
 
 #### Landuse ####
-landuse <- read_csv(table1.file,
-                    skip = 1, 
-                    col_types = cols(.default = col_character()),
-                    na = '-') |>
-  mutate(management_history = str_extract(captions$table1, '†.*(?=\\r\\n)'),
+#### Process the landuse documented in Table 1
+landuse <- data.lvl0.df$data$Table1$primary |>
+  mutate(management_history = str_extract(data.lvl0.df$data$Table1$caption, '†.*(?=\\r\\n)'),
          paired_wildland = ifelse(str_detect(`Site †`, '‡'),
-                              str_extract(captions$table1, '‡.*(?=\\r\\n)'),
-                              NA_character_),
+                                  str_extract(data.lvl0.df$data$Table1$caption, '‡.*(?=\\r\\n)'),
+                                  NA_character_),
          Eucalyptus_established = ifelse(str_detect(`Site †`, '§'),
-                              str_extract(captions$table1, '§.*$'),
+                              str_extract(data.lvl0.df$data$Table1$caption, '§.*$'),
                               NA_character_)) |>
     #only keep the year and drop the § symbol which is captured in the line above
     mutate(`*Eucalyptus* planted` = str_extract(`*Eucalyptus* planted`, '\\d{4}')) |>
@@ -272,6 +314,7 @@ landuse <- read_csv(table1.file,
                              column_name %in% c('management_history', 'paired_wildland', 'Eucalyptus_established') ~ 'note',
                              .default = 'value')) 
 
+##Assign the units
 temp.df <- landuse |>
   select(`Site †`, column_name, of_variable) |>
   unique() |>
@@ -282,16 +325,16 @@ temp.df <- landuse |>
     'year CE', with_entry)) |>
   filter(!is.na(with_entry))
 
+##Put everything together
 landuse <- landuse |>
   bind_rows(temp.df) |>
+  rename('Site' = "Site †") |>
   mutate(source = 'Table 1') |>
-  rename('Site' = "Site †")
+  arrange(Site)
 
 #### soil carbon ####
-
-soilObs <- read_csv(table2.file,
-                    skip = 1, 
-                    col_types = cols(.default = col_character())) |>
+#### Process the soil observations in Table 3
+soilObs <- data.lvl0.df$data$Table3$primary |>
   mutate(`Depth (cm)` = ifelse(`Depth (cm)` == 'Total', '0-55', `Depth (cm)`)) |>
   pivot_longer(-`Depth (cm)`,
                names_to = 'column_name',
@@ -299,15 +342,24 @@ soilObs <- read_csv(table2.file,
   separate_wider_delim(cols = value, names = c('mean', 'standard deviation'),
                        delim = '+-', too_few='align_start') |>
   mutate(note = ifelse(str_detect(column_name, '†'), 
-                       str_extract(captions$table2, '†.*\\.(?= ‡)'),
+                       str_extract(data.lvl0.df$data$Table3$caption, '†.*\\.(?= ‡)'),
                        ifelse(str_detect(column_name, '‡'), 
-                              str_extract(captions$table2, '‡.*\\.$'),
+                              str_extract(data.lvl0.df$data$Table3$caption, '‡.*\\.$'),
                               NA_character_))) |>
   mutate(sample_size = case_when(str_detect(note, 'two sites') ~ '2',
                                  str_detect(note, 'five sites') ~ '5',
                                  .default = NA_character_),
+         ##Pull out the total carbon from the column_name
          of_variable = ifelse(str_detect(column_name, 'TC'),
-                              'total_carbon', NA_character_)) |>
+                              'total_carbon', NA_character_),
+         ##Pull out the land use id from the column_name
+         landuse_id = case_when(
+           str_detect(column_name, 'Wildland forest') ~ 'Wildland forest',
+           str_detect(column_name, '\\*Eucalyptus\\* \\- cane') ~ NA_character_,
+           str_detect(column_name, 'Cane') ~ 'Sugar cane',
+           str_detect(column_name, 'Eucalyptus') ~ 'Eucalyptus',
+           .default = NA_character_)
+         ) |>
   pivot_longer(cols = c(mean, `standard deviation`, note, sample_size),
                values_to = 'with_entry',
                names_to = 'is_type',
@@ -325,21 +377,32 @@ layers.df <- soilObs |>
                names_to = 'is_type',
                values_to = 'with_entry')
 
-soilObs.methods <- soilObs |>
-  filter(of_variable == 'total_carbon') |>
-  select("Depth (cm)",  "column_name", of_variable) |>
-  mutate(is_type = 'method',
-    with_entry = 'layer depth times organic carbon fraction times fine earth bulk density, no coarse fraction correction', 
-         source = paste('Methods, ln44:', methods.arr[44], collapse = '\n'))
+total_carbon.meta <- tibble(of_variable = 'total_carbon',
+         is_type = c('method', 'unit'),
+    with_entry = c('layer depth times organic carbon fraction times fine earth bulk density, no coarse fraction correction', 'Mg/ha'),
+         source = c(paste('Methods, ln44:', data.lvl0.df$method[44], collapse = '\n'),
+                    paste('Table 3, caption:', data.lvl0.df$data$Table3$caption))) |>
+  full_join(soilObs |>
+              filter(of_variable == 'total_carbon') |>
+              select(`Depth (cm)`, landuse_id, of_variable) |>
+              unique(),
+            by = join_by(of_variable))
   
 soilObs <- soilObs |>
   bind_rows(layers.df) |>
   mutate(source = 'Table 2') |>
-  bind_rows(soilObs.methods)
+  bind_rows(total_carbon.meta)
+
+meta.df <- study.df |>
+  bind_rows(site.df) |>
+  ##Turn this into a long data frame
+  pivot_longer(cols = c(value, unit, method),
+               values_to = 'with_entry', names_to = 'is_type',
+               values_drop_na = TRUE)
 
 pivotBind <- landuse |>
   bind_rows(soilObs) |>
-  bind_rows(location) |>
+  bind_rows(meta.df) |>
   mutate(study_id = 'Bashkin1998')
 
 ```
@@ -361,38 +424,74 @@ sources <- temp |>
   select(source, is_type, of_variable) |>
   unique()
 
+#metadata
+meta.df <- pivotBind |>
+  filter(of_variable %in% c('bulk_density', 'organic_fraction',
+                            'sample_design', 'core_description', 'sample prep')) |>
+  select(study_id,
+         of_variable, with_entry, is_type) |>
+  mutate(of_variable = paste(of_variable, is_type, sep = '::')) |>
+  select(-is_type) |>
+  pivot_wider(names_from = of_variable, values_from = with_entry)
+
 wideTable <- temp |>
   select(-source)|>
+  arrange(of_variable, is_type) |>
   pivot_wider(names_from = c(of_variable, is_type),
               values_from = with_entry,
               names_sep = '::')
 # 
-# average land use history
-temp <- pivotBind |>
+# site history
+site_history <- pivotBind |>
   filter(of_variable %in% c('elevation', 
                             'sugar cane cultivation', 'sugar cane yield',
                             'Eucalyptus plantation', 
                             'management_history', 'Eucalyptus_established')) |>
-  
-  select(-c(source, column_name))|>
-  pivot_wider(names_from = c(of_variable, is_type),
-              values_from = with_entry,
-              names_sep = '::', values_fn = unique) |>
-  select("Eucalyptus planting::value" = 'Eucalyptus plantation::start',
-         "sugar cane cultivation::start", "sugar cane cultivation::end") |>
-  mutate(across(everything(), as.numeric)) |>
-  mutate(duration_Euculyptus =
-           as.numeric(wideTable$`observation year::value`) - `Eucalyptus planting::value`,
-         duration_sugarCane = `sugar cane cultivation::end` - `sugar cane cultivation::start`) |>
-  reframe(`Euculyptus_duration::min` = min(duration_Euculyptus, na.rm = TRUE),
-          `Euculyptus_duration::med` = median(duration_Euculyptus, na.rm = TRUE),
-          `Euculyptus_duration::max` = max(duration_Euculyptus, na.rm = TRUE),
-          `Cane_duration::min` = min(duration_sugarCane, na.rm=TRUE),
-          `Cane_duration::med` = median(duration_sugarCane, na.rm=TRUE),
-          `Cane_duration::max` = max(duration_sugarCane, na.rm=TRUE))
+  mutate(with_entry = if_else(with_entry == '-', NA_character_, with_entry)) |>
+  filter(!is.na(with_entry)) |>
+  select(-c(source, column_name)) |>
+   pivot_wider(names_from = c(of_variable, is_type),
+               values_from = with_entry,
+               names_sep = '::', values_fn = unique) |>
+  # select("Eucalyptus planting::value" = 'Eucalyptus plantation::start',
+  #        "sugar cane cultivation::start", "sugar cane cultivation::end") |>
+  mutate(across(all_of(c('Eucalyptus plantation::start', 
+                         "sugar cane cultivation::start",
+                         "sugar cane cultivation::end")), as.numeric)) |>
+  mutate(`Eucalyptus plantation::duration` =
+           as.numeric(wideTable$`observation year::value`) - `Eucalyptus plantation::start`,
+         `Eucalyptus plantation::prior_Cane_duration` = `sugar cane cultivation::end` - `sugar cane cultivation::start`,
+         `sugar cane cultivation::duration` = as.numeric(wideTable$`observation year::value`) - `sugar cane cultivation::start`)
 
+landUse <- tribble(~landuse_id, ~of_variable, ~is_type, ~with_entry,
+                   "Eucalyptus", 'planting_duration', 'median', median(temp$`Eucalyptus plantation::duration`),
+                   "Eucalyptus", 'planting_duration', 'minimum', min(temp$`Eucalyptus plantation::duration`),
+                   "Eucalyptus", 'planting_duration', 'maximum', max(temp$`Eucalyptus plantation::duration`),
+                   "Sugar cane", 'planting_duration', 'median', median(temp$`sugar cane cultivation::duration`, na.rm=TRUE),
+                   "Sugar cane", 'planting_duration', 'minimum', min(temp$`sugar cane cultivation::duration`, na.rm=TRUE),
+                   "Sugar cane", 'planting_duration', 'maximum', max(temp$`sugar cane cultivation::duration`, na.rm=TRUE),
+                   "Eucalyptus", 'prior_planting_duration', 'median', median(temp$`Eucalyptus plantation::prior_Cane_duration`, na.rm=TRUE),
+                   "Eucalyptus", 'prior_planting_duration', 'minimum', min(temp$`Eucalyptus plantation::prior_Cane_duration`, na.rm=TRUE),
+                   "Eucalyptus", 'prior_planting_duration', 'maximum', max(temp$`Eucalyptus plantation::prior_Cane_duration`, na.rm=TRUE)) |>
+  mutate(with_entry = as.character(with_entry)) |>
+  bind_rows(tribble(~landuse_id, ~of_variable, ~is_type, ~with_entry,
+    "Eucalyptus", 'planting_duration', 'unit', 'year',
+    "Eucalyptus", 'prior_planting_duration', 'unit', 'year',
+    "Eucalyptus", 'prior_planting_duration', 'type', 'Sugar cane',
+    "Eucalyptus", 'prior_planting_duration', 'note', 'One site was wildland prior and is not included here',
+    "Eucalyptus", 'planting', 'note', unique(site_history$`management_history::note`),
+    "Sugar cane", 'planting_duration', 'unit', 'year'))
 
 
 # composition sample values sampling strategy
+SOC.df <- pivotBind |>
+  filter(of_variable %in% c('total_carbon', 'upper_bound', 'lower_bound',
+                            'bulk_density', 'organic_fraction'),
+         !is.na(landuse_id)) |>
+  select(study_id, landuse_id, layer_id = `Depth (cm)`,
+         of_variable, with_entry, is_type) |>
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
+
 ```
 
