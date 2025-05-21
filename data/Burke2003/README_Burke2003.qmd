@@ -1,0 +1,179 @@
+---
+title: "Data Rescue: Burke 2003"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Burke2003_Methods_KTB.bib
+  - Burke2003.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Mirah
+      family: Blanchard
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/Misheph
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/80.
+
+> Burke, R.A., Molina, M., Cox, J.E., Osher, L.J. and Piccolo, M.C. (2003), Stable Carbon Isotope Ratio and Composition of Microbial Fatty Acids in Tropical Soils. J. Environ. Qual., 32: 198-206. https://doi.org/10.2134/jeq2003.1980
+
+# Data Summary
+
+@Burke2003 investigates the effects of soil type and land use on soil microbial community structure and orgnaic carbon stocks.
+This is done by analyzing soil phospholipid fatty acid profiles (PLFA) and stable carbon isotope ratios as indicators of microbial activity.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location:  No latitude and longitude coordinates are listed, but regional descriptions are given in methods section. 
+- Soil carbon stock: Soil organic carbon percentage is in Table 1. Bulk density and stock values do not appear to be persent
+- Soil type: Classification is given in the methods section (Typic Distrandepts).
+- Land use: Land use history for site given in methods.
+
+# Tables and figures
+
+- Table 
+  1) delta 13C, organic C, PLFA, soil depth
+  2) PCA of top three components by region and management
+
+- Figure 
+  1) PCA plot of PLFA data
+  2) PLFA 13C by time since conversion
+  3) 13C PLFA vs 13C SOM
+  4) 13C PLFA by site
+  
+  
+### Table 1
+
+Table 1 was modified by moving the sub-tables to columns, lifting the units into the header, and down filling empty rows. 
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Burke2003_Table1_KTB.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Burke2003_Methods_KTB.md >}}
+
+# Transcription comparison
+
+```{gitbash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Burke2003_Methods_KTB.md Burke2003_Methods_MB.md
+```
+
+# Files
+
+These files are in the Burke2003 data rescue.
+
+- [Readme](README_Burke2003.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Burke2003.bib](Burke2003.bib)
+  + citation for article transcribed
+- [Burke2003_Methods.bib](Burke2003_Methods.bib)
+  + citations for the methods section of the article
+- [Burke2003_Methods.md](Burke2003_Methods.md)
+  + methods transcribed from primary article
+- [Burke2003_Table1.csv](Burke2003_Table1.csv)
+  + table 1 from primary article with organic carbon fraction.
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [ ] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [ ] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Dean and Dixon, 1951
+    + citation from table 1 caption
+    + direct export
+- [x] Osher 1997
+  + Osher, L J 1997 Sequestration and turnover of soil carbon: The roles of minerology and land use change. PhD diss. University of California Berkley
+- [x] Townsend et al., 1995
+  + Townsend, AR, PM Vitousek, and SE Trumbore. 1995. Soil organic matter dyanmics along gradients in temperature an dland use on the island of Hawaii. Ecology 76:721-733
+  + direct export
+- [x] Bashkin and Binkley, 1998
+  + Bashkin, MA, and D Binkley 1998. Changes in soil carbon following afforestration in hawaii. Ecology 79:828-833
+- [x] Vitorello et al., 1989
+  + Vitorello, VA, CC Cerri, F Andreaudx, C. Feller, and RL Victoria 1989. Organic matter and natural carbon-13 districution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773-778.
+- [x] Rhoades et al., 2000
+  + Rhoades. CC, GE Eckert, and DC Coleman. 2000. Soil carbon differences among forest, agriculture, and secondry vegitation in lower montane Ecuador. Ecol. Appl. 10:497-505
+- [x] Bligh and Dyer, 1959
+  + Bligh, E.G. A rapid method of total lipid extraction and purification. J. Biochem. Physiol. 1959 37 911–917
+- [x] Zelles (1999)
+  + Zelles, L. Fatty acid patterns of phospholipids and lipopolysaccharides in the characterisation of microbial communities in soil: A review. Biol. Fertil. Soils 1999 29 111–129. https://doi.org/10.1007/s003740050533
+- [x] Zelles and Bai, 1993
+  + Zelles, L. Fractionation of fatty acids derived from soil lipids by solid phase extraction and their quantitative analysis by GC–MS. Soil Biol. Biochem. 1993 25 495–507. https://doi.org/10.1016/0038-0717(93)90075-M
+- [x] White et al., 1979
+  + White, D.C. Determination of sedimentary microbial biomass by extractible lipid phosphate. Oecologia 1979 40 51–62. https://doi.org/10.1007/BF00388810
+- [x] Grogan and Cronan, 1997
+  + Grogan, D. Cyclopropane ring formation in membrane lipids of bacteria. Microbiol. Mol. Biol. Rev. 1997 61 429–441.
+- [x] Nichols et al., 1986
+  + Nichols, P.D. Determination of monounsaturated fatty acids double bond position and geometry for microbial monocultures and complex consortia by capillary GC–MS of their dimethyl disulfide adducts. J. Microbiol. Methods 1986 5 49–55. https://doi.org/10.1016/0167-7012(86)90023-0
+- [x] Number Cruncher Statistical Systems, 2000
+  + Number Cruncher Statistical Systems. 2000. NCSS 2000. NCSS, Kaysville, UT.
+- [x] O'Malley et al., 1997
+  + O'Malley, V.P. Using GC–MS/Combustion/IRMS to determine the 13C/12C ratios of individual hydrocarbons produced from the combustion of biomass materials—Application to biomass burning. Org. Geochem. 1997 27 567–581. https://doi.org/10.1016/S0146-6380(97)00087-9
+- [x] Abraham et al. (1998)
+  + Abraham, W.-R. Ratios of carbon isotopes in microbial lipids as an indicator of substrate usage. Appl. Environ. Microbiol. 1998 64 4202–4209.
+- [x] Rieley, 1994
+  + Rieley, G. Derivatization of organic compounds prior to gas chromatographic–combustion–isotope ratio mass spectrometric analysis: Identification of isotope fractionation processes. Analyst 1994 119 915–919. https://doi.org/10.1039/an9941900915
+
+
+
+
