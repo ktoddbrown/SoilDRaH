@@ -122,7 +122,11 @@ readNCSS <- function(dataDir,
         dplyr::across(
           tidyselect::everything(), as.character))
     
+     ident_columns <- reducedAnnotations |>
+                              dplyr::filter(is_type  == 'identifier') |>
+                              dplyr::select(table_id, column_id, of_variable)
     
+     
     regional_area <- orginalTables$lab_combine_nasis_ncss
     
     ans.df <- plyr::ldply(
@@ -131,7 +135,8 @@ readNCSS <- function(dataDir,
                           function(tableName.str){
                             temp_key <- reducedAnnotations |>
                               dplyr::filter(table_id == tableName.str,
-                                            with_entry == '--') |>
+                                            with_entry == '--',
+                                            !is.na(of_variable)) |>
                               dplyr::select(-with_entry) |>
                               dplyr::select(table_id, column_id, of_variable, is_type)
                             
