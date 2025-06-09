@@ -1,0 +1,220 @@
+---
+title: "Data Rescue: Elmore 2006"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Elmore2006_Methods.bib
+  - Elmore2006.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex) #read in the bib file to dataframe
+
+methods.file <- 'Elmore2006_Methods.md'
+table1.file <- 'Elmore2006_Table1.csv'
+primaryCitation.file <- 'Elmore2006.bib'
+methodsCitation.file <- 'Elmore2006_Methods.bib'
+```
+
+This documents the data transcription for @Elmore2006.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/93.
+
+> ELMORE, A.J. and ASNER, G.P. (2006), Effects of grazing intensity on soil carbon stocks following deforestation of a Hawaiian dry tropical forest. Global Change Biology, 12: 1761-1772. https://doi.org/10.1111/j.1365-2486.2006.01198.x
+
+# Data Summary
+
+This study investigates the impact of livestock grazing on soil carbon (C) levels following the clearing of dry tropical forests in Hawaii.
+The findings show that long-term grazing reduces soil organic carbon, with the extent of these changes increasing at higher elevations.
+
+## Fit for purpose: HiCSC
+
+This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
+
+- Location:  Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, in-depth description found in the materials and methods section, subsection Site description.
+- Soil carbon stock: The depth of the soil and SOC cores were taken, and total SOC was determined using a pool modeling model.
+- Soil type: Volcanic ash (about ~200 to 3500-year-old basaltic lava flows), with forest converted to pasture lands
+- Land use:  Land use of the soil was primary pasture, converted from dry tropical forest 100 years prior. In-depth land use is in the methods and materials section, subsection Site description.
+
+# Tables and figures
+
+- Table 
+  1) The fraction of SOC derived from forest sources increased with elevation (R=0.62; P<0.001), but total soil C stocks and pasture-derived SOC were not significantly influenced by elevation.
+  2) Soil measurements made from forest soils at two elevations
+  3) Model results using data from both transects
+
+- Figure 
+  1) A portion of Pu'u Wa'awa'a Ranch on the island of Hawai'i, showing the location of field transects.
+  2) Mean changes in vegetation and soil properties along transects of grazing intensity (constant elevation and precipitation): (a) remotely sensed fractional cover of photosynthetic and nonphotosynthetic vegetation cover and base substrate; (b) soil organic C (SOC); (c) SOC derived from forest soils; (d) SOC derived from pasture grasses.
+  3)  Mean changes in species cover along transects of grazing intensity.
+  4) The relationship between remotely sensed nonphotosynthetic vegetation fraction and Pennisetum Setaceum cover.
+  5)  Mean changes in plant and soil properties along elevation transects: (a) remotely sensed fractional cover of photosynthetic and nonphotosynthetic vegetation cover and base substrate; (b) soil organic C (SOC); (c) SOC derived from forest soils; (d) SOC derived from pasture grasses.
+  6) The relationship between total soil organic carbon (SOC) from soil cores to 10cm depth and nonphotosynthetic vegetation from imaging spectroscopy.
+  
+### Table 1
+
+Table 1 was not modified during the transcription process. 
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Elmore2006_Table1.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Elmore2006_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+
+diff --strip-trailing-cr Elmore2006_Methods.md Elmore2006_Methods_KTB.Rmd
+diff --strip-trailing-cr Elmore2006_Table1.csv Elmore2006_Table1_KTB.csv
+
+```
+
+# Files
+
+These files are in the @Elmore2006 data rescue.
+
+- [Readme](README_Elmore2006.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Elmore2006.bib](Elmore2006.bib)
+  + citation for article transcribed
+- [Elmore2006_Methods.bib](Elmore2006_Methods.bib)
+  + citations for the methods section of the article
+- [Elmore2006_Methods.Rmd](Elmore2006_Methods.Rmd)
+  + methods transcribed from primary article
+- [Elmore2006_Table1.csv](Elmore2006_Table1.csv)
+  + table N from primary article with  Soil data collected along gradients in grazing intensity (G) and elevation (E).
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [ ] add contribution yaml
+- [x] create csv with Table 1
+  + in this case it was easier to copy-paste directly to csv and replace the ' ' with ','
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Wolfe EW, Morris J (1996) Geologic map of the island of Hawaii. US Geological Survey. Map I-2524-A. US Department of the Interior.
+  + direct export
+- [x] MacCaughey V (1917) Vegetation of Hawaiian lava flows. Botanical Gazette, 64, 386–420.
+  + direct export
+- [x] Eggler WA (1971) Quantitative studies of vegetation on sixteen young lava flows on the island of Hawaii. Tropical Ecology, 12, 66–100.
+  + direct export
+- [x] Blackmore M, Vitousek PM (2000) Cattle grazing, forest loss, and fuel loading in a dry forest ecosystem at Pu'u Wa'aWa'a ranch, Hawai'i. Biotropica, 32, 625–632.
+  + direct export
+- [x] State of Hawaii. (2003) Management plan for the Ahupua'a of Pu'u Wa'awa'a and the Makai Lands of Pu'u Anahulu. Department of Land and Natural Resources, Division of Forestry and Wildlife, Hilo, Hawaii.
+  + direct export
+- [x] Savory A (1992) Livestock and Desertification. BioScience, 42, 244–244.
+  + direct export
+- [x] Asner GP, Elmore AJ, Hughes FMR et al. (2005) Ecosystem Structure along Bioclimatic Gradients in Hawai'i from Imaging Spectroscopy. Remote Sensing of Environment, 96, 497–508.
+  + direct export
+- [x] Adams JB, Smith MO, Johnson PE (1986) Spectral mixture modeling: a new analysis of rock and soil types at the Viking Lander I Site. Journal of Geophysical Research, 91, 8098–8112.
+  + direct export
+- [x] Smith MO, Ustin SL, Adams JB et al. (1990) Vegetation in deserts: I. A regional measure of abundance from multispectral images. Remote Sensing Environment, 31, 1–26.
+  + direct export
+- [x] Elmore AJ, Mustard JF, Manning SJ et al. (2000) Quantifying vegetation change in semiarid environments: precision and accuracy of spectral mixture analysis and the Normalized Difference Vegetation Index. Remote Sensing of Environment, 73, 87–102.
+  + direct export
+- [x] Asner GP, Bateson CA, Privette JL et al. (1998) Estimating vegetation structural effects on carbon uptake using satellite data fusion and inverse modeling. Journal of Geophysical Research, 103, 28,839–28,853.
+  + direct export
+- [x] Asner GP, Heidebrecht KB (2002) Spectral unmixing of vegetation, soil and dry carbon cover in arid regions: comparing multispectral and hyperspectral observations. International Journal of Remote Sensing, 23, 3939–3958.
+  + direct export
+- [x] Canfield RH (1941) Application of the line interception method. In sampling range vegetation. Journal of Forestry, 39, 388–304.
+  + direct export
+- [x] Daniel JA, Potter K, Altom W et al. (2002) Long-term grazing density impacts on soil compaction. Transactions of the ASAE, 45, 1911–1915.
+  + direct export
+- [x] Veldkamp E (1994) Organic-Carbon Turnover in three tropical soils under pasture after deforestation. Soil Science Society of America Journal, 58, 175–180.
+  + direct export
+- [x] Murty D, Kirschbaum MUF, McMurtrie RE et al. (2002) Does conversion of forest to agricultural land change soil carbon and nitrogen? a review of the literature. Global Change Biology, 8, 105–123.
+  + direct export
+- [x] Neill C, Melillo JM, Steudler PA et al. (1997) Soil carbon and nitrogen stocks following forest clearing for pasture in the southwestern Brazilian Amazon. Ecological Applications, 7, 1216–1225.
+  + direct export
+- [x] Vitorello B, Cerri CC, Andreux F et al. (1989) Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Science Society of America Journal, 53, 773–778.
+  + direct export
+- [x] Townsend AR, Vitousek PM, Trumbore SE (1995) Soil organic-matter dynamics along gradients in temperature and land-use on the Island of Hawaii. Ecology, 76, 721–733.
+  + direct export
+  
+# Level 0: raw reads
+
+The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(
+  citation = 
+    list(primary = 
+           read.bib(file = primaryCitation.file), 
+         methods = 
+           read.bib(file = methodsCitation.file)
+    ), #end citation
+  method = read_lines(file = methods.file),
+  data = list(Table1 = 
+                list(caption = 
+                       read_csv(file = table1.file,
+                                col_types = cols(.default = col_character()),
+                                n_max = 1, col_names = FALSE)$X1[1],
+                     primary = 
+                       read_csv(file = table1.file,
+                                col_types = cols(.default = col_character()),
+                                skip = 1,
+                                na = '-')
+                ) #end Table 1
+  ) #end data
+)
+```
+
