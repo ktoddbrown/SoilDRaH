@@ -9,7 +9,7 @@ Elevation ranged from 850 to 1100 m.
 Native plant communities are characteristic of dry montane forests throughout Hawai'i and are dominated by the tree *Metrosideros polymorpha* (ohia).
 Other scattered endemic tree species are *Acacia koa* (koa), and *Sophora chrysophylla* (mamane), and *Erythrina sandwicensis* (wiliwili tree) [@MacCaughey1917, @Eggler1971].
 
-Two C4 pasture grasses – *Pennisetum clandestinum* (kikuyu grass) and *P. setaceum* (fountain grass) – were introduced in approximately 1900, and have spread throughout the ranch in the past hundred years [@Blackmore2000, @StateofHawaii2003].
+Two C4 pasture grasses – *Pennisetum clandestinum* (kikuyu grass) and *P. setaceum* (fountain grass) – were introduced in approximately 1900, and have spread throughout the ranch in the past hundred years [@Blackmore2000, @DLNR2003].
 Dry montane woodlands are now restricted to several small patches around the ranch and to a wildlife preserve above ∼1200 m elevation.
 No stands of *M. polymorpha* or other tree species remain in the grazed paddocks used in this study, but some are scattered elsewhere within the ranch.
 Aerial photos from as recently as 1950 show forest stands existing in many grazed areas [@Blackmore2000], but our study area was already deforested in the 1950 air photos.
