@@ -174,14 +174,4 @@ These files are in the Crews1995 data rescue.
 - [ ] archive on SoilDRaH
 
 
-## Citation notes from Methods
-
-Below are the citation notes from the methods section.
-Some citations are missing, those are noted here and how best guess were generated.
-
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
-
-
 
