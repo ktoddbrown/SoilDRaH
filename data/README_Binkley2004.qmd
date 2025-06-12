@@ -1,0 +1,166 @@
+---
+title: "Data Rescue: Binkley 2004"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Binkley2004_Methods.bib
+  - Binkley2004.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Binkley2004_Methods.md'
+figure1.file <- 'Binkley2004_Figure1.csv'
+primaryCitation.file <- 'Binkley2004.bib'
+methodsCitation.file <- 'Binkley2004_Methods.bib'
+```
+
+This documents the data transcription for @Binkley2004 .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/76.
+
+> Binkley, D., Kaye, J., Barry, M. and Ryan, M.G. (2004), First-Rotation Changes in Soil Carbon and Nitrogen in a Eucalyptus Plantation in Hawaii. Soil Sci. Soc. Am. J., 68: 1713-1719. https://doi.org/10.2136/sssaj2004.1713
+
+
+# Data Summary
+
+@Binkley2004 looks at the changes in soil carbon and nitrogen throughout the full rotation of a Eucalyptus saligna plantation (throughout 8 years). This helped to assess the impact of the change in a natural forest and a plantation on the carbon stock of the soil.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Given in site description however it's unclear if the lat/long is Hilo or study site.
+- Soil carbon stock: Soil carbon fraction and bulk density were measured. Sample declared rock free so no course fraction corrected applied.
+- Soil type: Soil type is identified in the methods
+- Land use: Detailed land use history provided
+
+# Tables and figures
+
+- Table - No tables
+
+- Figure 
+  1) Soil content of C, C derived from C4 plants, C derived from C3 plants and Nitrogen over 8 years
+  2) CO2 incubation data
+  3) Cumulative soil carbon loss
+  
+### Figure 1
+
+Figure 1 was captured using [PlotDigitizer](https://plotdigitizer.com/app) and then truncated to represent realistic precision.
+
+```{r figure1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Binkley2004_Figure1.csv'
+plot.df <- read_csv(file = filename,
+                   skip = 1) |>
+  rename(Layer = `type label`)
+caption <- read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+ggplot(data = plot.df) +
+  geom_line(aes(x=x, y=y, color = Layer)) +
+  geom_point(aes(x=x, y=y, color = Layer, shape = Layer)) +
+  facet_wrap(~`y label`, scales = 'free_y') +
+  labs(x='Year', y = '')
+```
+
+
+{{< include Binkley2004_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr Binkley2004_Methods_KTB.md Binkley2004_Methods_SRS.md
+```
+
+# Files
+
+These files are in the @Binkley2004 data rescue.
+
+- [Readme](README_Binkley2004.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Binkley2004.bib](Binkley2004.bib)
+  + citation for article transcribed
+- [Binkley2004_Methods.bib](Binkley2004_Methods.bib)
+  + citations for the methods section of the article
+- [Binkley2004_Methods.Rmd](Binkley2004_Methods.Rmd)
+  + methods transcribed from primary article
+- [Binkley2004_Figure1.csv](Binkley2004_Figure1.csv)
+  + Figure 1 shows the soil content of C, C derive from C$_4$ plants, C derived from C$_3$ and N. 
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml to top of this doc
+- [x] use [PlotDigitizer](https://plotdigitizer.com/app) to extract points from Figure 1
+- [x] export excel table to csv and reconstruct plot
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+- [x] 4 -Binkley, D. Rapid changes in soils following Eucalyptus afforestation in Hawaii. Soil Sci. Soc. Am. J.1999 63 222225https://doi.org/10.2136/sssaj1999.03615995006300010032xhttp://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=ag
+  + exact export
+- [x] 10 - Giardina, C.P. Total belowground carbon allocation in a fast growing Eucalyptus plantation estimated using a carbon balance approach. Ecosystems2002 5 487499https://doi.org/10.1007/s10021-002-0130-8
+  + exact export
+- [x] 1 - Barnard, H. A test of the hydraulic limitation hypothesis in fast-growing Eucalyptus saligna. Plant Cell Environ.2003 26 12351245https://doi.org/10.1046/j.1365-3040.2003.01046.x
+  + exact export
+- [x] 26 - Ryan, M.G., D. Binkley, J. Fownes, C. Giardina, and R. Senock. 2004. An experimental test of the causes of age-related decline in forest growth. Ecol. Monogr. (in press).
+  + exact export
+- [x] 11 - Goncalves, J.L.M., N.F. Barros, E.K.S. Nambiar, and R.F. Novais. 1997. Soil and stand management for short-rotation plantations. p. 379–417. In E.K.S. Nambiar and A. Brown (ed.) Management of soil, nutrients, and water in tropical plantation forests. ACIAR Monograph #43, Canberra.
+  + exact export
+- [x] 28 - Vitorello, V.A.Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J.1989 53 773778https://doi.org/10.2136/sssaj1989.03615995005300030024xhttp://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=a
+  + exact export
+- [x] 2 - Bashkin, M.Changes in soil carbon following afforestation in Hawaii. Ecology1998 79 828833https://doi.org/10.1890/0012-9658(1998)079[0828:CISCFA]2.0.CO;2http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=a
+  + exact export
+
+
+
