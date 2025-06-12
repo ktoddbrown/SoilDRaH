@@ -38,7 +38,7 @@ Calcium phosphates (presumably apatites) were removed with 1 mol/L HCl.
 Occluded P$_i$ was extracted with NaOH after sonication with hot concentrated HCl, and the final H$_2$SO$_4$/H$_2$O$_2$ digest.
 Protected and recalcitrant P$_o$ was extracted in the sonicated NaOH and hot concentrated HCl extracts.
 For thorough reviews of the P pools believed to be extracted with each step, as well as background references for the different fractions, see @Stewart1982, @Sharpley1987, @Tiessen1991, and @Tiessen1993.
-We realize that the chemical extractions and digests of this and other phosphorus fractionations represent approximations of theoretical pools, but they have proved useful in practice ([@Tiessen1984], [@Tiessen1992], [@LajthaandSchlesinger1988], [@Frossard1989], [@Schoenau1989]).
+We realize that the chemical extractions and digests of this and other phosphorus fractionations represent approximations of theoretical pools, but they have proved useful in practice ([@Tiessen1984], [@Tiessen1992], [@Lajtha1988a], [@Frossard1989], [@Schoenau1989]).
 
 We transformed the P fractionation data to units comparable with the @Walker1976 model (Fig. 1) by first multiplying P mass per fraction by the bulk density and depth of the corresponding horizon.
 Next we summed all horizons to 50 cm to estimate the P associated with a given fraction per profile.
@@ -64,7 +64,7 @@ We used the mean bulk density of each horizon in our calculations of P fractions
 Soil pH was determined in a 2:1 ratio of deionized H$_2$O : soil.
 The soil water was allowed to equilibrate for 1 h, and pH values were measured using an Orion Sure-flow combination pH probe.
 
-We used resin bags buried in the field [@Lajtha1988] to provide a relative measure of soil nutrient availability in these sites.
+We used resin bags buried in the field [@Lajtha1988b] to provide a relative measure of soil nutrient availability in these sites.
 Three grams of anion exchange resin (Biorad, AG 1-X8, 20-50 mesh, Cl$^-$ form) and cation exchange resin (Biorad, AG 50W-X8, 20-50 mesh, H$^+$ form) were weighed into separate 30-cm$^2$ bags of 86 mesh (≈190-µm openings) polyester.
 In the field an anion and a cation resin bag were tethered to a polyvinyl chloride (PVC) pipe with heavy-duty cotton-polyester button thread, and buried in a horizontal orientation at 4-7 cm depth.
 In burying the resin bags, care was taken to maintain the structure of the topsoil that overlaid the bags.
