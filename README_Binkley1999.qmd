@@ -1,0 +1,166 @@
+---
+title: "Data Rescue: Binkley 1999"
+format:
+  html:
+    toc: true
+date: 2025-06
+date-format: YYYY-MMMM
+bibliography:
+  - Binkley1999_Methods.bib
+  - Binkley1999.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Han
+      family: Nguyen
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/hannguyenuf
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Binkley1999_Methods.md'
+table1.file <- 'Binkley1999_Table1.csv'
+primaryCitation.file <- 'Binkley1999.bib'
+methodsCitation.file <- 'Binkley1999_Methods.bib'
+```
+
+This documents the data transcription for @Binkley1999 .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/76.
+
+> Binkley, D. and Resh, S.C. (1999), Rapid Changes in Soils Following Eucalyptus Afforestation in Hawaii. Soil Science Society of America Journal, 63: 222-225. https://doi.org/10.2136/sssaj1999.03615995006300010032x
+
+# Data Summary
+
+@Binkley1999 looks at soil carbon stocks under ~3 years of Eucalytus plantation from sugarcane. They use this data to conclude that there was no change in carbon stocks but there was a shift from sugarcane derived carbon to Eucalytus.
+
+This paper documents changes in Hawaiian soil after 32 months of development of a eucalyptus plantation.
+Soil C was found to not change significantly, suggesting that expectations of C accumulation due to afforestation may need to be reduced.
+Rapid changes in soil are examined here as: (1) Soil fertility may affect tree growth rate, and (2) Changes in soil C must be accounted for to predict root production following an efflux in CO2.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: The exact lat/lon is given in the methods section, although it is unclear if this is the location of downtown Hilo or the site. Years of observation is given in text.
+- Soil carbon stock: Carbon stock is given in Table 1 at 0 months and 32 months of plantation. Depth of sample included, bulk density determined but unclear where the data is.
+- Soil type: Soils of the Kaiwiki thixotropic, isothermic Typic Hydrandepts. Unclear if "Kaiwiki thixotropic" qualifies as soil type here, but the location might be precise enough to extract from soil maps
+- Land Use: Detailed soil history and classification provided in methods section. Land use largely characterized by eucalyptus afforestation.
+
+# Tables and figures
+
+- Table 
+  1) Soil Properties at Time of Planting and 32 Months after (C, N, pH, Ca, Mg, K+, Al)
+  2)  Nutrient Accumulation on Ion-Exchange Resin Bags (age, fertilization, nutrients)
+  
+- Figure
+  1) Loss of Soil C from Sugar Cane (C4) matched with gain of soil C derived from Eucalyptus (C3). bar plot of soil carbon source parition.
+
+### Table 1
+
+Table 1 was modified by filling in blanks with `NA` and down filling the Age column.
+There were two rows in the 'K' column that indicated control vs fertilizer, I split this into two separate columns.
+The CI for pH was not aggregated to 0-30 but reported for 0-15 and 15-30, I concatenated both values with a ';' separate into one entry.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Binkley1999_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr Binkley1999_Methods.md Binkley1999_Methods_HN.md
+```
+
+# Files
+
+These files are in the @Binkley1999 data rescue.
+
+- [Readme](README_Binkley1999.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Binkley1999.bib](Binkley1999.bib)
+  + citation for article transcribed
+- [Binkley1999_Methods.bib](Binkley1999_Methods.bib)
+  + citations for the methods section of the article
+- [Binkley1999_Methods.md](Binkley1999_Methods.md)
+  + methods transcribed from primary article
+- [Binkley1999_Table1.csv](Binkley1999_Table1.csv)
+  + table 1 from primary article with data about the soil properties at time of planting and 32 months after (C, N, pH, Ca, Mg, K+, Al)
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Binkley, D., K.A. Dunkin, D. Debell, and M.G. Ryan. 1992. Production and nutrient cycling in mixed plantations of *Eucalyptus* and *Albizia* in Hawaii. For. Sci. 38:393-408.
+  + copy from bib
+- [x] Vitorello, V.A., C.C. Cerri, F. Andreux, C. Feller, and R.L. Victoria. 1989. Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773-778
+  + copy from bib
+- [x] Bashkin, M., and D. Binkley. 1998. Changes in soil carbon following afforestation in Hawaii. Ecology 79:828-833.
+  + copy from bib
