@@ -1,0 +1,211 @@
+---
+title: "Data Rescue: Ares 2001"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Ares2001_Methods.bib
+  - Ares2001.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        -"Transcription"
+        -"Review"
+  - name:
+      given: Colby
+      family: Green
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/colbyGreen1520
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Ares2001_Methods.md'
+table1.file <- 'Ares2001_Table1.csv'
+table3.file <- 'Ares2001_Table3.csv'
+primaryCitation.file <- 'Ares2001.bib'
+methodsCitation.file <- 'Ares2001_Methods.bib'
+```
+
+This documents the data transcription for @Ares2001 .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/77 .
+
+> A. Ares and J. H. Fownes. Productivity, resource use, and competitive interactions of fraxinus uhdei in hawaii uplands. Canadian Journal of Forest Research, 31(1):132-142, [https://doi.org/10.1139/x00-156](https://doi.org/10.1139/x00-156). 2001 
+
+# Data Summary
+
+@Ares2001 primarily measures tree growth parameters (including litterfall) but also characterized elemental fractions of soil. They use this data to look at factors affecting a specific invasive tree growth in Hawaii including nitrogen and moisture gradients.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
+- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
+- Land use: Land use and history are clearly identified in methods.
+
+# Tables and figures
+
+- Table 
+  1) characterists of stands including oc percent
+  2) regression coefficents linking diameter at breast height to biomass and leaf area
+  3) climate
+  4) elevation vs productivity metrics
+  5) fertilizer treatement vs productivity over time
+  6) fertilizer vs leaf area index
+  7) gradient vs plant efficency metrics
+
+- Figure 
+  1) stand map overlayed on soil.
+  2) elevation vs productivity metrics
+  3) nitrogen correlations
+  4) light intercept vs nitrogen and water use effiency metrics
+  
+### Table 1: Stand characteristics
+
+Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3: Climate
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- table3.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Ares2001_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff Ares2001_Methods_CAG.md Ares2001_Methods.md
+```
+
+# Files
+
+These files are in the Ares2001 data rescue.
+
+- [Readme](README_Ares2001.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Ares2001.bib](Ares2001.bib)
+  + citation for article transcribed
+- [Ares2001_Methods.bib](Ares2001_Methods.bib)
+  + citations for the methods section of the article
+- [Ares2001_Methods.Rmd](Ares2001_Methods.Rmd)
+  + methods transcribed from primary article
+- [Ares2001_Table1.csv](Ares2001_Table1.csv)
+  + table 1 from primary article with site descriptions
+- [Ares2001_Table3.csv](Ares2001_Table3.csv)
+  + table 3 from primary article with climate variables
+
+
+# Working notes (KTB)
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1 and 3
+- [x] export excel table to csv
+- [x] copy over methods section into markdown 
+  - started, PDF doesn't copy but there is an html version which is incomplete and error ridden. Ended up with alot of retyping.
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Sato et al. 1973
+  + Sato, H.H., Ikeda, W., Paeth, R., Smythe, R., and Takehiro, M. 1973. Soil survey of the island of Hawaii, state of Hawaii. USDA Soil Conservation Service, University of Hawaii Agricultural Experiment Station, U.S. Government Printing Office, Washington D.C.
+  + manually entered 
+- [x] Harrington and Fownes (1993)
+  + Harrington, R.A., and Fownes, J.H. 1993. Allometry and growth of planted versus coppice stands of four fast-growing tropical tree species. For. Ecol. Manage. 56: 315-327.
+  + direct export
+- [x] Sprugel 1983
+  + Sprugel, D.G. 1983. Correcting for bias in log-transformed allometric equations. Ecology, 64: 209-210.
+  + direct export
+- [x] Avery 1975
+  + Avery, T.E. 1975. Natural resources measurements. McGraw-Hill Inc., New York.
+  + Manual add as a @book
+- [x] Welles and Norman 1991
+  + Welles, J.M., and Norman, J.M. 1991. Instrument for indirect measurement of canopy architecture. Agron. J. 83: 818-825.
+  + direct export
+- [x] Nelson and Sommers ~1972~ 1973
+  + Nelson, D.W., and Sommers, L.E. 1972. Determination of total nitrogen in plant material. Agron. J. 65: 109-112.
+  + correction to the year, 1973 instead
+- [x] Isaac and Johnson 1983
+  + Isaac, R.A., and Johnson, W.C. 1983. High speed analysis of agriculture samples using inductively coupled plasma-atomic emission spectroscopy. Spectrochim. Acta, 38B: 277-282.
+  + direct export
+- [x] Wolf 1974
+  + Wolf, B. 1974. Improvements in the azomethine-H-method for the determination of boron. Comm. Soil Sci. Plant Anal. 5: 39-44.
+  + direct export
+- [x] Vitousek and Sanford 1986
+  + Vitousek, PM., and Sanford, R.L. 1986. Nutrient cycling in moist tropical forests. Annu. Rev. Ecol. Syst. 17: 137-167.
+  + direct export
+  + correct number citation
+- [x] Heanes 1984
+  + Heanes, D. L. 1984. Determination of total organic C in soils by improved chromic acid digestion and spectrophotometric procedure. Commun. Soil Sci. Plant Anal. 15: 1191-1213.
+  + direct export
+
+
