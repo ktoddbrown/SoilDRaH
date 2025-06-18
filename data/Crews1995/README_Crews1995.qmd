@@ -50,29 +50,36 @@ author:
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(bibtex)
 
 methods.file <- 'Crews1995_Methods.md'
 primaryCitation.file <- 'Crews1995.bib'
 methodsCitation.file <- 'Crews1995_Methods.bib'
+table1.file <- 'Crews1995_Table1.csv'
+table2.file <- 'Crews1995_Table2.csv'
 ```
 
-This documents the data transcription for  .
+This documents the data transcription for @Crews1995.
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/87.
 
 Crews, T.E., Kitayama, K., Fownes, J.H., Riley, R.H., Herbert, D.A., Mueller-Dombois, D. and Vitousek, P.M. (1995), Changes in Soil Phosphorus Fractions and Ecosystem Dynamics across a Long Chronosequence in Hawaii. Ecology, 76: 1407-1424. https://doi.org/10.2307/1938144
 
 # Data Summary
 
-Crews (1995) looks at changes in soil phosphorous fractions at six chronosequence sites across Hawaii, with total carbon also recorded for additional soil analyses. While the paper primarily focuses on changes in soil P fractions in comparison to the Walker and Syers model, carbon data was used to create 50-cm soil profiles from each site and element ratios with nitrogen and organic phosphorus. Litter of dominant _Metrosideros polymorpha_ tree species is also analyzed for contributions to soil composition.
+Crews (1995) looks at changes in soil phosphorous fractions at six chronosequence sites across Hawaii, with total carbon also recorded for additional soil analyses.
+While the paper primarily focuses on changes in soil P fractions in comparison to the Walker and Syers model, carbon data was used to create 50-cm soil profiles from each site and element ratios with nitrogen and organic phosphorus.
+Litter of dominant _Metrosideros polymorpha_ tree species is also analyzed for contributions to soil composition.
 
 ## Fit for purpose: HiCSC
 
 This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the [HiCSC](https://github.com/ktoddbrown/SoilDRaH/wiki/Hawaii-SOC).
 
-Location: The chronosequence section in this paper does not list specific latitude/longitude of the 6 sites but does include a figure which could be used to approximate specific latitude and longitude. The paper also gives detailed regional descriptions and elevations which could be used for inference. Year of observation is not given in the text.
-Soil carbon stock: Depth of the sample of soil organic carbon is given in the methods section, under subsection _Other soil analyses_.
-Soil type: Detailed classification provided in the chronosequence section.
-Land use: Detailed land use and land use history in the chronosequence section.
+- Location: The chronosequence section in this paper does not list specific latitude/longitude of the 6 sites but does include a figure which could be used to approximate specific latitude and longitude.
+The paper also gives detailed regional descriptions and elevations which could be used for inference.
+Year of observation is not given in the text.
+- Soil carbon stock: Depth of the sample of soil organic carbon is given in the methods section, under subsection _Other soil analyses_.
+- Soil type: Detailed classification provided in the chronosequence section.
+- Land use: Detailed land use and land use history in the chronosequence section.
 
 # Tables and figures
 
@@ -102,7 +109,7 @@ Table 1 was not modified.
 #| code-fold: true
 #| message: false
 
-filename <- 'Crews1995_Table1.csv'
+filename <- table1.file
 read_csv(file = filename,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -120,7 +127,7 @@ Table 2 was modified by condensing the separate Pool sizes and Element ratios se
 #| code-fold: true
 #| message: false
 
-filename <- 'Crews1995_Table2_LK.csv'
+filename <- table2.file
 read_csv(file = filename,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -134,13 +141,13 @@ read_csv(file = filename,
 
 # Transcription comparison
 
-```{bash eval=FALSE}
+```{bash eval=FALSE, echo=FALSE}
 diff --strip-trailing-cr --suppress-common-lines -y Crews1995_Methods_LK.md Crews1995_Methods__SRSfinal.md
 ```
 
 # Files
 
-These files are in the Crews1995 data rescue.
+These files are in the @Crews1995 data rescue.
 
 - [Readme](README_Crews1995.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -173,5 +180,53 @@ These files are in the Crews1995 data rescue.
 - [ ] submit to independent review
 - [ ] archive on SoilDRaH
 
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+
+
+# Level 0: raw data reads
+
+The Level 0 data in this package include the tables above (Table 1 and 2) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ), 
+                              Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
 
 
