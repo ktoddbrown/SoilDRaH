@@ -104,3 +104,195 @@ read_csv(file = filename,
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
+
+### Table 2
+
+Table 2 was modified to include the footer in the caption.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 4
+
+Table 4 was modified to include the footer in the caption.
+
+```{r table4}
+#| code-fold: true
+#| message: false
+
+filename <- table4.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 5
+
+Table 5 was modified to include the footer in the caption.
+
+```{r table5}
+#| code-fold: true
+#| message: false
+
+filename <- table5.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Youkhana2009_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_SRS.md AuthorYYYY_Methods_LK.Rmd
+```
+
+# Files
+
+These files are in the @Youkhana2009 data rescue.
+
+- [Readme](README_Youkhana2009.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Youkhana2009.bib](Youkhana2009.bib)
+  + citation for article transcribed
+- [Youkhana2009_Methods.bib](Youkhana2009_Methods.bib)
+  + citations for the methods section of the article
+- [Youkhana2009_Methods.md](Youkhana2009_Methods.md)
+  + methods transcribed from primary article
+- [Youkhana2009_Table1.csv](Youkhana2009_Table1.csv)
+  + table 1 from primary article with *Leucaena* mulch additons
+- [Youkhana2009_Table2.csv](Youkhana2009_Table2.csv)
+  + table 2 from primary article with inital soil characteristics (2005)
+- [Youkhana2009_Table4.csv](Youkhana2009_Table4.csv)
+  + table 4 from primary article with changes in carbon concentrations
+- [Youkhana2009_Table5.csv](Youkhana2009_Table5.csv)
+  + table 5 from primary article with changes in soil C due to mulch addition
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1, 2, 4 and 5
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [x] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Giambelluca, T. W., Chen, Q., Frazier, A. G., Price, J. P., Chen, Y. L., Chu, P. S., ... & Delparte, D. M. (2013). Online rainfall atlas of Hawai ‘i. Bulletin of the American Meteorological Society, 94(3), 313-316.
+  + direct export
+  
+- [x] National Climatic Data Center 2002
+   + no citation
+
+- [x] Brewbaker, J. L. (2008). Registration of KX2‐Hawaii, Interspecific‐Hybrid Leucaena. Journal of Plant Registrations, 2(3), 190-193.
+  + direct export
+  
+- [x] Herrick, J. E. (1995). Simple method for determination of mass loss rates for soil-contaminated samples in decomposition studies.
+  + direct export
+  
+- [x] Idol, T. W., Holzbaur, K. A., Pope, P. E., & Ponder, F. (2002). Control‐bag correction for forest floor litterbag contamination. Soil Science Society of America Journal, 66(2), 620-623.
+  + direct export
+
+- [x] Holechek, J. L., & Vavra, M. (1982). Comparison of micro-and macro-digestion methods for fiber analysis in forages and ruminant diets. Rangeland Ecology & Management/Journal of Range Management Archives, 35(6), 799-801.
+  + direct export
+  
+- [x] Anderson, J. M., & Ingram, J. S. (1994). Tropical soil biology and fertility: a handbook of methods. Soil Science, 157(4), 265.
+  + direct export
+  
+- [x] Chapin III, F. S., Matson, P. A., & Vitousek, P. (2011). Principles of terrestrial ecosystem ecology. Springer Science & Business Media.
+  + direct export
+  
+- [x] SAS/STAT User's Guide Version 9 1990
+  + no citation
+  
+- [x] von Ende, C. N. (2020). Repeated-measures analysis: growth and other time-dependent measures. In Design and analysis of ecological experiments (pp. 113-137). Chapman and Hall/CRC.
+  + direct export
+  
+- [x] Maxwell, S. E., Delaney, H. D., & Kelley, K. (2017). Designing experiments and analyzing data: A model comparison perspective. Routledge.
+  + direct export
+   
+- [x] Scheiner, S. M. (2020). MANOVA: multiple response variables and multispecies interactions. In Design and analysis of ecological experiments (pp. 94-112). Chapman and Hall/CRC.
+  + direct export
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table2 = list(
+                                caption = read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                               Table4 = 
+                                list(caption = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                                Table5 = 
+                                list(caption = 
+                                       read_csv(file = table5.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table5.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
