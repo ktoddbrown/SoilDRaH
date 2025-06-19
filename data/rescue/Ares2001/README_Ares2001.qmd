@@ -51,6 +51,7 @@ author:
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(bibtex)
 
 methods.file <- 'Ares2001_Methods.md'
 table1.file <- 'Ares2001_Table1.csv'
@@ -208,4 +209,27 @@ Some citations are missing, those are noted here and how best guess were generat
   + Heanes, D. L. 1984. Determination of total organic C in soils by improved chromic acid digestion and spectrophotometric procedure. Commun. Soil Sci. Plant Anal. 15: 1191-1213.
   + direct export
 
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1,
+                                                na = '-')
+                                )
+                  ) 
+)
+```
 
