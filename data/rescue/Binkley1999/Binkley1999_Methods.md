@@ -30,7 +30,7 @@ For total C and N concentrations, 2-g subsamples were acidified with 10 mL of 0.
 Total C and N on the carbonate-free samples were determined with a LECO 1000 CN analyzer (Leco Corp., St. Joseph, MI), with all samples run at the same time (in 1997) to insure consistent, comparable values for both sampling periods.
 
 The ratios of C isotopes were measured with a VG isochrom-NA stable isotope ratio mass spectrometer (Fisons Instruments, Milan, Italy), and the pool of C derived from sugarcane (a C4 grass) was calculated (after @Vitorello1989) as:
-$%C4 = (\delta - \delta_o / \delt_c - \delta_o)100$
+$$ \%C4 = (\delta - \delta_o / \delta_c - \delta_o)100$$
 where $\delta$ is the natural abundance, the $\delta^{13}C$ of the soil sample ($\delta^{13}C$ = per mil difference between the <sup>13</sup>C content of the sample and the PeeDee Belmnite [PDB] standard), $\delta_o$ is the $\delta^{13}C$ of soil samples with no C from C4 plants, and $\delta_c$ is the $\delta^{13}C$ of C4 (sugarcane) plant material.
 The value for soil samples with no C input from C4 plants was taken as -25.5%$_o$, based on values from native Hawaiian forests within a few kilometers of this site (@Bashkin1998).
 The $\delta^{13}C$ of sugarcane material was taken as -11.5%$_o$ (also from @Bashkin1998).
