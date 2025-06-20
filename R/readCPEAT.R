@@ -73,7 +73,8 @@ readCPEAT <- function(dataDir,
          str_detect(xx[1], 'Status') |
          str_detect(xx[1], 'Comment') |
          str_detect(xx[1], 'Further details') |
-         str_detect(xx[1], 'Change history')){
+         str_detect(xx[1], 'Change history') |
+         str_detect(xx[1], 'Replaced by')){
         ans <- paste(ans, collapse = '; ')
         return(ans)
       }
