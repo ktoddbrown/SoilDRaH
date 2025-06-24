@@ -51,6 +51,7 @@ author:
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(bibtex)
 
 methods.file <- 'Idol2007_Methods.md'
 table1.file <- 'Idol2007_Table1.csv'
@@ -238,6 +239,8 @@ Some citations are missing, those are noted here and how best guess were generat
 - [x] HURLBERT, S. H. 1984. Pseudoreplication and the design of field experiments. *Ecological Monographs* 54:187-211.
   + copy from bib
   
+# Level 0 data
+
 ```{r readLevel0}
 
 data.lvl0.df <- list(citation = 
@@ -277,3 +280,5 @@ data.lvl0.df <- list(citation =
                                                 skip = 1)
                                 )))
 ```
+
+# References
