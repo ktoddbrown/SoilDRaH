@@ -1,8 +1,9 @@
-﻿Table 1. Site Characteristics for Acacia koa stands on the Island of Hawaii. HONO=Honomalino Forest; HAVO=Hawaii Volcanoes National Park; KR=Keauhou Ranch. MAP=Mean annual precipitation; MAT = Mean annual temperature. ᵃStand age at HAVO approximate based on time of complete ungulate removal.,,,,,,,
-Site,HONO,HAVO,HAVO,HAVO,HAVO,HAVO,KR
-Elevation (m),1600,1200,1350,1600,1900,2050,1650
-MAP(mm),1000,1500,1500,1500,1500,1500,2000
-MAT(°C),15.2,17.0,16.4,15.2,13.7,13.0,15.0
-Stand age (y),25,30ᵃ,30,30,30,30,25
-Soil age (y),1500-3000,3000-5000,1500-3000,1500-3000,1500-3000,1500-3000,1500-3000
-Density (stems ha-1),3400,1630,3530,4250,2600,1100,1330
+Table 1. Site Characteristics for Acacia koa stands on the Island of Hawaii. HONO=Honomalino Forest; HAVO=Hawaii Volcanoes National Park; KR=Keauhou Ranch. MAP=Mean annual precipitation; MAT = Mean annual temperature. <sup>a</sup>Stand age at HAVO approximate based on time of complete ungulate removal.,,,,,,
+Site,Elevation (m),MAP(mm),MAT(°C),Stand age (y),Soil age (y),Density (stems ha<sup>-1</sup>)
+HONO,1600,1000,15.2,25,1500-3000,3400
+HAVO,1200,1500,17.0,30<sup>a</sup>,3000-5000,1630
+HAVO,1350,1500,16.4,30,1500-3000,3530
+HAVO,1600,1500,15.2,30,1500-3000,4250
+HAVO,1900,1500,13.7,30,1500-3000,2600
+HAVO,2050,1500,13.0,30,1500-3000,1100
+KR,1650,2000,15.0,25,1500-3000,1330
