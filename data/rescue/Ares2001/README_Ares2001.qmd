@@ -209,7 +209,9 @@ Some citations are missing, those are noted here and how best guess were generat
   + Heanes, D. L. 1984. Determination of total organic C in soils by improved chromic acid digestion and spectrophotometric procedure. Commun. Soil Sci. Plant Anal. 15: 1191-1213.
   + direct export
 
- ```{r readLevel0}
+# Level 0 data read
+
+```{r readLevel0}
 
 data.lvl0.df <- list(citation = 
                     list(primary = 
