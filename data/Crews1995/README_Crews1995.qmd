@@ -1,0 +1,232 @@
+---
+title: "Data Rescue: Crews 1995"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Crews1995_Methods.bib
+  - Crews1995.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Crews1995_Methods.md'
+primaryCitation.file <- 'Crews1995.bib'
+methodsCitation.file <- 'Crews1995_Methods.bib'
+table1.file <- 'Crews1995_Table1.csv'
+table2.file <- 'Crews1995_Table2.csv'
+```
+
+This documents the data transcription for @Crews1995.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/87.
+
+Crews, T.E., Kitayama, K., Fownes, J.H., Riley, R.H., Herbert, D.A., Mueller-Dombois, D. and Vitousek, P.M. (1995), Changes in Soil Phosphorus Fractions and Ecosystem Dynamics across a Long Chronosequence in Hawaii. Ecology, 76: 1407-1424. https://doi.org/10.2307/1938144
+
+# Data Summary
+
+Crews (1995) looks at changes in soil phosphorous fractions at six chronosequence sites across Hawaii, with total carbon also recorded for additional soil analyses.
+While the paper primarily focuses on changes in soil P fractions in comparison to the Walker and Syers model, carbon data was used to create 50-cm soil profiles from each site and element ratios with nitrogen and organic phosphorus.
+Litter of dominant _Metrosideros polymorpha_ tree species is also analyzed for contributions to soil composition.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the [HiCSC](https://github.com/ktoddbrown/SoilDRaH/wiki/Hawaii-SOC).
+
+- Location: The chronosequence section in this paper does not list specific latitude/longitude of the 6 sites but does include a figure which could be used to approximate specific latitude and longitude.
+The paper also gives detailed regional descriptions and elevations which could be used for inference.
+Year of observation is not given in the text.
+- Soil carbon stock: Depth of the sample of soil organic carbon is given in the methods section, under subsection _Other soil analyses_.
+- Soil type: Detailed classification provided in the chronosequence section.
+- Land use: Detailed land use and land use history in the chronosequence section.
+
+# Tables and figures
+
+Figure 1: Model of phosphorus transformations with time
+Figure 2: Locations and ages of the six chronosequence field sites in Hawaii
+Figure 3: Changes in phosphorus fractions with time at six chronosequence sites presented as mass per volume and fractions of total P
+Figure 4: Percentage of leaf litter mass remaining versus decomposition time up to 2 years
+Figure 5: Exponential decomposition constants for litter decomposed over 2 years
+Figure 6: Changes in percentage cover of six dominant tree and shrub genera at six chronosequence sites
+Figure 7: Detrended correspondence analysis (DCA) scores of chronosequence sites
+Figure 8: Cluster analysis and similarity comparison of species composition of chronosequence sites
+Figure 9: Changes in percentage of P and N in foliage of _Metrosideros polymorpha_ across chronosequence sites
+
+Table 1: Hawaiian chronosequence sites including age, elevation, mean temperature and precipitation, soil classification, and location
+Table 2: Sums and ratios of total carbon, nitrogen, and organic phosphorus at six chronosequence sites
+Table 3: P and N availability, nitrous oxide flux, gross N-mineralization and nitrification, and pH of chronosequence sites
+Table 4: Initial litter quality of senescent leaves from four chronosequence sites including N, P, Ca, Mg, K, Lignin, and Cellulose percentages
+Table 5: Percentage of initial N and P remaining in leaf litter decomposed in situ for 1.5 years
+Table 6: Total community basal areas of trees >30 mm in diameter and maximum canopy height
+Table 7: Species diversity of the Hawaiian chronosequence sites
+  
+### Table 1
+
+Table 1 was not modified.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+  
+### Table 2
+
+Table 2 was modified by condensing the separate Pool sizes and Element ratios sections of the table into a singular section. This was done by including the "Pool sizes (kg/m<sup>2</sup>)" and "Element Ratios" subheadings into the row labels.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                           show_col_types = FALSE)$caption)
+```
+
+
+{{< include Crews1995_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Crews1995_Methods_LK.md Crews1995_Methods__SRSfinal.md
+```
+
+# Files
+
+These files are in the @Crews1995 data rescue.
+
+- [Readme](README_Crews1995.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Crews1995.bib](Crews1995.bib)
+  + citation for article transcribed
+- [Crews1995_Methods.bib](Crews1995_Methods.bib)
+  + citations for the methods section of the article
+- [Crews1995_Methods.md](Crews1995_Methods.md)
+  + methods transcribed from primary article
+- [Crews1995_Table1.csv](Crews1995_Table1.csv)
+  + table 1 from primary article
+- [Crews1995_Table2.csv](Crews1995_Table2.csv)
+  + table 2 from primary article
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] copy description from Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet for tables 1 and 2
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+
+
+# Level 0: raw data reads
+
+The Level 0 data in this package include the tables above (Table 1 and 2) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ), 
+                              Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
+
+
