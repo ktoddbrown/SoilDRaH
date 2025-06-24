@@ -123,7 +123,7 @@ read_csv(file = filename,
 
 Table 2 was modified by condensing the separate Pool sizes and Element ratios sections of the table into a singular section. This was done by including the "Pool sizes (kg/m<sup>2</sup>)" and "Element Ratios" subheadings into the row labels.
 
-```{r table1}
+```{r table2}
 #| code-fold: true
 #| message: false
 
