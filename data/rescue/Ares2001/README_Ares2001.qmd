@@ -24,6 +24,7 @@ author:
       role: 
         -"Transcription"
         -"Review"
+        -"Standardization"
   - name:
       given: Colby
       family: Green
@@ -242,3 +243,65 @@ data.lvl0.df <- list(citation =
                                 )))
 ```
 
+# Level 1 data - Hawaii SOC DB
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
+- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
+- Land use: Land use and history are clearly identified in methods.
+
+```{r}
+
+#Pull in the soil type and land use from the methods section
+#Pull in the soc stock from one of the tables(?)
+#Check for geolocation and observation date somewhere???
+
+data.df <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.df$method[5], collapse = ' ')),
+                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.df$method[14:16], collapse = ' ')),
+                   'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.df$method[14]),
+                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.df$method[c(30,53,58)], collapse = '... ')))
+
+temp1 <- data.lvl0.df$data$Table1$primary |>
+  mutate(row_id = paste0('R', 1:n())) |>
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         of_variable = case_when(
+           column_name == "Stand type" ~ 'stand_type',
+           column_name == 'Elevation (m)' ~ 'elevation',
+           column_name = 'Soil type' ~ 'soil_class',
+           column_name == 'Soil pH' ~ 'soil_ph',
+           column_name == 'Soil organic carbon (%)' ~ 'soil_organic_carbon',
+           column_name == 'Soil N (%)' ~ 'soil_nitrogen',
+           column_name == 'Soil P (mg kg<sup>-1</sup>)' ~ 'soil_phosphorus',
+           column_name == 'Stand age (years)' ~ 'stand_age',
+           column_name == '*F. uhdei* Stem density (trees / ha)' ~ 'stem_density_F_uhdei',
+           column_name == '*F. uhdei* Mean DBH (cm)' ~ 'diameter_at_breast_height_F_uhdei',
+           column_name == '*F. uhdei* Mean height(m)' ~ 'height_F_uhdei',
+           column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density_A_koa',
+           column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
+           column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
+  mutate(source = 'Table 1') |>
+  tribble(~of_varible, ~method, ~source,
+          'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+          'soil_organic_carbon', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+          'soil_nitrogen', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+          'soil_phosphorus', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+          'soil_class', paste0(data.lvl0.df$method[10:12], collapse = ' '), 'Methods ln10-12') |>
+  tribble(~of_variable, control_vocabulary, ~source,
+          'stand_type', '', '')
+  
+
+temp3 <- data.lvl0.df$data$Table3$primary |>
+  pivot_longer(cols = -variable,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE)
+  
+```
+
+
+# References
