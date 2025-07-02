@@ -40,9 +40,15 @@ author:
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(bibtex) #read in the bib file to dataframe
+
+methods.file <- 'Burke2003_Methods.md'
+table1.file <- 'Burke2003_Table1.csv'
+primaryCitation.file <- 'Burke2003.bib'
+methodsCitation.file <- 'Burke2003_Methods.bib'
 ```
 
-This documents the data transcription for  .
+This documents the data transcription for @Burke2003.
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/80.
 
 > Burke, R.A., Molina, M., Cox, J.E., Osher, L.J. and Piccolo, M.C. (2003), Stable Carbon Isotope Ratio and Composition of Microbial Fatty Acids in Tropical Soils. J. Environ. Qual., 32: 198-206. https://doi.org/10.2134/jeq2003.1980
@@ -96,13 +102,18 @@ read_csv(file = filename,
 
 # Transcription comparison
 
-```{gitbash eval=FALSE}
+```{gitbash eval=FALSE, echo=FALSE}
+# Transcription comparison
 diff --strip-trailing-cr --suppress-common-lines -y Burke2003_Methods_KTB.md Burke2003_Methods_MB.md
+
+# Transcription comparison
+diff --strip-trailing-cr --suppress-common-lines -y Burke2003_Table1_KTB.csv Burke2003_Table2_MB.csv
+
 ```
 
 # Files
 
-These files are in the Burke2003 data rescue.
+These files are in the @Burke2003 data rescue.
 
 - [Readme](README_Burke2003.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -113,15 +124,13 @@ These files are in the Burke2003 data rescue.
 - [Burke2003_Methods.md](Burke2003_Methods.md)
   + methods transcribed from primary article
 - [Burke2003_Table1.csv](Burke2003_Table1.csv)
-  + table 1 from primary article with organic carbon fraction.
-- [temp/](temp/)
-    + scratch folder that will not be archived includes excel and article pdf document
+  + Table 1 from primary article with organic carbon fraction.
 
 # Working notes 
 
 ## Data Rescue Plan
 
-- [ ] describe files in human readable form inside ReadMe
+- [x] describe files in human readable form inside ReadMe
 - [x] description with Git issue with link
 - [x] add contribution yaml
 - [x] create excel sheet with Table 1
@@ -129,8 +138,8 @@ These files are in the Burke2003 data rescue.
 - [x] copy over methods section into markdown
 - [x] pull down citations in methods section to bib file
 - [x] add in citation links to methods
-- [ ] cross check with second transcriber for tables and methods
-- [ ] submit to independent review
+- [x] cross check with second transcriber for tables and methods
+- [x] submit to independent review
 - [ ] archive on SoilDRaH
 
 
@@ -140,40 +149,74 @@ Below are the citation notes from the methods section.
 Some citations are missing, those are noted here and how best guess were generated.
 
 - [x] Dean and Dixon, 1951
-    + citation from table 1 caption
-    + direct export
+  + Dean, R.B., and W.J. Dixon. 1951. Simplified statistics for small numbers of observations. Anal. Chem. 23:636–638.
+  + citation from table 1 caption
+  + direct export
 - [x] Osher 1997
-  + Osher, L J 1997 Sequestration and turnover of soil carbon: The roles of minerology and land use change. PhD diss. University of California Berkley
+  + Osher, L J 1997 Sequestration and turnover of soil carbon: The roles of minerology and land use change. PhD diss. University of California, Berkeley.
+  + direct export
 - [x] Townsend et al., 1995
-  + Townsend, AR, PM Vitousek, and SE Trumbore. 1995. Soil organic matter dyanmics along gradients in temperature an dland use on the island of Hawaii. Ecology 76:721-733
+  + Townsend, AR, PM Vitousek, and SE Trumbore. 1995. Soil organic matter dyanmics along gradients in temperature an dland use on the island of Hawaii. Ecology 76:721-733.
   + direct export
 - [x] Bashkin and Binkley, 1998
-  + Bashkin, MA, and D Binkley 1998. Changes in soil carbon following afforestration in hawaii. Ecology 79:828-833
+  + Bashkin, MA, and D Binkley 1998. Changes in soil carbon following afforestration in hawaii. Ecology 79:828-833.
+  + direct export
 - [x] Vitorello et al., 1989
-  + Vitorello, VA, CC Cerri, F Andreaudx, C. Feller, and RL Victoria 1989. Organic matter and natural carbon-13 districution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773-778.
+  + Vitorello, V.A., C.C. Cerri, F. Andreaux, C. Feller, and R.L. Victoria. 1989. Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773–778.
+  + direct export
 - [x] Rhoades et al., 2000
   + Rhoades. CC, GE Eckert, and DC Coleman. 2000. Soil carbon differences among forest, agriculture, and secondry vegitation in lower montane Ecuador. Ecol. Appl. 10:497-505
+  + direct export
 - [x] Bligh and Dyer, 1959
   + Bligh, E.G. A rapid method of total lipid extraction and purification. J. Biochem. Physiol. 1959 37 911–917
+  + direct export
 - [x] Zelles (1999)
-  + Zelles, L. Fatty acid patterns of phospholipids and lipopolysaccharides in the characterisation of microbial communities in soil: A review. Biol. Fertil. Soils 1999 29 111–129. https://doi.org/10.1007/s003740050533
+  + Zelles, L. Fatty acid patterns of phospholipids and lipopolysaccharides in the characterisation of microbial communities in soil: A review. Biol. Fertil. Soils 1999 29 111–129.
+  + direct export
 - [x] Zelles and Bai, 1993
-  + Zelles, L. Fractionation of fatty acids derived from soil lipids by solid phase extraction and their quantitative analysis by GC–MS. Soil Biol. Biochem. 1993 25 495–507. https://doi.org/10.1016/0038-0717(93)90075-M
+  + Zelles, L. Fractionation of fatty acids derived from soil lipids by solid phase extraction and their quantitative analysis by GC–MS. Soil Biol. Biochem. 1993 25 495–507.
+  + direct export
 - [x] White et al., 1979
-  + White, D.C. Determination of sedimentary microbial biomass by extractible lipid phosphate. Oecologia 1979 40 51–62. https://doi.org/10.1007/BF00388810
+  + White, D.C. Determination of sedimentary microbial biomass by extractible lipid phosphate. Oecologia 1979 40:51–62.
+  + direct export
 - [x] Grogan and Cronan, 1997
   + Grogan, D. Cyclopropane ring formation in membrane lipids of bacteria. Microbiol. Mol. Biol. Rev. 1997 61 429–441.
+  + direct export
 - [x] Nichols et al., 1986
-  + Nichols, P.D. Determination of monounsaturated fatty acids double bond position and geometry for microbial monocultures and complex consortia by capillary GC–MS of their dimethyl disulfide adducts. J. Microbiol. Methods 1986 5 49–55. https://doi.org/10.1016/0167-7012(86)90023-0
+  + Nichols, P.D. Determination of monounsaturated fatty acids double bond position and geometry for microbial monocultures and complex consortia by capillary GC–MS of their dimethyl disulfide adducts. J. Microbiol. Methods 1986 5 49–55.
+  + direct export
 - [x] Number Cruncher Statistical Systems, 2000
   + Number Cruncher Statistical Systems. 2000. NCSS 2000. NCSS, Kaysville, UT.
+  + direct export
 - [x] O'Malley et al., 1997
-  + O'Malley, V.P. Using GC–MS/Combustion/IRMS to determine the 13C/12C ratios of individual hydrocarbons produced from the combustion of biomass materials—Application to biomass burning. Org. Geochem. 1997 27 567–581. https://doi.org/10.1016/S0146-6380(97)00087-9
+  + O'Malley, V.P. Using GC–MS/Combustion/IRMS to determine the 13C/12C ratios of individual hydrocarbons produced from the combustion of biomass materials—Application to biomass burning. Org. Geochem. 1997 27 567–581.
+  - direct export
 - [x] Abraham et al. (1998)
   + Abraham, W.-R. Ratios of carbon isotopes in microbial lipids as an indicator of substrate usage. Appl. Environ. Microbiol. 1998 64 4202–4209.
+  + direct export
 - [x] Rieley, 1994
-  + Rieley, G. Derivatization of organic compounds prior to gas chromatographic–combustion–isotope ratio mass spectrometric analysis: Identification of isotope fractionation processes. Analyst 1994 119 915–919. https://doi.org/10.1039/an9941900915
+  + Rieley, G. Derivatization of organic compounds prior to gas chromatographic–combustion–isotope ratio mass spectrometric analysis: Identification of isotope fractionation processes. Analyst 1994 119 915–919.
+  + direct export
 
+```{r readLevel0}
 
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
 
 
