@@ -267,13 +267,13 @@ data.df <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
 temp1 <- data.lvl0.df$data$Table1$primary |>
   mutate(row_id = paste0('R', 1:n())) |>
   pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
+               names_to = 'column_name', values_to = 'value',
                values_drop_na = TRUE) |>
   mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
          of_variable = case_when(
            column_name == "Stand type" ~ 'stand_type',
            column_name == 'Elevation (m)' ~ 'elevation',
-           column_name = 'Soil type' ~ 'soil_class',
+           column_name == 'Soil type' ~ 'soil_class',
            column_name == 'Soil pH' ~ 'soil_ph',
            column_name == 'Soil organic carbon (%)' ~ 'soil_organic_carbon',
            column_name == 'Soil N (%)' ~ 'soil_nitrogen',
@@ -285,21 +285,58 @@ temp1 <- data.lvl0.df$data$Table1$primary |>
            column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density_A_koa',
            column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
            column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
-  mutate(source = 'Table 1') |>
-  tribble(~of_varible, ~method, ~source,
-          'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-          'soil_organic_carbon', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-          'soil_nitrogen', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-          'soil_phosphorus', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-          'soil_class', paste0(data.lvl0.df$method[10:12], collapse = ' '), 'Methods ln10-12') |>
-  tribble(~of_variable, control_vocabulary, ~source,
-          'stand_type', '', '')
-  
+  mutate(source = 'Table 1') 
+
+temp1.meta <-
+  temp1 |>
+  select(of_variable, unit, source) |>
+  unique() |>
+  filter(!is.na(unit)) |>
+  bind_rows(
+  tribble(~of_variable, ~method, ~source,
+            'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_organic_carbon', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_nitrogen', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_phosphorus', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_class', paste0(data.lvl0.df$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~source,
+            'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+temp1 <- temp1 |>
+  select(-unit)
 
 temp3 <- data.lvl0.df$data$Table3$primary |>
   pivot_longer(cols = -variable,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE)
+               names_to = 'elevation_id', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(`elevation_id` = str_extract(elevation_id, '\\d{3,} m')) |>
+  pivot_wider(names_from = 'variable', values_from = 'with_entry') |>
+  mutate(`Elevation (m)` = str_extract(elevation_id, '\\d{3,}')) |>
+  pivot_longer(cols = -elevation_id, names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(of_variable = case_when(
+    column_name == "Mean air temperature (degree C)"~ 'mean_air_temperature',
+    column_name == "Total rainfall (mm)" ~ 'total_rainfall',
+    column_name == "Mean total solar radiation (MJ m<sup>-2</sup> day<sup>-1</sup>)" ~ 'mean_solar_radiation',
+    column_name == "Mean maximum vapor pressure deficit (kPa)" ~ 'mean_max_vapor_pressure_deficit',
+    column_name == "Elevation (m)" ~ 'elevation',
+    TRUE ~ NA_character_)) |>
+  mutate(source = 'Table 3')
+
+temp3.meta <- temp3 |>
+  select(column_name, of_variable) |>
+  unique() |>
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         method = paste('Methods ln72-73:', paste0(data.lvl0.df$method[18:23], collapse = ' '))) |>
+  pivot_longer(cols = -c(column_name, of_variable),
+               names_to = 'is_type', values_to = 'with_entry') 
+
   
 ```
 
