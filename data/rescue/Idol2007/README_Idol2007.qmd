@@ -1,0 +1,284 @@
+---
+title: "Data Rescue: Idol 2007"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Idol2007_Methods.bib
+  - Idol2007.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Ashlynn
+      family: Walder
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/waldera
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Idol2007_Methods.md'
+table1.file <- 'Idol2007_Table1.csv'
+table2.file <- 'Idol2007_Table2.csv'
+table3.file <- 'Idol2007_Table3.csv'
+primaryCitation.file <- 'Idol2007.bib'
+methodsCitation.file <- 'Idol2007_Methods.bib'
+```
+
+This documents the data transcription for @Idol2007.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/83.
+
+> Full citation here
+Idol, T., Baker, P. J., & Meason, D. (2007). Indicators of forest ecosystem productivity and nutrient status across precipitation and temperature gradients in Hawaii. Journal of Tropical Ecology, 23, 693 - 704. https://doi.org/10.1017/s0266467407004439
+
+
+# Data Summary
+
+This paper examines how precipitation and temperature affect forest productivity, soil nutrients, and leaf nutrients in Hawaiian Acacia koa forests. It explores the relationships between climate, nutrient availability, and forest structure across independent elevation and rainfall gradients.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Keauhou Ranch (KR) 1600–1800 m elevation, Hawaii Volcanoes National Park (HAVO) 1200–2050 m elevation, and Honomalino (HONO) 1600 m elevation
+- Soil carbon stock: Soil carbon stock is not explicitly provided, but total soil carbon content and SOM was determined from oven-dried samples in a Carlo Erba NA 2500 elemental analyser and the results are displayed in Table 2.
+- Soil type: Andisols or as Histosols with andic properties
+- Land use: Detailed land use in the Materials and Methods section.
+
+# Tables and figures
+
+- Table 1: Site characteristics for Acacia koa stands on the Island of Hawaii
+- Table 2: Basal area and soil and leaf nutrients across a Mean Annual Precipitation (MAP) gradient for Acacia koa stands at 1600–1650 m elevation
+- Table 3: Stand productivity and soil and leaf nutrients from 1200–2050 m asl at Hawaii Volcanoes National Park (HAVO)
+
+- Figure 1: Location of Acacia koa study plots on the Island of Hawaii
+- Figure 2: Influence of leaf mass per area and soil C on measurements of leaf and soil N
+- Figure 3: Influence of soil P on stand basal area and soil organic matter
+
+  
+### Table 1
+
+Table 1 was modified to include the footer in the header
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+### Table 2
+
+Table 2 was not modified during the transcription.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 1
+
+Table 3 was modified to include +- as ±. 
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- table3.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+{{< include Idol2007_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y 'Idol2007_Methods.md' 'Idol2007_Methods_AW.md'
+```
+
+# Files
+
+These files are in the @Idol2007 data rescue.
+
+- [Readme](README_Idol2007.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Idol2007.bib](Idol2007.bib)
+  + citation for article transcribed
+- [Idol2007_Methods.bib](Idol2007_Methods.bib)
+  + citations for the methods section of the article
+- [Idol2007_Methods.md](Idol2007_Methods.md)
+  + methods transcribed from primary article
+- [Idol2007_Table1.csv](Idol2007_Table1.csv)
+  + table 1 from primary article with the site characteristics for *Acacia koa* stands on the Island of Hawaii. 
+- [Idol2007_Table2.csv](Idol2007_Table2.csv)
+  + table 2 from primary article with the basal area and soil and leaf nutrients across a Mean Annual Precipitation (MAP) gradient for *Acacia koa* stands at 1600–1650 m elevation.
+- [Idol2007_Table3.csv](Idol2007_Table3.csv)
+  + table 3 from primary article with the stand productivity and soil and leaf nutrients from 1200–2050 m asl at Hawaii Volcanoes National Park (HAVO).
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1, 2 and 3
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] TOSI, J. A., WATSON, V. & BOLANOS, R. 2002. *Life zone maps: Hawaii Guam, American Samoa, Northern Mariana Islands, Palau, and the Federated States of Micronesia.* Joint Venture of the Tropical Science Center, San Jose, Costa Rica and the Institute of Pacific Islands Forestry, USDA Forest Service, Hilo, 
+  + copy from bib
+- [x] LOCKWOOD, J. P., LIPMAN, P. W., PETERSON, L. D. & WARSHAUER, R. F. 1988. *Generalized ages of surface lava flows of Mauna Loa Volcano, Hawaii.* U.S. Geological Survey Miscellaneous Publications, Map I- 1908, U.S. Government Printing Office, Washington, DC. 
+  + copy from bib
+- [x] GIAMBELLUCA, T. W., NULLET, M. A. & SCHROEDER, T. A. 1986. *Rainfall atlas of Hawaii.* Department of Land and Natural Resources, Division of Water and Land Development, Honolulu. 267 pp.
+  + copy from bib
+- [x] ASSMANN, E. 19 70. *The principles offorest yield studies.* Pergamon Oxford. 506 pp.
+  + copy from bib
+- [x] BAKER, P. J. & SCOWCROFT, P. G. 2005. Stocking guidelines for endemic Hawaiian hardwood, *Acacia koa*. *Journal of Tropical Forest Science* 17:610-624.
+  + copy from bib
+- [x] FRALISH, J. S. 1994. The effect of site environment on forest productivity in the Illinois Shawnee Hills. *Ecological Applications* 4:134-143.
+  + copy from bib
+- [x] STERBA, H. & MONSERUD, R. A. 1993. The maximum density concept applied to uneven-aged mixed-species stands. *Forest Science* 39:432-452.
+  + copy from bib
+- [x] COOPERBAND, L. R. & LOGAN, T. J. 1994. Measuring in situ changes in labile soil phosphorus with anion-exchange membranes. *Soil Society of America Journal* 58: 105-114.
+  + copy from bib
+- [x] DROHAN, P. J., MERKLER, D. J. & BUCK, B. J. 2005. Suitability plant root simulator probe for use in the Mojave Desert. *Soil Society of America Journal* 69: 1482-1491.
+  + copy from bib
+- [x] MCGRATH, D. A., COMERFORD, N. B. & DURYEA, M. L. 2000. Litter dynamics and monthly fluctuations in soil phosphorus availability in an Amazonian agroforest. *Forest Ecology and Management* 131:167-
+181.
+  + copy from bib
+- [x] MYERS, R. G., SHARPLEY, A. N., THIEN, S. J. & PIERZYNSKI, G. M. 2005. Ion-sink phosphorus extraction methods applied on 24 soils from the continental USA. *Soil Science Society of America Journal* 69:511-521.
+  + copy from bib
+- [x] QIAN, P. & SCHOENAU, J. J. 2005. Practical applications of ion exchange resins in agricultural and environmental soil research. *Canadian Journal of Soil Science* 82:9-21.
+  + copy from bib
+- [x] JOHNSON, D. W., VERBURG, P. S. J. & ARNONE, J. A. 2005. Soil extraction, ion exchange resin, and ion exchange membrane measures of soil mineral nitrogen during incubation of a tallgrass prairie soil. *Soil Science Society of America Journal* 69:260-265.
+  + copy from bib
+- [x] HERNANDEZ-MORENO, J. M. & NEGRIN, M. A. 1998. Phosphorus extraction by anion exchange membranes (AEM) in Andisols. *Communications in Soil Science and Plant Analysis* 29:1771-1778.
+  + copy from bib
+- [x] VITOUSEK, P. M., MATSON, P. A. & TURNER, D. R. 1988. Elevational and age gradients in Hawaiian montane rainforest: leaf and soil nutrients. *Oecologia* 77:565-570.
+  + copy from bib
+- [x] PEARSON, H. L. & VITOUSEK, P. M. 2001. Stand dynamics, nitrogen accumulation, and symbiotic nitrogen fixation in regenerating stands of *Acacia koa. Ecological Applications* 11:1381-1394.
+  + copy from bib
+- [x] HEDLEY, M. J., STEWART, J. W. B. & CHAUHAN, B. S. 1982. Changes in inorganic and organic phosphorus soil fractions  induced by cultivation practices and by laboratory incubations. *Soil Science Society of America Journal* 46:970-976.
+  + copy from bib
+- [x] TIESSEN, H. & MOIR, J. 0. 1993. Characterization of available P by sequential extraction. Pp. 75-86 in Carter M. R. (ed.). *Soil sampling and methods of analysis.* CRC Press, Boca Raton
+  + copy from bib
+- [x] OLSEN, S. R. & SOMMERS, L. E. 1982. Phosphorus. Pp. 403-430 in Page A. L., Miller R. H. & Keeney D. R. (eds.). *Methods of soil analysis.* Part 2.
+*Chemical and microbiological methods.* American Society of Agronomy, Madison.
+  + copy from bib
+- [x] MURPHY, J. & RILEY, J. P. 1962. A modified single solution method for the determination of phosphate in natural waters. *Analytica Chimica Acta* 27:31-36
+  + copy from bib
+- [x] HURLBERT, S. H. 1984. Pseudoreplication and the design of field experiments. *Ecological Monographs* 54:187-211.
+  + copy from bib
+  
+# Level 0 data
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table2 = list(
+                                caption = read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                               Table3 = 
+                                list(caption = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
+
+# References
