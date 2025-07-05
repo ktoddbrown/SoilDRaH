@@ -267,10 +267,9 @@ data.df <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
 temp1 <- data.lvl0.df$data$Table1$primary |>
   mutate(row_id = paste0('R', 1:n())) |>
   pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'value',
+               names_to = 'column_name', values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         of_variable = case_when(
+  mutate(of_variable = case_when(
            column_name == "Stand type" ~ 'stand_type',
            column_name == 'Elevation (m)' ~ 'elevation',
            column_name == 'Soil type' ~ 'soil_class',
@@ -289,9 +288,12 @@ temp1 <- data.lvl0.df$data$Table1$primary |>
 
 temp1.meta <-
   temp1 |>
-  select(of_variable, unit, source) |>
+  select(column_name, of_variable) |>
   unique() |>
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         source = 'Table 1 column names.') |>
   filter(!is.na(unit)) |>
+  select(-column_name) |>
   bind_rows(
   tribble(~of_variable, ~method, ~source,
             'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
@@ -309,17 +311,16 @@ temp1.meta <-
                values_drop_na = TRUE,
                values_to = 'with_entry')
 
-temp1 <- temp1 |>
-  select(-unit)
 
 temp3 <- data.lvl0.df$data$Table3$primary |>
   pivot_longer(cols = -variable,
-               names_to = 'elevation_id', values_to = 'with_entry',
+               names_to = 'row_id', values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  mutate(`elevation_id` = str_extract(elevation_id, '\\d{3,} m')) |>
+  #mutate(`elevation_id` = str_extract(elevation_id, '\\d{3,} m')) |>
   pivot_wider(names_from = 'variable', values_from = 'with_entry') |>
-  mutate(`Elevation (m)` = str_extract(elevation_id, '\\d{3,}')) |>
-  pivot_longer(cols = -elevation_id, names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(`Elevation (m)` = str_extract(row_id, '\\d{3,}')) |>
+  pivot_longer(cols = -row_id, 
+               names_to = 'column_name', values_to = 'with_entry') |>
   mutate(of_variable = case_when(
     column_name == "Mean air temperature (degree C)"~ 'mean_air_temperature',
     column_name == "Total rainfall (mm)" ~ 'total_rainfall',
@@ -334,10 +335,29 @@ temp3.meta <- temp3 |>
   unique() |>
   mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
          method = paste('Methods ln72-73:', paste0(data.lvl0.df$method[18:23], collapse = ' '))) |>
-  pivot_longer(cols = -c(column_name, of_variable),
-               names_to = 'is_type', values_to = 'with_entry') 
+  select(-column_name) |>
+  pivot_longer(cols = -of_variable,
+               names_to = 'is_type', values_to = 'with_entry') |>
+  mutate(source = case_when(is_type == 'unit' ~ 'Table 3 column names.',
+                            is_type == 'method' ~ 'Methods ln72-73',
+                            TRUE ~ NA_character_))
 
-  
+
+data.lvl1.ls <- list(
+  meta = bind_rows(data.df, temp1.meta, temp3.meta),
+  primary = bind_rows(temp1, temp3)|>
+    mutate(elevation_id = with_entry[of_variable == 'elevation'],
+           is_type = 'value',
+           .by = row_id) |>
+    arrange(row_id, elevation_id, column_name,
+            of_variable, is_type, with_entry, source))
+
+```
+
+# Level 2 data
+
+```{r}
+
 ```
 
 
