@@ -262,7 +262,9 @@ data.df <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.df$method[5], collapse = ' ')),
                    'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.df$method[14:16], collapse = ' ')),
                    'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.df$method[14]),
-                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.df$method[c(30,53,58)], collapse = '... ')))
+                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.df$method[c(30,53,58)], collapse = '... ')),
+                   'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
+                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
 
 temp1 <- data.lvl0.df$data$Table1$primary |>
   mutate(row_id = paste0('R', 1:n())) |>
@@ -344,7 +346,9 @@ temp3.meta <- temp3 |>
 
 
 data.lvl1.ls <- list(
-  meta = bind_rows(data.df, temp1.meta, temp3.meta),
+  meta = bind_rows(data.df,
+                   temp1.meta, 
+                   temp3.meta),
   primary = bind_rows(temp1, temp3)|>
     mutate(elevation_id = with_entry[of_variable == 'elevation'],
            is_type = 'value',
@@ -354,11 +358,68 @@ data.lvl1.ls <- list(
 
 ```
 
+
 # Level 2 data
 
 ```{r}
 
-```
+HISOC_variables <- c(
+  "citation",
+  "doi",
+  "region", 
+  "land_use_type",
+  "observation_year",
+  'elevation',
+  'mean_air_temperature',
+  'total_rainfall',
+  "soil_organic_carbon",
+  "soil_nitrogen",
+  "soil_phosphorus",
+  "soil_ph",
+  "soil_class",
+  "stand_age",
+  'stand_type'
+)
 
+temp_study <- data.lvl1.ls$meta |>
+  filter(of_variable %in% HISOC_variables) |>
+select(-source)  |>
+  unique()|>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
+  mutate(study_id = 'Ares2001')
+  
+  
+temp_plot <- data.lvl1.ls$primary|>
+  filter(of_variable %in% HISOC_variables,
+         str_detect(of_variable, 'soil') |
+           str_detect(of_variable, 'stand'))|>
+  select(-c(column_name, source)) |>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
+  select(-row_id) |>
+  mutate(study_id = 'Ares2001')
+
+temp_evel <- data.lvl1.ls$primary|>
+  filter(of_variable %in% HISOC_variables,
+         !(str_detect(of_variable, 'soil') |
+           str_detect(of_variable, 'stand')))|>
+  select(-c(row_id, column_name, source)) |>
+  unique() |>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
+  mutate(study_id = 'Ares2001')
+
+data.lvl2.df <- full_join(temp_study,
+          temp_plot, 
+          by = join_by(study_id)) |>
+  full_join(temp_evel, 
+            by = join_by(elevation_id, study_id)) |>
+  mutate(row_id = paste0('ID', 1:n())) |>
+  pivot_longer(cols = -c(study_id, elevation_id, row_id),
+               values_to = 'with_entry',
+               names_sep = '::',
+               names_to = c('of_variable', 'is_type'),
+               values_drop_na = TRUE) 
+  
+
+```
 
 # References
