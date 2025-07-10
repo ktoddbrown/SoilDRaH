@@ -240,7 +240,11 @@ data.lvl0.df <- list(citation =
                                                 col_types = cols(.default = col_character()),
                                                 skip = 1)
                                 )))
-
+#View(data.lvl0.df)
+# creates a list of lists (I think) as a dataframe
+# df pulls in citations as key value pairs, 
+# methods as a line by line read of a text block,
+# and two tables --- table1 and table3
 ```
 
 # Level 1 data - Hawaii SOC DB
@@ -355,7 +359,7 @@ data.lvl1.ls <- list(
            .by = row_id) |>
     arrange(row_id, elevation_id, column_name,
             of_variable, is_type, with_entry, source))
-
+View(data.lvl1.ls)
 ```
 
 
