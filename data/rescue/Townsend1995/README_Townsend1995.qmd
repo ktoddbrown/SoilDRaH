@@ -1,0 +1,241 @@
+---
+title: "Data Rescue: Townsend1995"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Townsend1995_Methods.bib
+  - Townsend1995.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Townsend1995_Methods.md'
+table1.file <- 'Townsend1995_Table1.csv'
+table2.file <- 'Townsend1995_Table2.csv'
+primaryCitation.file <- 'Townsend1995.bib'
+methodsCitation.file <- 'Townsend1995_Methods.bib'
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/74
+
+> Full citation here
+
+# Data Summary
+
+This paper looks at soil organic carbon stock and radiocarbon age across a gradient of three elevations of two land uses (pasture and forested). They use this data to fit soil carbon pools in a three pool first order linear model.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: The methods section in this paper does not have specific latitude/longitude of the sites but does give detailed regional descriptions which could be used to infer specific latitude and longitude. Year of observation is given in text.
+- Soil carbon stock: Depth of sample and area-density of soil organic carbon is given, unclear how coarse fraction was corrected for or bulk density assessed.
+- Soil type: Detailed classification provided in methods section.
+- Land use: Detailed land use and land use history in the methods section.
+
+# Tables and figures
+
+- Table 
+  1) Soil carbon, respiration, biomass, radiocarbon, pasture age, and forest-derived SOC
+  2) Seasonal variation in soil respiration, temperature, and moisture
+  3) Model performance summary
+  4) Modeled pool size
+  5) Soil incubation cumulative totals
+  6) Estimated passive pool
+  7) Model sensitivity results
+
+- Figure 
+  1) Soil pH values
+  2) Pasture age vs radiocarbon
+  3) Soil depth vs age
+  4) Pasture site vs forest-derived carbon
+  5) Modeled vs observed 13C
+  6) Half-life of intermediate SOM vs mean annual temperature
+  
+### Table 1
+
+Table 1 was modified by replacing delta symbols with text as well as removing superscripts *a*, *b*, and *c* denoting values used in the results section for an equation.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Townsend1995_Table1.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 2
+
+Table 2 was modified by combining grouped headings into column/header names.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Townsend1995_Table2.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Townsend1995_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/Townsend1995_Methods_KTB.md Townsend1995_Methods_LK.Rmd
+```
+
+# Files
+
+These files are in the Townsend1995 data rescue.
+
+- [Readme](README_Townsend1995.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Townsend1995.bib](Townsend1995.bib)
+  + citation for article transcribed
+- [Townsend1995_Methods.bib](Townsend1995_Methods.bib)
+  + citations for the methods section of the article
+- [Townsend1995_Methods.md](Townsend1995_Methods.md)
+  + methods transcribed from primary article
+- [Townsend1995_Table1.csv](Townsend1995_Table1.csv)
+- [Townsend1995_Table2.csv](Townsend1995_Table2.csv)
+  + table 1 from primary article.
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] copy decription from Git issue with link into readme
+- [x] create excel sheet with table 1 and 2
+- [x] figure out how to get caption and link filed together (?readme yaml?)
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods section
+- [x] add contribution yaml
+- [x] describe filed in human readable form inside ReadMe
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+Pending: 7 techincal reports and book chapters to manually enter
+
+- [x] Peterson, D. W., and R. B. Moore. 1987. Geologic history and evolution of geologic concepts, island of Hawaii. Pages 149-189 in Volcanism in Hawaii. United States Geological Survey Professional paper 1350. https://hilo.hawaii.edu/maunakea/library/ref/621
+    + manual entry as '@incollection'
+- [x] Juvik et al. 1978
+    + Juvik, J. 0., D. C. Singleton, and G. G. Clarke. 1978. Climate and water balance on the island of Hawaii. Pages 129-139 in Mauna Loa Observatory, a 20th Anniversary report. National Oceanic and Atmospheric Administration Special Report, Silver Spring, Maryland, USA.
+    + manual entry as '@incollection'
+- [x] Fieldes and Perrott 1965
+    + Fields, M., and K. W. Perrott. 1965. The nature of allophane in soils. Part 3. Rapid field and laboratory test for allophane. New Zealand Journal of Science 9:623-629.
+    + added to bib from journal export
+- [x] Uehara and Gilman 1981
+    + Uehara, G., and G. Gillman. 1981. The mineralogy, chemistry, and physics of tropical soils with variable charge clays. Westview, Boulder, Colorado, USA.
+    + manual entry as '@book'
+- [x] Raich et al. 1990
+    + no citaiton
+    + given citation appears in soil respiration section, it's likely this paper: Raich, J.W., Bowden, R.D. and Steudler, P.A. (1990), Comparison of Two Static Chamber Techniques for Determining Carbon Dioxide Efflux from Forest Soils. Soil Science Society of America Journal, 54: 1754-1757. https://doi.org/10.2136/sssaj1990.03615995005400060041x
+    + added to bib from journal export
+- [x] Trumbore 1993
+    + Trumbore, S. E. 1993. Comparison of carbon dynamics in tropical and temperate soils using radiocarbon measurements. Global Biogeochemical Cycles 7:275-290.
+    + added to bib from journal export
+- [x] Vogel et al. 1987
+    + Vogel, J. S., D. E. Nelson, and J. R. Southon. 1987. 14C background levels in an accelerator mass spectrometry system. Radiocarbon 29:323-333.
+    + added to bib from journal export
+- [x] Stuvier and Polach 1977
+    + Stuiver, M., and H. Polach. 1977. Reporting of 14C data. Radiocarbon 19:355-363.
+    + added to bib from journal export
+- [x] Jenkinson and Powlson 1976
+    + Jenkinson, D.S., and D. S. Powlson. 1976. The effect of biocidal treatments on metabolism in soil. V. A method for measuring soil biomass. Soil Biology and Biochemistry 8: 209-213.
+    + added to bib from journal export
+- [x] Coleman et al. 1978
+    + Coleman, D. C., R. V. Anderson, C. V. Cole, E. T. Elliot, L. Woods, and M. K. Campion. 1978. Trophic interactions in soils as they affect energy and nutrient dynamics. IV. Flows of metabolic and biomass carbon. Microbial Ecology 4:373-380.
+    + added to bib from journal export
+    + year incorrectly cited
+- [x] Chaussod and Nicolardot (1982)
+    + no citation
+    + given appearence in microbial biomass section, it is likely this citation: Chaussod,R. and Nicolardot,B., 19831980666, French, Journal article, 19, (4), Revue db
+    
+    # Level 0: raw data reads
+
+The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ), 
+                              Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```

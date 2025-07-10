@@ -1,0 +1,12 @@
+"TABLE 1. Soil carbon pools and fluxes, carbon isotopes, pasture ages, and the percent forest-derived soil carbon calculated from <sup>13</sup>C data using Eq. 3. Sites are three C<sub>4</sub> pastures and two C<sub>3</sub> forests on the northeast flank of Mauna Kea Volcano, island of Hawaii. Values in parentheses are standard errors, and *N* = 15 for all but soil respiration (*N* = 75) and soil <sup>14</sup>C",,,,,,,,,,
+,Pasture (100 m) mean,Pasture (100 m) SE,Pasture (800 m) mean,Pasture (800 m) SE,Pasture (1700 m) mean,Pasture (1700 m) SE,Forest (900 m) mean,Forest (900 m) SE,Forest (1500 m) mean,Forest (1500 m) SE
+"Soil carbon (carbon, g m<sup>-2</sup> 20 cm depth<sup>-1</sup>)",9610,123,13620,565,14170,543,11390,762,15360,343
+"Soil respiration (carbon, g m<sup>-2</sup> yr<sup>-1</sup>)",3180,91,2910,80,2260,71,2630,77,2400,67
+"Microbial biomass (carbon, mg g<sup>-1</sup> soil)",1.78,0.25,2.70,0.57,3.55,0.70,2.49,0.42,2.64,0.53
+Microbial biomass (% soil C),1.85,NA,1.78,NA,1.69,NA,1.73,NA,1.01,NA
+delta <sup>13</sup>C vegetation (per mille),-12.92,0.15,-12.66,0.20,-12.87,0.18,-26.98,0.14,-26.32,0.18
+delta <sup>13</sup>C soil (per mille),-16.43,0.18,-18.33,0.25,-19.90,0.30,-26.70,0.17,-25.90,0.13
+delta <sup>13</sup>C soil respiration (per mille),-14.65,1.07,-15.21,1.76,-13.28,1.20,-26.16,0.46,-25.99,0.52
+Delta <sup>13</sup>C soil (per mille),-70,42,19,21,34,17,-24,35,51,44
+Pasture age (yr),approximate 100,NA,40-50,NA,40-50,NA,NA,NA,NA,NA
+% forest-derived soil C,25.4,NA,41.5,NA,52.3,NA,100,NA,100,NA
