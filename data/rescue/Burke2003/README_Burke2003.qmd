@@ -6,7 +6,7 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - Burke2003_Methods_KTB.bib
+  - Burke2003_Methods.bib
   - Burke2003.bib
 author:
   - name:
@@ -88,17 +88,16 @@ Table 1 was modified by moving the sub-tables to columns, lifting the units into
 #| code-fold: true
 #| message: false
 
-filename <- 'Burke2003_Table1_KTB.csv'
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
 
 
-{{< include Burke2003_Methods_KTB.md >}}
+{{< include Burke2003_Methods.md >}}
 
 # Transcription comparison
 
@@ -197,6 +196,9 @@ Some citations are missing, those are noted here and how best guess were generat
 - [x] Rieley, 1994
   + Rieley, G. Derivatization of organic compounds prior to gas chromatographic–combustion–isotope ratio mass spectrometric analysis: Identification of isotope fractionation processes. Analyst 1994 119 915–919.
   + direct export
+
+
+# Level 0 Data
 
 ```{r readLevel0}
 
