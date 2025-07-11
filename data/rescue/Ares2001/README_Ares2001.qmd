@@ -245,6 +245,7 @@ data.lvl0.df <- list(citation =
 # df pulls in citations as key value pairs, 
 # methods as a line by line read of a text block,
 # and two tables --- table1 and table3
+# everything is read in as text strings ( which is character 'type' in R parlance, I think)
 ```
 
 # Level 1 data - Hawaii SOC DB
@@ -262,20 +263,22 @@ This data is identified as a data source for the [Hawai'i Soil Organic Carbon Da
 #Pull in the soc stock from one of the tables(?)
 #Check for geolocation and observation date somewhere???
 
+#create a metadata table/df and move/paste in values from methods and citation info
 data.df <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.df$method[5], collapse = ' ')),
-                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.df$method[14:16], collapse = ' ')),
+                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.df$method[14:16], collapse = ' ')), #were these methods a manual fine?
                    'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.df$method[14]),
                    'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.df$method[c(30,53,58)], collapse = '... ')),
                    'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
                    'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
 
+#create a temporary df as temp1 using Table1 data
 temp1 <- data.lvl0.df$data$Table1$primary |>
-  mutate(row_id = paste0('R', 1:n())) |>
+  mutate(row_id = paste0('R', 1:n())) |> #adding a row id -- not unique, preserving row source
   pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-  mutate(of_variable = case_when(
+               names_to = 'column_name', values_to = 'with_entry', #specifying columns in the pivot to populate
+               values_drop_na = TRUE) |> #drop missing values 
+  mutate(of_variable = case_when( #swap human readible text (I think) depeding on value for the 'of_variable' column
            column_name == "Stand type" ~ 'stand_type',
            column_name == 'Elevation (m)' ~ 'elevation',
            column_name == 'Soil type' ~ 'soil_class',
@@ -290,34 +293,38 @@ temp1 <- data.lvl0.df$data$Table1$primary |>
            column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density_A_koa',
            column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
            column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
-  mutate(source = 'Table 1') 
+  mutate(source = 'Table 1') #add column called source and populate each row with Table 1.  I assume this will make sense further down :)
+#View(temp1)
 
+# creating a metadata table for temp1
 temp1.meta <-
   temp1 |>
   select(column_name, of_variable) |>
   unique() |>
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'), # well it's the units column with a regex pattern to....grab everything between parentheses
          source = 'Table 1 column names.') |>
   filter(!is.na(unit)) |>
   select(-column_name) |>
   bind_rows(
   tribble(~of_variable, ~method, ~source,
-            'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
             'soil_organic_carbon', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_nitrogen', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_phosphorus', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_class', paste0(data.lvl0.df$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
   bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~source,
+    tribble(~of_variable, ~control_vocabulary, ~source, #hard coding controlled vocabulary values....I think
             'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
             'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
   ) |>
+  # is this pivot compressing or separating?
   pivot_longer(cols = c(unit, method, control_vocabulary),
                names_to = 'is_type',
                values_drop_na = TRUE,
                values_to = 'with_entry')
+#View(temp1.meta)
 
-
+#the following is doing the same process as above but fitted to the data and formatting of Table3
 temp3 <- data.lvl0.df$data$Table3$primary |>
   pivot_longer(cols = -variable,
                names_to = 'row_id', values_to = 'with_entry',
@@ -348,7 +355,10 @@ temp3.meta <- temp3 |>
                             is_type == 'method' ~ 'Methods ln72-73',
                             TRUE ~ NA_character_))
 
-
+# so this is where I get lost
+# assuming I understand what's going on here....
+# the info was munged as separate dfs
+# but now it gets mashed into a list (well, list of lists) for all the metadata and primary data
 data.lvl1.ls <- list(
   meta = bind_rows(data.df,
                    temp1.meta, 
@@ -359,7 +369,7 @@ data.lvl1.ls <- list(
            .by = row_id) |>
     arrange(row_id, elevation_id, column_name,
             of_variable, is_type, with_entry, source))
-View(data.lvl1.ls)
+#View(data.lvl1.ls)
 ```
 
 
@@ -367,6 +377,7 @@ View(data.lvl1.ls)
 
 ```{r}
 
+# yep, just defining all the variables
 HISOC_variables <- c(
   "citation",
   "doi",
@@ -385,6 +396,7 @@ HISOC_variables <- c(
   'stand_type'
 )
 
+# create a temp_study df using level1 metadata and match (or filter) to HICSC variable
 temp_study <- data.lvl1.ls$meta |>
   filter(of_variable %in% HISOC_variables) |>
 select(-source)  |>
@@ -392,7 +404,7 @@ select(-source)  |>
   pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
   mutate(study_id = 'Ares2001')
   
-  
+# same as above but look for and match to specific strings-- soil or stand   
 temp_plot <- data.lvl1.ls$primary|>
   filter(of_variable %in% HISOC_variables,
          str_detect(of_variable, 'soil') |
@@ -402,6 +414,7 @@ temp_plot <- data.lvl1.ls$primary|>
   select(-row_id) |>
   mutate(study_id = 'Ares2001')
 
+# same as above but look for and match against strings without soil or stand (should be whatever is left)
 temp_evel <- data.lvl1.ls$primary|>
   filter(of_variable %in% HISOC_variables,
          !(str_detect(of_variable, 'soil') |
@@ -414,13 +427,19 @@ temp_evel <- data.lvl1.ls$primary|>
     #Figure out linear interpolation with
     #lm(formula = `mean_air_temperature::value` ~ `elevation::value`, data = temp_evel)
     #N = 3, Adjusted R-squared:  0.997 , p-value: 0.02449
-    `mean_air_temperature::value` = if_else(is.na(`mean_air_temperature::value`), 23.15 - 0.006429 * `elevation::value`, `mean_air_temperature::value`),
+    
+    # bw -- if no mean air temp use available data to calculate it -- where did calculated range values originate?  
+    `mean_air_temperature::value` = if_else(is.na(`mean_air_temperature::value`), 23.15 - 0.006429 * `elevation::value`, `mean_air_temperature::value`), 
     #N = 3, Adjusted R-squared:  0.9886; p-value: 0.0482
+    
+    # bw -- same as mean air temp but now do total rainfall -- where did calculated range values originate?
     `total_rainfall::value` = if_else(is.na(`total_rainfall::value`),
                                       19078.83 - 9.97 * `elevation::value`, `total_rainfall::value`)) |>
   mutate(across(everything(), as.character)) |>
   mutate(study_id = 'Ares2001')
 
+
+# join the temp dfs above together
 data.lvl2.df <- full_join(temp_study,
                           temp_plot, 
                           by = join_by(study_id)) |>
@@ -433,13 +452,15 @@ data.lvl2.df <- full_join(temp_study,
                names_to = c('of_variable', 'is_type'),
                values_drop_na = TRUE) 
 
-
+#View(data.lvl2.df)
 ```
 
 
 ## HiCSC Visuals
 
 ```{r fig.width=7, fig.height=6}
+# generating unique plots using level 2 data (obviously)
+# but....I'm going to leave this for another day
 plot.df <- data.lvl2.df |>
   mutate(is_type = 
            case_when(
