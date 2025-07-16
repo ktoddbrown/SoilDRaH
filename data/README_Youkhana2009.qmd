@@ -21,8 +21,7 @@ author:
           city: Gainesville
           state: FL
           country: USA
-      role: 
-        - "Transcription"
+      role:
         - "Review"
   - name:
       given: Savannah
@@ -35,6 +34,17 @@ author:
           country: USA
       role: "Transcription"
       note: https://github.com/SavaScott
+ - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: ESS UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
@@ -247,6 +257,7 @@ Some citations are missing, those are noted here and how best guess were generat
 - [x] Scheiner, S. M. (2020). MANOVA: multiple response variables and multispecies interactions. In Design and analysis of ecological experiments (pp. 94-112). Chapman and Hall/CRC.
   + direct export
 
+# Level 0: raw data reads
 ```{r readLevel0}
 
 data.lvl0.df <- list(citation = 
