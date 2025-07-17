@@ -1,0 +1,317 @@
+---
+title: "Data Rescue: Perez2001"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: 2025-0006
+bibliography:
+  - Perez2001_Methods.bib
+  - Perez2001_Thestudyarea.bib
+  - Perez2001.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
+  - name:
+      given: Vaasuki
+      family: Marupaka
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Review"
+      note: https://github.com/vaasukimarupaka
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Perez2001_Methods.md'
+studysite.file <- 'Perez2001_Thestudyarea.md'
+table2.file <- 'Perez2001_Table2.csv'
+table3.file <- 'Perez2001_Table3.csv'
+primaryCitation.file <- 'Perez2001.bib'
+thestudysiteCitation.file <- 'Perez2001_Thestudyarea.bib'
+methodsCitation.file <- 'Perez2001_Methods.bib'
+```
+
+This documents the data transcription for @Perez2001.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/92.
+
+> Pérez, H. E., & Turner, B. L. (2001). Geoecological alteration of surface soils by the Hawaiian silversword (Argyroxiphium sandwicense DC.) in Haleakalā's crater, Maui. Plant Ecology, 157(2), 215–233. https://doi.org/10.1023/A:1013977009064
+
+# Data Summary
+
+This study examines how the Hawaiian silversword affects soil properties in the volcanic crater of Haleakalā, Maui. The findings indicate that the plant's litter significantly changes the soil chemistry and characteristics, promoting seedling establishment and the species' own regeneration.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location:  Locational data was found in the Research method section. Specific data of the sample sites, inside the crater, were not mentioned.
+- Soil carbon stock: The depth of the soil was mentioned in the Research Methods site
+- Soil type:  Specific soil type is found in the section named 'The study area'. Soils are found to be Inceptisol or Andisols.
+- Land use: The land use of the soil is found within the Study area section of the paper.
+
+# Tables and figures
+
+- Table 
+  1) Average values (± S.D.) for physical soil properties in three different sampling positions: (1) bare, unvegetated (control) ground; (2)
+under the canopy of adjacent, live silversword rosettes; and (3) below nearby dead plants.
+  2)  Average values (± S.D.) for chemical soil properties and exchangeable nutrients in three different sampling positions: (1) bare,
+unvegetated (control) ground; (2) under the canopy of adjacent, live silversword rosettes; and (3) below nearby dead plants.
+  3)  Average values (± S.D.) for selected physical and chemical properties of live foliage and standing litter of Hawaiian silverswords.
+
+- Figure 
+  1) View of the silversword population sampled (2505 m), July 30, 1996
+  2) Particle-size distributions (mm) for surficial (0–10 cm depth) soils from Haleakala
+  3) Variability of (dry) color in the soil samples. A: Control (bare) soils; B: soils under live silverswords; C: soils below dead rosettes.
+  4) : Relationship between (Y axis) soil water content (percentage) at field capacity and (X axis): A: Organic carbon percentage; B: Soil porosity (%).
+  5) Relationship between organic matter content (percentage) and total nitrogen content (percentage).
+  6) Relationship between plant height (cm) of 12 live rosettes and: A: Ca (ppm); B: Mg (ppm) in the soil below.
+  7) Relationship between organic carbon content (percentage) and cation-exchange capacity.
+  8)  Soil temperatures (5 cm depth), at noon, in four silversword populations, Haleakala’s crater, Aug. 6–9, 1998.
+  9) View of the study site (2505 m), Aug. 4, 1998
+  10) Stage progression for 104 silverswords during a two-year period (July 1996–Aug. 1998)
+  11) Idealized temporal sequence of concomitant silversword development and changes in soil properties
+
+### Table 2
+
+Table 2 was modified to include the footer in the header.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 2
+
+Table 3 was modified to include the footer in the header. Dashes are used to mark empty data cells.
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- table3.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+{{< include Perez2001_Methods.md >}}
+{{< include Perez2001_thestudyarea.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Perez2001_Methods_LK.md Perez2001_Methods.md
+```
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Perez2001_Thestudyarea_LK.md Perez2001_Thestudyarea.md
+```
+# Files
+
+These files are in the @Perez2001 data rescue.
+
+- [Readme](README_Perez2001.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Perez2001.bib](Perez2001.bib)
+  + citation for article transcribed
+- [Perez2001_Methods.bib](Perez2001_Methods.bib)
+  + citations for the methods section of the article
+- [Perez2001_Thestudyarea.bib](Perez2001_Thestudyarea.bib)
+  + citations for the The study area subsection of the article
+- [Perez2001_Methods.md](Perez2001_Methods.md)
+  + methods transcribed from primary article
+- [Perez2001_Thestudyarea.md](Perez2001_Thestudyarea.md)
+  + subsection The study area transcribed from primary article
+- [Perez2001_Table2.csv](Perez2001_Table2.csv)
+  + table 2 from primary article with data about the average values (± S.D.) for chemical soil properties and exchangeable nutrients in three different sampling positions.
+- [Perez2001_Table3.csv](Perez2001_Table3.csv)
+  + table 3 from primary article with data about the average values (± S.D.) for selected physical and chemical properties of live foliage and standing litter of Hawaiian silverswords.
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 2 and 3
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] MacDonald G.A. 1978. Geologic map of the crater section of Haleakala National Park, Maui, Hawaii. USA Geological Survey Miscellaneous Investigation Series, Map I-1088: 1-8 + 1 map (1: 24,000).
+  + copy from bib
+- [x] MacDonald G.A. and Abbott A.T. 1977. Volcanoes in the Sea. The Geology of Hawaii. University of Hawaii Press, Honolulu.
+  + copy from bib
+- [x] Kobayashi H.K. 1973a. Ecology of the silversword, Argyroxiphium sandwicense DC. (Compositae) Haleakala crater, Hawaii. Unpublished Ph.D. Dissertation.
+  + copy from bib
+- [x] Kobayashi H.K. 1974. Preliminary investigations on insects affecting the reproductive stage of the silversword (*Argyroxiphium sandwicense* DC.) Compositae, Haleakala crater, Maui, Hawaii. In: Proceedings, Hawaiian Entomological Society., pp. 397–402.
+  + copy from bib
+- [x] Pérez F.L. 1992a. The influence of organic matter addition by caulescent Andean rosettes on surficial soil properties. Geoderma 54: 151–171.
+  + copy from bib
+- [x] Stevenson F.J. 1994. Humus Chemistry. Genesis, Composition, Reactions. Wiley, New York.
+  + copy from bib
+- [x] Blake G.R. and Hartge K.H. 1982. Bulk density. Pp. 363-375. In: Methods of Soil Analysis, Part 1. Physical and Mineralogical Methods. 2nd edn. American Society of Agronomy, Monograph 9.
+  + copy from bib
+- [x] Friar E.A., Robichaux R.H. and Mount D.W. 1996. Molecular genetic variation following a population crash in the endangered Mauna Kea silversword, *Argyroxiphium sandwicense* spp. *sandwicense* (Asteraceae). Molecular Ecology 5: 687–691.
+  + copy from bib
+- [x] Rogers G.F., Malde H.E. and Turner R.M. 1984. Bibliography of Repeat Photography for Evaluating Landscape Change. University of Utah Press, Salt Lake City.
+  + copy from bib
+- [x] Ball D.F. 1964. Loss-on-ignition as an estimate of organic matter and organic carbon in non-calcareous soils. Journal of Soil Science 15: 84–92.
+  + copy from bib
+- [x] Munsell Color 1977. Munsell Color Charts for Plant Tissues. Macbeth, Baltimore, Maryland.
+  + copy from bib
+- [x] Munsell Color 1992. Munsell Soil Color Charts. Macbeth, Newburgh, New York.
+  + copy from bib
+- [x] Pérez F.L. 2000. The influence of surface volcaniclastic layers from Haleakala (Maui, Hawaii) on soil water conservation. Catena 38: 301–332.
+  + copy from bib
+- [x] Brady N.C. 1974. The Nature and Properties of Soils. MacMillan, New York.
+  + copy from bib
+- [x] Pérez F.L. 1992b. Miniature sorted stripes in the Páramo de Piedras Blancas (Venezuelan Andes). In: Dixon J.C. and Abrahams A.D. (eds), Periglacial Geomorphology. Wiley, London, pp. 125–157.
+  + copy from bib
+- [x] Pitty A.F. 1979. Geography and Soil Properties. Methuen, London.
+  + copy from bib
+- [x] Olsen S.R. and Sommers L.E. 1982. Phosphorus Pp. 403-430. In: Methods of Soil Analysis, Part 2. Chemical and Microbiological Properties. 2nd edn. American Society of Agronomy, Monograph 9.
+  + copy from bib
+- [x] Liegel E.A., Simson C.R. and Schulte E.E. (eds) 1980. Wisconsin procedure for soil testing, plant analysis and feed and forage analysis. University of Wisconsin Extension, Soil Fertility Series 6.
+  + copy from bib
+- [x] Jones T.A. 1969. Skewness and kurtosis as criteria of normality in observed frequency distributions. Journal of Sedimentary Petrology 39: 1622–1627.
+  + copy from bib
+- [x] Miller R.L. and Kahn J.S. 1962. Statistical Analysis in the Geological Sciences. Wiley, New York.
+  + copy from bib
+- [x] Pérez F.L. 1992a. The influence of organic matter addition by caulescent Andean rosettes on surficial soil properties. Geoderma 54: 151–171.
+  + copy from bib
+- [x] Pérez F.L. 1996. The effects of giant Andean rosettes on surface soils along a high paramo toposequence. Geojournal 40.3: 283–298.
+  + copy from bib
+  
+## Citation Notes for the Study Site subsection
+
+Below are the citation notes from the subsection, The study site.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Stearns H.T. 1942. Origin of the Haleakala crater, island of Maui, Hawaii. Geological Society of America Bulletin 53: 1–14.
+  + copy from bib
+- [x] Stearns H.T. 1946. Geology of the Hawaiian islands. Bulletin, Hawaii Hydrography Division 8: 1–106.
+  + copy from bib
+- [x] Blumenstock D.I. and Price S. 1967. Climates of the states: Hawaii. Climatography of the United States. USA Department of Commerce, N° 60–51.
+  + copy from bib
+- [x] Leopold L.B. 1949. The interaction of tradewind and sea breeze, Hawaii. Journal of Meteorology 6: 312–320.
+  + copy from bib
+- [x] Giambelluca T.W. and Nullet D. 1991. Influence of the trade-wind inversion on the climate of a leeward mountain slope in Hawaii. Climate Research 1: 207–216.
+  + copy from bib
+- [x] Whiteaker L.D. 1983. The vegetation and environment in the Crater District of Haleakala National Park. Pacific Science 37:1–24.
+  + copy from bib
+- [x] Yocom C.F. 1967. Ecology of feral goats in Haleakala National Park, Maui, Hawaii. American Midland Naturalist 77: 418–451.
+  + copy from bib
+- [x] Kobayashi H.K. 1973a. Ecology of the silversword, *Argyroxiphium sandwicense* DC. (Compositae) Haleakala crater, Hawaii. Unpublished Ph.D. Dissertation.
+  + copy from bib
+- [x] Leuschner C. and Schulte M. 1991. Microclimatological investigations in the tropical alpine scrub of Maui, Hawaii: evidence fora drought-induced alpine timberline. Pacific Science 45: 152–168.
+  + copy from bib
+- [x] Noguchi Y., Tabuchi H. and Hasegawa H. 1987. Physical factorscontrolling the formation of patterned ground on Haleakala, Maui. Geografiska Annaler 69A: 329–342.
+  + copy from bib
+- [x] Rundel P.W. and Witter M.S. 1994. Population dynamics and flowering in a Hawaiian alpine rosette plant, Argyroxiphium sandwicense. In: Rundel P.W., Smith A.P. and Meinzer F.C. (eds), Tropical Alpine Environments. Plant Form and Function. Cambridge Univ. Press, pp. 295–306.
+  + copy from bib
+- [x] Ruhle G.C. 1959. A Guide for the Haleakala section. Island of Maui, Hawaii. Hawaii Nature Notes. Hawaii Natural History Association, Honolulu
+  + copy from bib
+- [x] Cline M.G. 1955. Soil Survey of the Territory of Hawaii. In: USDA, Soil Conservation Service, Soil Survey Series., p. 644 USDA, Soil Conservation Service, Soil Survey Series
+  + copy from bib
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table3 = list(
+                                caption = read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+```
