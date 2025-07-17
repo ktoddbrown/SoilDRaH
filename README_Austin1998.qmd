@@ -1,0 +1,249 @@
+---
+title: "Data Rescue: Austin1998"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Austin1998_Methods.bib
+  - Austin1998.bib
+  - Austin1998_Table1.bib
+  - Austin1998_Table4.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        -"Transcription"
+        -"Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Austin1998_Methods.md'
+table1.file <- 'Austin1998_Table1.csv'
+table4.file <- 'Austin1998_Table4.csv'
+primaryCitation.file <- 'Austin1998.bib'
+methodsCitation.file <- 'Austin1998_Methods.bib'
+table1Citation.file <- 'Austin1998_Table1.bib'
+table4Citation.file <- 'Austin1998_Table4.bib'
+```
+
+This documents the data transcription for @Austin1998.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/102.
+
+> Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405
+
+# Data Summary
+
+This paper examines how soil and foliar nutrients vary across five native Hawaiian forests that differ in annual rainfall (ranging from 500 mm to 5500 mm), but are otherwise held constant in terms of elevation, substrate age, and dominant vegetation (primarily Metrosideros polymorpha). They used this data to evaluate changes in leaf mass per area, lignin content, δ$^{15}$N, and δ$^{13}$C.
+
+## Fit for purpose: HiCSC
+
+This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
+
+Location: Locational data was found in the materials and methods section, subsection sites. The five sites were located around 700 m on the Big Island of Hawai'i. Three of the sites were found on lava flows from the Mauna Loa Volcano, with the other two being on the Hualalai Volcano. Specific locations of the sites are found in Fig. 1 and Table 1.
+Soil Carbon Stock: The depth of the soil was mentioned in the Materials and methods section, subsection soil analysis, with the top 10 cm of the soil being sampled.
+Soil type: The in-depth analysis of the soil type of the sites was found within the section Materials and methods, subsection Soil analysis.
+Land use: The land use of the sites is found within the section Materials and methods, and subsection Sites.
+# Tables and figures
+
+- Table 
+  1) Climate and age characteristics for sites sampled along precipitation gradient in Hawai'i.
+  2) Soil characteristics and nitrogen mineralization for transects from sites along the precipitation gradient in Hawai'i. Soils were sampled at 0±10 cm, and were composited by transect.
+  3)  Foliar nutrients per unit leaf area and lignin: nitrogen ratios for *Metrosideros polymorpha* along the precipitation gradient.
+  4) Leaf mass per area (LMA), foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
+  
+- Figure 
+  1) Location of study sites along the precipitation gradient on the island of Hawai'i. All sites are located at 700 m elevation, on 'a'a flows aged 2500 +- 300 years.
+  2) Nitrogen and phosphorus concentrations for soil and foliar *Metrosideros polymorpha* for five sites across precipitation gradient.
+  3) Cation concentrations (Ca, Mg, K) in soil and *Metrosideros polymorpha*, for five sites across precipitation gradient.
+  4) Variation in leaf mass per area (LMA) and lignin concentrations of *M. polymorpha*.
+  5) Variation in delta^15N values (&) for soil and foliar *M. polymorpha* from all sites across precipitation gradient.
+  
+### Table 1: climate and age characteristics
+
+Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 4: LMA, foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
+
+```{r table4}
+#| code-fold: true
+#| message: false
+
+filename <- table4.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include Austin1998_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff Austin1998_Methods.md Austin1998_Methods_MB.md
+```
+
+# Files
+
+These files are in the @Austin1998 data rescue.
+
+- [Readme](README_Austin1998.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Austin1998.bib](Austin1998.bib)
+  + citation for article transcribed
+- [Austin1998_Methods.bib](Austin1998_Methods.bib)
+  + citations for the methods section of the article
+- [Austin1998_Methods.md](Austin1998_Methods.md)
+  + methods transcribed from primary article
+- [Austin1998_Table1.csv](Austin1998_Table1.csv)
+  + table 1 from primary article with site descriptions
+- [Austin1998_Table1.bib](Austin1998_Table1.bib)
+  + citations for the table 1 of the article
+- [Austin1998_Table4.csv](Austin1998_Table4.csv)
+  + table 4 from primary article with climate variables
+- [Austin1998_Table4.bib](Austin1998_Table4.bib)
+  + citations for the table 4 of the article
+
+# Working notes
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1 and 3
+- [x] export excel table to csv
+- [x] copy over methods section into markdown 
+  - started, PDF doesn't copy but there is an html version which is incomplete and error ridden. Ended up with alot of retyping.
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+  
+- [x] Carlquist SJ (1980) Hawaii, a natural history: geology, climate, native flora and fauna above the shoreline. The Natural History Press. Garden City, NY
+  + copy from bib
+
+- [x] Wagner WL, Herbst DR, Sohmer SH (1990) Manual of the flowering plants of Hawaii. University of Hawaii Press, Honolulu
+  + copy from bib
+
+- [x] Vitousek PM, Turner DR, Kitayama K (1995) Foliar nutrients during long-term soil development in Hawaiian montane rain forest. Ecology 76:712-720
+  + copy from bib
+
+- [x] Giambelluca TW, Nullet MA, Schroeder TA (1986) Rainfall atlas of Hawaii. Department of Land and Natural Resources, Honolulu
+  + copy from bib
+
+- [x] Price S (1983) Climate. In: Armstrong RW (ed) Atlas of Hawaii. University of Hawaii Press, Honolulu, pp 59-66
+  + copy from bib
+
+- [x] Lockwood JP, Lipman PW, Peterson LD, Warshauer FR (1988) Generalized ages of surface lava flows of Mauna Loa Volcano, Hawaii (U. S. Geological Survey Miscellaneous Publications Map I-1908). U. S. Government Printing Office, Washington DC
+  + copy from bib
+
+- [x] Moore RB, Clague DA (1991) Geological map of Hualalai Volcano, Hawaii (U. S. Geological Survey Miscellaneous Publications Map I-2213). U. S. Government Printing Office, Washington DC
+  + copy from bib
+
+- [x] Stemmerman L (1983) Ecological studies of Hawaiian *Metrosideros* in a successional context. Pac Sci 37:361-373
+  + copy from bib
+  
+- [x] Reich PB, Walters MB, Ellsworth DS (1992) Leaf life-span in relation to leaf, plant, and stand characteristics among diverse ecosystems. Ecol Monogr 62:365-392
+  + copy from bib
+
+- [x] Morrison IM (1972) Improvements in the acetyl bromide technique to determine lignin and digestibility and its application to legumes. J Sci Food Agric 23:1463-1469
+  + copy from bib
+  
+- [x] Iiyama K, Wallis AFA (1990) Determination of lignin in herbaceous plants by an improved acetyl bromide procedure. J Sci Food Agric 51:145-161
+  + copy from bib
+  
+# Level 0: raw data reads
+
+The Level 0 data in this package include the tables above (Table 1 and 4) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file),
+                         table1 = 
+                           read.bib(file = table1Citation.file),
+                         table4 = 
+                           read.bib(file = table4Citation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table4 = list(
+                                caption = read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )))
+                  
+```
