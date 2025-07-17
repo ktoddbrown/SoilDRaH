@@ -1,0 +1,7 @@
+"Table 1. Climate and age characteristics for sites sampled along precipitation gradient in Hawai'i. Mean annual precipitation values were determined from @Giambelluca1986. Flow ages, elevation and origin were determined from maps for Mauna Loa [@Lockwood1988] and Hualalai [@Moore1991] and personal communication with J. Lockwood. Dominant vegetation type from @Wagner1990",,,,,,
+Site ,Name,Precipitation (mm),Flow age,Elevation (m),Volcano,Dominant vegetation
+1,Kaniku,500,2800,700,Mauna Loa,Metrosideros-Diospyros forest
+2,Kaupulehu,900,2800,680,Hualalai,Diospyros forest
+3,Manuka,1500,2330,710,Mauna Loa,Metrosideros-Nestigis forest
+4,Kaloko,2000,2300,705,Hualalai,Metrosideros-Psychotria forest
+5,Waiakea,5500,2300,710,Mauna Loa,Metrosideros-Acacia forest
