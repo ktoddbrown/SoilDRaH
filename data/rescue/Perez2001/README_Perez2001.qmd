@@ -151,11 +151,11 @@ read_csv(file = filename,
 
 # Transcription comparison
 
-```{bash eval=FALSE, echo=FALSE}
+```{bash eval=FALSE, echo=TRUE}
 diff --strip-trailing-cr --suppress-common-lines -y Perez2001_Methods_LK.md Perez2001_Methods.md
 ```
 
-```{bash eval=FALSE, echo=FALSE}
+```{bash eval=FALSE, echo=TRUE}
 diff --strip-trailing-cr --suppress-common-lines -y Perez2001_Thestudyarea_LK.md Perez2001_Thestudyarea.md
 ```
 # Files
@@ -285,6 +285,8 @@ Some citations are missing, those are noted here and how best guess were generat
   + copy from bib
 - [x] Cline M.G. 1955. Soil Survey of the Territory of Hawaii. In: USDA, Soil Conservation Service, Soil Survey Series., p. 644 USDA, Soil Conservation Service, Soil Survey Series
   + copy from bib
+
+# Level 0 data
 
 ```{r readLevel0}
 
