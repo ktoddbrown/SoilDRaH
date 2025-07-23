@@ -34,7 +34,7 @@ author:
           country: USA
       role: "Transcription"
       note: https://github.com/SavaScott
- - name:
+  - name:
       given: Layla
       family: Kalandjian
       affiliation:
@@ -258,6 +258,7 @@ Some citations are missing, those are noted here and how best guess were generat
   + direct export
 
 # Level 0: raw data reads
+
 ```{r readLevel0}
 
 data.lvl0.df <- list(citation = 
