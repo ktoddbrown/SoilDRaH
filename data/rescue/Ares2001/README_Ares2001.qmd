@@ -103,11 +103,10 @@ Table 1 was modified to remove the sub-tables and flatted sub-tables in certain 
 #| code-fold: true
 #| message: false
 
-filename <- table1.file
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -118,11 +117,10 @@ read_csv(file = filename,
 #| code-fold: true
 #| message: false
 
-filename <- table3.file
-read_csv(file = filename,
+read_csv(file = table3.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table3.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -130,12 +128,14 @@ read_csv(file = filename,
 
 {{< include Ares2001_Methods.md >}}
 
-# Transcription comparison
-<!-- what purpose does this serve? this file does not exist in this file group -->
+<!--  # Transcription comparison
+what purpose does this serve? this file does not exist in this file group -BW
+This is here mostly to remind transcribers to cross check using diff the two transcripts. Let's keep this here but comment it out. -KTB
 ```{bash eval=FALSE}
 diff Ares2001_Methods_CAG.md Ares2001_Methods.md
 ```
-
+ -->
+ 
 # Files
 
 These files are in the Ares2001 data rescue.
@@ -153,6 +153,7 @@ These files are in the Ares2001 data rescue.
 - [Ares2001_Table3.csv](Ares2001_Table3.csv)
   + table 3 from primary article with climate variables
 
+<!--- comment out these working notes but preserve them as work done -KTB
 
 # Working notes (KTB)
 
@@ -208,44 +209,52 @@ Some citations are missing, those are noted here and how best guess were generat
 - [x] Heanes 1984
   + Heanes, D. L. 1984. Determination of total organic C in soils by improved chromic acid digestion and spectrophotometric procedure. Commun. Soil Sci. Plant Anal. 15: 1191-1213.
   + direct export
+--->
 
 # Level 0 data read
 
-```{r readLevel0}
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
 
-data.lvl0.df <- list(citation = 
-                    list(primary = 
-                           read.bib(file = primaryCitation.file), 
-                         methods = 
-                           read.bib(file = methodsCitation.file)
-                    ),
-                  method = read_lines(file = methods.file),
-                  data = list(Table1 = 
-                                list(caption = 
-                                       read_csv(file = table1.file,
-                                                col_types = cols(.default = col_character()),
-                                                n_max = 1, col_names = FALSE)$X1[1],
-                                     primary = 
-                                       read_csv(file = table1.file,
-                                                col_types = cols(.default = col_character()),
-                                                skip = 1)
-                                ), 
-                               Table3 = 
-                                list(caption = 
-                                       read_csv(file = table3.file,
-                                                col_types = cols(.default = col_character()),
-                                                n_max = 1, col_names = FALSE)$X1[1],
-                                     primary = 
-                                       read_csv(file = table3.file,
-                                                col_types = cols(.default = col_character()),
-                                                skip = 1)
-                                )))
-#View(data.lvl0.df)
-# creates a list of lists (I think) as a dataframe
-# df pulls in citations as key value pairs, 
-# methods as a line by line read of a text block,
-# and two tables --- table1 and table3
-# everything is read in as text strings ( which is character 'type' in R parlance, I think)
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.df <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    #Same format as Table1
+    Table3 = list(
+      caption = read_csv(file = table3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )))
+
 ```
 
 # Level 1 data - Hawaii SOC DB
