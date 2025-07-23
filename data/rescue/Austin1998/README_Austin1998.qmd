@@ -23,8 +23,7 @@ author:
           city: Gainesville
           state: FL
           country: USA
-      role: 
-        -"Transcription"
+      role:
         -"Review"
   - name:
       given: Savannah
@@ -66,10 +65,11 @@ This paper examines how soil and foliar nutrients vary across five native Hawaii
 
 This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
 
-Location: Locational data was found in the materials and methods section, subsection sites. The five sites were located around 700 m on the Big Island of Hawai'i. Three of the sites were found on lava flows from the Mauna Loa Volcano, with the other two being on the Hualalai Volcano. Specific locations of the sites are found in Fig. 1 and Table 1.
-Soil Carbon Stock: The depth of the soil was mentioned in the Materials and methods section, subsection soil analysis, with the top 10 cm of the soil being sampled.
-Soil type: The in-depth analysis of the soil type of the sites was found within the section Materials and methods, subsection Soil analysis.
-Land use: The land use of the sites is found within the section Materials and methods, and subsection Sites.
+  + Location: Locational data was found in the materials and methods section, subsection sites. The five sites were located around 700 m on the Big Island of Hawai'i. Three of the sites were found on lava flows from the Mauna Loa Volcano, with the other two being on the Hualalai Volcano. Specific locations of the sites are found in Fig. 1 and Table 1.
+  + Soil Carbon Stock: The depth of the soil was mentioned in the Materials and methods section, subsection soil analysis, with the top 10 cm of the soil being sampled.
+  + Soil type: The in-depth analysis of the soil type of the sites was found within the section Materials and methods, subsection Soil analysis.
+  + Land use: The land use of the sites is found within the section Materials and methods, and subsection Sites.
+
 # Tables and figures
 
 - Table 
@@ -102,7 +102,9 @@ read_csv(file = filename,
                                  show_col_types = FALSE)$caption)
 ```
 
-### Table 4: LMA, foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
+### Table 4
+
+Table 4: LMA, foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
 
 ```{r table4}
 #| code-fold: true
