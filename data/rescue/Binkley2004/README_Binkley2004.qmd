@@ -84,11 +84,11 @@ Figure 1 was captured using [PlotDigitizer](https://plotdigitizer.com/app) and t
 #| code-fold: true
 #| message: false
 
-filename <- 'Binkley2004_Figure1.csv'
-plot.df <- read_csv(file = filename,
+plot.df <- read_csv(file = figure1.file,
                    skip = 1) |>
   rename(Layer = `type label`)
-caption <- read_csv(file = filename, 
+
+caption <- read_csv(file = figure1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption
 
@@ -164,6 +164,7 @@ Some citations are missing, those are noted here and how best guess were generat
   + exact export
 
 # Level 0: raw data reads
+
 ```{r readLevel0}
 
 data.lvl0.df <- list(citation = 
