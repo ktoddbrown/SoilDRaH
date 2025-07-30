@@ -1,13 +1,13 @@
 ---
-title: "Data Rescue: Author YYYY"
+title: "Data Rescue: Veldkamp 1994"
 format:
   html:
     toc: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods_KTB.bib
-  - AuthorYYYY.bib
+  - Veldkamp1994_Methods.bib
+  - Veldkamp1994.bib
 author:
   - name:
       given: Brandon
