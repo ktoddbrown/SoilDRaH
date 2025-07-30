@@ -70,7 +70,7 @@ Canthium odoratum,0.36 (.08),0.20 (.02),0.32 (.05),-,-
 Diospyros sandwicensis,0.21 (.02),0.19 (.01),0.21 (.02),-,-
 Freycinetia arborea,-,-,-,0.39 (.02),0.43 (.01)
 Myrsine spp.,0.32,-,0.39 (.14),0.34 (.03),0.39 (.06)
-Metrosideros polymorpha,0.37 (.03),0.33 (.03),0.23 (.02),023 (.06),0.16 (.03)
+Metrosideros polymorpha,0.37 (.03),0.33 (.03),0.23 (.02),0.23 (.06),0.16 (.03)
 Nestegis sandwicensis,-,-,0.26 (.04),-,-
 Psychotria hawaiiense,-,-,0.52 (.09),0.36 (.03),0.37
 Pouteria sandwicensis,0.37 (.03),0.28 (.02),-,-,-
@@ -111,7 +111,7 @@ Xylosma hawaiiense,+0.80,+1.00,-,-,-
 Average,-0.19 (.30),-0.51 (.49),-3.52 (.12),-3.70 (.23),-2.89 (.16)
 ,,,,,
 -,Kaniku,Kaupulehu,Manuka,Kaloko,Waiakea
-Species,δ15C,δ15C,δ15C,δ15C,δ15C
+Species,δ13C,δ13C,δ13C,δ13C,δ13C
 Acacia koa,-,-,-,-,-28.5 (.71)
 Antidesma platyphyllum,-,-,-29.1,-32.4,-31.6
 Canthium odoratum,-25.5 (.63),-25.3 (.53),-29.9 (.62),-,-
