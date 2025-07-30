@@ -1,0 +1,291 @@
+---
+title: "Data Rescue: Author YYYY"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - AuthorYYYY_Methods_KTB.bib
+  - AuthorYYYY.bib
+author:
+  - name:
+      given: Brandon
+      family: Whitehead
+      orcid: 
+      affiliations:
+        - id: 
+          name: University of Florida
+          department: 
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+      note: https://github.com/brandonnodnarb
+  - name:
+      given: Mirah
+      family: Blanchard
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/Misheph
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex) #read in the bib file to dataframe
+
+methods.file <- 'Veldkamp1994_Methods.md'
+table1.file <- 'Veldkamp1994_Table1.csv'
+table2.file <- 'Veldkamp1994_Table2.csv'
+table3.file <- 'Veldkamp1994_Table3.csv'
+table4.file <- 'Veldkamp1994_Table4.csv'
+primaryCitation.file <- 'Veldkamp1994.bib'
+methodsCitation.file <- 'Veldkamp1994_Methods.bib'
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
+
+> Veldkamp, E. (1994). Organic carbon turnover in three tropical soils under pasture after deforestation. Soil Science Society of America Journal, 58(1), 175–180. https://doi.org/10.2136/sssaj1994.03615995005800010025x
+
+# Data Summary
+
+Veldkamp (1994) investigates the effect of deforestation on soil organic carbon storage in three different soil types in Costa Rica. The study used 13C isotope analysis to directly compare pasture soils to forest soils. Soil samples were taken from sites at depths up to 1.0 m, then analyzed to measure bulk density, carbon content, and pH. Results were then compared between sites, assuming that forest soil can be considered as the precursor of pasture soil.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Latitude and longitude are not provided, but information on location of the sample sites is provided in methods section. Year of observation not stated. This study takes place in Costa Rica, not Hawaii.
+- Soil carbon stock: Depth of soil samples given in multiple tables. Soil bulk density reported in table 1, and soil carbon stock reported in Mg C ha-1 in multiple tables. Coarse fraction is not reported.
+- Soil type: Subgroup-level soil classification given in methods section.
+- Land use: Land use and land use history detailed in the study sites section under methods.
+
+# Tables and figures
+
+- Table 
+  1) Bulk density, organic C (%), pH, and CEC for 3 soil types, forest and pasture
+  2) SOC contents for two soil types with/without compaction correction (Andic Humitropept)
+  3) DSOC and PSOC for three soil types under forest
+  4) SOCp and SOCf over time in Andic Humitropept pasture (chronosquence by pasture age)
+  5) Model parameters for SOCp/SOCf change
+
+- Figure 
+  1) δ13C and SOCf/SOCp for two soils under pasture
+  2) δ13C in an Andic Humitropept over pasture age (3, 5, 10 yrs)
+  3) SOC over time in depth 0-0.1 m
+  
+### Table 1
+
+Table 1 was modified to have the units in parentheses beside each variable. Soil type was added as a column header.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Veldkamp1994_Table1.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 2
+
+Table 2 was modified so that soil type would be included as a variable, moved from a header to its own column. Units were moved to be beside each variable.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- 'Veldkamp1994_Table2.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3
+
+Table 3 was modified so that soil type was included as a variable with its own column. Information in separate columns was moved to be in rows to simplify the table. Units were moved to be beside each variable.
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- 'Veldkamp1994_Table3.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 4
+
+Table 4 was modified so that years since forest cleaning would be included as a variable with its own single column, reducing the number of columns and increasing the number of rows. Table note was moved to be included in the header.
+
+```{r table4}
+#| code-fold: true
+#| message: false
+
+filename <- 'Veldkamp1994_Table4.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include AuthorYYYY_Methods.Rmd >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
+```
+
+# Files
+
+These files are in the Veldkamp1994 data rescue.
+
+- [Readme](README_Veldkamp1994.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Veldkamp1994.bib](Veldkamp1994.bib)
+  + citation for article transcribed
+- [Veldkamp1994_Methods.bib](Veldkamp1994_Methods.bib)
+  + citations for the methods section of the article
+- [Veldkamp1994_Methods.md](Veldkamp1994_Methods.md)
+  + methods transcribed from primary article
+- [Veldkamp1994_Table1.csv](Veldkamp1994_Table1.csv)
+  + table 1 from primary article with bulk density and organic C %
+- [Veldkamp1994_Table2.csv](Veldkamp1994_Table2.csv)
+  + table 2 from primary article with SOC contents
+- [Veldkamp1994_Table3.csv](Veldkamp1994_Table3.csv)
+  + table 3 from primary article with DSOC and PSOC
+- [Veldkamp1994_Table4.csv](Veldkamp1994_Table4.csv)
+  + table 4 from primary article with SOCp and SOCf
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1
+- [x] create excel sheet with Table 2
+- [x] create excel sheet with Table 3
+- [x] create excel sheet with Table 4
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Tosi 1969
+ + Tosi, J.A. 1969. Mapa ecologico-segina la clasificacion de zonas de vida del mundo de L.R. Holdridge. Escala 1:750 000. Centro Cientifico Tropical, San Jose, Costa Rica.
+ + direct export
+- [x] Veldkamp 1992
+ + Veldkamp, N., A.M. Weitz, I.G. Staritsky, and E.J. Huising. 1992. Deforestation trends in the Atlantic Zone of Costa Rica: A case study. Land Regard. Rehab. 3:71-84.
+ + direct export
+- [x] Soil Survey Staff 1990
+ + Soil Survey Staff. 1990. Keys to soil taxonomy. 4th ed. Soil Manage. Support Serv. Tech. Monogr. 6. Virg. Polytech. Inst. and State Univ., Blacksburg.
+ + direct export
+- [x] Mizota 1989
+ + Mizota, C., and L.P. van Reeuwijk. 1989. Clay mineralogy and chemistry of soils formed in volcanic material in diverse climatic regions. Soil Monogr. 2. Int. Soil Ref. and Inf. Center, Wageningen, the Netherlands.
+ + direct export
+- [x] Keller 1993
+ + Keller, M., E. Veldkamp, A.M. Weitz, and W.A. Reihers. 1993. Effect of pasture age on soil trace-gas emissions from a deforested area of Costa Rica. Nature (London) 365:244-246.
+ + direct export
+ + citation title was incorrect, title edited to match authors, publication date, etc.
+- [x] Vitorello 1989
+ + Vitorello, V.A., C.C. Cerri, F. Andrews, C. Feller, and R.L. Victória. 1989. Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773-778.
+ + direct export
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              Table3 = 
+                                list(caption = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              Table4 = 
+                                list(caption = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )
+                              ))
+```
+
