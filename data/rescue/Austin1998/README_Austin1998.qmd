@@ -36,6 +36,17 @@ author:
           country: USA
       role: "Transcription"
       note: https://github.com/SavaScott
+  - name:
+      given: Mirah
+      family: Blanchard
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/Misheph
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
@@ -87,7 +98,7 @@ This source is identified as a data source for the Hawai'i Soil Organic Carbon D
   
 ### Table 1: climate and age characteristics
 
-Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
+Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns. Table 1 citation was changed from Wagner et al 1991 to @Wagner1990, as the citation was listed in references. 
 
 ```{r table1}
 #| code-fold: true
@@ -105,6 +116,8 @@ read_csv(file = filename,
 ### Table 4
 
 Table 4: LMA, foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
+
+Table 4 was modified to include 'NA' to represent the line breaks between the subtables.
 
 ```{r table4}
 #| code-fold: true
@@ -163,7 +176,7 @@ These files are in the @Austin1998 data rescue.
 - [x] pull down citations in methods section to bib file
 - [x] add in citation links to methods
 - [x] cross check with second transcriber for tables and methods
-- [ ] submit to independent review
+- [x] submit to independent review
 - [ ] archive on SoilDRaH
 
 
