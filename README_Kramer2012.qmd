@@ -1,0 +1,243 @@
+---
+title: "Data Rescue: Kramer2012"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Kramer2012_Methods.bib
+  - Kramer2012.bib
+  - Kramer2012_Table1.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role:
+        - "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: ESS UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+  - name:
+      given: Brandon
+      family: Whitehead
+      affiliation:
+        - id: ESS UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+      - "Transcription"
+      - "Review"
+      note: https://github.com/brandonnodnarb
+      
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Kramer2012_Methods.md'
+table1.file <- 'Kramer2012_Table1.csv'
+primaryCitation.file <- 'Kramer2012.bib'
+methodsCitation.file <- 'Kramer2012_Methods.bib'
+table1Citation.file <- 'Kramer2012_Table1.bib'
+```
+
+This documents the data transcription for @Kramer2012.
+For the discussion of this data rescue see the Github issue: [https://github.com/ktoddbrown/SoilDRaH/issues/95](https://github.com/ktoddbrown/SoilDRaH/issues/95).
+
+> Kramer, Marc & Sanderman, Jonathan & Chadwick, Oliver & Chorover, Jon & Vitousek, Peter. (2012). Long‐term carbon storage through retention of dissolved aromatic acids by reactive particles in soil. Global Change Biology. 18. 2594-2605. http://doi.org/10.1111/j.1365-2486.2012.02681.x
+
+# Data Summary
+
+This paper investigates carbon sequestration in volcanic soils along a chronosequence in Hawai‘i, using biochemical analyses to explore how soil mineralogy influences organic carbon retention.
+The data show that long-term carbon storage in short-range ordered minerals occurs through chemical retention of aromatic acids.
+
+## Fit for purpose: HiCSC
+
+This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
+
+Location: Six sites: Thurston, Laupahoehoe, Kohala, Pololu, Kolekole, and Kokee.
+Soil Carbon Stock: Depth to around 1m, with a variety of ages 0.3 to 4100 y. 
+$^{13}$C was analyzed from the sites.
+Soil type: The six sites had a range of soil classification from Lithic Hapludand (Thurston Site), Aquic Hydrudand (Laupahoehoe, Kohala, Pololu Sites), Awuic Hapludand (Kolekole Site), and Plinthic Kandiudox (Kokke Site).
+Land use: Sites had the same vegetation with Ohi'a trees, ferns and herbaceous plants.
+
+# Tables and figures
+
+- Table 
+  1) Selected soil properties from a previous paper combined with new data, across the chronosequence.
+
+- Figure 
+  1) The distribution of SRO minerals and soil C content from soils worldwide.
+  2) Changes in relative proportions of major NMR regions as a function of SRO mineral abundance in the mineral soil horizons.
+  3) Solid-state $^{13}$C NMR spectra of plant-litter DOM and Bw-horizon soil carbon with high SRO mineral abundance.
+  4) Changes in biochemical components as a function of SRO mineral abundance in mineral soil horizons
+  5) van Krevelen plot showing H:C and O:C molar ratio from mineral soil horizon samples.
+  6) Soil depth profiles of δ$^{15}$N and SRO minerals across the chronosequence
+  7) Relationship between C/N ratio and SRO mineral abundance.
+  8) Amount of carbon released from soil as DOC after SRO mineral dissolution with acid oxalate extraction
+  9) Organic soil horizon DOC production and microbial activity in the soil column leaching experiment over 5 months of cumulative DOM production.
+
+### Table 1: climate and age characteristics
+
+Table 1 was not modified during transcription.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Kramer2012_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr Kramer2012_Methods.md Kramer2012_methods_SRS.md
+```
+
+# Files
+
+These files are in the @Kramer2012 data rescue.
+
+- [Readme](README_Kramer2012.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Kramer2012.bib](Kramer2012.bib)
+  + citation for article transcribed
+- [Kramer2012_Methods.bib](Kramer2012_Methods.bib)
+  + citations for the methods section of the article
+- [Kramer2012_Methods.md](Kramer2012_Methods.md)
+  + methods transcribed from primary article
+- [Kramer2012_Table1.csv](Kramer2012_Table1.csv)
+  + table 1 from primary article with site descriptions
+- [Kramer2012_Table1.bib](Kramer2012_Table1.bib)
+  + citations for the table 1 of the article
+
+# Working notes
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1
+- [x] export excel table to csv
+- [x] copy over methods section into markdown 
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [ ] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+No citations are missing. Problematic entries are noted here along with how the current citation was generated.
+
+- [ ] _citation example_
+  + copy from bib
+  + manually entered
+  + direct export
+  
+- [x] Baldock, J. A., C. A. Masiello, Y. Gélinas, and J. I. Hedges. 2004. “Cycling and Composition of Organic Matter in Terrestrial and Marine Ecosystems.” Marine Chemistry 92 (1): 39–64.https://doi.org/10.1016/j.marchem.2004.06.016.
+  + direct export
+  
+- [x] Burt, R. 2004. Soil Survey Laboratory Methods Manual. Soil Survey Investigations Report 4. USDA-NRCS.
+  + direct export
+
+- [x] Chadwick, Oliver A., Robert T. Gavenda, Eugene F. Kelly, et al. 2003. “The Impact of Climate on the Biogeochemical Functioning of Volcanic Soils.” Chemical Geology 202 (3): 195–223. https://doi.org/10.1016/j.chemgeo.2002.09.001.
+  + direct export
+  
+- [x] Clarke, K. R., and R. N. Gorley. 2006. PRIMER v6: User Manual/Tutorial. Primer-E Ltd.
+  + manual entry
+  
+- [x] Dai, K’o H., and Chris E. Johnson. 1999. “Applicability of Solid-State 13C CP/MAS NMR Analysis in Spodosols: Chemical Removal of Magnetic Materials.” Geoderma 93 (3): 289–310. https://doi.org/10.1016/S0016-7061(99)00072-5.
+  + direct export
+
+- [x] Hockaday, W. C., C. A. Masiello, J. T. Randerson, et al. 2009. “Measurement of Soil Carbon Oxidation State and Oxidative Ratio by 13C Nuclear Magnetic Resonance.” Journal of Geophysical Research: Biogeosciences 114 (G2). https://doi.org/10.1029/2008JG000803.
+  + direct export
+  
+- [x] McDowell, W. H., A. Zsolnay, J. A. Aitkenhead-Peterson, et al. 2006. “A Comparison of Methods to Determine the Biodegradable Dissolved Organic Carbon from Different Terrestrial Sources.” Soil Biology and Biochemistry 38 (7): 1933–42. https://doi.org/10.1016/j.soilbio.2005.12.018.
+  + direct export
+  
+- [x] Nelson, Paul N., and Jeffrey A. Baldock. 2005. “Estimating the Molecular Composition of a Diverse Range of Natural Organic Materials from Solid-State 13C NMR and Elemental Analyses.” Biogeochemistry 72 (1): 1–34. https://doi.org/10.1007/s10533-004-0076-3.
+  + direct export
+  
+- [x] Schilling, Michael, and William T. Cooper. 2004. “Effects of Chemical Treatments on the Quality and Quantitative Reliability of Solid-State 13C NMR Spectroscopy of Mineral Soils.” Analytica Chimica Acta 508 (2): 207–16. https://doi.org/10.1016/j.aca.2003.12.001.
+  + direct export
+  
+- [x] Schoeneberger, P.J., D.A. Wysocki, E.C. Benham, and W.D. Broderson. 1998. Field Book for Describing and Sampling Soils. Natural Resources Conservation Service, USDA, National Soil Survey Center.
+  + manual entry
+  
+- [x] Torn, Margaret S., Susan E. Trumbore, Oliver A. Chadwick, Peter M. Vitousek, and David M. Hendricks. 1997. “Mineral Control of Soil Organic Carbon Storage and Turnover.” Nature 389 (6647): 170–73. https://doi.org/10.1038/38260.
+  + direct export
+  
+- [x] Vitousek, P. M., O.A. Chadwick, T.E. Crews, J.H. Fownes, D.M. Hendricks, and D. Herbert. 1997. “Soil and Ecosystem Development across the Hawaiian Island.” GSA Today 7: 1–8. https://rock.geosociety.org/gsatoday/archive/7/9/pdf/gt9709.pdf.
+  + manual entry
+  
+- [x] Vitousek, Peter. 2004. Nutrient Cycling and Limitation. Edited by Mario J. Molina, Francois M. M. Morel, James J. Morgan, and David Tilman. Princeton University Press. JSTOR. http://www.jstor.org/stable/j.ctv39x77c.
+  + direct export
+  
+- [x] Wada, Koji. 1989. “Allophane and Imogolite.” In Minerals in Soil Environments. John Wiley & Sons, Ltd. https://doi.org/10.2136/sssabookser1.2ed.c21.
+  + direct export
+
+- [x] Weishaar, James L., George R. Aiken, Brian A. Bergamaschi, Miranda S. Fram, Roger Fujii, and Kenneth Mopper. 2003. “Evaluation of Specific Ultraviolet Absorbance as an Indicator of the Chemical Composition and Reactivity of Dissolved Organic Carbon.” Environmental Science & Technology 37 (20): 4702–8. https://doi.org/10.1021/es030360x.
+  + direct export
+  
+# Level 0: raw data reads
+
+The Level 0 data in this package include the tables above (Table 1) as well as the methods section.
+Here we draft the read function that will be transferred to the R scripts.
+In the future this draft will be echoed from the R scripts.
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file),
+                         table1 = 
+                           read.bib(file = table1Citation.file)
+                        ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                    )))
+```
