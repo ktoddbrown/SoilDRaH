@@ -47,6 +47,8 @@ source('../../R/checkAnnotations.R')
 #locate the data locally
 dataDir <- '../temp/FS_FIA'
 dataAnnotations <- '../../data/FIA_Annotations.csv'
+
+#knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 ```{r, echo=FALSE}
