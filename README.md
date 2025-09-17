@@ -46,4 +46,4 @@ The data workflow is further described in the [wiki](https://github.com/ktoddbro
 
 ## License
 
-[MIT License](LICENSE.md)
+[MIT License](LICENSE)
