@@ -1,0 +1,40 @@
+#the primary items here are the valid variable options for level 1 data objects in Soil DRaH
+# Variables are structured and interelated using ids that are not discussed here.
+# <of_variable>
+#  - definition:
+#  - <is_type>:
+#   - <with_entry>: #either `text`/`numeric`/etc
+#   - <with_entry>:
+#     - one_of: #control vocabulary
+#       - <term>: <long format description>
+
+region:
+  - local_name
+  - S2
+  - H3
+  - FIPS
+geoposition:
+  - latitude
+  - longitude
+  - datum
+  - projection
+soil_organic_carbon:
+  - value: numeric
+  - unit
+  - method
+organic_carbon_fraction:
+  - value: numeric
+  - unit
+  - method
+bulk_density:
+  - value: numeric
+  - unit
+  - method
+land_practice:
+  - value: text
+  - time_interval:
+      #any valid ISO8601
+      - YYYY/YYYY
+      - YYYY-MM/YYYY-MM
+      - YYYY-MM-DD/YYYY-MM-DD
+  - source
