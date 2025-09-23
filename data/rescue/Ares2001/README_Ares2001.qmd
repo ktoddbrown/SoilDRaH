@@ -278,6 +278,7 @@ The final format of the data frame here will include the following
   + `source`
 
 ```{r}
+#| lable: constructLevel1
 
 #Create table with data that is consistent across the study
 studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
@@ -316,8 +317,7 @@ Table1Primary <- data.lvl0.df$data$Table1$primary |>
   mutate(source = 'Table 1')
 
 # Create the metadata for table one from the header information and cited methods
-Table1Meta <-
-  Table1Primary |>
+Table1Meta <- Table1Primary |>
   select(column_name, of_variable) |>
   unique() |>
   #Grab everything between the parentheses as units and attribute the source as the column names.
