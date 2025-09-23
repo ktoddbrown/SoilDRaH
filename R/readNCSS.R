@@ -18,6 +18,7 @@
 #'
 readNCSS <- function(dataDir,
                      annotationFilename,
+                     #Want to move format into pivotBind or joinPivot and away from long as an option
                      format = c('original', 'long')[1],
                      verbose = TRUE){
   
@@ -80,16 +81,19 @@ readNCSS <- function(dataDir,
     warning('This function currently only extracts tables associated with non-NA `of_variables` (currently layer-resolved soil organic carbon and geolocation).')
     
     reducedAnnotations <- annotations.df |>
+      #Consider keeping the NA variables maybe?
       dplyr::filter(any(!is.na(of_variable)), .by = table_id)
     
     annotatedTables <- reducedAnnotations$table_id |>
       unique() |>
-      #only read in annotations that are there, some annotated tables provided by NRCS are 'meta'
+      #Only process tables that have annotations and are in the sql table list
+      #... NRCS has 'meta' tables that we don't care about
       intersect(RSQLite::dbListTables(myconnect))
     
     #tableNames <- dbListTables(myconnect)
     
     if(verbose) message('Reading in all tables, this takes some time and results in 1.3 GB data object')
+    #TODO: expand to include `lab_analysis_procedure` to pull the references for the measurements in
     orginalTables <- lapply(setNames(object = as.list(annotatedTables), annotatedTables),
                             function(xx) {
                               RSQLite::dbReadTable(myconnect, xx)
@@ -102,18 +106,39 @@ readNCSS <- function(dataDir,
     ### Make the tables that we are interested in longer ###
     
     #Only thse tables have been verified for the soc, obs time, and geo-location variables
-    verified_tables <- list('lab_physical_properties' = 'lab_physical_properties',
-               'lab_chemical_properties' = 'lab_chemical_properties',
-               'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
-               lab_layer = 'lab_layer',
-               lab_site = 'lab_site',
-               lab_pedon = 'lab_pedon',
-               #country, state, county information below
-               lab_area = 'lab_area',
-               lab_combine_nasis_ncss = 'lab_combine_nasis_ncss')
+    verified_tables <- list(
+      'lab_physical_properties' = 'lab_physical_properties',
+      'lab_chemical_properties' = 'lab_chemical_properties',
+      'lab_calculations_including_estimates_and_default_values' = 'lab_calculations_including_estimates_and_default_values', 
+      lab_layer = 'lab_layer',
+      lab_site = 'lab_site',
+      lab_pedon = 'lab_pedon',
+      #country, state, county information below
+      lab_area = 'lab_area',
+      lab_combine_nasis_ncss = 'lab_combine_nasis_ncss')
     
     message("This function only reads the annotated information from the following tables:")
     message(paste(names(verified_tables), collapse = ', '))
+    
+    #TODO have this dynamically select the columns that we want to work with
+    #...from the annotations instead of hard counting them below.
+    location.df <- orginalTables$lab_combine_nasis_ncss |>
+      dplyr::select(site_key, pedon_key, 
+                    #TODO consider `pedlabsamplnum`
+             site_obsdate,
+             country_key, state_key, county_key) |>
+      pivot_longer(cols = c(country_key, state_key, county_key),
+                   names_to = 'area_type',
+                   values_to = 'area_key') |>
+      #the area table is keyed differently and applies to each of the 
+      #... different regional levels independently.
+      left_join(orginalTables$lab_area |>
+                  select(area_key, area_name),
+                by = join_by(area_key)) |>
+      select(-area_key) |>
+      mutate(area_type = str_remove(area_type, '_key')) |>
+      pivot_wider(names_from = area_type, values_from = area_name)
+      
     
     #link all the tables together
     key.df <- orginalTables$lab_layer |>
@@ -122,16 +147,21 @@ readNCSS <- function(dataDir,
         dplyr::across(
           tidyselect::everything(), as.character))
     
+     ident_columns <- reducedAnnotations |>
+                              dplyr::filter(is_type  == 'identifier') |>
+                              dplyr::select(table_id, column_id, of_variable)
     
+     
     regional_area <- orginalTables$lab_combine_nasis_ncss
     
     ans.df <- plyr::ldply(
-      #lab area is key'ed differently
+      #lab area is key'ed differently and dealt with in the location.df table
       setdiff(verified_tables,c('lab_area', 'lab_combine_nasis_ncss')), 
                           function(tableName.str){
                             temp_key <- reducedAnnotations |>
                               dplyr::filter(table_id == tableName.str,
-                                            with_entry == '--') |>
+                                            with_entry == '--',
+                                            !is.na(of_variable)) |>
                               dplyr::select(-with_entry) |>
                               dplyr::select(table_id, column_id, of_variable, is_type)
                             
