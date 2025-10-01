@@ -117,7 +117,7 @@ read_csv(file = filename,
 
 Table 4: LMA, foliar nitrogen, phosphorus, major cations, δ$^{15}$N, and δ$^{13}$C for native overstory species from sites along the precipitation gradient in Hawai'i.
 
-Table 4 was modified to include 'NA' to represent the line breaks between the subtables.
+Table 4 was modified to include '-' to represent no data given. There was also a shift of the condition from a row above each subtable to the first column, combining the subtables.
 
 ```{r table4}
 #| code-fold: true
@@ -139,6 +139,7 @@ read_csv(file = filename,
 
 ```{bash eval=FALSE, echo=FALSE}
 diff Austin1998_Methods.md Austin1998_Methods_MB.md
+diff Austin1998_Table1.csv Austin1998_Table1_MB.csv
 ```
 
 # Files
@@ -262,3 +263,4 @@ data.lvl0.df <- list(citation =
                                 )))
                   
 ```
+
