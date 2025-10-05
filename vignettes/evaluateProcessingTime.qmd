@@ -1,0 +1,66 @@
+---
+title: "Evaluation of time long"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(googlesheets4)
+
+data_url.str <- 'https://docs.google.com/spreadsheets/d/1tbSftRSyNCYDV98VWcexFZI-tnrBYmM7HZLviYjsfvg/edit?usp=sharing'
+```
+
+
+```{r}
+data.df <- googlesheets4::read_sheet(data_url.str, sheet=1, skip =1) |>
+  select(`Project`,`Data Name (AuthorYYYY)`,
+         `Source URL`,`SoilDRaH issue link`,
+         `Responsible (who)`,`Deliverable`,
+         `2025 - S3 (hr)`,`2025-S2 (hr)`, `Notes`) |>
+  tidyr::fill(`Project`,`Data Name (AuthorYYYY)`,
+         `Source URL`,`SoilDRaH issue link`,
+          .direction = 'down') |>
+  filter(str_detect(`Responsible (who)`, '\\w')) |>
+  mutate(total_time = 
+           case_when(is.na(`2025 - S3 (hr)`) ~ `2025-S2 (hr)`,
+                     is.na(`2025-S2 (hr)`) ~ `2025 - S3 (hr)`,
+                     is.finite(`2025 - S3 (hr)` + `2025-S2 (hr)`) ~ `2025 - S3 (hr)` + `2025-S2 (hr)`,
+         TRUE ~ NA_real_)) |>
+  mutate(`Deliverable` = factor(`Deliverable`, levels = 
+                                  c("Data rescue plan", "Transcription 1", "Transcription 2", "Cross check",
+                                    "Readme update (lvl 0)", "Pull request and review", "Annotations", "Readme update (lvl 1)", "Readme update (lvl 2)")))
+```
+
+```{r}
+data.df$`Data Name (AuthorYYYY)` |> unique() |> length()
+```
+
+```{r}
+plot.df <- data.df |> 
+  filter(is.finite(total_time)) |>
+  select(total_time, `Responsible (who)`,`Deliverable`)
+
+ggplot(plot.df) +
+  geom_violin(aes(x=Deliverable, y = total_time)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+plot.df <- data.df |> 
+  filter(is.finite(total_time)) 
+
+ggplot(plot.df) +
+  geom_col(aes(y=`Data Name (AuthorYYYY)`, 
+               x = total_time, fill = `Deliverable`)) #+
+  #theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+#| eval: false
+#| echo: false
+plot.df <- data.df |> 
+  filter(is.finite(total_time)) |>
+  reframe(count = n(),
+          total_time = sum(total_time),
+          .by = c(`Responsible (who)`, Deliverable))
+```
