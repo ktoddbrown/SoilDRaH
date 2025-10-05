@@ -277,6 +277,33 @@ The final format of the data frame here will include the following
   + `with_entry`
   + `source`
 
+The `of_variable` being used here are:
+
+ + citation
+ + diameter_at_breast_height_A_koa
+ + diameter_at_breast_height_F_uhdei
+ + doi
+ + elevation
+ + height_A_koa
+ + height_F_uhdei
+ + inital_planting
+ + land_use_type
+ + mean_air_temperature
+ + mean_max_vapor_pressure_deficit
+ + mean_solar_radiation
+ + observation_year
+ + region
+ + soil_class
+ + soil_nitrogen
+ + soil_organic_carbon
+ + soil_ph
+ + soil_phosphorus
+ + stand_age
+ + stand_type
+ + stem_density_A_koa
+ + stem_density_F_uhdei
+ + total_rainfall
+
 ```{r}
 
 #Create table with data that is consistent across the study
@@ -379,6 +406,7 @@ Table3Meta <- Table3Primary |>
                             is_type == 'method' ~ 'Methods ln72-73',
                             TRUE ~ NA_character_))
 
+
 # Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
   meta = bind_rows(studyMeta, Table1Meta, Table3Meta),
@@ -387,8 +415,38 @@ data.lvl1.ls <- list(
            is_type = 'value',
            .by = row_id) |>
     arrange(row_id, elevation_id, column_name,
-            of_variable, is_type, with_entry, source))
+            of_variable, is_type, with_entry, source)
+  )
 #View(data.lvl1.ls)
+
+```
+
+```{r}
+#| label: createInitalSemanticVocab
+#| eval: false
+#| echo: false
+
+tibble(of_variable = c(data.lvl1.ls$meta$of_variable, data.lvl1.ls$primary$of_variable) |> unique() |>sort(),
+       definition = ' ',
+       status = ' ') |>
+  write_csv(file = '../../semantics/SoilDRaHVocabulary_of_variable.csv', quote = 'all')
+```
+
+## Check for new variables
+
+```{r}
+#| label: check_of_variable
+
+SoilDRaH_variable_list <- read_csv(file = '../../semantics/SoilDRaHVocabulary_of_variable.csv',
+                                   show_col_types = FALSE)
+
+if(all(unique(c(data.lvl1.ls$meta$of_variable,
+            data.lvl1.ls$primary$of_variable)) %in% SoilDRaH_variable_list$of_variable)){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  print(paste0('Please start a pull request for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
+            data.lvl1.ls$primary$of_variable)), SoilDRaH_variable_list$of_variable), ']'))
+}
 ```
 
 
