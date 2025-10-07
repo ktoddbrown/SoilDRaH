@@ -444,7 +444,7 @@ if(all(unique(c(data.lvl1.ls$meta$of_variable,
             data.lvl1.ls$primary$of_variable)) %in% SoilDRaH_variable_list$of_variable)){
   print('All of_variables are in the SoilDRaH variable list. No additions required')
 }else{
-  print(paste0('Please start a pull request for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
+  print(paste0('Please start a issue for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
             data.lvl1.ls$primary$of_variable)), SoilDRaH_variable_list$of_variable), ']'))
 }
 ```
