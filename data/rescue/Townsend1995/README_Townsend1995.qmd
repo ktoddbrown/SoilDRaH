@@ -94,7 +94,7 @@ Table 1 was modified by replacing delta symbols with text as well as removing su
 #| code-fold: true
 #| message: false
 
-filename <- 'Townsend1995_Table1.csv'
+filename <- table1.file
 read_csv(file = filename,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -111,7 +111,7 @@ Table 2 was modified by combining grouped headings into column/header names.
 #| code-fold: true
 #| message: false
 
-filename <- 'Townsend1995_Table2.csv'
+filename <- table2.file
 read_csv(file = filename,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -203,7 +203,7 @@ Pending: 7 techincal reports and book chapters to manually enter
     + no citation
     + given appearence in microbial biomass section, it is likely this citation: Chaussod,R. and Nicolardot,B., 19831980666, French, Journal article, 19, (4), Revue db
     
-    # Level 0: raw data reads
+# Level 0: raw data reads
 
 The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
 Here we draft the read function that will be transferred to the R scripts.
@@ -239,3 +239,4 @@ data.lvl0.df <- list(citation =
                                                 skip = 1)
                                 )))
 ```
+
