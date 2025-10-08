@@ -34,7 +34,7 @@ readAres2001 <- function(dataDir,
   primaryCitation.file <- file.path(dataDir, 'Ares2001.bib')
   methodsCitation.file <- file.path(dataDir, 'Ares2001_Methods.bib')
   
-  dataLevel <- 'level0'
+  #dataLevel <- 'level0'
   
   ###Level 0 data read rescued from pdf ####
   ###
@@ -194,5 +194,5 @@ readAres2001 <- function(dataDir,
               of_variable, is_type, with_entry, source)
   )
   
-  return(data.lvl0.ls)
+  return(data.lvl1.ls)
 }
