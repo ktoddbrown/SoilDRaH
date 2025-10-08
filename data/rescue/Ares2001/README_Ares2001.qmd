@@ -20,6 +20,7 @@ authors:
       - Transcription
       - Review
       - Standardization
+      - Harmonization
 
   - name:
       given: Colby
@@ -54,15 +55,18 @@ library(kableExtra)
 library(bibtex)
 
 #semantic files
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
 is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
-# source files
+# data files
 methods.file <- 'Ares2001_Methods.md'
 table1.file <- 'Ares2001_Table1.csv'
 table3.file <- 'Ares2001_Table3.csv'
 primaryCitation.file <- 'Ares2001.bib'
 methodsCitation.file <- 'Ares2001_Methods.bib'
+
+# read function
+source('../../../R/readAres2001.R')
 ```
 
 This documents the data transcription for @Ares2001 .
@@ -225,7 +229,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
 
-data.lvl0.df <- list(
+data.lvl0.ls <- list(
   #Read in a list of all the bib files
   citation = list(
     #Citation for the article transcriptions are pulled from
@@ -259,6 +263,20 @@ data.lvl0.df <- list(
                          col_types = cols(.default = col_character()),
                          skip = 1)
     )))
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAres2001(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
 
 ```
 
@@ -314,15 +332,15 @@ The `of_variable` being used here are:
 
 #Create table with data that is consistent across the study
 studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.df$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
-                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.df$method[14:16], collapse = ' ')),
-                   'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.df$method[14]),
-                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.df$method[c(30,53,58)], collapse = '... ')),
-                   'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
-                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
+                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
+                   'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
+                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
+                   'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
 
 # Process the primary data from Table 1 by maintaining data groups and standardizing the variable name so that we can link this to the study metadata and data in the other tables when needed.
-Table1Primary <- data.lvl0.df$data$Table1$primary |>
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
   #Add a row id preserving row grouping -- not unique
   mutate(row_id = paste0('R', 1:n())) |>
   #Transform the table to long data by row group and column names. This allows us to then create the cross links between the tables.
@@ -362,11 +380,11 @@ Table1Meta <- Table1Primary |>
   #Stack into the table the methods for each variable that we can find
   bind_rows(
   tribble(~of_variable, ~method, ~source,
-            'soil_ph', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
-            'soil_organic_carbon', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-            'soil_nitrogen', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-            'soil_phosphorus', paste0(data.lvl0.df$method[72:73], collapse = ' '), 'Methods ln72-73',
-            'soil_class', paste0(data.lvl0.df$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
+            'soil_ph', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_nitrogen', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_phosphorus', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
+            'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
   #Stack onto the tables the controlled vocabulary used
   bind_rows(
     tribble(~of_variable, ~control_vocabulary, ~source,
@@ -381,7 +399,7 @@ Table1Meta <- Table1Primary |>
 
 
 #The following is doing the same process as above but fitted to the data and formatting of Table3
-Table3Primary <- data.lvl0.df$data$Table3$primary |>
+Table3Primary <- data.lvl0.ls$data$Table3$primary |>
   pivot_longer(cols = -variable,
                names_to = 'row_id', values_to = 'with_entry',
                values_drop_na = TRUE) |>
@@ -403,7 +421,7 @@ Table3Meta <- Table3Primary |>
   select(column_name, of_variable) |>
   unique() |>
   mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         method = paste('Methods ln72-73:', paste0(data.lvl0.df$method[18:23], collapse = ' '))) |>
+         method = paste('Methods ln72-73:', paste0(data.lvl0.ls$method[18:23], collapse = ' '))) |>
   select(-column_name) |>
   pivot_longer(cols = -of_variable,
                names_to = 'is_type', values_to = 'with_entry') |>
@@ -479,6 +497,20 @@ if(nrow(undefined_data_type) == 0){
 }
 ```
 
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+datafunction.lvl1.ls <- readAres2001(dataDir = '.',
+                                    dataLevel = 'level1')
+
+if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+  print('Read function matches code for level 1.')
+}else{
+  print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+}
+
+```
 
 # Level 2 data: HiSOC Database
 
