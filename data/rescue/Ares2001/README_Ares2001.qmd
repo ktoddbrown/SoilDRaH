@@ -53,6 +53,11 @@ library(tidyverse)
 library(kableExtra)
 library(bibtex)
 
+#semantic files
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+# source files
 methods.file <- 'Ares2001_Methods.md'
 table1.file <- 'Ares2001_Table1.csv'
 table3.file <- 'Ares2001_Table3.csv'
@@ -430,9 +435,20 @@ tibble(of_variable = c(data.lvl1.ls$meta$of_variable, data.lvl1.ls$primary$of_va
        definition = ' ',
        status = ' ') |>
   write_csv(file = '../../semantics/SoilDRaHVocabulary_of_variable.csv', quote = 'all')
+
+data.lvl1.ls$meta |> select(of_variable, is_type) |> unique() |>
+  bind_rows(data.lvl1.ls$primary |> 
+              select(of_variable, is_type) |> unique()) |>
+  filter(!(str_detect(of_variable, 'A_koa') | str_detect(of_variable, 'F_uhdei'))) |>
+  arrange(of_variable, is_type) |>
+  reframe(of_variable = paste(of_variable, collapse = ','),
+          .by = is_type) |>
+  write_csv(file = of_variable.file, quote = 'all')
 ```
 
 ## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
 
 ```{r}
 #| label: check_of_variable
@@ -446,6 +462,40 @@ if(all(unique(c(data.lvl1.ls$meta$of_variable,
 }else{
   print(paste0('Please start a issue for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
             data.lvl1.ls$primary$of_variable)), SoilDRaH_variable_list$of_variable), ']'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  select(of_variable, is_type) |>
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+undefined_data_type <- data.lvl1.ls$meta |> 
+  select(of_variable, is_type) |> 
+  unique() |>
+  bind_rows(data.lvl1.ls$primary |> 
+              select(of_variable, is_type) |> 
+              unique()) |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
 }
 ```
 
