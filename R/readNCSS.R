@@ -18,6 +18,7 @@
 
 readNCSS <- function(dataDir,
                      annotationFilename,
+                     #Want to move format into pivotBind or joinPivot and away from long as an option
                      format = c('original', 'long')[1],
                      verbose = TRUE){
   
@@ -87,23 +88,28 @@ readNCSS <- function(dataDir,
     # For each table_id in this lab's generated annotations, if at least one of the rows with said table_id has its of_variable's column cell value set to anything other than NA, keep all rows containing said table_id, 
     # else remove all rows containing said table_id; set the resulting table to reducedAnnotations
     reducedAnnotations <- annotations.df |>
+      #Consider keeping the NA variables maybe?
       dplyr::filter(any(!is.na(of_variable)), .by = table_id)
     
     # For every unique table_id's in reducedAnnotations that is also present as a name of one of the SQL data tables, append it to the annotatedTables char
     annotatedTables <- reducedAnnotations$table_id |>
       unique() |>
-      #only read in annotations that are there, some annotated tables provided by NRCS are 'meta'
+      #Only process tables that have annotations and are in the sql table list
+      #... NRCS has 'meta' tables that we don't care about
       intersect(RSQLite::dbListTables(myconnect))
     
     #tableNames <- dbListTables(myconnect)
     
     # For each value in annotatedTables, read in the data from the correspondingly named data table in the SQL database
     if(verbose) message('Reading in all tables, this takes some time and results in 1.3 GB data object')
+    #TODO: expand to include `lab_analysis_procedure` to pull the references for the measurements in
     originalTables <- lapply(setNames(object = as.list(annotatedTables), annotatedTables),
-                            function(xx) {RSQLite::dbReadTable(myconnect, xx)})
+                            function(xx) {
+                              RSQLite::dbReadTable(myconnect, xx)
+                              })
     
     ### Clean up the connection ####
-    dbDisconnect(myconnect)
+    RSQLite::dbDisconnect(myconnect)
     
     ### Make the tables that we are interested in longer ###
     
@@ -162,7 +168,8 @@ readNCSS <- function(dataDir,
                           function(tableName.str){
                             temp_key <- reducedAnnotations |>
                               dplyr::filter(table_id == tableName.str,
-                                            with_entry == '--') |>
+                                            with_entry == '--',
+                                            !is.na(of_variable)) |>
                               dplyr::select(-with_entry) |>
                               dplyr::select(table_id, column_id, of_variable, is_type)
                             

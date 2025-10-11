@@ -16,8 +16,13 @@
 
 readFIA <- function(dataDir,
                     annotationFilename,
-                    format = c('original', 'long')[1],
+                    format = c('original',
+                               'long', 'joinPivot',
+                               'wide','pivotBind')[1],
                     verbose = TRUE){
+  
+  #annotationFilename <- 'data/FIA_Annotations.csv'
+  #dataDir <- '~/Dropbox (UFL)/Research/Datasets/FS_FIA'
   
   if(verbose) warning('This function may have a high memory demand.')
   
@@ -47,12 +52,13 @@ readFIA <- function(dataDir,
   # Read in annotations
   if(verbose) message('Loading annotations.')
   annotations.df <- readr::read_delim(annotationFilename,
-                                        col_type = readr::cols(
-                                          .default = readr::col_character()),
+                                      col_type = readr::cols(
+                                        .default = readr::col_character()),
                                       delim = ';')
   
   # Get list of annotated table names
-  tables <- unique(annotations.df$table_id)
+  tables <- unique((annotations.df |>
+                      filter(!is.na(table_id)))$table_id)
   
   # Read in the original files
   if(verbose) message('Starting data read... ')
@@ -99,46 +105,81 @@ readFIA <- function(dataDir,
   # ENTIRE_SOILS_SAMPLE_LOC => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR
   # ENTIRE_SOILS_LAB => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR, LAYER_TYPE
   
-  allData <- original_data$ENTIRE_PLOT %>%
-    #rename the plot CN to match the foreign key in other tables
-    dplyr::mutate(PLT_CN = CN) %>% 
+  #TODAY PLAN
+  #   + rename CN to table_CN patterns
+  #   + Pull out the wide table before pivoting
+  #   + return 'joinPivot' instead of 'long'
+  
+  if(format %in% c('wide', 'joinPivot', 'long')){
+  
+  wide.df <- original_data$ENTIRE_PLOT |>
+    #copy over the Control Number(?) (aka CN) to cross refernece 
+    #...with other tables, preserving the original column for 
+    #...uniformity of how we treat the tables. 
+    #...This is probably overkill and we could just rename the column
+    dplyr::mutate(PLT_CN = CN) |> 
     #add in the table name to columns
-    dplyr::rename_with(.cols = !PLT_CN, ~paste0(.x, '.ENTIRE_PLOT')) %>%
-    dplyr::right_join(original_data$ENTIRE_SOILS_VISIT %>% 
-                 #add in the table name to columns
-                 dplyr::rename_with(.cols = !PLT_CN, 
-                             ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
-               by = dplyr::join_by(PLT_CN)) %>%
-    dplyr::full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC %>% 
-                #add in the table name to columns
-                dplyr::rename_with(.cols = !PLT_CN, 
-                            ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
-              by = dplyr::join_by(PLT_CN)) %>%
-    dplyr::full_join(original_data$ENTIRE_SOILS_EROSION %>%
-                #add in the table name to columns
-                dplyr::rename_with(.cols = !PLT_CN, 
-                            ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
-              by = dplyr::join_by(PLT_CN),
-              relationship = "many-to-many") %>%
-    dplyr::full_join(original_data$ENTIRE_SOILS_LAB %>%
-                #add in the table name to columns
-                dplyr::rename_with(.cols = !PLT_CN, 
-                            ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
-              by = dplyr::join_by(PLT_CN),
-              relationship = "many-to-many") %>%
-    dplyr::filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB)) %>%
-    #before pivot => 0.4 Gb
-    #slice_head(n=100) %>%
+    dplyr::rename_with(.cols = !PLT_CN, 
+                       ~paste0(.x, '.ENTIRE_PLOT')) |>
+    dplyr::right_join(original_data$ENTIRE_SOILS_VISIT |> 
+                        #add in the table name to columns
+                        dplyr::rename_with(.cols = !PLT_CN, 
+                                           ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
+                      by = dplyr::join_by(PLT_CN)) |>
+    dplyr::full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC |> 
+                       #add in the table name to columns
+                       dplyr::rename_with(.cols = !PLT_CN, 
+                                          ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
+                     by = dplyr::join_by(PLT_CN)) |>
+    dplyr::full_join(original_data$ENTIRE_SOILS_EROSION |>
+                       #add in the table name to columns
+                       dplyr::rename_with(.cols = !PLT_CN, 
+                                          ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
+                     by = dplyr::join_by(PLT_CN),
+                     relationship = "many-to-many") |>
+    dplyr::full_join(original_data$ENTIRE_SOILS_LAB |>
+                       #add in the table name to columns
+                       dplyr::rename_with(.cols = !PLT_CN, 
+                                          ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
+                     by = dplyr::join_by(PLT_CN),
+                     relationship = "many-to-many") |>
+    dplyr::filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB))
+  
+  #before pivot => 0.4 Gb
+  #slice_head(n=100)
+  
+  if(format == 'wide'){
+    
+    if(verbose) message('done.')
+    return(list(annotations = annotations.df, 
+                wide = wide.df))
+  }
+  
+  joinPivot.df <- wide.df |>
     #make everything long
     tidyr::pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
-                 values_drop_na = TRUE,
-                 names_to = c('column_id', 'table_id'),
-                 names_sep = '\\.',
-                 names_transform = as.factor,
-                 values_to = 'with_entry')
+                        values_drop_na = TRUE,
+                        names_to = c('column_id', 'table_id'),
+                        names_sep = '\\.',
+                        names_transform = as.factor,
+                        values_to = 'with_entry')
   #after pivot => 2.1 Gb
   
-  if(verbose) message('done.')
+  if(format %in% c('joinPivot', 'long')){
+    
+    if(format == 'long') warning('`long` format is decrepit. Use `joinPivot`')
+    if(verbose) message('done.')
+    return(list(annotations = annotations.df, 
+                joinPivot = joinPivot.df))
+  }
+  
+  }
+  
+  if(format %in% c('pivotBind')){
+    warning('This is not currently implemented.')
+    return(NULL)
+  }
+  
   
   return(list(annotations = annotations.df, long = allData))
 }

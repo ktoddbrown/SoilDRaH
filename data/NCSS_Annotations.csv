@@ -46,7 +46,7 @@ lab_area;area_type;2;NA;value;--
 lab_area;area_type;2;NA;description;The record ID (an integer number) of a particular record (component record, horizon record, etc.) in a particular table (component table, horizon table, etc.). A record ID is not sufficient in and of itself to uniquely identify a record in a table. Each record in a table is uniquely identified by the combination of a record ID and the ID of the database in which the entity (area type, legend or data mapunit), of which the record is a member, was created.
 lab_area;parent_area_key;4;NA;foreign_key;--
 lab_area;parent_area_key;4;NA;description;parent_area key
-lab_area;parent_org_key;5;NA;foreign_key;--
+lab_area;parent_org_key;5;NA;identifier;--
 lab_area;parent_org_key;5;NA;description;parent_org key
 lab_calculations_including_estimates_and_default_values;percent_passing_2_micron_sieve;79;NA;description;This is the cumulative gravimetric percentage of particles with diameters <2 microns (0.002 mm), reported on a <3 inch base. ( < 75 mm base)
 lab_calculations_including_estimates_and_default_values;percent_passing_20_micron_sieve;77;NA;description;This is the cumulative gravimetric percentage of particles with diameters <20 microns (0.02 mm), reported on a <3 inch base. ( < 75 mm base)
@@ -127,8 +127,8 @@ lab_calculations_including_estimates_and_default_values;cumulative_curve_size_lt
 lab_calculations_including_estimates_and_default_values;gradation_curvature;50;NA;description;The coefficient of curvature is a descriptive parameter calculated from the cumulative grain size distribution curve (gradation curve). It is used in the Unified Soil Classification System to evaluate grading characteristics of coarse materials.
 lab_calculations_including_estimates_and_default_values;gradiation_uniformity;49;NA;description;The coefficient of uniformity is a descriptive parameter calculated from the cumulative grain size distribution curve (gradation curve). It is used in the Unified Soil Classification System to evaluate grading characteristics of coarse materials. (< 75 mm fraction)
 lab_calculations_including_estimates_and_default_values;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_calculations_including_estimates_and_default_values;layer_key;0;NA;identifier;--
-lab_calculations_including_estimates_and_default_values;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_calculations_including_estimates_and_default_values;layer_key;0;layer_key;identifier;--
+lab_calculations_including_estimates_and_default_values;layer_key;0;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_calculations_including_estimates_and_default_values;le_third_bar_to_oven_dry_rewet;52;NA;description;Linear extensibility percent, rewet, 1/3 bar/OD isthe percent dimensional change of a rewet clod as water content changes from oven dry to 1/3 bar tension. It is reported as percent length change on a<2 mm base.
 lab_calculations_including_estimates_and_default_values;le_third_fifteen_whole_soil;53;NA;description;Linear extensibility percent, whole soil,1/3 bar/15 bar is the percent change in a clod dimension as water content changes from 15 bar to 1/3 bar tension. It is reported as percent length change on a whole soil base.
 lab_calculations_including_estimates_and_default_values;le_third_ovendry_whole_soil;51;NA;description;Linear extensibility percent, whole soil,1/3 bar/Ovendry is the percent change in a clod dimension as water content changes from ovendry to 1/3 bar tension. It is reported as percent length change on a whole soil base.
@@ -308,8 +308,8 @@ lab_chemical_properties;k_nh4_ph_7_method;11;NA;description;k_nh4_ph_7 analysis 
 lab_chemical_properties;k_satx;83;NA;description;Potassium in the saturation extract is the fraction removed from a sample by saturating the sample with distilled H2O, then vacuum extracting the water. It is reported as meq per liter of extract.
 lab_chemical_properties;k_satx_method;84;NA;description;k_satx analysis method
 lab_chemical_properties;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_chemical_properties;layer_key;0;NA;identifier;--
-lab_chemical_properties;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_chemical_properties;layer_key;0;layer_key;identifier;--
+lab_chemical_properties;layer_key;0;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_chemical_properties;lead_mehlich3_extractable;180;NA;description;The lead extracted by the Mehlich III solution.
 lab_chemical_properties;lead_water_extractable;152;NA;description;The lead extracted by the water solution.
 lab_chemical_properties;magnesium_mehlich3_extractable;181;NA;description;The magnesium extracted by the Mehlich III solution.
@@ -377,10 +377,10 @@ lab_combine_nasis_ncss;samp_taxsubgrp;16;NA;description;samp_taxsubgrp
 lab_combine_nasis_ncss;samp_taxsuborder;14;NA;description;samp_taxsuborder
 lab_combine_nasis_ncss;samp_taxtempcl;21;NA;description;samp_taxtempcl
 lab_combine_nasis_ncss;samp_taxtempregime;23;NA;description;samp_taxtempregime
-lab_combine_nasis_ncss;site_key;2;NA;description;An integer number that uniquely identifies a particular site
-lab_combine_nasis_ncss;site_key;2;NA;identifier;--
-lab_combine_nasis_ncss;site_obsdate;65;site_observation_date;value;--
+lab_combine_nasis_ncss;site_key;2;site_key;description;An integer number that uniquely identifies a particular site
+lab_combine_nasis_ncss;site_key;2;site_key;identifier;--
 lab_combine_nasis_ncss;site_obsdate;65;site_observation_date;description;site_obsdate
+lab_combine_nasis_ncss;site_obsdate;65;site_observation_date;value;--
 lab_combine_nasis_ncss;siteiid;63;NA;description;siteiid
 lab_combine_nasis_ncss;siteobjupdate;80;NA;description;siteobjupdate
 lab_combine_nasis_ncss;ssa_key;72;NA;description;key for the lab_area table that is associated with a SSA area type
@@ -404,8 +404,8 @@ lab_combine_nasis_ncss;SSL_taxsubgrp;52;NA;description;SSL_taxsubgrp
 lab_combine_nasis_ncss;SSL_taxsuborder;50;NA;description;SSL_taxsuborder
 lab_combine_nasis_ncss;SSL_taxtempcl;57;NA;description;SSL_taxtempcl
 lab_combine_nasis_ncss;SSL_taxtempregime;59;NA;description;SSL_taxtempregime
-lab_combine_nasis_ncss;state_key;69;state;description;key for the lab_area table that is associated with a state area type
-lab_combine_nasis_ncss;state_key;69;state;foreign_key;--
+lab_combine_nasis_ncss;state_key;69;state_key;description;"state key that cross references lab_area where the area_type == state"
+lab_combine_nasis_ncss;state_key;69;state_key;identifier;--
 lab_combine_nasis_ncss;upedonid;5;NA;description;upedonid
 lab_combine_nasis_ncss;usiteid;64;NA;description;usiteid
 lab_combine_nasis_ncss;corr_class_type;28;NA;description;corr_class_type
@@ -427,10 +427,10 @@ lab_combine_nasis_ncss;corr_taxsubgrp;34;NA;description;corr_taxsubgrp
 lab_combine_nasis_ncss;corr_taxsuborder;32;NA;description;corr_taxsuborder
 lab_combine_nasis_ncss;corr_taxtempcl;39;NA;description;corr_taxtempcl
 lab_combine_nasis_ncss;corr_taxtempregime;41;NA;description;corr_taxtempregime
-lab_combine_nasis_ncss;country_key;68;country;description;key for the lab_area table that is associated with a country area type
-lab_combine_nasis_ncss;country_key;68;country;foreign_key;--
-lab_combine_nasis_ncss;county_key;70;county;description;key for the lab_area table that is associated with a county area type
-lab_combine_nasis_ncss;county_key;70;county;foreign_key;--
+lab_combine_nasis_ncss;country_key;68;country_key;description;"country key, crosslinked with lab_area::area_key where area_type == country"
+lab_combine_nasis_ncss;country_key;68;country_key;value;--
+lab_combine_nasis_ncss;county_key;70;county_key;description;"county key, crosslinked with lab_area::area_key where area_type == county"
+lab_combine_nasis_ncss;county_key;70;county_key;identifier;--
 lab_combine_nasis_ncss;labdatadescflag;6;NA;description;labdatadescflag
 lab_combine_nasis_ncss;latitude_decimal_degrees;66;latitude_decimal_degrees;value;--
 lab_combine_nasis_ncss;latitude_decimal_degrees;66;latitude_decimal_degrees;description;latitude_decimal_degrees
@@ -445,8 +445,8 @@ lab_combine_nasis_ncss;npark_key;73;national_park;description;key for the lab_ar
 lab_combine_nasis_ncss;npark_key;73;national_park;foreign_key;--
 lab_combine_nasis_ncss;pedlabsampnum;3;NA;description;An identifier for the pedon sample that is assigned by the Kellogg Soil Survey Laboratory. This identifier is used to link the morphological pedon description with the associated measured property values from the laboratory.
 lab_combine_nasis_ncss;pedobjupdate;79;NA;description;pedobjupdate
-lab_combine_nasis_ncss;pedon_key;1;NA;description;An integer number that uniquely identifies a particular pedon
-lab_combine_nasis_ncss;pedon_key;1;NA;identifier;--
+lab_combine_nasis_ncss;pedon_key;1;pedon_key;description;An integer number that uniquely identifies a particular pedon
+lab_combine_nasis_ncss;pedon_key;1;pedon_key;identifier;--
 lab_combine_nasis_ncss;pedoniid;4;NA;description;pedoniid
 lab_dd_domain_detail;choice;5;NA;description;A character string that represents a member of a domain. This value must be unique for every member of a given domain.
 lab_dd_domain_detail;choice_desc;7;NA;description;choice_desc
@@ -490,8 +490,8 @@ lab_column_descriptions;foreign_table_name;16;NA;foreign_key;TRUE
 lab_column_descriptions;foreign_table_name;16;NA;description;A character string containing the physical name of a table in the LIMS database, in this case the table corresponding to a particular foreign key.
 lab_layer;project_key;3;NA;value;--
 lab_layer;project_key;3;NA;description;An integer number that uniquely identifies a particular project. Currently no project table to cross link 20240625 KTB
-lab_layer;site_key;4;NA;identifier;--
-lab_layer;site_key;4;NA;description;An integer number that uniquely identifies a particular site
+lab_layer;site_key;4;site_key;identifier;--
+lab_layer;site_key;4;site_key;description;An integer number that uniquely identifies a particular site
 lab_layer;stratified_textures_flag;21;NA;description;A Boolean flag that when set (Y) indicates that the textures that comprise a particular texture group, are stratified.
 lab_layer;texture_description;22;NA;description;The full texture description for a horizon, using full texture class and in lieu of names rather than abbreviations.
 lab_layer;hzn_bot;12;layer_bottom;description;The bottom (lower) depth of the layer.
@@ -515,15 +515,15 @@ lab_layer;labsampnum;2;NA;description;A unique identifier number for the pedon a
 lab_layer;layer_field_label_1;8;NA;description;The label assigned in the field to the layer.
 lab_layer;layer_field_label_2;9;NA;description;A second label assigned in the field to the layer.
 lab_layer;layer_field_label_3;10;NA;description;A third label assigned in the field to the layer.
-lab_layer;layer_key;1;NA;identifier;--
-lab_layer;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_layer;layer_key;1;layer_key;identifier;--
+lab_layer;layer_key;1;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_layer;layer_sequence;6;layer_order;description;The horizon layer number is a sequential number (starting at 1 for the top horizon) for horizons in a pedon. It is used to order data in reports.
 lab_layer;layer_sequence;6;layer_order;value;--
 lab_layer;layer_type;7;layer_type;description;The layer type indicates whether the layer is a horizon, layer or non-layer reporting type.  The intent is to allow flexible reporting of data for pedons, projects or other data groupings.
 lab_layer;layer_type;7;layer_type;value;--
 lab_layer;non_hzn_desgn;20;NA;description;A string entered into the horizon field that is not a horizon designation
-lab_layer;pedon_key;5;NA;identifier;--
-lab_layer;pedon_key;5;NA;description;An integer number that uniquely identifies a particular pedon
+lab_layer;pedon_key;5;pedon_key;identifier;--
+lab_layer;pedon_key;5;pedon_key;description;An integer number that uniquely identifies a particular pedon
 lab_major_and_trace_elements_and_oxides;phosphorus_major_element;12;NA;description;Phosphorus_Major_Element is the total P measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
 lab_major_and_trace_elements_and_oxides;phosphorus_trace_element;30;NA;description;Phosphorus_Trace_Element is the total P measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
 lab_major_and_trace_elements_and_oxides;potassium_major_element;8;NA;description;Potassium_Major_Element is the total K measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
@@ -559,7 +559,7 @@ lab_major_and_trace_elements_and_oxides;copper_trace_element;25;NA;description;C
 lab_major_and_trace_elements_and_oxides;iron_major_element;7;NA;description;Iron_Major_Element is the total Fe measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
 lab_major_and_trace_elements_and_oxides;iron_oxide_total;40;NA;description;iron_oxide_total
 lab_major_and_trace_elements_and_oxides;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_major_and_trace_elements_and_oxides;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_major_and_trace_elements_and_oxides;layer_key;0;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_major_and_trace_elements_and_oxides;lead_trace_element;31;NA;description;Lead_Trace_Element is the total Pb measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
 lab_major_and_trace_elements_and_oxides;magnesium_major_element;9;NA;description;Magnesium_Major_Element is the total Mg measured after total dissolution of a size fraction of soil material. It is reported as mg/kg on less than 2 mm fraction.
 lab_major_and_trace_elements_and_oxides;major_element_method;4;NA;description;major_element analysis method
@@ -739,7 +739,7 @@ lab_mineralogy_glass_count;KK_Kaolinite_Petro_Count;97;NA;description;Quantity o
 lab_mineralogy_glass_count;KY_Kyanite_Petro_Count;98;NA;description;Quantity of kyanite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
 lab_mineralogy_glass_count;LA_Lamprobolite_Petro_Count;100;NA;description;Quantity of lamprobolite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
 lab_mineralogy_glass_count;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_mineralogy_glass_count;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_mineralogy_glass_count;layer_key;1;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_mineralogy_glass_count;LC_Analcime_Petro_Count;175;NA;description;Quantity of analcime mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
 lab_mineralogy_glass_count;LE_Lepidocrocite_Petro_Count;176;NA;description;Quantity of lepidocrocite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
 lab_mineralogy_glass_count;LI_Leucite_Petro_Count;177;NA;description;Quantity of leucite mineral grains from a total examination of 300 grains in a specific PSDA sand or silt fraction using a petrographic microscope.
@@ -782,12 +782,12 @@ lab_mir;filename;7;NA;description;The unique filename of the results file.
 lab_mir;id;1;NA;description;The unique record identifier.
 lab_mir;lab_proj_name;6;NA;description;A character string containing the name the project submitter has given to the project. This is to allow the project submitter to identify the project with a name not constrained by the LIMS
 lab_mir;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_mir;layer_key;3;NA;description;An integer number that uniquely identifies a particular layer
+lab_mir;layer_key;3;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_mir_wavelength;wavelength_string;3;NA;description;The list of wavelengths used for analysis of the sample
 lab_mir_wavelength;d_wavelength_array_id;1;NA;description;An integer number that uniquely identifies the wavelength collection from the lab_mir_wavelength domain
 lab_mir_wavelength;description;2;NA;description;a description of the wavelength collection
-lab_pedon;site_key;10;NA;identifier;--
-lab_pedon;site_key;10;NA;description;An integer number that uniquely identifies a particular site
+lab_pedon;site_key;10;site_key;identifier;--
+lab_pedon;site_key;10;site_key;description;An integer number that uniquely identifies a particular site
 lab_pedon;cntrl_depth_to_bot;7;NA;description;Depth to the bottom of the taxonomic particle size control section.  (Soil Taxonomy)
 lab_pedon;cntrl_depth_to_top;6;NA;description;Depth to the top of the taxonomic particle size control section. (Soil Taxonomy)
 lab_pedon;user_pedon_id;4;NA;description;A short label to help a user identify a particular pedon.
@@ -796,9 +796,10 @@ lab_pedon;mapsyb;9;NA;description;mapsyb
 lab_pedon;observation_date;3;observation_date;description;The date on which this particular soil was described or sampled, expressed as month, day, year -- xx/xx/xxxx.
 lab_pedon;observation_date;3;observation_date;value;--
 lab_pedon;pedlabsampnum;2;NA;description;An identifier for the pedon sample that is assigned by the Kellogg Soil Survey Laboratory. This identifier is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_pedon;pedon_key;1;NA;identifier;--
-lab_pedon;pedon_key;1;NA;description;An integer number that uniquely identifies a particular pedon
-lab_pedon;pedon_seq_num;5;NA;description;The consecutive number of the pedon sampled in a particular survey area in a particular year.
+lab_pedon;pedon_key;1;pedon_key;identifier;--
+lab_pedon;pedon_key;1;pedon_key;description;An integer number that uniquely identifies a particular pedon
+lab_pedon;pedon_seq_num;5;sample_size;description;The consecutive number of the pedon sampled in a particular survey area in a particular year.
+lab_pedon;pedon_seq_num;5;sample_size;value;--
 lab_physical_properties;plastic_limit;74;NA;description;The measured water content of the soil, expressed on a dry weight basis, at the change between the semisolid and plastic states.
 lab_physical_properties;plastic_limit_method;75;NA;description;plastic_limit analysis method
 lab_physical_properties;prep_code;3;sample_preparation;description;A character string containing the Soil Survey Laboratory code used to identify the type of sample preparation.
@@ -906,8 +907,8 @@ lab_physical_properties;frag_20_75_mm_wt_pct_lt_75;21;NA;description;The gravime
 lab_physical_properties;frag_5_20_mm_wt_pct_lt_75;20;NA;description;The gravimetric percentage of 5 to 20 mm diameter particles reported  in the <75 mm size fraction.
 lab_physical_properties;water_dispersible_fraction_method;91;NA;description;h2o_dispersible_fraction analysis method
 lab_physical_properties;labsampnum;1;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_physical_properties;layer_key;0;NA;identifier;--
-lab_physical_properties;layer_key;0;NA;description;An integer number that uniquely identifies a particular layer
+lab_physical_properties;layer_key;0;layer_key;identifier;--
+lab_physical_properties;layer_key;0;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_physical_properties;le_field_moist_to_oben_dry;48;NA;description;Linear extensibility percent, field moist to ovendry is the percent change in a clod dimension as water content changes from oven dry to field moist water tension. It is reported as percent length change on a <2 mm base.
 lab_physical_properties;le_fm_to_od_method;49;NA;description;le_fm_to_od analysis method
 lab_physical_properties;le_third_fifteen_lt2_mm;44;NA;description;Linear extensibility percent, <2 mm, 1/3 bar/15 bar is the percent change in a clod dimension as water content changes from 15 bar to 1/3 bar water tension. It is reported as percent length change on a <2 mm base.
@@ -943,11 +944,11 @@ lab_rosetta_key;usedmodel;7;NA;description;usedmodel
 lab_rosetta_key;wlupdated;8;NA;description;wlupdated
 lab_rosetta_key;Ko;10;NA;description;Ko
 lab_rosetta_key;Ks;9;NA;description;Ks
-lab_rosetta_key;layer_key;2;NA;description;An integer number that uniquely identifies a particular layer
+lab_rosetta_key;layer_key;2;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_rosetta_key;Lpar;11;NA;description;Lpar
 lab_rosetta_key;npar;6;NA;description;npar
-lab_site;site_key;1;NA;identifier;--
-lab_site;site_key;1;NA;description;An integer number that uniquely identifies a particular site
+lab_site;site_key;1;site_key;identifier;--
+lab_site;site_key;1;site_key;description;An integer number that uniquely identifies a particular site
 lab_site;user_site_id;2;NA;description;A short label to help a user identify a particular site.
 lab_site;horizontal_datum_name;3;longitude;description;The identification given to the reference system used for defining the coordinates of points.  (Content Standards for Spatial Metadata, FGDC, 3/31/94 draft)
 lab_site;horizontal_datum_name;3;longitude;method;--
@@ -1072,7 +1073,7 @@ lab_xray_and_thermal;KK_Kaolinite_Differential_thermal_Analysis;98;NA;descriptio
 lab_xray_and_thermal;KK_Kaolinite_thermal_Gravimetric_Analysis;90;NA;description;The percent kaolinite calculated from using the TGA instrument to heat a dried ground sample, generally the clay fraction, to 900 C, and quantifying the fractional weight loss of the sample between about 450-550 C.
 lab_xray_and_thermal;KK_Kaolinite_X_Ray;31;NA;description;kaolinite_x_ray
 lab_xray_and_thermal;labsampnum;2;NA;description;A unique identifier number for the pedon assigned by the laboratory. This number is used to link the morphological pedon description with the associated measured property values from the laboratory.
-lab_xray_and_thermal;layer_key;1;NA;description;An integer number that uniquely identifies a particular layer
+lab_xray_and_thermal;layer_key;1;layer_key;description;An integer number that uniquely identifies a particular layer
 lab_xray_and_thermal;LC_Anacime_X_Ray;8;NA;description;anacime_x_ray
 lab_xray_and_thermal;LE_Lepidocrocite_X_Ray;33;NA;description;lepidocrocite_x_ray
 lab_xray_and_thermal;MC_Montmorillonite_Chlorite_X_Ray;38;NA;description;montmorillonite_chlorite_x_ray

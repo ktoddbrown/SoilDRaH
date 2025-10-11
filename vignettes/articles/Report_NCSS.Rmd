@@ -46,6 +46,8 @@ Read in the appropriate NCSS data bases for later use. The readNCSS function is 
 ncss.df <- readNCSS(dataDir = dataDirectory,
                     annotationFilename = '../../data/NCSS_Annotations.csv',
                     format = 'long')
+#                    format = 'original')
+
 ```
 
 # Data descriptions
