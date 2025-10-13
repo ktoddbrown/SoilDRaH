@@ -115,11 +115,10 @@ Table 1 was modified to have the units in parentheses beside each variable. Soil
 #| code-fold: true
 #| message: false
 
-filename <- 'Veldkamp1994_Table1.csv'
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -132,11 +131,10 @@ Table 2 was modified so that soil type would be included as a variable, moved fr
 #| code-fold: true
 #| message: false
 
-filename <- 'Veldkamp1994_Table2.csv'
-read_csv(file = filename,
+read_csv(file = table2.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table2.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -149,11 +147,10 @@ Table 3 was modified so that soil type was included as a variable with its own c
 #| code-fold: true
 #| message: false
 
-filename <- 'Veldkamp1994_Table3.csv'
-read_csv(file = filename,
+read_csv(file = table3.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table3.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -166,22 +163,21 @@ Table 4 was modified so that years since forest cleaning would be included as a 
 #| code-fold: true
 #| message: false
 
-filename <- 'Veldkamp1994_Table4.csv'
-read_csv(file = filename,
+read_csv(file = table4.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table4.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
 
 
-{{< include AuthorYYYY_Methods.Rmd >}}
+{{< include Veldkamp1994_Methods.md >}}
 
 # Transcription comparison
 
 ```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
+diff --strip-trailing-cr --suppress-common-lines -y temp/Veldkamp1994_Methods_SRS.md Veldkamp1994_Methods_MB.Rmd
 ```
 
 # Files
@@ -250,6 +246,8 @@ Some citations are missing, those are noted here and how best guess were generat
 - [x] Vitorello 1989
  + Vitorello, V.A., C.C. Cerri, F. Andrews, C. Feller, and R.L. Victória. 1989. Organic matter and natural carbon-13 distribution in forested and cultivated Oxisols. Soil Sci. Soc. Am. J. 53:773-778.
  + direct export
+ 
+## Level 0 Read
 
 ```{r readLevel0}
 
