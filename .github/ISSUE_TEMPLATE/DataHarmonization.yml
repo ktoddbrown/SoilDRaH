@@ -10,7 +10,7 @@ body:
       label: "Data rescue issue"
       description: "What is the data rescue issue?"
       placeholder: "#102"
-  -type: textarea
+  - type: textarea
     attributions:
       label: Citation
       description: "What is the orginal source citation?"
