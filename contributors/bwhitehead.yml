@@ -1,0 +1,12 @@
+author:
+  - name:
+      given: Brandon
+      family: Whitehead
+      affiliation:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      note: https://github.com/brandonnodnarb

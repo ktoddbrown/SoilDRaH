@@ -1,0 +1,11 @@
+author:
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      note: https://github.com/SavaScott

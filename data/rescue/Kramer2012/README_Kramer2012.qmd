@@ -9,46 +9,10 @@ bibliography:
   - Kramer2012_Methods.bib
   - Kramer2012.bib
   - Kramer2012_Table1.bib
-author:
-  - name:
-      given: Katherine
-      family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role:
-        - "Review"
-  - name:
-      given: Savannah
-      family: Scott
-      affiliation:
-        - id: ESS UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/SavaScott
-  - name:
-      given: Brandon
-      family: Whitehead
-      affiliation:
-        - id: ESS UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-      - "Transcription"
-      - "Review"
-      note: https://github.com/brandonnodnarb
-      
+metadata-files:
+  - ../../../contributors/ktodd-brown.yml
+  - ../../../contributors/sscott.yml
+  - ../../../contributors/bwhitehead.yml
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
