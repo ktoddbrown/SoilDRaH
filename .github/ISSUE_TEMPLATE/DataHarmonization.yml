@@ -26,9 +26,9 @@ body:
       label: of_variable
       description: "What SoilDRaH variables do you expect to use?"
       value: |
-      "Using the `of_variable` list (here)[https://github.com/ktoddbrown/SoilDRaH/blob/main/data/semantics/SoilDRaHVocabulary_of_variable.csv] we expect to use the following variables:
+        Using the `of_variable` list (here)[https://github.com/ktoddbrown/SoilDRaH/blob/main/data/semantics/SoilDRaHVocabulary_of_variable.csv] we expect to use the following variables:
       
-      - region
-      - soil_organic_carbon	
-      - land_use_type
-      - ..."
+        - region
+        - soil_organic_carbon	
+        - land_use_type
+        - ...
