@@ -11,12 +11,12 @@ body:
       description: "What is the data rescue issue?"
       placeholder: "#102"
   - type: textarea
-    attributions:
+    attributes:
       label: Citation
       description: "What is the orginal source citation?"
       placeholder: "Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405"
   - type: textarea
-    attributions:
+    attributes:
       label: "description_purpose"
       description: "Give a brief discription of the data and the purpose for the data curation. This may be copied from the data rescue issue."
       placeholder: "This paper examines how soil and foliar nutrients vary across five native Hawaiian forests that differ in annual rainfall (ranging from 500 mm to 5500 mm), but are otherwise held constant in terms of elevation, substrate age, and dominant vegetation (primarily Metrosideros polymorpha). They used this data to evaluate changes in leaf mass per area, lignin content, δ¹⁵N, and δ¹³C.
