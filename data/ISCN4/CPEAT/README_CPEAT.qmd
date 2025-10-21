@@ -1,15 +1,31 @@
 ---
 title: "Carbon in Peat on EArth through Time"
-author: "Kathe Todd-Brown, Vaasuki Marupaka"
-date: "2024"
-knitr:
-  opts_chunk: 
-    collapse: true
-    comment: "#>" 
-    R.options:
-      knitr.graphics.auto_pdf: true
-toc: true
-toc-depth: 2
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+authors:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliation:
+      - ref: uf-ees
+  - name:
+      given: Vaasuki
+      family: Marupaka
+    affiliation:
+      - ref: uf-ees
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: FL
+    country: USA
+    url: https://essie.ufl.edu/ees/
 ---
 
 The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
@@ -22,7 +38,204 @@ The version of the Carbon in Peat on EArth through Time (C-PEAT) Database descri
 > **C-PEAT Database**
 > Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
 
-Taken from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
+Quote from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
+
+# Where is the data
+
+This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 850 unique DOIs.
+We have noticed that these DOIs have reduced over time, some of these were merged data sets (merging age and geochemistry from the same core into a single core, 10.1594/PANGAEA.890358 and 10.1594/PANGAEA.928557), others appear to be newly registered data, and others seem to disappear from new quires.
+We have provided a list of doi's retrieved at various points in the project as a `echo: false` chunk in the qmd code for documentation and the commented out `pangaear::pg_search` code.
+
+There is some one-off data collections for ingest that means we can not ensure that future data contributions will be consistent with what we present here.
+This should be a good starting point however for adding new contributions.
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+#library(pangaear)
+
+download.dir <- '../../../temp/CPEAT'
+#list.files(download.dir) |> length()
+```
+
+```{r}
+#| label: doi_list
+#| echo: false
+
+#### Long doi list ####
+
+downloadUrl.arr <- read_csv(file = 'download_url_CPEAT.csv', col_names = FALSE, col_types = cols(col_character()))$X1
+
+#### Check pangaea search ####
+
+# temp.df <- pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', count = 500) |>
+#   bind_rows(
+#     pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', offset = 500, count = 500))
+# 
+# #is there anything new?
+# setdiff(paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"),
+#         downloadUrl.arr)
+# #is there anything "lost" from the search
+# setdiff(downloadUrl.arr,
+#         paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"))
+```
+
+# Level 0 data
+
+```{r}
+#| label: downloadCPEAT
+
+basenames.arr <- downloadUrl.arr |> 
+  # start with:
+  # "https://doi.pangaea.de/10.1594/PANGAEA.889936?format=textfile"
+  str_extract(pattern = '(?<=pangaea.de/).*(?=.format)') |> 
+  # extract the string between the doi url and the format information:
+  # 10.1594/PANGAEA.889936
+  str_replace(patter = '/', replacement = '_') |>
+  # replase the forward slash so that it is not treated as a folder
+  # 10.1594_PANGAEA.889936
+  paste0('.txt')
+  # add the extension
+
+download.flag <- !file.exists(file.path(download.dir, basenames.arr))
+if(any(download.flag)){
+  download.file(url = downloadUrl.arr[download.flag], 
+                destfile = file.path(download.dir,
+                                     basenames.arr[download.flag]))
+}
+```
+
+```{r}
+#| label: loadLevel0
+
+#file.str <- readr::read_file(file.path(download.dir, basenames.arr[1]))
+#
+basenames.ls <- setNames(object = as.list(basenames.arr), str_remove(basenames.arr, '.txt'))
+all.text <- plyr::llply(.data = basenames.ls, 
+                        .fun = function(basename.str){
+  readr::read_file(file.path(download.dir, basename.str))
+})
+
+all.meta <- plyr::ldply(.data = all.text,
+                        .fun = function(file.str){
+  #### Parse the first level of the metadata ####
+  #file.str <- all.text$`10.1594_PANGAEA.928061`
+  header.str <- file.str |>
+    str_extract(regex('(?<=/\\* ).*(?=\\*/)', multiline=TRUE, dotall=TRUE))
+  
+  meta.df <- header.str |>
+    str_split_1('(?<=\\n)[^\\t]*\\:') |>
+    as.list() |>
+    setNames(c('meta', str_extract_all(header.str, '(?<=\\n)[^\\t]*\\:') |> 
+                 unlist() |>
+                 str_remove('\\:$'))) |>
+    as_tibble_row()
+  return(meta.df)
+}, .id = 'doi') 
+
+all.primary <- plyr::ldply(.data = all.text, .fun = function(file.str){
+  
+#### Parse the primary data file ####
+
+  header.str <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n)[^\\n]*', multiline=TRUE, dotall=TRUE)) |>
+    str_split(patter = '\\t') |>
+    unlist()
+  
+  #"10.1594_PANGAEA.928439" index 388 has an extra 3 at the end of the file randomly, this throws a warning but does not affect how the data is read in
+primary.df <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
+  read_tsv(col_types = cols(.default = col_character()),
+           skip = 1, col_names = FALSE) |>
+  mutate(across(.cols = everything(), .fns = trimws)) |>
+  mutate(row_id = paste0('R',1:n())) |>
+  pivot_longer(cols = -row_id, 
+               names_to = 'column_index', values_to = 'with_entry') |>
+  full_join(tibble(column_index = paste0('X', 1:length(header.str)),
+                   column_name = header.str),
+            by = join_by(column_index))
+
+  return(primary.df)
+}, .id = 'doi')
+
+
+```
+
+
+```{r}
+#| label: processHeader
+
+study.df <- all.meta |>
+  select(doi, citation = Citation, 
+         replaced_by = `Replaced by`, related_to = `Related to`,
+         further_details = `Further details`,
+         projects = `Project(s)`,
+         change_history = `Change history`,
+         license = License,
+         size = Size, abstract = Abstract,
+         keyword = `Keyword(s)`, status = Status) |>
+  mutate(across(everything(), trimws)) |>
+  mutate(across(c(projects, license, keyword, status), as.factor)) |>
+  mutate(replaced_by_doi = str_extract(replaced_by, '10\\.1594/PANGAEA\\.\\d*') |>
+           str_replace('/', '_'))
+
+core.df <- all.meta |>
+  select(doi, coverage = Coverage,
+         event = `Event(s)`, parameters = `Parameter(s)`) |>
+  separate_wider_delim(cols = parameters, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start')
+
+#identfy and process the sub-patterns
+structures.df <- all.meta |>
+  select(Coverage, `Event(s)`, Size, `Parameter(s)`) |>
+  mutate(
+    Coverage_pattern = 
+      str_replace_all(Coverage, '\\-?\\d*\\.?\\d+', '%d'),
+    Events_pattern = 
+      str_replace(`Event(s)`, '^[^\\*]*\\*', '%s') |>
+      str_replace(':[^\\*]*$', ': %s') |>
+      str_replace_all(':[^\\*]*\\*', ': %s'),
+    Size_pattern = 
+      str_replace_all(Size, '\\d+', '%d')) |>
+  ##Size: Convert to numeric with unit descriptions
+  ##Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
+  ##Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
+  ##Parameters: Separate and process the parameter descriptions by str subtraction
+  separate_wider_delim(cols = `Parameter(s)`, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start') |>
+  select(-X0) |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'column_index',
+               values_drop_na = TRUE) |>
+  mutate(column_name_match = str_detect(value, '^.+ \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$'))
+  # move from the end with comments and strip out the values in reverse order
+
+```
+
+# Restructuring plan
+
+**Code as Documentation**
+
+
+
+3) Collapse the header list into a SoilDRaH data tuple `doi-is_type-with_entry-source` and `doi-column_name-column_number-is_type-with_entry-source` 
+4) Collapse the primary data table into a SoilDRaH data tuple `doi-column_name-column_number-row_number-is_type-with_entry-source`
+5) Append the three tables `study`, `core`, `layer` across the doi's as a level 2 data product
+
+# 
+
+```{r}
+
+```
+
+
+# OLD
+
 
 The annotations table draws heavily from the parameters described in the orginal metadata and also from the point of contact for C-PEAT collection of datasets (Dr. Julie Loisel). 
 
