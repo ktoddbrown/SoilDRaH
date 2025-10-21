@@ -1,0 +1,141 @@
+---
+title: "Data Rescue: Author YYYY"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - AuthorYYYY_Methods_KTB.bib
+  - AuthorYYYY.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
+      given: Jane
+      family: Gator
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
+
+> Full citation here
+
+# Data Summary
+
+AuthorYYYY primarily measures ... They use this data to look at ...
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+# Tables and figures
+
+- Table 
+  1) 
+
+- Figure 
+  1) 
+  
+### Table N
+
+Table N was modified ....
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Table.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include AuthorYYYY_Methods.Rmd >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
+```
+
+# Files
+
+These files are in the AuthorYYYY data rescue.
+
+- [Readme](README_KTB.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [AuthorYYYY.bib](AuthorYYYY.bib)
+  + citation for article transcribed
+- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+  + citations for the methods section of the article
+- [AuthorYYYY_Methods.Rmd](AuthorYYYY_Methods.Rmd)
+  + methods transcribed from primary article
+- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
+  + table N from primary article with ...
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [ ] describe files in human readable form inside ReadMe
+- [ ] description with Git issue with link
+- [ ] add contribution yaml
+- [ ] create excel sheet with Table 1 and 3
+- [ ] export excel table to csv
+- [ ] copy over methods section into markdown
+- [ ] pull down citations in methods section to bib file
+- [ ] add in citation links to methods
+- [ ] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+
+
