@@ -6,41 +6,65 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods_KTB.bib
-  - AuthorYYYY.bib
-author:
-  - name:
+  - Ares2001_Methods.bib
+  - Ares2001.bib
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Transcription"
-        - "Review"
-  - name:
-      given: Jane
-      family: Gator
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
 library(tidyverse)
 library(kableExtra)
+library(bibtex)
+
+# data files for level 0
+methods.file <- "AuthorYYYY_Methods.md"
+tableN.file <- 'AuthorYYYY_TableN.csv'
+figureM.file <- 'AuthorYYYY_FigureM.csv'
+
+ #TODO see if there is a way to pull bib files from the yaml
+primaryCitation.file <- 'AuthorYYYY.bib'
+methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+
+# read function
+readsource.file <- '../../../R/readAuthorYYYY.R'
+#source('readsource.file')
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
 ```
+
 
 This documents the data transcription for  .
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
@@ -76,7 +100,6 @@ Table N was modified ....
 #| code-fold: true
 #| message: false
 
-filename <- 'Table.csv'
 read_csv(file = filename,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -86,7 +109,7 @@ read_csv(file = filename,
 ```
 
 
-{{< include AuthorYYYY_Methods.Rmd >}}
+{{< include AuthorYYYY_Methods.md >}}
 
 # Transcription comparison
 
