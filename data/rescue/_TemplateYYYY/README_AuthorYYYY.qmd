@@ -6,8 +6,8 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - Ares2001_Methods.bib
-  - Ares2001.bib
+  - AuthorYYYY_Methods.bib #contains the citations in the methods section
+  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
