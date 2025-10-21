@@ -61,7 +61,7 @@ To read in the data base use the `readFIA` function.
 ```{r, warning=FALSE}
 fia.ls <- readFIA(dataDir, 
                   annotationFilename = dataAnnotations, 
-                  verbose = FALSE, #when first running, switch this to true 
+                  verbose = TRUE, #when first running, switch this to true 
                   format = 'long')
 
 fia.ls$long %>%
@@ -175,7 +175,7 @@ soil_carbon.df <- fia.ls$annotations %>%
   #create a table for exclusive join
   select(table_id, column_id, of_variable, is_type) %>%
   #down select the data that matches the variables of interest above
-  left_join(fia.ls$long,
+  left_join(fia.ls$joinPivot,
             by = join_by(table_id, column_id),
             relationship = "many-to-many")  %>%
   #only take the values, just incase there are any methods or units in the table
@@ -591,3 +591,48 @@ knitr::kable(appendixG)
 ```{r}
 testingRead <- read_csv('../data/fia_annotations.csv')
 ```
+
+```{r}
+fia_subplot <- read_csv("~/Dropbox (UFL)/Analysis/ISCN4/data/Raw/FS-FIA/September 2025 download/CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv", 
+                        col_type = readr::cols(
+                                        .default = readr::col_character()))
+
+fia_subplot_loc <- read_csv("~/Dropbox (UFL)/Analysis/ISCN4/data/Raw/FS-FIA/September 2025 download/CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv",
+                            col_type = readr::cols(
+                                        .default = readr::col_character()))
+
+fia_entire_soils <- fia.original.ls$original$ENTIRE_SOILS_LAB
+
+fia_entire_soils_loc <- fia.original.ls$original$ENTIRE_SOILS_SAMPLE_LOC
+
+test <- anti_join(fia_entire_soils, fia_subplot)
+
+setdiff(fia_subplot, fia_entire_soils)
+
+```
+
+```{r}
+# extract metadata from the pdf file 
+dataDictionary_pdf <- file.path(dataDir, 'wo-v9-4_Aug2025_UG_FIADB_database_description_NFI.pdf')
+dataDictionary <- pdf_text(dataDictionary_pdf)
+
+temp <- tibble(text = str_extract(dataDictionary[453], 
+            pattern = regex('Code .*(?=\n\n\n\n )', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n\n?')) |> # '?' is matching the preceeding expression 
+  filter(!grepl("Code", text)) |> 
+  mutate(text = trimws(text)) |> 
+  filter(text != "") |> 
+  separate_wider_delim(cols = text,
+                      names = c('Layer_type_code', 'description'),
+                      delim = regex(' {2,}')) |> 
+  mutate(Soil_sample_method_code = )
+
+temp_method <- tibble(text = str_extract(dataDictionary[453], 
+            pattern = regex('Code .*(?=\n\n\n\n )', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n\n?')) |> # '?' is matching the preceeding expression 
+  filter(!grepl("Code ", text)) |> 
+  mutate(text = trimws(text)) |> 
+  filter(text != "")
+
+```
+
