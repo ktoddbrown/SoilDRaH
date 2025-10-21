@@ -44,7 +44,7 @@ library(bibtex) #read in the bib file to dataframe
 
 methods.file <- 'Bashkin1998_Method.md'
 table1.file <- 'Bashkin1998_Table1.csv'
-table2.file <- 'Bashkin1998_Table3.csv'
+table3.file <- 'Bashkin1998_Table3.csv'
 pirmaryCitation.file <- 'Bashkin1998.bib'
 methodsCitation.file <- 'Bashkin1998_Method.bib'
 ```
@@ -89,12 +89,10 @@ Blank entries were replaced with `-`.
 #| code-fold: true
 #| message: false
 
-filename <- table1.file
-
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -109,11 +107,10 @@ We replaced the $\pm$ with `+-`
 #| code-fold: true
 #| message: false
 
-filename <- table2.file
-read_csv(file = filename,
+read_csv(file = table3.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table3.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -150,6 +147,7 @@ These files are in the @Bashkin1998 data rescue.
 - [Bashkin1998_Table3.csv](Bashkin1998_Table3.csv)
   + table 3 from primary article with soil organic carbon measurements.
 
+<!---
 # Working notes
 
 ## Citation notes from Methods
@@ -184,6 +182,8 @@ Below are the citation notes from the methods section.
   + SAS. 1987. SAS guide, volume 4. Sixth edition. Cary, North Carolina, USA.
   + manual entry as manual
 
+
+---->
 # Level 0: raw data reads
 
 The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
@@ -212,11 +212,11 @@ data.lvl0.df <- list(citation =
                                 ), 
                               Table3 = 
                                 list(caption = 
-                                       read_csv(file = table2.file,
+                                       read_csv(file = table3.file,
                                                 col_types = cols(.default = col_character()),
                                                 n_max = 1, col_names = FALSE)$X1[1],
                                      primary = 
-                                       read_csv(file = table2.file,
+                                       read_csv(file = table3.file,
                                                 col_types = cols(.default = col_character()),
                                                 skip = 1)
                                 )))
@@ -224,16 +224,21 @@ data.lvl0.df <- list(citation =
 
 # Level 1: cleaned data
 
-Create the data from the methods and tables here using fundamental processing and recast the data model.
-This will eventually go into the read function.
-Since there is no machine readable data download, all of this will be treated as an 'annotation' (Still struggling with this decision. -KTB).
+Pull together three data tables at the study, site, and layer levels.
 
-Ideally this should rely on recasting or explicit processing of the Level 0 data read in above, however where this is not practical (or possible) be sure to include a specific source citation and notes on any logical derivations used here (e.g. see the `observation_year` method).
+## Recovered study data
 
-```{r compileStudyData}
+```{r}
+#| label: compileStudyData
+#| code-fold: true
+
 #### Study information including sample design and observation methods
 #### Pull out the information from the methods and citation manually with reference
-study.df <- meta.df <- tribble(
+
+
+##Start with values plus their sources then move onto methods
+
+study.df <- tribble(
   ## put in the variable, value, unit, method, and reference source
   ~of_variable, ~value, ~source,
   ## Document the primary citation for the dataset
@@ -246,7 +251,7 @@ study.df <- meta.df <- tribble(
                     'core_description', 'cylinder 6cm x 1m', paste('Methods, ln26:', paste( data.lvl0.df$method[26], collapse = '\n')),
                     ##How were the samples prep-ed
                     'sample_prep', 'oven dried at 70 C, sieved <2mm', paste('Methods, ln27,29:', paste( data.lvl0.df$method[c(27, 29)], collapse = '\n')),
-                    ##How was the bulk desnity calculated
+                    ##How was the bulk density calculated
                     'bulk_density', 'fine earth mass divided by corer volume calculated, n=3', paste('Methods, ln29-31:', paste(data.lvl0.df$method[29:31], collapse = '\n')),
                     ##Organic fraction methods
                     'organic_fraction', 'composit sample n=3, acidified soil, CHZ analyizer by dry combustion', paste('Methods, ln35-43:', paste(data.lvl0.df$method[35:43], collapse = '\n')))
@@ -255,13 +260,17 @@ study.df <- meta.df <- tribble(
                names_to = 'is_type',
                values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  bind_rows( tibble(
+  bind_rows( 
+    ##Deal with both the method and unit of the total_carbon variable...
+    ##.... don't forget the source!
+    tibble(
     of_variable = 'total_carbon',
     is_type = c('method', 'unit'),
     with_entry = c('layer depth times organic carbon fraction times fine earth bulk density, no coarse fraction correction', 'Mg/ha'),
     source = c(paste('Methods, ln44:', data.lvl0.df$method[44], collapse = '\n'),
                paste('Table 3, caption:', data.lvl0.df$data$Table3$caption))) |>
       bind_rows(
+        ##Identify method and unit for the layers
         tibble(
           of_variable = 'layer_interval',
           is_type = c('method', 'unit'),
@@ -275,6 +284,8 @@ study.df <- meta.df <- tribble(
 kable(study.df) |>
   kable_paper()
 ```
+
+## Recover site data
 
 ```{r compileSiteData}
 ## Note that the layer information is aggregated across all sites and reported by land use (sites have paired Eucalyptus and cane plots). After struggling to process the data from the tables it was cleaner to just cite the source and hand code it below. If someone has a better idea, feel free to submit a pull request! -KTB
@@ -291,12 +302,14 @@ site.df <- tribble(
   'geopercision', '17', 'km', NA, paste('Methods, ln20:', data.lvl0.df$method[20]),
   ## Observation year inferred from a comment in the discussion
   'observation_year', '1995', 'CE', 'In the discussion section @Bashkin1998 talks about expected total carbon changes over the 10-13 years of the study not being meet and since the sites were planted in 1982-1985, we assume samples were taken in 1995.', '@Bashkin1998',
+  #TODO come back to this
   'sugar_cane_practice', str_extract(data.lvl0.df$data$Table1$caption,'†.*(?=\\r\\n)'), NA, NA, 'Table 1 - Caption',
   ## Pull in the site descriptions
   'soil_classification', 'isothermic Typic Hydrudands of the Akaka and Kaiwiki series', NA, 'USDA', paste('Methods, ln8:', data.lvl0.df$method[8]),
   'minerology', 'amorphous noncrystalline hydrous alumina and iron oxides', NA, NA, paste('Methods, ln9:', data.lvl0.df$method[9]),
   'parent_material', 'volcanic ash', NA, NA, paste('Methods, ln9:', data.lvl0.df$method[9])
 ) |> bind_rows(
+  #TODO recover land use better somehow
   tribble(
     ## put in the variable, value, unit, method, and reference source
     ~of_variable, ~minimum, ~maximum, ~unit, ~method, ~source,
@@ -316,16 +329,20 @@ kable(site.df) |>
   kable_paper()
 ```
 
+## Recover soil layer observations
+
 ```{r}
 #### soil carbon ####
 #### Process the soil observations in Table 3
 soilObs.df <- data.lvl0.df$data$Table3$primary |>
+  #preserve the groupings along the rows
   mutate(row_id = paste0('Table3_Row', 1:n()),
+         #convert total to an actual depth from context
     `Depth (cm)` = ifelse(`Depth (cm)` == 'Total', '0-55', `Depth (cm)`)) |>
   pivot_longer(-row_id,
                names_to = 'column_name',
                values_to = 'with_entry') |>
-  #Seperate the ranges, means, standard deviations and other values
+  #Separate the ranges, means, standard deviations and other values
   mutate(lower_bound = str_extract(with_entry, '^\\d+(?=-)'),
          upper_bound = str_extract(with_entry, '(?<=\\d-)\\d+$'),
          mean = str_extract(with_entry, '^\\d+\\.?\\d+(?= \\+-)'),
