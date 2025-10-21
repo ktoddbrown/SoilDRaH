@@ -199,11 +199,84 @@ structures.df <- all.meta |>
       str_replace(':[^\\*]*$', ': %s') |>
       str_replace_all(':[^\\*]*\\*', ': %s'),
     Size_pattern = 
-      str_replace_all(Size, '\\d+', '%d')) |>
-  ##Size: Convert to numeric with unit descriptions
-  ##Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
-  ##Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
-  ##Parameters: Separate and process the parameter descriptions by str subtraction
+      str_replace_all(Size, '\\d+', '%d'))
+
+  ##Do this --
+  ## - [x] Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
+  ## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
+  ## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
+
+size.df <- all.meta |>
+  select(doi, Size) |>
+  mutate(value = str_extract(Size, '\\d+'),
+         unit = str_remove(Size, '\\d+'),
+         of_variable = 'data_size') |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry') |>
+  select(doi, of_variable, is_type, with_entry)
+
+coverage.df <- all.meta |>
+  select(doi, temp_str = Coverage) |>
+  mutate(temp_str = trimws(temp_str)) |>
+  separate_longer_delim(temp_str, delim = stringr::regex('\\*|\\n')) |>
+  separate_wider_delim(temp_str, delim = ':', names = c('of_variable', 'text')) |>
+  mutate(across(everything(), trimws)) |>
+  mutate(value = str_remove(text, ' c?m$'),
+         unit = str_extract(text, 'c?m$')) |>
+  select(-text) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(across(everything(), trimws))
+  
+
+events.df <- all.meta |>
+  select(doi, temp_str = `Event(s)`) |>
+  mutate(core_name = str_extract(temp_str, '^.*(?= \\* LATITUDE)')) |>
+  mutate(temp_str = str_remove(temp_str, '^.* \\* (?=LATITUDE)')) |>
+  separate_wider_delim(temp_str, names = paste0('X', 1:10), 
+                       delim = ' * ',
+                       too_few = "align_start") |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'drop_names',
+               values_to = 'component',
+               values_drop_na = TRUE) |>
+  mutate(is_type = str_extract(component, '^[^:]+'),
+         with_entry = str_remove(component, '^[^:]+: ')) |>
+  select(doi, is_type, with_entry) |>
+  pivot_wider(names_from = is_type, values_from = with_entry) 
+
+events_comment.df <- events.df |>
+  select(doi, COMMENT) |>
+  #remove refernce to core name in comments
+  mutate(COMMENT = str_remove(COMMENT,'^.*e[ta]+ils.*(?=c|Coring year)')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'sphagnum, Volume of bulk density samples', 'sphagnum; Volume of bulk density samples')) |>#X3
+  mutate(COMMENT = str_replace(COMMENT, 'Stordalen_core2 Dominant peat type', 'Stordalen_core2; Dominant peat type')) |> #X2
+  mutate(COMMENT = str_replace(COMMENT, 'KOE.', 'KOE')) |>
+  mutate(COMMENT = str_replace(COMMENT, '17 samples:', '17 samples - ')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'uncal., basal', 'uncal.; basal')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'basal age 1', 'basal age: 1')) |>
+  separate_longer_delim(cols = 'COMMENT', delim = ';') |>
+  mutate(COMMENT = trimws(COMMENT)) |>
+separate_wider_delim(cols = COMMENT, delim = ':',
+                       names = c('of_variable', 'with_entry'), too_few = 'align_end') |>
+  filter(!(is.na(with_entry) & is.na(of_variable))) |>
+  mutate(of_variable = if_else(is.na(of_variable), 
+                               'COMMENT', of_variable)) |>
+  mutate(of_variable = paste0('EVENT::COMMENT::',str_to_lower(of_variable)))
+
+events_clean.df <- events.df |>
+  select(-COMMENT) |>
+  pivot_longer(-doi, names_to = 'of_variable', values_to='temp',
+               values_drop_na = TRUE) |>
+  mutate(value = str_remove(temp, ' c?m$'),
+         unit = str_extract(temp, 'c?m$')) |>
+  select(-temp) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(of_variable = paste0('EVENT::', of_variable))
+
+#### Set up the meta data ####
+
+column_meta.df <- all.meta |>
+  select(doi, `Parameter(s)`) |>
   separate_wider_delim(cols = `Parameter(s)`, 
                        delim = '\t',
                        names = paste0('X', 0:14),
@@ -211,9 +284,50 @@ structures.df <- all.meta |>
   select(-X0) |>
   pivot_longer(cols = starts_with('X'),
                names_to = 'column_index',
+               values_to = 'column_name',
                values_drop_na = TRUE) |>
-  mutate(column_name_match = str_detect(value, '^.+ \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$'))
-  # move from the end with comments and strip out the values in reverse order
+  #mutate(column_name_match = str_detect(column_name, '^.+ \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(comment = str_extract(column_name, '(?<= \\* COMMENT:).+$'),
+         MethodDevice = str_extract(
+           str_remove(column_name, '( \\* COMMENT:.+)?$'), #trim the end
+           '(?<= \\* METHOD/DEVICE:).+$'), #extraction pattern
+         PI = str_extract(
+           str_remove(column_name, 
+                      '( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$'), #trim
+           '(?<= PI: ).+$'), #extract
+         geocode = str_extract(column_name, 'GEOCODE'),
+         temp = str_remove(column_name, ' \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(description = str_remove(temp, '[\\[\\(].*$'),
+         unit = str_extract(temp, '(?<=\\[).+(?=\\])'),
+         of_variable = str_extract(temp, '(?<=\\().+(?=\\))')) |>
+  select(!c(column_name, temp)) |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = -c(doi, column_index, of_variable),
+               names_to = 'is_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE)
+  
+
+study_meta.df <- all.meta |>
+  select(doi, citation = Citation, 
+         replaced_by = `Replaced by`, 
+         related_to = `Related to`, 
+         further_details = `Further details`,
+         projects = `Project(s)`, 
+         change_history = `Change history`, 
+         license = License, 
+         abstract = Abstract, 
+         keywords = `Keyword(s)`, 
+         status = Status, 
+         header_comment = Comment) |>
+  pivot_longer(cols = -doi, 
+               names_to = 'of_variable', values_to = 'with_entry',
+              values_drop_na = TRUE) |>
+  mutate(is_type = 'value') |>
+  bind_rows(size.df,
+            events_clean.df,
+            events_comment.df,
+            coverage.df)
 
 ```
 
