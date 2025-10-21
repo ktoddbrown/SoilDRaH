@@ -67,30 +67,33 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 
 This documents the data transcription for  .
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
 
-> Full citation here
+> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
 
 # Data Summary
 
-AuthorYYYY primarily measures ... They use this data to look at ...
+AuthorYYYY primarily measures ... 
+They use this data to look at ...
 
-## Fit for purpose: HiCSC
+## Fit for purpose: ProjectName
 
-This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+This data is identified as a data source for PROJECT with https://github.com/ktoddbrown/SoilDRaH/wiki link
 
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below--->
 
-# Tables and figures
+  - Location:
+  - Soil carbon stock: 
+  - Soil type: 
+  - Land use: 
+
+## Tables and figures
 
 - Table 
-  1) 
+  1) Describe the data in the first table.
 
 - Figure 
-  1) 
+  1)  Describe the data in the first figure
   
 ### Table N
 
@@ -100,10 +103,10 @@ Table N was modified ....
 #| code-fold: true
 #| message: false
 
-read_csv(file = filename,
+read_csv(file = tableN.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = tableN.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
