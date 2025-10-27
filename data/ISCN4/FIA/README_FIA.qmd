@@ -625,14 +625,19 @@ temp <- tibble(text = str_extract(dataDictionary[453],
   separate_wider_delim(cols = text,
                       names = c('Layer_type_code', 'description'),
                       delim = regex(' {2,}')) |> 
-  mutate(Soil_sample_method_code = )
+  mutate(Soil_sample_method_code = c(rep("when SOILS_SAMPLE_METHOD_CD = 1 (P3 Soils)", 4),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 2 (Interior Alaska pilot)", 4),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 3 (Interior Alaska)", 6),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 4 (Hawaii)", 5)))
 
 temp_method <- tibble(text = str_extract(dataDictionary[453], 
             pattern = regex('Code .*(?=\n\n\n\n )', dotall = TRUE, multiline = TRUE) )) %>%
   separate_longer_delim(text, delim = regex('\n\n?')) |> # '?' is matching the preceeding expression 
   filter(!grepl("Code ", text)) |> 
   mutate(text = trimws(text)) |> 
-  filter(text != "")
+  filter(text != "") |> 
+  slice(c(5,10,17)) |> 
+  rep()
 
 ```
 
