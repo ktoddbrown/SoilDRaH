@@ -57,6 +57,8 @@ library(tidyverse)
 
 download.dir <- '../../../temp/CPEAT'
 #list.files(download.dir) |> length()
+
+variable_keep <- c('variable_keep', 'download.dir')
 ```
 
 ```{r}
@@ -93,7 +95,7 @@ basenames.arr <- downloadUrl.arr |>
   # extract the string between the doi url and the format information:
   # 10.1594/PANGAEA.889936
   str_replace(patter = '/', replacement = '_') |>
-  # replase the forward slash so that it is not treated as a folder
+  # replace the forward slash so that it is not treated as a folder
   # 10.1594_PANGAEA.889936
   paste0('.txt')
   # add the extension
@@ -107,7 +109,7 @@ if(any(download.flag)){
 ```
 
 ```{r}
-#| label: loadLevel0
+#| label: loadPreLevel0
 
 #file.str <- readr::read_file(file.path(download.dir, basenames.arr[1]))
 #
@@ -165,21 +167,24 @@ primary.df <- file.str |> #all.text[388] |> #
 
 ```{r}
 #| label: processHeader
+# 
+# study.df <- all.meta |>
+#   select(doi, citation = Citation, 
+#          replaced_by = `Replaced by`, related_to = `Related to`,
+#          further_details = `Further details`,
+#          projects = `Project(s)`,
+#          change_history = `Change history`,
+#          license = License,
+#          size = Size, abstract = Abstract,
+#          keyword = `Keyword(s)`, status = Status) |>
+#   mutate(across(everything(), trimws)) |>
+#   mutate(across(c(projects, license, keyword, status), as.factor)) |>
+#   mutate(replaced_by_doi = str_extract(replaced_by, '10\\.1594/PANGAEA\\.\\d*') |>
+#            str_replace('/', '_'))
 
-study.df <- all.meta |>
-  select(doi, citation = Citation, 
-         replaced_by = `Replaced by`, related_to = `Related to`,
-         further_details = `Further details`,
-         projects = `Project(s)`,
-         change_history = `Change history`,
-         license = License,
-         size = Size, abstract = Abstract,
-         keyword = `Keyword(s)`, status = Status) |>
-  mutate(across(everything(), trimws)) |>
-  mutate(across(c(projects, license, keyword, status), as.factor)) |>
-  mutate(replaced_by_doi = str_extract(replaced_by, '10\\.1594/PANGAEA\\.\\d*') |>
-           str_replace('/', '_'))
 
+#### core data (pre-processing) ####
+#### to be broken up into coverage, event, and parameter information
 core.df <- all.meta |>
   select(doi, coverage = Coverage,
          event = `Event(s)`, parameters = `Parameter(s)`) |>
@@ -187,6 +192,7 @@ core.df <- all.meta |>
                        delim = '\t',
                        names = paste0('X', 0:14),
                        too_few = 'align_start')
+
 
 #identfy and process the sub-patterns
 structures.df <- all.meta |>
@@ -206,6 +212,8 @@ structures.df <- all.meta |>
   ## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
   ## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
 
+### size data ####
+### number of data points for each doi
 size.df <- all.meta |>
   select(doi, Size) |>
   mutate(value = str_extract(Size, '\\d+'),
@@ -215,6 +223,8 @@ size.df <- all.meta |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry') |>
   select(doi, of_variable, is_type, with_entry)
 
+#### coverage data ####
+#### lat/long and core depth interval
 coverage.df <- all.meta |>
   select(doi, temp_str = Coverage) |>
   mutate(temp_str = trimws(temp_str)) |>
@@ -227,7 +237,8 @@ coverage.df <- all.meta |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
   mutate(across(everything(), trimws))
   
-
+#### event data (pre-processing) ####
+#### lat/long, location (region), elevation, method and device (coring), core recovery length, core penetration depth, and structured comments (processed next)
 events.df <- all.meta |>
   select(doi, temp_str = `Event(s)`) |>
   mutate(core_name = str_extract(temp_str, '^.*(?= \\* LATITUDE)')) |>
@@ -242,8 +253,11 @@ events.df <- all.meta |>
   mutate(is_type = str_extract(component, '^[^:]+'),
          with_entry = str_remove(component, '^[^:]+: ')) |>
   select(doi, is_type, with_entry) |>
-  pivot_wider(names_from = is_type, values_from = with_entry) 
+  mutate(across(everything(), trimws)) |>
+  pivot_wider(names_from = is_type, values_from = with_entry)
 
+### event comment data ####
+### coring year, peatland type, basal age, basal age depth, core microtopography, core length, number of dates, carbon rate site, peat properties sample size, bulk density sample volumne, surface age, altitude, site name, and comment
 events_comment.df <- events.df |>
   select(doi, COMMENT) |>
   #remove refernce to core name in comments
@@ -263,6 +277,9 @@ separate_wider_delim(cols = COMMENT, delim = ':',
                                'COMMENT', of_variable)) |>
   mutate(of_variable = paste0('EVENT::COMMENT::',str_to_lower(of_variable)))
 
+### event (clean) data ####
+### lat/long, location (region), elevation, method and device (coring), core recovery length, and core penetration depth
+### Note structured comments are processed above seperately
 events_clean.df <- events.df |>
   select(-COMMENT) |>
   pivot_longer(-doi, names_to = 'of_variable', values_to='temp',
@@ -273,8 +290,8 @@ events_clean.df <- events.df |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
   mutate(of_variable = paste0('EVENT::', of_variable))
 
-#### Set up the meta data ####
-
+#### column information ####
+#### column data model includes column index, name as `of_variable`, and `is_type` including: description, unit, comment, MethodDevice, geocode, and PI
 column_meta.df <- all.meta |>
   select(doi, `Parameter(s)`) |>
   separate_wider_delim(cols = `Parameter(s)`, 
@@ -307,8 +324,10 @@ column_meta.df <- all.meta |>
                values_to = 'with_entry',
                values_drop_na = TRUE)
   
-
+###Compile study-level data####
+###put everything together except the column and layer data
 study_meta.df <- all.meta |>
+  #trim out the things that don't need heavy processing
   select(doi, citation = Citation, 
          replaced_by = `Replaced by`, 
          related_to = `Related to`, 
@@ -324,11 +343,32 @@ study_meta.df <- all.meta |>
                names_to = 'of_variable', values_to = 'with_entry',
               values_drop_na = TRUE) |>
   mutate(is_type = 'value') |>
+  #pull in the processed data
   bind_rows(size.df,
             events_clean.df,
             events_comment.df,
-            coverage.df)
+            coverage.df) |>
+  mutate(across(everything(), trimws))
 
+####Create level 0 data list####
+#put it all together
+lvl0_data.ls <- list(study = study_meta.df,
+                columns = column_meta.df,
+                primary = all.primary)
+
+variable_keep <- c(variable_keep, 'lvl0_data.ls')
+
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+# Level 1 data
+
+```{r}
+#remove the cores that have been replaced
+#map the of_variables to a common vocabulary
+#move column is_type up to study if needed
+#map column names uniquely and replace the index
 ```
 
 # Restructuring plan
