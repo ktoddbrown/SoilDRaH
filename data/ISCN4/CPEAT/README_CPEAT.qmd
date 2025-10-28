@@ -448,6 +448,7 @@ rm(list = setdiff(ls(), variable_keep))
 # Level 2 data - ISCN4
 
 ```{r}
+#| label: mapISCN4
 
 site.df <- lvl1_data.ls$core |>
   mutate(of_variable_ISCN4 = case_when(
@@ -524,6 +525,55 @@ primary.df <- lvl1_data.ls$primary |>
   #pivot_wider(names_from = 'of_variable_ISCN4', values_from = 'with_entry')
   select(doi, variable_id, layer_id = row_id, of_variable_ISCN4, value = with_entry)
 
+lvl2_data.ls <- list(study = variable.df,
+                     site = site.df,
+                     layer = primary.df)
 
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+## Figures
+
+```{r}
+wide_site <- lvl2_data.ls$site |>
+  select(doi, of_variable_ISCN4, value) |>
+  pivot_wider(names_from = of_variable_ISCN4,
+              values_from = value) |>
+  mutate(elevation = if_else(is.na(elevation), elevation_start, elevation)) |>
+  select(-c(elevation_start, elevation_end, site_name)) |>
+  mutate(across(c(latitude, longitude, elevation, observation_year), .fns = as.numeric)) |>
+  mutate(across(c(projects, data_license, region, sampling_method, principal_investigator), as.factor))
+
+wide_layers <- lvl2_data.ls$layer |>
+  select(doi, layer_id, of_variable_ISCN4, value) |>
+  pivot_wider(names_from = of_variable_ISCN4, values_from = value) |>
+  mutate(layer_middle = if_else(is.na(layer_middle_LOI), layer_middle, layer_middle_LOI)) |>
+  select(-c(layer_id, layer_middle_LOI)) |>
+  unique() |>
+  mutate(across(-doi, as.numeric)) |>
+  mutate(layer_top = c(0, layer_middle[-n()]),
+         layer_bottom = layer_middle,
+         .by = doi)
+
+temp <- wide_layers |>
+  select(-layer_thickness) |>
+  reframe(layers_included = paste0(layer_middle, collapse = ';'),
+          .by = -layer_middle)
+```
+
+### Where is the data located?
+
+```{r}
+
+countries <- map_data('world')
+ggplot(wide_site) +
+  geom_polygon(data = countries, aes(x=long, y = lat, group=group),
+               fill = NA, color = 'black') +
+  geom_point(aes(x=longitude, y =latitude, color = observation_year)) +
+  theme_bw()
+```
+
+```{r}
 
 ```
