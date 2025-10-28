@@ -58,7 +58,9 @@ library(tidyverse)
 download.dir <- '../../../temp/CPEAT'
 #list.files(download.dir) |> length()
 
-variable_keep <- c('variable_keep', 'download.dir')
+verbose <- TRUE
+variable_keep <- c('variable_keep', 'download.dir', 'verbose', 
+                   'lvl0_data.ls', 'lvl1_data.ls', 'lvl2_data.ls')
 ```
 
 ```{r}
@@ -232,7 +234,7 @@ coverage.df <- all.meta |>
   separate_wider_delim(temp_str, delim = ':', names = c('of_variable', 'text')) |>
   mutate(across(everything(), trimws)) |>
   mutate(value = str_remove(text, ' c?m$'),
-         unit = str_extract(text, 'c?m$')) |>
+         unit = trimws(str_extract(text, ' c?m$'))) |>
   select(-text) |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
   mutate(across(everything(), trimws))
@@ -285,7 +287,7 @@ events_clean.df <- events.df |>
   pivot_longer(-doi, names_to = 'of_variable', values_to='temp',
                values_drop_na = TRUE) |>
   mutate(value = str_remove(temp, ' c?m$'),
-         unit = str_extract(temp, 'c?m$')) |>
+         unit = trimws(str_extract(temp, ' c?m$'))) |>
   select(-temp) |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
   mutate(of_variable = paste0('EVENT::', of_variable))
@@ -356,8 +358,6 @@ lvl0_data.ls <- list(study = study_meta.df,
                 columns = column_meta.df,
                 primary = all.primary)
 
-variable_keep <- c(variable_keep, 'lvl0_data.ls')
-
 # memory management
 rm(list = setdiff(ls(), variable_keep))
 ```
@@ -365,10 +365,167 @@ rm(list = setdiff(ls(), variable_keep))
 # Level 1 data
 
 ```{r}
-#remove the cores that have been replaced
-#map the of_variables to a common vocabulary
-#move column is_type up to study if needed
-#map column names uniquely and replace the index
+
+### Remove replaced cores####
+### Also check to make sure we have their replacements
+replaced_core <- lvl0_data.ls$study |>
+  #remove 112 dois that have been replaced
+  filter(of_variable %in% 'replaced_by') |>
+  mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$') |>
+           str_replace(pattern = '/', replacement = '_'))
+
+if(all(replaced_core$replacement_doi %in% lvl0_data.ls$study$doi)){
+  if(verbose) message('Replacement cores present in dataset')
+}else{
+  warning('There are missing replacement cores.')
+}
+
+# Take the cores out of each of the data frames
+study.df <- lvl0_data.ls$study |>
+  filter(! (doi %in% replaced_core$doi))
+
+column.df <- lvl0_data.ls$columns|>
+  filter(! (doi %in% replaced_core$doi))
+
+primary.df <- lvl0_data.ls$primary |>
+  filter(! (doi %in% replaced_core$doi))
+
+#### Move the PI info to the study data ####
+pi.df <- column.df |>
+  filter(is_type == 'PI') |>
+  select(doi, with_entry) |>
+  unique() |>
+  # #Confirm none of dois have more then one PI, moving information to study.df
+  # filter(n() > 1,
+  #        .by = doi)
+  mutate(of_variable = 'PI',
+         is_type = 'value')
+
+#remove PI from the column.df
+column_noPI.df <- column.df |>
+  filter(is_type != 'PI') |>
+  #drop geocode
+  filter(is_type != 'geocode') |>
+  mutate(across(everything(), trimws))
+
+####Map core to ISCN4 #####
+core.df <- study.df |>
+  #add the PI to the study.df
+  bind_rows(pi.df) 
+
+####Create unique variable groups and map to ISCN4 ####
+####some of the variables have the same name but different methods, within the 
+####same core (!). Go through and add in an index to group the unique variable
+####dimensions
+
+unique_column.df <- column_noPI.df |>
+  pivot_wider(names_from = is_type, values_from = with_entry) |>
+  reframe(doi_list = str_c(doi, column_index, sep = '$', collapse = ';'),
+          .by = -c(doi, column_index))|>
+  mutate(variable_id = paste0('V',1:n()) )
+####Move variable ID over to primary data####
+
+expanded_primary.df <- primary.df |>
+  full_join(unique_column.df |>
+              pivot_longer(cols = c('description', 'unit', 'comment', 'MethodDevice'),
+                           names_to = 'is_type', 
+                           values_to = 'with_entry', values_drop_na = TRUE)|>
+              separate_longer_delim(cols = doi_list, delim = ';') |>
+              separate_wider_delim(cols = doi_list, delim = '$', 
+                                   names = c('doi', 'column_index')) |>
+              select(doi, column_index, variable_id, of_variable) |>
+              unique(),
+            by = join_by(doi, column_index))
+
+lvl1_data.ls <- list(core = core.df,
+                     variable = unique_column.df,
+                     primary = expanded_primary.df)
+
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+# Level 2 data - ISCN4
+
+```{r}
+
+site.df <- lvl1_data.ls$core |>
+  mutate(of_variable_ISCN4 = case_when(
+    of_variable == 'citation' ~ 'citation',
+    of_variable == 'related_to' ~ 'related_research',
+    of_variable == 'projects' ~ 'projects',
+    of_variable == 'license' ~ 'data_license',
+    of_variable == 'header_comment' ~ 'core_comment',
+    of_variable == "EVENT::LATITUDE" ~ 'latitude',
+    of_variable == "EVENT::LONGITUDE" ~ 'longitude',
+    of_variable == "EVENT::LOCATION" ~ 'region',
+    of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
+    of_variable == "EVENT::ELEVATION" ~ 'elevation',
+    of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
+    of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
+    of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
+    of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+    of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+    of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
+    of_variable == 'PI' ~ 'principal_investigator',
+  TRUE ~ NA_character_
+  )) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  mutate(is_type = if_else(is.na(is_type), 'value', is_type)) |>
+  select(doi, of_variable_ISCN4, is_type, with_entry) |>
+  #filter(length(unique(with_entry)) > 1,
+  #        .by = c(doi, of_variable_ISCN4, is_type))
+  pivot_wider(names_from = is_type, values_from = with_entry, 
+              values_fn = function(xx)(paste(xx, collapse = ' ')))
+
+variable.df <- lvl1_data.ls$variable |>
+  mutate(of_variable_ISCN4 = case_when(
+    of_variable == 'C' ~ 'carbon_percent',
+    of_variable == 'TC' ~ 'total_carbon_percent',
+    of_variable == 'TIC' ~ 'inorganic_carbon_percent',
+    of_variable == 'TOC' ~ 'organic_carbon_percent',
+    of_variable == 'Corg dens' ~ 'organic_carbon_density',
+    of_variable == 'DBD' ~ 'dry_bulk_density',
+    of_variable == 'Depth bot' ~ 'layer_bottom',
+    of_variable == 'Depth top' ~ 'layer_top',
+    of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+    of_variable == 'Depth sed' ~ 'layer_middle',
+    of_variable == 'Samp thick' ~ 'layer_thickness',
+    of_variable == 'LOI' ~ 'loss_on_ignition',
+    of_variable == 'OM' ~ 'organic_matter_percent',
+    of_variable == 'OM dens' ~ 'organic_matter_density',
+    of_variable == "Water wm" ~ 'field_water_percent',
+    TRUE ~ NA_character_
+  )) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  select(variable_id, of_variable_ISCN4, description, unit, comment, MethodDevice)
+
+primary.df <- lvl1_data.ls$primary |>
+  left_join(variable.df |>
+              select(variable_id, of_variable_ISCN4) |>
+              unique(),
+            by = join_by(variable_id)) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  select(doi, row_id, variable_id, 
+         of_variable_ISCN4, with_entry) |>
+  filter(!is.na(with_entry)) |>
+  pivot_wider(names_from = c(of_variable_ISCN4, variable_id), 
+              names_sep = '::',
+              values_from = with_entry) |>
+  pivot_longer(cols = -c(doi, row_id, starts_with('layer'))) |>
+  filter(!is.na(value)) |>
+  select(where(function(xx){any(!is.na(xx))})) |>
+  pivot_wider() |>
+  pivot_longer(-c(doi, row_id), values_to = 'with_entry', values_drop_na = TRUE) |>
+  separate_wider_delim(cols = name, delim = '::', names = c('of_variable_ISCN4', 'variable_id')) |>
+  ## filter(length(unique(variable_id)) > 1,
+  ##        .by = c(doi, row_id, of_variable_ISCN4))
+  #select(-variable_id) |>
+  #pivot_wider(names_from = 'of_variable_ISCN4', values_from = 'with_entry')
+  select(doi, variable_id, layer_id = row_id, of_variable_ISCN4, value = with_entry)
+
+
+
 ```
 
 # Restructuring plan
