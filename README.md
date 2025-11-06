@@ -2,7 +2,7 @@
 
 The Soil Data Rescue and Harmonization (Soil-DRaH) project is a collaborative effort to rescue, harmonize, and curate soil data from multiple sources.
 We currently, as of fall 2025, focus on [rescuing data](https://github.com/ktoddbrown/SoilDRaH/wiki/Workflow-for-data-rescue) from the primary research literature, by identifying, transcribing, and cross checking fit-for-purpose elements of the tables, figures, and method sections of published articles or reports.
-Over the next few months we will expand our focus to [harmonizing data](https://github.com/ktoddbrown/SoilDRaH/wiki/Workflow-for-data-harmonization-v2025%E2%80%9010) where the orignial data elements rescued previously will be standardized.
+Over the next few months we will expand our focus to [harmonizing data](https://github.com/ktoddbrown/SoilDRaH/wiki/Workflow-for-data-harmonization-v2025%E2%80%9010) where the original data elements rescued previously will be standardized.
 You can read more about [our history in our wiki](https://github.com/ktoddbrown/SoilDRaH/wiki)
 
 ## Installation
