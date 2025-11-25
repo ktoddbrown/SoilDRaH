@@ -3,6 +3,7 @@ title: "Data Rescue: Author YYYY"
 format:
   html:
     toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -42,22 +43,22 @@ affiliations:
 #| echo: false
 
 
-library(tidyverse)
-library(kableExtra)
-library(bibtex)
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "AuthorYYYY_Methods.md"
 tableN.file <- 'AuthorYYYY_TableN.csv'
 figureM.file <- 'AuthorYYYY_FigureM.csv'
 
- #TODO see if there is a way to pull bib files from the yaml
+# Bibliograph files
 primaryCitation.file <- 'AuthorYYYY.bib'
 methodsCitation.file <- 'AuthorYYYY_Methods.bib'
 
 # read function
 readsource.file <- '../../../R/readAuthorYYYY.R'
-#source('readsource.file')
+source('readsource.file')
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -66,65 +67,49 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 ```
 
 
-This documents the data transcription for  .
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+# Data Summary
+
+<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
 
 > Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
 
-# Data Summary
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+
+<!--- After you read through the paper write a brief summary of what the study
+measured and what the data was used for in. This should be <250 words.--->
 
 AuthorYYYY primarily measures ... 
 They use this data to look at ...
 
-## Fit for purpose: ProjectName
-
-This data is identified as a data source for PROJECT with https://github.com/ktoddbrown/SoilDRaH/wiki link
-
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below--->
-
-  - Location:
-  - Soil carbon stock: 
-  - Soil type: 
-  - Land use: 
-
 ## Tables and figures
+
+<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
 
 - Table 
   1) Describe the data in the first table.
 
 - Figure 
   1)  Describe the data in the first figure
+
+## Fit for purpose: ProjectName
+
+<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+
+This data is identified as a data source for PROJECT.
+The purpose of this PROJECT is...
+
+<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+
+  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
+  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
   
-### Table N
+## Files
 
-Table N was modified ....
-
-```{r table1}
-#| code-fold: true
-#| message: false
-
-read_csv(file = tableN.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
-
-
-{{< include AuthorYYYY_Methods.md >}}
-
-# Transcription comparison
-
-```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
-```
-
-# Files
+<!--- Include a brief explaination to all the files in the folder--->
 
 These files are in the AuthorYYYY data rescue.
 
-- [Readme](README_KTB.qmd)
+- [Readme](README_AUTHORYYYY.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
 - [AuthorYYYY.bib](AuthorYYYY.bib)
   + citation for article transcribed
@@ -135,24 +120,59 @@ These files are in the AuthorYYYY data rescue.
 - [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
   + table N from primary article with ...
 - [temp/](temp/)
-    + scratch folder that will not be archived includes excel and article pdf document
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
-# Working notes 
+# Data Rescue working notes 
 
 ## Data Rescue Plan
 
-- [ ] describe files in human readable form inside ReadMe
-- [ ] description with Git issue with link
-- [ ] add contribution yaml
-- [ ] create excel sheet with Table 1 and 3
-- [ ] export excel table to csv
-- [ ] copy over methods section into markdown
-- [ ] pull down citations in methods section to bib file
-- [ ] add in citation links to methods
-- [ ] cross check with second transcriber for tables and methods
-- [ ] submit to independent review
-- [ ] archive on SoilDRaH
++ Lead
+  - [ ] Read the article or data resource and the discription of the target project
+  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
+  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [ ] Add the reviewer to the author list in the yml
++ Do
+  - [ ] Create a spreadsheet with TableN and FiguresM and export it to csv
+  - [ ] Transcribe or copy the method section
+  - [ ] Insert references to bib entries
+  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [ ] Create a bib file with the citations from the methods section
+  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
 
+## Table N
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table N was modified ....
+
+```{r table1}
+
+read_csv(file = tableN.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+## Methods comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.md
+```
+
+## Methods Section Transcription
+
+{{< include AuthorYYYY_Methods.md >}}
 
 ## Citation notes from Methods
 
@@ -163,5 +183,59 @@ Some citations are missing, those are noted here and how best guess were generat
   + copy from bib
   + manually entered or direct export
 
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
 
 
+# References
