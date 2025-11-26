@@ -9,8 +9,8 @@ We see a **vision** of a world where:
 
   + data stewardship is an active and valued component of soil science
   + researchers at all levels are able to place their observations within the broader context of scientific data collected across decades and globally
-  + data usability lives on beyond a grant lifecycle or individual researcher's career
-  + data reanalysis and learning is a community activity where researchers support one another's career in ways that are synergistic
+  + data usability and reanalysis is a community activity that lives on beyond a grant lifecycle or individual researcher's career
+  + researchers support one another's career in ways that are synergistic
 
 See the Appendix of: Todd-Brown, K. E. O., Abramoff, R. Z., Beem-Miller, J., Blair, H. K., Earl, S., Frederick, K. J., Fuka, D. R., Guevara Santamaria, M., Harden, J. W., Heckman, K., Heran, L. J., Holmquist, J. R., Hoyt, A. M., Klinges, D. H., LeBauer, D. S., Malhotra, A., McClelland, S. C., Nave, L. E., Rocci, K. S., Schaeffer, S. M., Stoner, S., van Gestel, N., von Fromm, S. F., and Younger, M. L.: Reviews and syntheses: The promise of big diverse soil data, moving current practices towards future potential, Biogeosciences, 19, 3505–3522, https://doi.org/10.5194/bg-19-3505-2022, 2022.
 
