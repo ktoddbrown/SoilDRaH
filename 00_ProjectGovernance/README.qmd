@@ -11,3 +11,4 @@ This includes a list of the files and folders with a once sentence purpose discr
 
 + README.qmd - This is the primary landing file for the directory, you are here!
 + 01_MissionVision.qmd - This states the mission and vision for Soil-DRaH as an organization.
++ 03_PolicyLog.qmd - Describes the standing policies for the organization including stragetic and operational, giving their context, links to the text, metrics, who is responsible, and when it is being revised.
