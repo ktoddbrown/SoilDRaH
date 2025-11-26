@@ -5,7 +5,7 @@ toc: true
 ---
 
 This document is a policy log where we manage the review process and document any changes.
-We need to define a 'policy' as a decision that is applicable multiple situations.
+We define a 'policy' as a decision that is applicable multiple situations.
 A policy is intended to reduce cognitive load by making a standard practice that reduces the need for groups of people to make similar decisions. 
 In most cases policies will be in the policy folder except for a few key, high level documents (like this one) that are in the primary governance folder. 
 In all cases a link will the provided to the document.
