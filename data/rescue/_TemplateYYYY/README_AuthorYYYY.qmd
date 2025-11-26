@@ -32,6 +32,17 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: @ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2025-11-26
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P30M
+version: 'vs202512' #template version, remove before use
 ---
 
 
@@ -115,7 +126,7 @@ These files are in the AuthorYYYY data rescue.
   + citation for article transcribed
 - [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.Rmd](AuthorYYYY_Methods.Rmd)
+- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
   + methods transcribed from primary article
 - [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
   + table N from primary article with ...
@@ -134,7 +145,8 @@ These files are in the AuthorYYYY data rescue.
   - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [ ] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and FiguresM and export it to csv
+  - [ ] Create a spreadsheet with TableN and export it to csv
+  - [ ] Extract points from FigureM and export it to csv
   - [ ] Transcribe or copy the method section
   - [ ] Insert references to bib entries
   - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -239,3 +251,6 @@ if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
 
 
 # References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
