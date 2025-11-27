@@ -1,0 +1,34 @@
+name: DataHarmonization
+title: "[AuthorLastYYYY or ShortNameYYYY]-Level 1 data"
+labels: ["Data Harmonization"]
+
+description: "This issue tracks a data contribution as it moves from a level 0 data rescue to a level 1 data harmonization. See (the wiki)[https://github.com/ktoddbrown/SoilDRaH/wiki] for more details."
+
+body:
+  - type: input
+    attributes:
+      label: "Data rescue issue"
+      description: "What is the data rescue issue?"
+      placeholder: "#102"
+  - type: textarea
+    attributes:
+      label: Citation
+      description: "What is the orginal source citation?"
+      placeholder: "Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405"
+  - type: textarea
+    attributes:
+      label: "Description and purpose"
+      description: "Give a brief discription of the data and the purpose for the data curation. This may be copied from the data rescue issue."
+      placeholder: "This paper examines how soil and foliar nutrients vary across five native Hawaiian forests that differ in annual rainfall (ranging from 500 mm to 5500 mm), but are otherwise held constant in terms of elevation, substrate age, and dominant vegetation (primarily Metrosideros polymorpha). They used this data to evaluate changes in leaf mass per area, lignin content, δ¹⁵N, and δ¹³C.
+      This is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC. As such it needs information on geolocation, mineral status, and soil carbon."
+  - type: textarea
+    attributes:
+      label: of_variable
+      description: "What SoilDRaH variables do you expect to use?"
+      value: |
+        Using the `of_variable` list (here)[https://github.com/ktoddbrown/SoilDRaH/blob/main/data/semantics/SoilDRaHVocabulary_of_variable.csv] we expect to use the following variables:
+      
+        - region
+        - soil_organic_carbon	
+        - land_use_type
+        - ...

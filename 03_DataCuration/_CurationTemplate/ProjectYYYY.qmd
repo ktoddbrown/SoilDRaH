@@ -1,0 +1,119 @@
+---
+title: "Data Curation: PROJECT YYYY"
+format:
+  html:
+    toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - ProjectYYYY.bib #contains citation that provide background on the project
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity: 
+      description: Drafted initial template
+      who: @ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2025-11-25T18:45
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P1H15M
+version: 'vs202512' #template version, remove before use
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# Bibliograph files
+refernceCitation.file <- 'ProjectYYYY.bib'
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+# Purpose
+
+The purpose PROJECTYYYY is to create a data product aggregating data on ...
+With this data we will ...
+If you are interested in contributing to this project please contact .... OR We have closed contributions for this project, if you would like to restart or extend the current dataset please contact ....
+
+# Variables of interest
+
+<!--- Briefly describe what you want the data rescuers to look for when digitizing a data resource.---->
+
+For this analysis we are interested in:
+
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+
+If available we will also pull in:
+
+  * **Land history**: land management , duration of practice, definition of land management
+  * **Mean annual temperature**: mean annual temperature, unit of temperature
+  
+# Data sources
+
+For this project, we have identified the following data sources by ...
+
+<!---- Data stage corresponds to: Identified, In progress, level 0: digitized data rescue, level 1: harmonized into standard data tuple, level 2: integrated into a project ---->
+
+| AuthorYYYY | citation | GitHub Issue | Stage |
+|--------|--|------------|-----|
+| Ares2001 | @Ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | 2 |
+<!---- remove and replace the example above ---->
+
+# Data Level 1 
+
+```{r}
+#Source and append all the level 1 tuples
+
+```
+
+# Data Level 2
+
+```{r}
+#Map the comparable methods and align any needed vocabulary
+```
+
+```{r}
+#Data viz checks
+```
+
+# References
+
+<!---- This will be populated when you render the document.---->

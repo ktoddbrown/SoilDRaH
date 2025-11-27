@@ -1,0 +1,12 @@
+"Table 1. Soil properties at time of planting, and 32 mo later (means with standard errors in parentheses), and change over time (with 95% confidence intervals). Effects of fertilization and spacing not significant, except for K at 32 mo. + C is control plots; F is fertilized plots.",,,,,,,,,
+Age (mo),Depth (cm),C (g m<sup>-2</sup>),N (g m<sup>-2</sup>),pH<sub>CaCl2</sub>,Ca (mmol m<sup>-2</sup>),Mg (mmol m<sup>-2</sup>),C K+ (mmol m<sup>-2</sup>),F K+ (mmol m<sup>-2</sup>),Al (mmol m<sup>-2</sup>)
+0,0-15,4635 (35),318 (3),5.91 (0.10),844 (153),196 (26),101 (7),101 (7),1.3 (0.51)
+0,15-30,4225 (62),281 (6),5.85 (0.13),546 (109),83 (15),60 (6),60 (6),2.4 (0.9)
+0,0-30,8859 (70),599 (6.9),NA,1391 (235),279 (36),161 (11),161 (11),3.7 (1.2)
+32,0-15,4669 (98),309 (8),4.97 (0.17),211 (44),107 (13),C 74 (20),F 218 (75),21.8 (3.5)
+32,15-30,4129 (127),270 (9),5.19 (0.17),204 (76),77 (10),C 61 (23),F 156 (46),16.5 (5.9)
+32,0-30,8799 (111),578 (8),NA,427 (109),184 (20),C 135 (38),F 374 (89),38.3 (7.9)
+Change,0-15,35 (105),-8 (8),-0.94 (0.18),-633 (117),-89 (22),C -26 (35),F 104 (50),20.5 (3.43)
+Change,15-30,-95 (133),-11 (10),-0.66 (0.14),-331 (110),-6 (12),C -2 (36),F 108 (51),14 (5.7)
+Change,0-30,-61 (146),-19 (11),NA,-964 (155),-95 (27),C -30 (65),F 220 (93),34.6 (7.8)
+Change,95\% CI for 0-30,-369 to +248,-42 to +3,-0.9 to -1.0 (0-15); -0.6 to -0.7 (15-30),-646 to -1282,-39 to -152,C -71 to 12,F 122 to 318,+19 to +51
