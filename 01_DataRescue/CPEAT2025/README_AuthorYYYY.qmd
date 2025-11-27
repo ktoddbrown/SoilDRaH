@@ -21,7 +21,14 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: lead #secondary, review
       - standardization: lead #review
       - curation: lead #review
-
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    affiliation:
+      - ref: uf-ees
+    role:
+      - standardization: lead
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -65,15 +72,15 @@ figureM.file <- 'AuthorYYYY_FigureM.csv'
 
 # Bibliograph files
 primaryCitation.file <- 'AuthorYYYY.bib'
-methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+methodsCitation.file <- 'CPEAT2025_Methods.bib'
 
 # read function
 readsource.file <- '../../../R/readAuthorYYYY.R'
-source('readsource.file')
+#source('readsource.file')
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+#of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -82,25 +89,77 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 <!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+> PANGAEA. n.d. “Past Global Changes - Carbon in Peat on EArth Through Time.” https://www.pangaea.de/?q=project:label:PAGES_C-PEAT. (@CPEAT2025)
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
 
 <!--- After you read through the paper write a brief summary of what the study
 measured and what the data was used for in. This should be <250 words.--->
 
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+CPEAT primarily measures soil organic carbon stocks of peat cores with geolocation and depth.
+They use this data to look at global peat stock patterns (@Loisel2021).
 
-## Tables and figures
+## Where is the data
 
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
+This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 850 unique DOIs.
+We have noticed that these DOIs have reduced over time, some of these were merged data sets (merging age and geochemistry from the same core into a single core, 10.1594/PANGAEA.890358 and 10.1594/PANGAEA.928557), others appear to be newly registered data, and others seem to disappear from new quires.
+We have provided a list of doi's retrieved at various points in the project as a `echo: false` chunk in the qmd code for documentation and the commented out `pangaear::pg_search` code.
 
-- Table 
-  1) Describe the data in the first table.
+There is some one-off data collections for ingest that means we can not ensure that future data contributions will be consistent with what we present here.
+This should be a good starting point however for adding new contributions.
 
-- Figure 
-  1)  Describe the data in the first figure
+```{r}
+#| eval: false
+#| echo: false
+
+#transfer between the old url list and the new bib files
+##### Long doi list ####
+
+doi.df <- tibble(dataURL = read_csv(file = 'download_url_CPEAT.csv', col_names = FALSE, col_types = cols(col_character()))$X1) |>
+  mutate(doi = str_extract(dataURL, '10.*(?=\\?format)')) |>
+  mutate(citationURL = paste0(str_extract(dataURL, 'https.*(?=\\?format)'), '?format=citation_bibtex'),
+         id = str_extract(doi, '\\d+$'))
+
+for(ii in 1:nrow(doi.df)){
+  if(!file.exists(file.path('temp', 'orginalBibs', paste0(doi.df$id[ii],'.bib')))){
+    download.file(url = doi.df$citationURL[ii],
+                  destfile = file.path('temp', 'orginalBibs', paste0(doi.df$id[ii],'.bib')))
+  }
+}
+
+#cat 8*.bib 9*.bib >> _temp.bib
+#cat *.bib >> ../../CPEAT2025_Methods.bib
+#Open with BibDesk and regenerate citation key to remove duplicates
+```
+
+```{r}
+allMethodCitations <- bibtex::read.bib(file = methodsCitation.file)
+
+allURLs.df <- plyr::ldply(allMethodCitations, 
+                       .fun = function(xx){
+                         return(c(primary = xx$url))
+                       },
+                       .id = 'bibKey') |>
+  filter(bibKey != 'Loisel2021aa') |>
+  mutate(downloadData = sprintf('%s?format=textfile', 
+                                str_replace(primary, 'doi.org', 'doi.pangaea.de')))
+```
+
+```{r}
+#| eval: false
+
+### Query the pangaea repository
+### 
+temp.df <- pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', count = 500) |>
+  bind_rows(
+    pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', offset = 500, count = 500))
+
+#is there anything new?
+setdiff(paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"),
+        allURLs.df$downloadData)
+#is there anything "lost" from the search
+# setdiff(allURLs.df$downloadData,
+#         paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"))
+```
 
 ## Fit for purpose: ProjectName
 
