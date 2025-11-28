@@ -46,9 +46,10 @@ timelog:
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       start: 2025-11-27T11:40
+      end: T13:45
       #end: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P30M
+      duration: P2H
 version: 'vs202512' #template version, remove before use
 ---
 
@@ -69,6 +70,8 @@ library(bibtex) # reading in BibTex files to R
 methods.file <- "AuthorYYYY_Methods.md"
 tableN.file <- 'AuthorYYYY_TableN.csv'
 figureM.file <- 'AuthorYYYY_FigureM.csv'
+
+dataDownload.dir <- 'temp/CPEAT'
 
 # Bibliograph files
 primaryCitation.file <- 'AuthorYYYY.bib'
@@ -91,6 +94,8 @@ readsource.file <- '../../../R/readAuthorYYYY.R'
 
 > PANGAEA. n.d. “Past Global Changes - Carbon in Peat on EArth Through Time.” https://www.pangaea.de/?q=project:label:PAGES_C-PEAT. (@CPEAT2025)
 
+Also see @CPEAT_web
+
 
 <!--- After you read through the paper write a brief summary of what the study
 measured and what the data was used for in. This should be <250 words.--->
@@ -100,38 +105,17 @@ They use this data to look at global peat stock patterns (@Loisel2021).
 
 ## Where is the data
 
-This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 850 unique DOIs.
-We have noticed that these DOIs have reduced over time, some of these were merged data sets (merging age and geochemistry from the same core into a single core, 10.1594/PANGAEA.890358 and 10.1594/PANGAEA.928557), others appear to be newly registered data, and others seem to disappear from new quires.
-We have provided a list of doi's retrieved at various points in the project as a `echo: false` chunk in the qmd code for documentation and the commented out `pangaear::pg_search` code.
+This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 870 unique DOIs.
+Some of these DOIs have been superceded and are flagged as 'replaced by'.
+All DOIs are listed in the methods BibTex file and can be compared to the `pangaear::pg_search` code in the `checkDOIs` chunk.
 
 There is some one-off data collections for ingest that means we can not ensure that future data contributions will be consistent with what we present here.
 This should be a good starting point however for adding new contributions.
 
 ```{r}
-#| eval: false
-#| echo: false
+#| label: makeDownloadURLs
 
-#transfer between the old url list and the new bib files
-##### Long doi list ####
 
-doi.df <- tibble(dataURL = read_csv(file = 'download_url_CPEAT.csv', col_names = FALSE, col_types = cols(col_character()))$X1) |>
-  mutate(doi = str_extract(dataURL, '10.*(?=\\?format)')) |>
-  mutate(citationURL = paste0(str_extract(dataURL, 'https.*(?=\\?format)'), '?format=citation_bibtex'),
-         id = str_extract(doi, '\\d+$'))
-
-for(ii in 1:nrow(doi.df)){
-  if(!file.exists(file.path('temp', 'orginalBibs', paste0(doi.df$id[ii],'.bib')))){
-    download.file(url = doi.df$citationURL[ii],
-                  destfile = file.path('temp', 'orginalBibs', paste0(doi.df$id[ii],'.bib')))
-  }
-}
-
-#cat 8*.bib 9*.bib >> _temp.bib
-#cat *.bib >> ../../CPEAT2025_Methods.bib
-#Open with BibDesk and regenerate citation key to remove duplicates
-```
-
-```{r}
 allMethodCitations <- bibtex::read.bib(file = methodsCitation.file)
 
 allURLs.df <- plyr::ldply(allMethodCitations, 
@@ -145,7 +129,9 @@ allURLs.df <- plyr::ldply(allMethodCitations,
 ```
 
 ```{r}
+#| label: checkDOIs
 #| eval: false
+#| echo: false
 
 ### Query the pangaea repository
 ### 
@@ -192,71 +178,295 @@ These files are in the AuthorYYYY data rescue.
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
-# Data Rescue working notes 
+# Level 0 data
 
-## Data Rescue Plan
+Data is available for download (@CPEAT2025) and the first thing we do is construct the download files and URLs.
 
-+ Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
-+ Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
-+ Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions suggested in your pull request review
-  - [ ] celebrate!
+```{r}
+#| label: downloadCPEAT
+#| code-fold: true
 
-## Table N
+basenames.arr <- allURLs.df$downloadData |> 
+  # start with:
+  # "https://doi.pangaea.de/10.1594/PANGAEA.889936?format=textfile"
+  str_extract(pattern = '(?<=pangaea.de/).*(?=.format)') |> 
+  # extract the string between the doi url and the format information:
+  # 10.1594/PANGAEA.889936
+  str_replace(pattern = '/', replacement = '_') |>
+  # replace the forward slash so that it is not treated as a folder
+  # 10.1594_PANGAEA.889936
+  paste0('.txt')
+  # add the extension
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+download.flag <- !file.exists(file.path(dataDownload.dir, basenames.arr))
 
-Table N was modified ....
+if(any(download.flag)){
+  download.file(url = allURLs.df$downloadData[download.flag], 
+                destfile = file.path(dataDownload.dir,
+                                     basenames.arr[download.flag]))
+}
 
-```{r table1}
-
-read_csv(file = tableN.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
 ```
 
-## Methods comparison
+Go through and read in the text of the PANGAEA files.
+Then split the meta and primary data.
 
-```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.md
+```{r}
+#| label: loadPreLevel0
+#| code-fold: true
+#| warning: false
+
+basenames.ls <- setNames(object = as.list(basenames.arr), str_remove(basenames.arr, '.txt'))
+all.text <- plyr::llply(.data = basenames.ls, 
+                        .fun = function(basename.str){
+  readr::read_file(file.path(dataDownload.dir, basename.str))
+})
+
+all.meta <- plyr::ldply(.data = all.text,
+                        .fun = function(file.str){
+  #### Parse the first level of the metadata ####
+  #file.str <- all.text$`10.1594_PANGAEA.928061`
+  header.str <- file.str |>
+    str_extract(regex('(?<=/\\* ).*(?=\\*/)', multiline=TRUE, dotall=TRUE))
+  
+  meta.df <- header.str |>
+    str_split_1('(?<=\\n)[^\\t]*\\:') |>
+    as.list() |>
+    setNames(c('meta', str_extract_all(header.str, '(?<=\\n)[^\\t]*\\:') |> 
+                 unlist() |>
+                 str_remove('\\:$'))) |>
+    as_tibble_row()
+  return(meta.df)
+}, .id = 'doi') 
+
+all.primary <- plyr::ldply(.data = all.text, .fun = function(file.str){
+  
+#### Parse the primary data file ####
+
+  header.str <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n)[^\\n]*', multiline=TRUE, dotall=TRUE)) |>
+    str_split(patter = '\\t') |>
+    unlist()
+  
+  #"10.1594_PANGAEA.928439" index 388 has an extra 3 at the end of the file randomly, this throws a warning but does not affect how the data is read in
+primary.df <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
+  read_tsv(col_types = cols(.default = col_character()),
+           skip = 1, col_names = FALSE) |>
+  mutate(across(.cols = everything(), .fns = trimws)) |>
+  mutate(row_id = paste0('R',1:n())) |>
+  pivot_longer(cols = -row_id, 
+               names_to = 'column_index', values_to = 'with_entry') |>
+  full_join(tibble(column_index = paste0('X', 1:length(header.str)),
+                   column_name = header.str),
+            by = join_by(column_index))
+
+  return(primary.df)
+}, .id = 'doi')
+
+
 ```
 
-## Methods Section Transcription
+Finally split the data into a normalized set of tables.
 
-{{< include AuthorYYYY_Methods.md >}}
+```{r}
+#| label: processHeader
+#| code-fold: true
 
-## Citation notes from Methods
+# study.df <- all.meta |>
+#   select(doi, citation = Citation, 
+#          replaced_by = `Replaced by`, related_to = `Related to`,
+#          further_details = `Further details`,
+#          projects = `Project(s)`,
+#          change_history = `Change history`,
+#          license = License,
+#          size = Size, abstract = Abstract,
+#          keyword = `Keyword(s)`, status = Status) |>
+#   mutate(across(everything(), trimws)) |>
+#   mutate(across(c(projects, license, keyword, status), as.factor)) |>
+#   mutate(replaced_by_doi = str_extract(replaced_by, '10\\.1594/PANGAEA\\.\\d*') |>
+#            str_replace('/', '_'))
 
-Below are the citation notes from the methods section.
-Some citations are missing, those are noted here and how best guess were generated.
 
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
+#### core data (pre-processing) ####
+#### to be broken up into coverage, event, and parameter information
+core.df <- all.meta |>
+  select(doi, coverage = Coverage,
+         event = `Event(s)`, parameters = `Parameter(s)`) |>
+  separate_wider_delim(cols = parameters, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start')
 
-# Level 0 Data rescue
 
-This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+#identfy and process the sub-patterns
+structures.df <- all.meta |>
+  select(Coverage, `Event(s)`, Size, `Parameter(s)`) |>
+  mutate(
+    Coverage_pattern = 
+      str_replace_all(Coverage, '\\-?\\d*\\.?\\d+', '%d'),
+    Events_pattern = 
+      str_replace(`Event(s)`, '^[^\\*]*\\*', '%s') |>
+      str_replace(':[^\\*]*$', ': %s') |>
+      str_replace_all(':[^\\*]*\\*', ': %s'),
+    Size_pattern = 
+      str_replace_all(Size, '\\d+', '%d'))
+
+  ##Do this --
+  ## - [x] Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
+  ## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
+  ## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
+
+### size data ####
+### number of data points for each doi
+size.df <- all.meta |>
+  select(doi, Size) |>
+  mutate(value = str_extract(Size, '\\d+'),
+         unit = str_remove(Size, '\\d+'),
+         of_variable = 'data_size') |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry') |>
+  select(doi, of_variable, is_type, with_entry)
+
+#### coverage data ####
+#### lat/long and core depth interval
+coverage.df <- all.meta |>
+  select(doi, temp_str = Coverage) |>
+  mutate(temp_str = trimws(temp_str)) |>
+  separate_longer_delim(temp_str, delim = stringr::regex('\\*|\\n')) |>
+  separate_wider_delim(temp_str, delim = ':', names = c('of_variable', 'text')) |>
+  mutate(across(everything(), trimws)) |>
+  mutate(value = str_remove(text, ' c?m$'),
+         unit = trimws(str_extract(text, ' c?m$'))) |>
+  select(-text) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(across(everything(), trimws))
+  
+#### event data (pre-processing) ####
+#### lat/long, location (region), elevation, method and device (coring), core recovery length, core penetration depth, and structured comments (processed next)
+events.df <- all.meta |>
+  select(doi, temp_str = `Event(s)`) |>
+  mutate(core_name = str_extract(temp_str, '^.*(?= \\* LATITUDE)')) |>
+  mutate(temp_str = str_remove(temp_str, '^.* \\* (?=LATITUDE)')) |>
+  separate_wider_delim(temp_str, names = paste0('X', 1:10), 
+                       delim = ' * ',
+                       too_few = "align_start") |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'drop_names',
+               values_to = 'component',
+               values_drop_na = TRUE) |>
+  mutate(is_type = str_extract(component, '^[^:]+'),
+         with_entry = str_remove(component, '^[^:]+: ')) |>
+  select(doi, is_type, with_entry) |>
+  mutate(across(everything(), trimws)) |>
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
+### event comment data ####
+### coring year, peatland type, basal age, basal age depth, core microtopography, core length, number of dates, carbon rate site, peat properties sample size, bulk density sample volumne, surface age, altitude, site name, and comment
+events_comment.df <- events.df |>
+  select(doi, COMMENT) |>
+  #remove refernce to core name in comments
+  mutate(COMMENT = str_remove(COMMENT,'^.*e[ta]+ils.*(?=c|Coring year)')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'sphagnum, Volume of bulk density samples', 'sphagnum; Volume of bulk density samples')) |>#X3
+  mutate(COMMENT = str_replace(COMMENT, 'Stordalen_core2 Dominant peat type', 'Stordalen_core2; Dominant peat type')) |> #X2
+  mutate(COMMENT = str_replace(COMMENT, 'KOE.', 'KOE')) |>
+  mutate(COMMENT = str_replace(COMMENT, '17 samples:', '17 samples - ')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'uncal., basal', 'uncal.; basal')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'basal age 1', 'basal age: 1')) |>
+  separate_longer_delim(cols = 'COMMENT', delim = ';') |>
+  mutate(COMMENT = trimws(COMMENT)) |>
+separate_wider_delim(cols = COMMENT, delim = ':',
+                       names = c('of_variable', 'with_entry'), too_few = 'align_end') |>
+  filter(!(is.na(with_entry) & is.na(of_variable))) |>
+  mutate(of_variable = if_else(is.na(of_variable), 
+                               'COMMENT', of_variable)) |>
+  mutate(of_variable = paste0('EVENT::COMMENT::',str_to_lower(of_variable)))
+
+### event (clean) data ####
+### lat/long, location (region), elevation, method and device (coring), core recovery length, and core penetration depth
+### Note structured comments are processed above seperately
+events_clean.df <- events.df |>
+  select(-COMMENT) |>
+  pivot_longer(-doi, names_to = 'of_variable', values_to='temp',
+               values_drop_na = TRUE) |>
+  mutate(value = str_remove(temp, ' c?m$'),
+         unit = trimws(str_extract(temp, ' c?m$'))) |>
+  select(-temp) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(of_variable = paste0('EVENT::', of_variable))
+
+#### column information ####
+#### column data model includes column index, name as `of_variable`, and `is_type` including: description, unit, comment, MethodDevice, geocode, and PI
+column_meta.df <- all.meta |>
+  select(doi, `Parameter(s)`) |>
+  separate_wider_delim(cols = `Parameter(s)`, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start') |>
+  select(-X0) |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'column_index',
+               values_to = 'column_name',
+               values_drop_na = TRUE) |>
+  #mutate(column_name_match = str_detect(column_name, '^.+ \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(comment = str_extract(column_name, '(?<= \\* COMMENT:).+$'),
+         MethodDevice = str_extract(
+           str_remove(column_name, '( \\* COMMENT:.+)?$'), #trim the end
+           '(?<= \\* METHOD/DEVICE:).+$'), #extraction pattern
+         PI = str_extract(
+           str_remove(column_name, 
+                      '( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$'), #trim
+           '(?<= PI: ).+$'), #extract
+         geocode = str_extract(column_name, 'GEOCODE'),
+         temp = str_remove(column_name, ' \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(description = str_remove(temp, '[\\[\\(].*$'),
+         unit = str_extract(temp, '(?<=\\[).+(?=\\])'),
+         of_variable = str_extract(temp, '(?<=\\().+(?=\\))')) |>
+  select(!c(column_name, temp)) |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = -c(doi, column_index, of_variable),
+               names_to = 'is_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE)
+  
+###Compile study-level data####
+###put everything together except the column and layer data
+study_meta.df <- all.meta |>
+  #trim out the things that don't need heavy processing
+  select(doi, citation = Citation, 
+         replaced_by = `Replaced by`, 
+         related_to = `Related to`, 
+         further_details = `Further details`,
+         projects = `Project(s)`, 
+         change_history = `Change history`, 
+         license = License, 
+         abstract = Abstract, 
+         keywords = `Keyword(s)`, 
+         status = Status, 
+         header_comment = Comment) |>
+  pivot_longer(cols = -doi, 
+               names_to = 'of_variable', values_to = 'with_entry',
+              values_drop_na = TRUE) |>
+  mutate(is_type = 'value') |>
+  #pull in the processed data
+  bind_rows(size.df,
+            events_clean.df,
+            events_comment.df,
+            coverage.df) |>
+  mutate(across(everything(), trimws))
+
+####Create level 0 data list####
+#put it all together
+lvl0_data.ls <- list(study = study_meta.df,
+                columns = column_meta.df,
+                primary = all.primary)
+
+# memory management
+#rm(list = setdiff(ls(), variable_keep))
+```
+
+There was some decision to make here on if we are going to go with a core based list or data type. 
+We went with data type (`study`, `column`, `primary`) instead.
 
 ```{r readLevel0}
 #This chunk has two purposes. 
@@ -275,27 +485,14 @@ data.lvl0.ls <- list(
   method = read_lines(file = methods.file),
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
-  data = list(
-    Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = table1.file,
-                         col_types = cols(.default = col_character()),
-                         n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = table1.file,
-                         col_types = cols(.default = col_character()),
-                         skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
-   ) #end 'data' element
+  data = lvl0_data.ls,
 )
 
 ```
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
                                     dataLevel = 'level0')
