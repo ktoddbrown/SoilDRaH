@@ -4,11 +4,14 @@ format:
   html:
     toc: true
     eval: false #default to not evaluating the chunks, override this the template is completed
+    code-fold: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - CPEAT2025_Methods.bib #contains the citations in the methods section
   - CPEAT2025.bib #contains citation for the data source, generally a single citation of the primary paper
+nocite: |
+  @* #add all citations
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -41,32 +44,31 @@ affiliations:
     url: https://essie.ufl.edu/ees/
     
 timelog:
-    - activity: 
-      description: Review and comment level 1
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-11-29T13:20
-      #end: 2025-11-28T14:30
-      #alternatively duration can be combined with a being/end
-      #duration: P3H
   - activity: 
-      description: Finalize level 0 read function
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      #start: 2025-11-20T11:00
-      end: 2025-11-28T14:30
-      #alternatively duration can be combined with a being/end
-      duration: P3H
+    description: Review and comment level 1
+    who: ktoddbrown #github username
+    #when you started and ended, can be just a year or down to the minute
+    start: 2025-11-29T13:20
+    #end: 2025-11-28T14:30
+    #alternatively duration can be combined with a being/end
+    #duration: P3H
   - activity: 
-      description: Merge with prior work
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-11-27T11:40
-      end: T13:45
-      #end: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P2H
-version: 'vs202512' #template version, remove before use
+    description: Finalize level 0 read function
+    who: ktoddbrown #github username
+    #when you started and ended, can be just a year or down to the minute
+    #start: 2025-11-20T11:00
+    end: 2025-11-28T14:30
+    #alternatively duration can be combined with a being/end
+    duration: P3H
+  - activity: 
+    description: Merge with prior work
+    who: ktoddbrown #github username
+    #when you started and ended, can be just a year or down to the minute
+    start: 2025-11-27T11:40
+    end: T13:45
+    #end: YYYY-MM-DD THH:MM
+    #alternatively duration can be combined with a being/end
+    duration: P2H
 ---
 
 
@@ -97,8 +99,8 @@ readsource.file <- '../../02_DataHarmonization/readCPEAT2025.R'
 source(readsource.file)
 
 #semantic files for level 1
-#of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -195,7 +197,7 @@ These files are in the AuthorYYYY data rescue.
 
 # Level 0 data
 
-Data is available for download (@CPEAT2025) and the first thing we do is construct the download files and URLs.
+Data is available for download (@PCPEAT) and the first thing we do is construct the download files and URLs.
 
 ```{r}
 #| label: downloadCPEAT
@@ -592,20 +594,23 @@ unique_column.df <- column_noPI.df |>
   pivot_wider(names_from = is_type, values_from = with_entry) |>
   reframe(doi_list = str_c(bibKey, column_index, sep = '$', collapse = ';'),
           .by = -c(bibKey, column_index))|>
-  mutate(variable_id = paste0('Variable_',1:n()) )
+  mutate(variable_id = paste0('Variable_',1:n()) )|>
+  rename(method = MethodDevice) |>
+  pivot_longer(cols = c('description', 'unit', 'comment', 'method'),
+               names_to = 'is_type', 
+               values_to = 'with_entry', values_drop_na = TRUE)
+
 ####Move variable ID over to primary data####
 
 expanded_primary.df <- primary.df |>
   full_join(unique_column.df |>
-              pivot_longer(cols = c('description', 'unit', 'comment', 'MethodDevice'),
-                           names_to = 'is_type', 
-                           values_to = 'with_entry', values_drop_na = TRUE)|>
               separate_longer_delim(cols = doi_list, delim = ';') |>
               separate_wider_delim(cols = doi_list, delim = '$', 
                                    names = c('bibKey', 'column_index')) |>
               select(bibKey, column_index, variable_id, of_variable) |>
               unique(),
-            by = join_by(bibKey, column_index))
+            by = join_by(bibKey, column_index)) |>
+  mutate(is_type = 'value')
 
 #Finally create the variable map that matches the ISCN4 data purpose
 lvl1_data.ls <- list(
@@ -674,12 +679,96 @@ datafunction.lvl1.ls <- readCPEAT2025(dataDir = '.',
 ```
 
 ```{r}
-#| label: checkLvl0
+#| label: checkLvl1
 
 if(isTRUE(all.equal(datafunction.lvl1.ls, lvl1_data.ls))){
   print('Read function matches code for level 1.')
 }else{
   print('There is a mismatch in the data objects between the code and the read function at level 1.')
+}
+```
+
+```{r}
+#| label: updateVocab
+
+SoilDRaH_isType <- read_csv(is_type.file) |>
+  separate_longer_delim(of_variable, delim = ',')
+
+SoilDRaH_ofVarible <-read_csv(of_variable.file)
+
+CPEAT_variables <- datafunction.lvl1.ls$data$core |>
+  select(is_type, of_variable_DRaH) |>
+  unique() |>
+  bind_rows(datafunction.lvl1.ls$data$variable|>
+              select(is_type, of_variable_DRaH) |>
+              unique()) |>
+  bind_rows(datafunction.lvl1.ls$data$primary|>
+              select(is_type, of_variable_DRaH) |>
+              unique()) |>
+  unique()
+
+missing_variables <- CPEAT_variables |>
+  rename(of_variable = of_variable_DRaH) |>
+  anti_join(SoilDRaH_ofVarible,
+            by = join_by(of_variable)) |>
+  select(of_variable) |>
+  unique()
+  
+#cat(paste0(missing_variables,', ,draft\n'))
+
+# go through and add missing variables printed above to the file manually
+
+new_is_type <- CPEAT_variables |>
+  filter(!is.na(is_type) & !is.na(of_variable_DRaH)) |>
+  rename('of_variable' = 'of_variable_DRaH') |>
+  full_join(SoilDRaH_isType |>
+              select(is_type, project_definition) |>
+              unique()) |>
+  bind_rows(SoilDRaH_isType) |>
+  unique() |>
+  arrange(is_type, of_variable) |>
+  reframe(of_variable = paste0(of_variable, collapse = ','),
+          .by = c(is_type, project_definition))
+
+#so much here. modify directly
+#write_csv(new_is_type, is_type.file)
+```
+
+```{r}
+#| label: checkVocabulary
+#| eval: true
+
+SoilDRaH_isType <- read_csv(is_type.file) |>
+  separate_longer_delim(of_variable, delim = ',')
+
+SoilDRaH_ofVarible <-read_csv(of_variable.file)
+
+CPEAT_variables <- datafunction.lvl1.ls$data$core |>
+  select(is_type, of_variable = of_variable_DRaH) |>
+  unique() |>
+  bind_rows(datafunction.lvl1.ls$data$variable|>
+              select(is_type, of_variable = of_variable_DRaH) |>
+              unique()) |>
+  bind_rows(datafunction.lvl1.ls$data$primary|>
+              select(is_type, of_variable = of_variable_DRaH) |>
+              unique()) |>
+  unique() |>
+  filter(!is.na(of_variable), !is.na(is_type))
+
+if(all(CPEAT_variables$of_variable %in% SoilDRaH_ofVarible$of_variable)){
+  message('Success! All variables are in the DRaH')
+}else{
+  message('Fail! There are variables not in the DRaH, go back and add them.')
+}
+
+missingTypes <- CPEAT_variables |>
+  anti_join(SoilDRaH_isType,
+            by = join_by(is_type, of_variable))
+
+if(nrow(missingTypes) != 0){
+  message('Success! All types are in the DRaH')
+}else{
+  message('Fail! There are types not in the DRaH, go back and add them.')
 }
 ```
 

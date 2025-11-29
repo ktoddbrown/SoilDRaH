@@ -1,0 +1,118 @@
+---
+title: "Data Curation: ISCN 2025"
+format:
+  html:
+    toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - ISCN2025.bib #contains citation that provide background on the project
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity: 
+      description: Draft inital readme
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-11-27T11:00
+      end: 2025-11-27T11:38
+      #alternatively duration can be combined with a start or end
+      #duration: P1H15M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# Bibliograph files
+refernceCitation.file <- 'ISCN2025.bib'
+
+```
+
+# Purpose
+
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
+We have closed contributions for this project and are working on analysis.
+
+# Variables of interest
+
+<!--- Briefly describe what you want the data rescuers to look for when digitizing a data resource.---->
+
+For this analysis we are interested in:
+
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+
+# Data sources
+
+For this project, we have identified the following data sources by US federal monitoring databases and direct network contributions.
+These include:
+
++ CPEAT (@Loisel2021, @CPEAT_web)
+  - This is a collection of peat cores (@PCPEAT)
+  - Status: Reprocessing into the new repository structure
++ FIA
+  - This is a US Forest Service database.
+  - Status: Reprocessing into the new repository structure
++ NCSS
+  - This is a US NRCS database.
+  - Status: Reprocessing into the new repository structure
++ ISCN3 (@ISCN3)
+  - This database was orginally compiled in 2015, we want to update the NCSS data.
+  - Status: Reprocessing into the new repository structure
+
+
+
+# Data Level 1 
+
+```{r}
+#Source and append all the level 1 tuples
+
+```
+
+# Data Level 2
+
+```{r}
+#Map the comparable methods and align any needed vocabulary
+```
+
+```{r}
+#Data viz checks
+```
+
+# References
+
+<!---- This will be populated when you render the document.---->

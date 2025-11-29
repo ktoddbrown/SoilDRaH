@@ -425,21 +425,23 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     dplyr::reframe(doi_list = stringr::str_c(bibKey, column_index, 
                                              sep = '$', collapse = ';'),
                    .by = -c(bibKey, column_index))|>
-    dplyr::mutate(variable_id = paste0('Variable_',1:n()) )
+    dplyr::mutate(variable_id = paste0('Variable_',1:n()) ) |>
+    dplyr::rename(method = MethodDevice) |>
+    tidyr::pivot_longer(cols = c('description', 'unit',
+                                 'comment', 'method'),
+                        names_to = 'is_type', 
+                        values_to = 'with_entry', values_drop_na = TRUE)
   
   ####Move variable ID over to primary data####
   expanded_primary.df <- primary.df |>
     dplyr::full_join(unique_column.df |>
-                       tidyr::pivot_longer(cols = c('description', 'unit',
-                                                    'comment', 'MethodDevice'),
-                                           names_to = 'is_type', 
-                                           values_to = 'with_entry', values_drop_na = TRUE)|>
                        tidyr::separate_longer_delim(cols = doi_list, delim = ';') |>
                        tidyr::separate_wider_delim(cols = doi_list, delim = '$', 
                                                    names = c('bibKey', 'column_index')) |>
                        dplyr::select(bibKey, column_index, variable_id, of_variable) |>
                        unique(),
-                     by = dplyr::join_by(bibKey, column_index))
+                     by = dplyr::join_by(bibKey, column_index)) |>
+    dplyr::mutate(is_type = 'value')
   
   #Finally create the variable map that matches the ISCN4 data purpose
   lvl1_data.ls <- list(
