@@ -45,11 +45,11 @@ affiliations:
     
 timelog:
   - activity: 
-    description: Review and comment level 1
+    description: Review, comment, and finalize level 1
     who: ktoddbrown #github username
     #when you started and ended, can be just a year or down to the minute
     start: 2025-11-29T13:20
-    #end: 2025-11-28T14:30
+    end: 2025-11-29T16:00
     #alternatively duration can be combined with a being/end
     #duration: P3H
   - activity: 
