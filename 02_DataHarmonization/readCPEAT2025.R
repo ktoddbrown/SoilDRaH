@@ -1,4 +1,5 @@
-readCPEAT2025 <- function(dataDir, dataLevel = 'level0'){
+readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
+                          verbose = FALSE){
   
   #dataDir <- '01_DataRescue/CPEAT2025'
   
@@ -356,4 +357,151 @@ readCPEAT2025 <- function(dataDir, dataLevel = 'level0'){
     return(data.lvl0.ls)
   }
   
+  ####Data Level 1####
+  
+  ####Remove the replaced cores####
+  #Find the dois of each core
+  doi_core <- data.lvl0.ls$data$study |>
+    #remove 112 dois that have been replaced
+    dplyr::filter(of_variable %in% 'citation') |>
+    dplyr::mutate(doi = stringr::str_extract(with_entry, 
+                                             '(?<=https://doi.org/).*$'))
+  
+  #Find the cores that are flagged as replaced and the replacement doi
+  replaced_core <- data.lvl0.ls$data$study |>
+    #remove 112 dois that have been replaced
+    dplyr::filter(of_variable %in% 'replaced_by') |>
+    dplyr::mutate(
+      replacement_doi = stringr::str_extract(with_entry, 
+                                             '(?<=https://doi.org/).*$'))
+  
+  if(all(replaced_core$replacement_doi %in% doi_core$doi)){
+    if(verbose) message('Replacement cores present in dataset')
+  }else{
+    warning('There are missing replacement cores. Dropping cores that were not replaced.')
+  }
+  
+  # Take the cores out of each of the data frames
+  study.df <- data.lvl0.ls$data$study |>
+    dplyr::filter(!('replaced_by' %in% of_variable), .by = bibKey)
+  
+  column.df <- data.lvl0.ls$data$columns |>
+    dplyr::filter(bibKey %in% study.df$bibKey)
+  
+  primary.df <- data.lvl0.ls$data$primary |>
+    dplyr::filter(bibKey %in% study.df$bibKey)
+  
+  #### Move the PI info to the study data ####
+  #There is a lot or repeated PI's in the column
+  pi.df <- column.df |>
+    dplyr::filter(is_type == 'PI') |>
+    dplyr::select(bibKey, with_entry) |>
+    unique() |>
+    # #Confirm none of bibKeys have more then one PI, moving information to study.df
+    # filter(n() > 1,
+    #        .by = bibKey)
+    dplyr::mutate(of_variable = 'PI',
+                  is_type = 'value')
+  
+  #remove PI from the column.df
+  column_noPI.df <- column.df |>
+    dplyr::filter(is_type != 'PI') |>
+    #drop geocode
+    dplyr::filter(is_type != 'geocode') |>
+    dplyr::mutate(across(everything(), trimws))
+  
+  # Create add the pi information to the study 
+  study_PI.df <- study.df |>
+    #add the PI to the study.df
+    dplyr::bind_rows(pi.df)
+  
+  ####Create unique variable groups####
+  ####some of the variables have the same name but different methods, within the 
+  ####same core (!). Go through and add in an index to group the unique variable
+  ####dimensions
+  
+  unique_column.df <- column_noPI.df |>
+    tidyr::pivot_wider(names_from = is_type, values_from = with_entry) |>
+    dplyr::reframe(doi_list = stringr::str_c(bibKey, column_index, 
+                                             sep = '$', collapse = ';'),
+                   .by = -c(bibKey, column_index))|>
+    dplyr::mutate(variable_id = paste0('Variable_',1:n()) )
+  
+  ####Move variable ID over to primary data####
+  expanded_primary.df <- primary.df |>
+    dplyr::full_join(unique_column.df |>
+                       tidyr::pivot_longer(cols = c('description', 'unit',
+                                                    'comment', 'MethodDevice'),
+                                           names_to = 'is_type', 
+                                           values_to = 'with_entry', values_drop_na = TRUE)|>
+                       tidyr::separate_longer_delim(cols = doi_list, delim = ';') |>
+                       tidyr::separate_wider_delim(cols = doi_list, delim = '$', 
+                                                   names = c('bibKey', 'column_index')) |>
+                       dplyr::select(bibKey, column_index, variable_id, of_variable) |>
+                       unique(),
+                     by = dplyr::join_by(bibKey, column_index))
+  
+  #Finally create the variable map that matches the ISCN4 data purpose
+  lvl1_data.ls <- list(
+    #Read in a list of all the bib files
+    citation = list(
+      #Citation for the article transcriptions are pulled from
+      primary = bibtex::read.bib(file = primaryCitation.file), 
+      #Citations for all referenced articles
+      methods = bibtex::read.bib(file = methodsCitation.file)
+    ),
+    #Read in the text transcription of the primary website
+    method = readr::read_lines(file = methods.file),
+    data = plyr::llply(
+      list(core = study_PI.df,
+           variable = unique_column.df,
+           primary = expanded_primary.df),
+      .fun = function(xx){
+        xx |>
+          dplyr::mutate(of_variable_DRaH = dplyr::case_when(
+            of_variable == 'C' ~ 'carbon_percent',
+            of_variable == 'TC' ~ 'total_carbon_percent',
+            of_variable == 'TIC' ~ 'inorganic_carbon_percent',
+            of_variable == 'TOC' ~ 'organic_carbon_percent',
+            of_variable == 'Corg dens' ~ 'organic_carbon_density',
+            of_variable == 'DBD' ~ 'dry_bulk_density',
+            of_variable == 'Depth bot' ~ 'layer_bottom',
+            of_variable == 'Depth top' ~ 'layer_top',
+            #of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+            of_variable == 'Depth sed' ~ 'layer_middle',
+            of_variable == 'Samp thick' ~ 'layer_thickness',
+            of_variable == 'LOI' ~ 'loss_on_ignition',
+            of_variable == 'OM' ~ 'organic_matter_percent',
+            of_variable == 'OM dens' ~ 'organic_matter_density',
+            of_variable == "Water wm" ~ 'field_water_percent',
+            
+            of_variable == 'citation' ~ 'citation',
+            of_variable == 'related_to' ~ 'related_research',
+            of_variable == 'projects' ~ 'projects',
+            of_variable == 'license' ~ 'data_license',
+            of_variable == 'header_comment' ~ 'core_comment',
+            of_variable == "EVENT::LATITUDE" ~ 'latitude',
+            of_variable == "EVENT::LONGITUDE" ~ 'longitude',
+            of_variable == "EVENT::LOCATION" ~ 'region',
+            of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
+            of_variable == "EVENT::ELEVATION" ~ 'elevation',
+            of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
+            of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
+            of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
+            of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+            of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+            of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
+            of_variable == 'PI' ~ 'principal_investigator',
+            TRUE ~ NA_character_
+          )) |>
+          dplyr::rename(of_variable_CPEAT = of_variable)
+      }))
+  
+  if(dataLevel == 'level1'){
+    return(lvl1_data.ls)
+  }
+  
+  error('`dataLevel` provided does not match cases coded.')
+  
 }
+

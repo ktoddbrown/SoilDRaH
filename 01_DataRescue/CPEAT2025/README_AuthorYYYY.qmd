@@ -41,6 +41,22 @@ affiliations:
     url: https://essie.ufl.edu/ees/
     
 timelog:
+    - activity: 
+      description: Review and comment level 1
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-11-29T13:20
+      #end: 2025-11-28T14:30
+      #alternatively duration can be combined with a being/end
+      #duration: P3H
+  - activity: 
+      description: Finalize level 0 read function
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      #start: 2025-11-20T11:00
+      end: 2025-11-28T14:30
+      #alternatively duration can be combined with a being/end
+      duration: P3H
   - activity: 
       description: Merge with prior work
       who: ktoddbrown #github username
@@ -118,10 +134,10 @@ This should be a good starting point however for adding new contributions.
 allMethodCitations <- bibtex::read.bib(file = methodsCitation.file)
 
 allURLs.df <- plyr::ldply(allMethodCitations, 
-                       .fun = function(xx){
-                         return(c(primary = xx$url))
-                       },
-                       .id = 'bibKey') |>
+                          .fun = function(xx){
+                            return(c(primary = xx$url))
+                          },
+                          .id = 'bibKey') |>
   filter(bibKey != 'Loisel2021aa') |>
   mutate(downloadData = sprintf('%s?format=textfile', 
                                 str_replace(primary, 'doi.org', 'doi.pangaea.de')))
@@ -155,9 +171,9 @@ The purpose of this PROJECT is...
 
 <!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
-  
+- Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
+- Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
@@ -165,17 +181,17 @@ The purpose of this PROJECT is...
 These files are in the AuthorYYYY data rescue.
 
 - [Readme](README_AUTHORYYYY.qmd)
-  + This is the primary file that documents the transcriptions and decision made during data rescue.
++ This is the primary file that documents the transcriptions and decision made during data rescue.
 - [AuthorYYYY.bib](AuthorYYYY.bib)
-  + citation for article transcribed
++ citation for article transcribed
 - [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
-  + citations for the methods section of the article
++ citations for the methods section of the article
 - [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
-  + methods transcribed from primary article
++ methods transcribed from primary article
 - [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
++ table N from primary article with ...
 - [temp/](temp/)
-    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
++ scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
 # Level 0 data
 
@@ -195,7 +211,7 @@ basenames.arr <- allURLs.df$downloadData |>
   # replace the forward slash so that it is not treated as a folder
   # 10.1594_PANGAEA.889936
   paste0('.txt')
-  # add the extension
+# add the extension
 
 download.flag <- !file.exists(file.path(dataDownload.dir, basenames.arr))
 
@@ -216,53 +232,53 @@ Then split the meta and primary data.
 #| warning: false
 
 basenames.ls <- setNames(object = as.list(basenames.arr),
-                           allURLs.df$bibKey)
-  #str_remove(basenames.arr, '.txt'))
+                         allURLs.df$bibKey)
+#str_remove(basenames.arr, '.txt'))
 
 all.text <- plyr::llply(.data = basenames.ls, 
                         .fun = function(basename.str){
-  readr::read_file(file.path(dataDownload.dir, basename.str))
-})
+                          readr::read_file(file.path(dataDownload.dir, basename.str))
+                        })
 
 all.meta <- plyr::ldply(.data = all.text,
                         .fun = function(file.str){
-  #### Parse the first level of the metadata ####
-  #file.str <- all.text$`10.1594_PANGAEA.928061`
-  header.str <- file.str |>
-    str_extract(regex('(?<=/\\* ).*(?=\\*/)', multiline=TRUE, dotall=TRUE))
-  
-  meta.df <- header.str |>
-    str_split_1('(?<=\\n)[^\\t]*\\:') |>
-    as.list() |>
-    setNames(c('meta', str_extract_all(header.str, '(?<=\\n)[^\\t]*\\:') |> 
-                 unlist() |>
-                 str_remove('\\:$'))) |>
-    as_tibble_row()
-  return(meta.df)
-}, .id = 'bibKey') 
+                          #### Parse the first level of the metadata ####
+                          #file.str <- all.text$`10.1594_PANGAEA.928061`
+                          header.str <- file.str |>
+                            str_extract(regex('(?<=/\\* ).*(?=\\*/)', multiline=TRUE, dotall=TRUE))
+                          
+                          meta.df <- header.str |>
+                            str_split_1('(?<=\\n)[^\\t]*\\:') |>
+                            as.list() |>
+                            setNames(c('meta', str_extract_all(header.str, '(?<=\\n)[^\\t]*\\:') |> 
+                                         unlist() |>
+                                         str_remove('\\:$'))) |>
+                            as_tibble_row()
+                          return(meta.df)
+                        }, .id = 'bibKey') 
 
 all.primary <- plyr::ldply(.data = all.text, .fun = function(file.str){
   
-#### Parse the primary data file ####
-
+  #### Parse the primary data file ####
+  
   header.str <- file.str |> #all.text[388] |> #
-  str_extract(regex('(?<=\\*/\\n)[^\\n]*', multiline=TRUE, dotall=TRUE)) |>
+    str_extract(regex('(?<=\\*/\\n)[^\\n]*', multiline=TRUE, dotall=TRUE)) |>
     str_split(patter = '\\t') |>
     unlist()
   
   #"10.1594_PANGAEA.928439" index 388 has an extra 3 at the end of the file randomly, this throws a warning but does not affect how the data is read in
-primary.df <- file.str |> #all.text[388] |> #
-  str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
-  read_tsv(col_types = cols(.default = col_character()),
-           skip = 1, col_names = FALSE) |>
-  mutate(across(.cols = everything(), .fns = trimws)) |>
-  mutate(row_id = paste0('R',1:n())) |>
-  pivot_longer(cols = -row_id, 
-               names_to = 'column_index', values_to = 'with_entry') |>
-  full_join(tibble(column_index = paste0('X', 1:length(header.str)),
-                   column_name = header.str),
-            by = join_by(column_index))
-
+  primary.df <- file.str |> #all.text[388] |> #
+    str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
+    read_tsv(col_types = cols(.default = col_character()),
+             skip = 1, col_names = FALSE) |>
+    mutate(across(.cols = everything(), .fns = trimws)) |>
+    mutate(row_id = paste0('R',1:n())) |>
+    pivot_longer(cols = -row_id, 
+                 names_to = 'column_index', values_to = 'with_entry') |>
+    full_join(tibble(column_index = paste0('X', 1:length(header.str)),
+                     column_name = header.str),
+              by = join_by(column_index))
+  
   return(primary.df)
 }, .id = 'bibKey')
 
@@ -314,10 +330,10 @@ structures.df <- all.meta |>
     Size_pattern = 
       str_replace_all(Size, '\\d+', '%d'))
 
-  ##Do this --
-  ## - [x] Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
-  ## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
-  ## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
+##Do this --
+## - [x] Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
+## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
+## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
 
 ### size data ####
 ### number of data points for each bibKey
@@ -343,7 +359,7 @@ coverage.df <- all.meta |>
   select(-text) |>
   pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
   mutate(across(everything(), trimws))
-  
+
 #### event data (pre-processing) ####
 #### lat/long, location (region), elevation, method and device (coring), core recovery length, core penetration depth, and structured comments (processed next)
 events.df <- all.meta |>
@@ -377,7 +393,7 @@ events_comment.df <- events.df |>
   mutate(COMMENT = str_replace(COMMENT, 'basal age 1', 'basal age: 1')) |>
   separate_longer_delim(cols = 'COMMENT', delim = ';') |>
   mutate(COMMENT = trimws(COMMENT)) |>
-separate_wider_delim(cols = COMMENT, delim = ':',
+  separate_wider_delim(cols = COMMENT, delim = ':',
                        names = c('of_variable', 'with_entry'), too_few = 'align_end') |>
   filter(!(is.na(with_entry) & is.na(of_variable))) |>
   mutate(of_variable = if_else(is.na(of_variable), 
@@ -430,7 +446,7 @@ column_meta.df <- all.meta |>
                names_to = 'is_type',
                values_to = 'with_entry',
                values_drop_na = TRUE)
-  
+
 ###Compile study-level data####
 ###put everything together except the column and layer data
 study_meta.df <- all.meta |>
@@ -448,7 +464,7 @@ study_meta.df <- all.meta |>
          header_comment = Comment) |>
   pivot_longer(cols = -bibKey, 
                names_to = 'of_variable', values_to = 'with_entry',
-              values_drop_na = TRUE) |>
+               values_drop_na = TRUE) |>
   mutate(is_type = 'value') |>
   #pull in the processed data
   bind_rows(size.df,
@@ -460,8 +476,8 @@ study_meta.df <- all.meta |>
 ####Create level 0 data list####
 #put it all together
 lvl0_data.ls <- list(study = study_meta.df,
-                columns = column_meta.df,
-                primary = all.primary)
+                     columns = column_meta.df,
+                     primary = all.primary)
 
 # memory management
 #rm(list = setdiff(ls(), variable_keep))
@@ -498,7 +514,7 @@ data.lvl0.ls <- list(
 #| warning: false
 
 datafunction.lvl0.ls <- readCPEAT2025(dataDir = '.',
-                                    dataLevel = 'level0')
+                                      dataLevel = 'level0')
 ```
 
 ```{r}
@@ -512,6 +528,160 @@ if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
 
 ```
 
+# Level 1 data
+
+```{r}
+
+doi_core <- datafunction.lvl0.ls$data$study |>
+  #remove 112 dois that have been replaced
+  filter(of_variable %in% 'citation') |>
+  mutate(doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
+
+### Remove replaced cores####
+### Also check to make sure we have their replacements
+replaced_core <- datafunction.lvl0.ls$data$study |>
+  #remove 112 dois that have been replaced
+  filter(of_variable %in% 'replaced_by') #|>
+mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
+
+if(all(replaced_core$replacement_doi %in% doi_core$doi)){
+  if(verbose) message('Replacement cores present in dataset')
+}else{
+  warning('There are missing replacement cores.')
+}
+
+# Take the cores out of each of the data frames
+study.df <- datafunction.lvl0.ls$data$study |>
+  filter(!('replaced_by' %in% of_variable), .by = bibKey)
+
+column.df <- datafunction.lvl0.ls$data$columns |>
+  filter(bibKey %in% study.df$bibKey)
+
+primary.df <- datafunction.lvl0.ls$data$primary |>
+  filter(bibKey %in% study.df$bibKey)
+
+#### Move the PI info to the study data ####
+pi.df <- column.df |>
+  filter(is_type == 'PI') |>
+  select(bibKey, with_entry) |>
+  unique() |>
+  # #Confirm none of bibKeys have more then one PI, moving information to study.df
+  # filter(n() > 1,
+  #        .by = bibKey)
+  mutate(of_variable = 'PI',
+         is_type = 'value')
+
+#remove PI from the column.df
+column_noPI.df <- column.df |>
+  filter(is_type != 'PI') |>
+  #drop geocode
+  filter(is_type != 'geocode') |>
+  mutate(across(everything(), trimws))
+
+####Map core to ISCN4 #####
+core.df <- study.df |>
+  #add the PI to the study.df
+  bind_rows(pi.df)
+
+####Create unique variable groups and map to ISCN4 ####
+####some of the variables have the same name but different methods, within the 
+####same core (!). Go through and add in an index to group the unique variable
+####dimensions
+
+unique_column.df <- column_noPI.df |>
+  pivot_wider(names_from = is_type, values_from = with_entry) |>
+  reframe(doi_list = str_c(bibKey, column_index, sep = '$', collapse = ';'),
+          .by = -c(bibKey, column_index))|>
+  mutate(variable_id = paste0('Variable_',1:n()) )
+####Move variable ID over to primary data####
+
+expanded_primary.df <- primary.df |>
+  full_join(unique_column.df |>
+              pivot_longer(cols = c('description', 'unit', 'comment', 'MethodDevice'),
+                           names_to = 'is_type', 
+                           values_to = 'with_entry', values_drop_na = TRUE)|>
+              separate_longer_delim(cols = doi_list, delim = ';') |>
+              separate_wider_delim(cols = doi_list, delim = '$', 
+                                   names = c('bibKey', 'column_index')) |>
+              select(bibKey, column_index, variable_id, of_variable) |>
+              unique(),
+            by = join_by(bibKey, column_index))
+
+#Finally create the variable map that matches the ISCN4 data purpose
+lvl1_data.ls <- list(
+    #Read in a list of all the bib files
+    citation = list(
+      #Citation for the article transcriptions are pulled from
+      primary = bibtex::read.bib(file = primaryCitation.file), 
+      #Citations for all referenced articles
+      methods = bibtex::read.bib(file = methodsCitation.file)
+    ),
+    #Read in the text transcription of the primary website
+    method = readr::read_lines(file = methods.file),
+    data = plyr::llply(list(core = core.df,
+                 variable = unique_column.df,
+                 primary = expanded_primary.df),
+            .fun = function(xx){
+              xx |>
+                mutate(of_variable_DRaH = case_when(
+                  of_variable == 'C' ~ 'carbon_percent',
+                  of_variable == 'TC' ~ 'total_carbon_percent',
+                  of_variable == 'TIC' ~ 'inorganic_carbon_percent',
+                  of_variable == 'TOC' ~ 'organic_carbon_percent',
+                  of_variable == 'Corg dens' ~ 'organic_carbon_density',
+                  of_variable == 'DBD' ~ 'dry_bulk_density',
+                  of_variable == 'Depth bot' ~ 'layer_bottom',
+                  of_variable == 'Depth top' ~ 'layer_top',
+                  #of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+                  of_variable == 'Depth sed' ~ 'layer_middle',
+                  of_variable == 'Samp thick' ~ 'layer_thickness',
+                  of_variable == 'LOI' ~ 'loss_on_ignition',
+                  of_variable == 'OM' ~ 'organic_matter_percent',
+                  of_variable == 'OM dens' ~ 'organic_matter_density',
+                  of_variable == "Water wm" ~ 'field_water_percent',
+                  
+                  of_variable == 'citation' ~ 'citation',
+                  of_variable == 'related_to' ~ 'related_research',
+                  of_variable == 'projects' ~ 'projects',
+                  of_variable == 'license' ~ 'data_license',
+                  of_variable == 'header_comment' ~ 'core_comment',
+                  of_variable == "EVENT::LATITUDE" ~ 'latitude',
+                  of_variable == "EVENT::LONGITUDE" ~ 'longitude',
+                  of_variable == "EVENT::LOCATION" ~ 'region',
+                  of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
+                  of_variable == "EVENT::ELEVATION" ~ 'elevation',
+                  of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
+                  of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
+                  of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
+                  of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+                  of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+                  of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
+                  of_variable == 'PI' ~ 'principal_investigator',
+                  TRUE ~ NA_character_
+                )) |>
+                rename(of_variable_CPEAT = of_variable)
+            })
+)
+
+```
+
+```{r}
+#| label: readFunction_lvl1
+#| eval: true
+#| warning: false
+datafunction.lvl1.ls <- readCPEAT2025(dataDir = '.', 
+                                      dataLevel = "level1")
+```
+
+```{r}
+#| label: checkLvl0
+
+if(isTRUE(all.equal(datafunction.lvl1.ls, lvl1_data.ls))){
+  print('Read function matches code for level 1.')
+}else{
+  print('There is a mismatch in the data objects between the code and the read function at level 1.')
+}
+```
 
 # References
 
