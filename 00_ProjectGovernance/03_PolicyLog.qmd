@@ -10,7 +10,7 @@ A policy is intended to reduce cognitive load by making a standard practice that
 In most cases policies will be in the policy folder except for a few key, high level documents (like this one) that are in the primary governance folder. 
 In all cases a link will the provided to the document.
 
-A policy log can be thought of as similar to https://github.com/joelparkerhenderson/architecture-decision-record and is based off of Sociocracy principles.
+A policy log can be thought of as similar to [https://github.com/joelparkerhenderson/architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record) and is based off of Sociocracy principles.
 
 # Mission and vision - 2026 May
 
@@ -47,3 +47,21 @@ These will be aspirational and may not have clear metrics of success.
 
   + 20251207 - initial draft committed
   + 20251123 - [#155](https://github.com/ktoddbrown/SoilDRaH/issues/155) created
+  
+# Data harmonization - 2026 March
+
+*Context:* We need to document the workflow for data harmonization that will guide the combination of digitized data into a single resource.
+This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
+
+*Policy:* [00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd](00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd)
+
+*Responsible:* @ktoddbrown
+
+*Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
+
+*Term:* 3 months - review March 2026
+
+*Change log:*
+
+  + 20251207 - initial draft committed
+  + 20251123 - [#156](https://github.com/ktoddbrown/SoilDRaH/issues/156) created
