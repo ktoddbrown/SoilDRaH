@@ -27,5 +27,23 @@ These will be aspirational and may not have clear metrics of success.
 *Term:* 6 months - review May 2026
 
 *Change log:*
+
   + 20251124 - initial draft committed
   + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
+  
+# Data rescue - 2026 February
+
+*Context:* We need to document the workflow for data rescue that will guide folks doing the data rescue work. This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
+
+*Policy:* [00_ProjectGovernance/Policies/Workflow_DataRescue.qmd](00_ProjectGovernance/Policies/Workflow_DataRescue.qmd)
+
+*Responsible:* @ktoddbrown
+
+*Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
+
+*Term:* 2 months - review February 2026
+
+*Change log:*
+
+  + 20251207 - initial draft committed
+  + 20251123 - [#155](https://github.com/ktoddbrown/SoilDRaH/issues/155) created
