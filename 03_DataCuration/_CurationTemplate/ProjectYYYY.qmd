@@ -34,7 +34,7 @@ affiliations:
 timelog:
   - activity: 
       description: Drafted initial template
-      who: @ktoddbrown #github username
+      who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       end: 2025-11-25T18:45
       #start: YYYY-MM-DD THH:MM
