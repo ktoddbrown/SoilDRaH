@@ -20,11 +20,29 @@ These will be aspirational and may not have clear metrics of success.
 
 *Policy:* [01_MissionVision.qmd](01_MissionVission.qmd)
 
-*Responsible:* @ktoddbrown
+*Responsible:* ktoddbrown
 
 *Metric:* After presenting this to students involved with the project, new students starting on the project, and collaborators who are thinking about joining, are there common questions that surface that need to be addressed? Is this clear enough? Is it tightly scoped?
 
 *Term:* 6 months - review May 2026
+
+*Change log:*
+
+  + 20251124 - initial draft committed
+  + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
+  
+  
+# Community Norms - 2026 March
+
+*Context:* We need to establish who is in the project community, understand their basic capasity, limitation, and incentives, and how we deal with conflicts. In the future it would be good to ensure that our community members are support in rewarding particpation by developing metrics but this feels a bit more overbuilt then we need right now.
+
+*Policy:* [04_CommunityNorms.qmd](04_CommunityNorms.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* We will ask those who write workflows if this 'who' captures the background needed to target documentation. We will ask a sample of participants to review the conflict resolution section and check how this lines up with their expectations and if the could see implementing this in practice.
+
+*Term:* 3 months - review March 2026
 
 *Change log:*
 
@@ -46,7 +64,7 @@ These will be aspirational and may not have clear metrics of success.
 *Change log:*
 
   + 20251207 - initial draft committed
-  + 20251123 - [#155](https://github.com/ktoddbrown/SoilDRaH/issues/155) created
+  + 20251123 - [#154](https://github.com/ktoddbrown/SoilDRaH/issues/154) created
   
 # Data harmonization - 2026 March
 
