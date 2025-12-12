@@ -7,7 +7,7 @@ date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - Tirado-Corbala2015_Methods.bib
-  - Tirado-Corbala.bib
+  - Tirado-Corbala2015.bib
 author:
   - name:
       given: Katherine
@@ -685,3 +685,103 @@ Below are the citation notes from the methods section.
 - [x] Warncke, D.; Brown, J.R. Potassium and other basic cations. In Recommended Chemical Soil Test Procedures for the North Central Region; NCR Publication No. 221; Missouri Agri Exp Station: Columbia, MO, USA, 1998; pp. 31–33. 
   + copy from bib
 
+# Level 0: raw data reads
+
+```{r readLevel0}
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table3 = list(
+                                caption = read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              Table4 = list(
+                                caption = read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              figure1 = 
+                                list(caption = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure2 = 
+                                list(caption = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure3 = 
+                                list(caption = 
+                                       read_csv(file = figure3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                               figure4 = 
+                                list(caption = 
+                                       read_csv(file = figure4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                                figure9 = 
+                                list(caption = 
+                                       read_csv(file = figure9.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure9.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure10 = 
+                                list(caption = 
+                                       read_csv(file = figure10.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure10.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )
+                                ))
+```
