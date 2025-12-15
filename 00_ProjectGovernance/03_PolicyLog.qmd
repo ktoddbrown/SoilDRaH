@@ -31,7 +31,23 @@ These will be aspirational and may not have clear metrics of success.
   + 20251124 - initial draft committed
   + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
   
-  
+
+# Goals - 2025 May
+
+*Context:* Given the broad vision for the project what are the 1-5 year goals we are organizing activities around?
+Activities on the project should be linked to specific goals that are all relevant to the overall mission/vision. 
+These can include specific curation efforts as well as interconnected semantic development.
+
+*Policy:* [06_Goals.qmd](06_Goals.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* 
+  1) Conduct a file audit: Do all the files in the repository link to a specific goal? 
+  2) Ask community members: "Do the goals help you understand how we are furthering the broader mission and where their activities fit in?"
+
+*Term:* 6 months - review May 2026
+
 # Community Norms - 2026 March
 
 *Context:* We need to establish who is in the project community, understand their basic capasity, limitation, and incentives, and how we deal with conflicts. In the future it would be good to ensure that our community members are support in rewarding particpation by developing metrics but this feels a bit more overbuilt then we need right now.

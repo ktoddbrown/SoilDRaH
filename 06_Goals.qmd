@@ -1,0 +1,29 @@
+---
+title: "Goals"
+format: html
+---
+
+
+
+# Domain knowledge
+
+1) [ISCN4](../02_DataCuration/ISCN2025)
+  - How are soil carbon stocks distributed geo-spatially (surface and depth)?
+  - Stage: Finalizing curation
+2) [HiSOC](../02_DataCuration/HiSOC)
+  - What is the soil carbon stock across different land use and soil types in Hawaii?
+  - Stage: Starting curation
+3) [DeAD](../02_DataCuration/DeAD)
+  - How quickly does litter decay in dryland systems?
+  - Stage: Starting rescue
+
+# Semantic support
+
+1) Dictionary of DRaH terms
+2) Methods tree
+
+# Organization
+
+1) Community development and maintenance of 
+  a) Semantic tools
+  b) Workflows for rescue, harmonization and curation
