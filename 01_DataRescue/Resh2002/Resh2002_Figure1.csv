@@ -1,0 +1,8 @@
+"Figure 1. Aggregated SOC changes (kg C m$^{-2}$ y$^{-1}$) since plantation establishment across the four study sites. The error bars are standard errors of the mean using *n* = 4 for non–N–fixer species and *n* = 6 for the N–fixer species. The P values are for the test of the species-within-block split-plot effect.",,,,
+y,error bar,y axis label,species,graph label
+0.001,0.07,SOC_T change (kg m^-2 y^-1),non-N-fixers,P < 0.02
+0.111,0.18,SOC_T change (kg m^-2 y^-1),N-fixers,P < 0.02
+-0.11,-0.16,SOC_4 loss (kg m^-2 y^-1),non-N-fixers,P < 0.03
+-0.05,-0.1,SOC_4 loss (kg m^-2 y^-1),N-fixers,P < 0.03
+0.11,0.16,SOC_3 gain (kg m^-2 y^-1),non-N-fixers,P < 0.07
+0.16,0.21,SOC_3 gain (kg m^-2 y^-1),N-fixers,P < 0.07
