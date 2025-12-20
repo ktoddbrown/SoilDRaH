@@ -18,7 +18,7 @@ A policy log can be thought of as similar to [https://github.com/joelparkerhende
 The mission should help us define that scope and vision should tell us what the world might look like when we get there. 
 These will be aspirational and may not have clear metrics of success.
 
-*Policy:* [01_MissionVision.qmd](01_MissionVission.qmd)
+*Policy:* [01_MissionVision.qmd](01_MissionVision.qmd)
 
 *Responsible:* ktoddbrown
 
@@ -69,9 +69,9 @@ These can include specific curation efforts as well as interconnected semantic d
 
 *Context:* We need to document the workflow for data rescue that will guide folks doing the data rescue work. This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
 
-*Policy:* [00_ProjectGovernance/Policies/Workflow_DataRescue.qmd](00_ProjectGovernance/Policies/Workflow_DataRescue.qmd)
+*Policy:* [Policies/Workflow_DataRescue.qmd](Policies/Workflow_DataRescue.qmd)
 
-*Responsible:* @ktoddbrown
+*Responsible:* ktoddbrown
 
 *Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
 
@@ -87,9 +87,9 @@ These can include specific curation efforts as well as interconnected semantic d
 *Context:* We need to document the workflow for data harmonization that will guide the combination of digitized data into a single resource.
 This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
 
-*Policy:* [00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd](00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd)
+*Policy:* [Policies/Workflow_DataHarmonize.qmd](Policies/Workflow_DataHarmonize.qmd)
 
-*Responsible:* @ktoddbrown
+*Responsible:* ktoddbrown
 
 *Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
 
