@@ -100,7 +100,7 @@ We anticipate the following information to also be relevant for reanalysis.
 
 # Data sources
 
-For this project, we have identified the following data sources through personal communications with H Throop.
+For this project, we have identified the following data sources through personal communications with H Throop associated with @Throop2025.
 We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org/articles/14/3471/2022/).
 
 <!---- Move here to final table when data curation in process. ---->
