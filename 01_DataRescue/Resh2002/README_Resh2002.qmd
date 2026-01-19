@@ -34,7 +34,9 @@ author:
           city: Gainesville
           state: FL
           country: USA
-      role: "Transcription"
+      role:
+        - "Transcription"
+        - "Lead"
       note: https://github.com/SavaScott
   - name:
       given: Mirah
@@ -69,6 +71,7 @@ This documents the data transcription for @Resh2002.
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/136.
 
 > Resh, S., Binkley, D. & Parrotta, J. Greater Soil Carbon Sequestration under Nitrogen-fixing Trees Compared with Eucalyptus Species. Ecosystems 5, 217–231 (2002). https://doi.org/10.1007/s10021-001-0067-3
+
 # Data Summary
 
 @Resh2002 examines the soil carbon sequestration caused by Nitrogen-fixing trees compared to *Eucalyptus* species. The researchers studied 7- to 16-year-old plantations with N-fixer and *Eucalyptus* species in Hawai'i and Puerto Rico. They found that there were greater SOC pools with N-fixer species compared to non-N-fixer species, and suggest that reforestation of N-fixer species could lead to a greater reduction in C emissions.
@@ -104,8 +107,7 @@ Table 1 was modified to combine the columns with subsections in the characterist
 #| code-fold: true
 #| message: false
 
-filename <- table1.file
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
   kable(caption = read_csv(file = table1.file, 
@@ -120,6 +122,7 @@ Table 2 was modified to remove the sub-tables, and created a two new column cond
 ```{r table2}
 #| code-fold: true
 #| message: false
+
 read_csv(file = table2.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
@@ -136,140 +139,58 @@ Figure 1 was modified to include the y-axis label for each figure at the top of 
 ```{r figure1}
 #| code-fold: true
 #| message: false
-#still working on it, struggling with y-axis labels
-library(ggplot2)
-library(readr)
-library(dplyr) 
 
-filename <- figure1.file
-caption_data1 <- "Figure 1.\n Aggregated SOC changes (kg C m^-2 y^-1) since plantation establishment \nacross the four study sites. \nThe error bars are standard errors of the mean using *n* = 4 for non–N–fixer \nspecies and *n* = 6 for the N–fixer species. \nThe P values are for the test of the species-within-block split-plot effect."
-data1 <- read_csv(file = filename, skip = 1)
-data1$y <- as.numeric(data1$y)
 
-#Reorganizing the columns
-data1$`graph label` <- trimws(data1$`graph label`)
-data1$`graph label` <- factor(data1$`graph label`,
-      levels = c("P < 0.02", "P < 0.03", "P < 0.07"))
-data1$`species` <- factor(data1$`species`,
-      levels = c("non-N-fixers", "N-fixers"))
+figData <- read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(across(.cols = c('lower error', 'lower SOC',
+                          'upper SOC', 'upper error'), .fns = as.numeric),
+         `species` = factor(`species`,
+                            levels = c("non-N-fixers", "N-fixers")))
 
-#Setting up for the error bars
-data1$`error bar` <- as.numeric(data1$`error bar`)
-data1 <- data1 %>% mutate(error_var = `error bar` - y)
+figCaption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-#Setting up the geom_text
-data1 <- data1 %>%
-  mutate(y_label_text =
-           ifelse(`graph label` == "P < 0.02",
-                  "SOC_T change \n(kg m^-2 y^-1)",
-           ifelse(`graph label` == "P < 0.03",
-                  "SOC_4 loss \n(kg m^-2 y^-1)",
-                  "SOC_3 gain \n(kg m^-2 y^-1)")))
-#Limiting it to one label per sub figure
-label_df <- data1 %>%
-  distinct(`graph label`, y_label_text)
-
-ggplot(data1, aes(x = `species`, y = `y`, fill = species)) + 
-  geom_bar(stat = "identity", position = position_dodge(width = 1.2)) +
-  geom_errorbar(aes
-                (ymin = y, ymax = y + error_var)) +
-  facet_wrap(~`graph label`, scales = "free_y") + 
-  geom_text(data = label_df,
-            aes(x = 0.5, y = Inf, label = y_label_text),
-            inherit.aes = FALSE,
-            hjust = 0,
-            vjust = 1.2,
-            size = 2.7) +
- scale_y_continuous(expand = expansion(mult = 0, add = 0.03)) +
-  labs(title = "Figure 1. Aggregated SOC changes since plantation establishment\n across the four study sites", 
-       caption = caption_data1,
-       y = NULL) + 
-  theme_bw()
-
+ggplot(figData) +
+  geom_errorbar(aes(x = as.numeric(species),
+               ymin = `lower error`, ymax = `upper error`), width = 0.2) +
+  geom_rect(aes(xmin = as.numeric(species) - 0.4, xmax = as.numeric(species) + 0.4,
+               ymin = `lower SOC`, ymax = `upper SOC`)) +
+  scale_x_continuous(breaks = c(1,2), labels = c('non-N-fixers', 'N-fixers')) +
+  facet_wrap(~label, ncol = 1, scales = 'free_y') +
+  labs(y = 'SOC [kg C m-2 y-1]') +
+  theme(axis.title.x = element_blank())
 ```
 
 ### Figure 2
 
 Figure 2 was modified to included markdown format within the caption.
 
-```{r figure2}
+```{r}
+#| label: figure2
 #| code-fold: true
 #| message: false
-library(ggplot2)
-library(readr)
-library(dplyr)
-library(tidyr)
 
-filename <- figure2.file
-caption_data2 <- "Figure 2. SOC pools to 40 cm (or 50 cm for Chinchuck) for each species at Kamae (*n* = 3 for \n*Eucalyptus* and sugarcane, *n* = 4 for *Albizia*), Chinchuck (*n* = 4 \nfor *Eucalyptus* and *Albizia*), Lajas (*n* = 6 for all species), and \nToa Baja (*n* = 3 for all species). The error bars are standard errors of the mean for the total SOC pool.\nDifferent letters above the bars indicate significant differences for the total SOC pool between\nspecies within a site with P < 0.1 (see text for specific *P* values. The sugarcane data for the \nChinchuck site are from @BashkinUnpublished. Note the change in y-axis scale for the Toa Baja site."
-data2 <- read_csv(file = filename, skip = 1)
+figData <- read_csv(file = figure2.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(site = factor(site, levels = c("Kamae", "Lajas", "Chinchuck", "Toa Baja")),
+         species = factor(species, levels = c("Euc", "Alb", "Cane",
+                                              "Cas", "Leu", "Pasture")),
+         across(starts_with('SOC'), as.numeric))
 
-#Setting as Character
-data2$species <- as.character(data2$species)
+figCaption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-#Ensuring proper format of stacks
-data2 <- data2 %>%
-  mutate(
-    species_factor = if_else(
-      `graph label` %in% c("Kamae", "Chinchuck"),
-      factor(species, levels = c("Euc", "Alb", "Cane")),
-      factor(species, levels = c("Euc", "Cas", "Leu", "Pasture"))
-    ))
-
-#Setting as Numeric
-data2$`SOC$_4$ y value` <- as.numeric(data2$`SOC$_4$ y value`)
-data2$`SOC$_3$ y value` <- as.numeric(data2$`SOC$_3$ y value`)
-data2$`SE y value Low Bar` <- as.numeric(data2$`SE y value Low Bar`)
-data2$`SE y value High Bar` <- as.numeric(data2$`SE y value High Bar`)
-
-#Mutating the data to be better formatted as stacked
-data2_stacked <- data2 %>%
-  mutate(
-    SOC4 = `SOC$_4$ y value`,
-    SOC3_diff = `SOC$_3$ y value`-`SOC$_4$ y value`
-    ) %>%
-  select(species_factor, species, `graph label`, SOC4, SOC3_diff) %>%
-  pivot_longer(
-    cols = c(SOC4, SOC3_diff),
-    names_to = "SOC_component",
-    values_to = "y"
-  )
-#Using Levels to format the stack
-data2_stacked$SOC_component <- factor(
- data2_stacked$SOC_component, levels = c("SOC3_diff", "SOC4"))
-
-ggplot(data2_stacked, aes(x = species_factor, y = y, fill = SOC_component)) + 
-  geom_col() + 
- #error bar
-  geom_errorbar(data = data2,
-    aes(
-      x = species,
-      ymin = `SE y value Low Bar`, 
-      ymax = `SE y value High Bar`,
-      `graph label` = `graph label`
-      ),
-    width = 0.1, color = "black", inherit.aes = FALSE) +
-  #separating the graph
-  facet_wrap(~`graph label`, scales = "free_x") + 
-  scale_fill_manual(
-   values = c("SOC4" = "grey90", "SOC3_diff" = "grey40"),
-   labels = c("SOC4", "SOC3")) +
-  scale_y_continuous(breaks = seq(0, max(data2$`SE y value High Bar`, na.rm = TRUE), by = 2)) +
-   #footnote
-  geom_text(data = data2,
-    aes(x = species_factor,
-        y = `SE y value High Bar` + 1.0,
-        label = footnote,
-        `graph label` = `graph label`
-        ),
-    inherit.aes = FALSE,
-  hjust = 0,
-  size = 3) +
-  labs(title = "SOC pools for each species at the four different sites",
-    caption = caption_data2,
-    y = unique(data2$`y axis label`),
-    x = NULL) + 
-  theme_classic()
+ggplot(figData) +
+  geom_col(aes(x = species, y = SOC_T)) +
+  geom_col(aes(x=species, y = SOC_4), fill = 'lightgrey') +
+  geom_errorbar(aes(x=species, ymin = SOC_lower, ymax = SOC_upper)) +
+  facet_wrap(~site, scales= 'free_x') +
+  labs(y = unique(figData$unit))
 ```
 
 

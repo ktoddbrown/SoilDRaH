@@ -1,5 +1,5 @@
 "Figure 2. SOC pools to 40 cm (or 50 cm for Chinchuck) for each species at Kamae (*n* = 3 for *Eucalyptus* and sugarcane, *n* = 4 for *Albizia*), Chinchuck (*n* = 4 for *Eucalyptus* and *Albizia*), Lajas (*n* = 6 for all species), and Toa Baja (*n* = 3 for all species). The error bars are standard errors of the mean for the total SOC pool. Different letters above the bars indicate significant differences for the total SOC pool between species within a site with P < 0.1 (see text for specific P values). The sugarcane data for the Chinchuck site are from @BashkinUnpublished. Note the change in y-axis scale for the Toa Baja site.",,,,,,,
-SOC$_4$ y value,SOC$_3$ y value,SE y value Low Bar,SE y value High Bar,footnote,graph label,species,y axis label
+SOC_4,SOC_T,SOC_lower,SOC_upper,footnote,site,species,unit
 2.4,14.8,13.5,16.1,a,Kamae,Euc,Soil C pools (kg m^-2)
 2.4,16.0,14.5,17.4,a,Kamae,Alb,Soil C pools (kg m^-2)
 3.4,12.9,11.1,14.7,a,Kamae,Cane,Soil C pools (kg m^-2)
