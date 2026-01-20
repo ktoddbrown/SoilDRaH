@@ -1,0 +1,691 @@
+---
+title: "Data Rescue: Tirado-Corbala2015"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Tirado-Corbala2015_Methods.bib
+  - Tirado-Corbala2015.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role:
+        - "Transcription"
+        - "Lead"
+      note: https://github.com/SavaScott
+  - name:
+      given: Mirah
+      family: Blanchard
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/Misheph
+  - name:
+      given: Vaasuki
+      family: Marupaka
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+         - "Transcription"
+         - "Review"
+      note: https://github.com/vaasukimarupaka
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Tirado-Corbala2015_Methods.md'
+table2.file <- 'Tirado-Corbala2015_Table2.csv'
+table3.file <- 'Tirado-Corbala2015_Table3.csv'
+table4.file <- 'Tirado-Corbala2015_Table4.csv'
+figure1.file <- 'Tirado-Corbala2015_Figure1.csv'
+figure2.file <- 'Tirado-Corbala2015_Figure2.csv'
+figure3.file <- 'Tirado-Corbala2015_Figure3.csv'
+figure4.file <- 'Tirado-Corbala2015_Figure4.csv'
+figure9.file <- 'Tirado-Corbala2015_Figure9.csv'
+figure10.file <- 'Tirado-Corbala2015_Figure10.csv'
+primaryCitation.file <- 'Tirado-Corbala2015.bib'
+methodsCitation.file <- 'Tirado-Corbala2015_Methods.bib'
+```
+
+This documents the data transcription for @Tirado-Corbala2015.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/110.
+
+> Tirado-Corbalá, R., Anderson, R. G., Wang, D., & Ayars, J. E. (2015). Soil Carbon and Nitrogen Stocks of Different Hawaiian Sugarcane Cultivars. Agronomy, 5(2), 239-261. https://doi.org/10.3390/agronomy5020239
+
+# Data Summary
+
+Tirado-Corbala examines four sugarcane cultivars grown in Hawai‘i to assess their soil carbon sequestration potential and how this varies across different soil series. They use this data to determine how the two distinct soil types can affect total carbon, total nitrogen, dissolved organic carbon, and nitrates.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Locational data is found within the Material and Methods section, subsection Study Area. All of the sites were conducted on a commercial sugarcane plantation on the island of Maui, Hawai'i. The coordinates listed for the plantation are latitude: 20°54′ N and longitude: 156°26′ W.
+- Soil carbon stock: The depth of the samples was mentioned in section Materials and Methods, subsection Baseline Soil Properties of the Experimental Plots. The soil depths were collected from 0-20 cm, 20-40 cm, 40-80 cm, and 80-120 cm. Soil Carbon Fractions are not mentioned in the paper, but Root Carbon Fractions can be found in Table 4.
+- Soil type: The samples were determined to be either Pulehi series-cobbly silt loam or Molokai series-silty clay loam. This was found in the Materials and Methods section, subsection Study Area.
+- Land use:  The land use of the samples is found in the subsection 2.1 Study Area, which is a commercial sugarcane plantation. Both of the soil plots were planted in 2011 and harvested in 2013.
+
+# Tables and figures
+
+- Table 
+  1) Soil chemical properties of the experimental fields.
+  2) Soil total carbon, nitrogen, and physical properties of the samples.
+  3) Total Nitrogen and Carbon and C/N ratio (2 weeks before harvest date).
+  4) Soil organic carbon accumulation in soil from tillering to maturity.
+
+- Figure 
+  1) Total organic and inorganic carbon for the four sugarcane cultivars in Pulehu soil.
+  2) Total organic and inorganic carbon for the four sugarcane cultivars in Molokai soils. 
+  3) Dissolved organic carbon in Pulehu soils.
+  4) Dissolved organic carbon in Molokai soils.
+  5) Total nitrogen in Pulehu soils.
+  6) Total nitrogen in Molokai soils.
+  7) Aboveground biomass for sugarcane cultivars (2 weeks before harvest).
+  8) Lignin content (%) from sugarcane cultivars (2 weeks before harvest).
+  9) Total carbon in the first 120 cm of soil accumulation.
+  10) Root carbon from sugarcane cultivars (2 weeks before harvest).
+  
+### Table 2: Soil total carbon, nitrogen, and physical properties of the samples
+
+Table 2 was modified to include the footnotes of the table in the caption and combine the labels column with the units column.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3: Total Nitrogen and Carbon and C/N ratio (2 weeks before harvest date)
+
+Table 3 was modified to included the footer in the caption. It was also modified to combine the labels column, site column and the units column.
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+filename <- table3.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 4: Soil organic carbon accumulation in soil from tillering to maturity
+
+Table 4 was modified to included the footer in the header, and to combine the labels column and units column.
+
+```{r table4}
+#| code-fold: true
+#| message: false
+
+filename <- table4.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Figure 1: Total organic and inorganic carbon for the four sugarcane cultivars in Pulehu soil
+
+Figure 1 was adapted to switch the yellow-black columns and the green-black columns on each subset of the figures. It was also adapted to switch the black section of the column with the blue/green/yellow section.
+
+```{r}
+
+figCaption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+figData <- read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(across(c("Total carbon (kg*m^-2)", "Inorganic carbon (kg*m^-2)"),
+                as.numeric),
+         stage = factor(stage, 
+                        levels = c("tillering", 'grand growth', 'maturity')),
+         `soil depth (cm)` = factor(`soil depth (cm)`,
+                                    levels = c('10', '30', '60', '100')))
+
+ggplot(figData) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Total carbon (kg*m^-2)`,
+               fill = stage), width = 0.15) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Inorganic carbon (kg*m^-2)`), 
+           color = 'black', width = 0.15) +
+  geom_vline(xintercept = -1*(1:3 +0.5), color = 'red', linetype = 2) +
+  coord_flip() +
+  scale_x_continuous(breaks = -1*(1:4), 
+                     labels = rev(c("10", "30", "60", "100"))) +
+  facet_wrap(~site) +
+  labs(x='Soil depth (cm)')
+```
+
+### Figure 2: Total organic and inorganic carbon for the four sugarcane cultivars in Molokai soils
+
+Figure 2 was adapted to switch the yellow-black columns and the green-black columns on each subset of the figures. It was also adapted to switch the black section of the column with the blue/green/yellow section.
+
+```{r figure2}
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+library(tidyverse)
+library(kableExtra)
+
+figure2.file <- 'Tirado-Corbala2015_Figure2.csv'
+caption_data2 <- "Figure 2.\n Total organic (OC) and inorganic (IC) carbon for the four sugarcane\n cultivars growing in Molokai soils. Black (solid) portion\n of the bars represent the IC and color portion represent OC for each soil depth\n and sugarcane growing stages (i.e., blue\n (open arrows)-tillering, yellow (irregular shape)-grand growth, \ngreen (light circles)-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each Soil depth are not \nsignificantly different Tukey’s test at Pr < 0.05."
+
+ #Fixed caption format issues - SRS
+
+read_data <- read_csv(figure2.file, skip = 1) |> 
+  rename(total_C = x, 
+         depth_interval = y,
+         x_axis_label = `x axis label`,
+         y_axis_label = `y axis label`,
+         site_label = `site label`,
+         stage_color_ID = `color portion label`,
+         bar_color = `bar color`) |> 
+  mutate(stage = dplyr::case_when(
+    stringr::str_detect(stage_color_ID, "maturity - green") ~ "TC_maturity",
+    stringr::str_detect(stage_color_ID, "grand growth - yellow") ~ "TC_grand_growth",
+    stringr::str_detect(stage_color_ID, "tillering - blue") ~ "TC_tillering",
+    stringr::str_detect(stage_color_ID, "inorganic carbon - black") ~ "inorganic_C",
+    TRUE ~ NA_character_)) |> 
+  pivot_wider(names_from = stage,
+              values_from = total_C) |> 
+  group_by(depth_interval, site_label, bar_color) |> 
+  mutate(OC_stage_from_color = recode(bar_color,
+                                      "black-green" = "maturity",
+                                      "black-yellow" = "grand_growth",
+                                      "black-blue" = "tillering"),
+         TC = case_when(
+           stage_color_ID == "maturity - green" ~ TC_maturity,
+           stage_color_ID == "grand growth - yellow" ~ TC_grand_growth,
+           stage_color_ID == "tillering - blue" ~ TC_tillering,
+            TRUE ~ NA)) #|> 
+  # pivot_longer(cols = starts_with("TC"),
+  #           names_to = "total_C_calc",
+  #           values_to = 'C_value')
+ # group_by(depth_interval, site_label, bar_color) |> 
+inorganic_C_subset <- read_data |> 
+  filter(!is.na(inorganic_C)) |> 
+  select(c(1:5,7:8, OC_stage_from_color),) # getting rid of all OC related cols
+TC_subset <- read_data |> 
+  filter(!is.na(TC)) |> 
+  select(c(1:5,7, OC_stage_from_color,TC),) # getting rid of all IC related cols
+# this outputs the data table with distinct cols for OC, IC & TC  
+full_dataset <- full_join(TC_subset, inorganic_C_subset) |> 
+  unique() |> 
+  mutate(OC = TC - inorganic_C) |> 
+  rename(growth_stage = OC_stage_from_color)
+factor(full_dataset$depth_interval, levels = c(10, 30, 60, 100))
+full_dataset$growth_stage <- factor(full_dataset$growth_stage,
+      levels = c("maturity", "grand_growth", "tillering"))
+#preparing data for plotting
+depth_levels <- c('10', '30', '60', '100')
+full_dataset <- full_dataset |> 
+  mutate(depth_interval = factor(depth_interval, depth_levels, ordered = T))
+
+long.df <- full_dataset |> 
+ # select(site_label, depth_interval, growth_stage, inorganic_C, OC)
+  pivot_longer(cols = c(inorganic_C, OC),
+               names_to = "component",
+               values_to = "value")
+long.df <- full_dataset |>
+   pivot_longer(cols = c(inorganic_C, OC),
+               names_to = "component",
+               values_to = "value") |> 
+  mutate(grp = interaction(depth_interval, growth_stage, 
+                           drop = T, sep = "|"),
+          growth_stage_group = interaction(growth_stage, component,
+                           drop = T, sep = "|"))
+ggplot(long.df,
+       aes(x = as.numeric(grp), y = value, fill = growth_stage_group,
+           group = component,
+           colour = component)) +
+  geom_col(width = 0.45,
+           color = "black") +
+  geom_vline(xintercept = c(3.5 , 6.5, 9.5),
+             linetype = "dotted",
+             color = "red", linewidth = 0.5) +
+  coord_flip() +
+  # scale_fill_manual(
+   #  values = c(inorganic_C = "black",
+  #              OC = "#77FFB7"),
+  #   labels = c(inorganic_C = "inorganic carbon (IC)",
+  #              OC = "organic carbon (OC)")) +
+  scale_fill_manual(
+    name = "growth_stage_group",
+    values = c("maturity|inorganic_C" = "black",
+               "maturity|OC" = "chartreuse4",
+               "grand_growth|inorganic_C" = "black",
+               "grand_growth|OC" = "darkgoldenrod2",
+               "tillering|inorganic_C" = "black",
+               "tillering|OC" = "cyan")) +
+ # scale_x_discrete(labels = function(x) sub("\\|.*", "", x)) +
+   scale_x_continuous(
+    breaks = c(2.5, 5.5, 8.5, 11.5),
+    labels = c("10", "30", "60", "100"),
+  #  expand = expansion(mult = c(0.03, 0.12)),
+    trans = "reverse"
+  ) +
+  facet_wrap(~site_label) +
+  # geom_hline(yintercept = c(3.5 , 6.5, 9.5),
+  #            linetype = "dotted",
+  #            color = "red", linewidth = 0.3) +
+  labs(title = "Total organic (OC) and inorganic (IC) carbon for the four sugarcane cultivars
+grown in Pulehu soils.",
+     caption = caption_data2,
+     y = expression("Total Carbon (kg "  *m^-2*")"),
+     x = "Soil depth (in cm)",
+  position = position_dodge(width = 0.9)) + geom_text(
+    data = subset(long.df, !grepl("inorganic_C", growth_stage_group)),
+    aes(x = as.numeric(grp), y = `TC`  + 0.13, label = footnote),
+  position = position_dodge(width = 0.9),
+  hjust = 0,
+  size = 2
+) +
+  theme_bw()
+
+```
+
+### Figure 3: Dissolved organic carbon in Pulehu soils
+
+Figure 3 was modified to create a title from the site label and dashes were added in where no letter was provided. Figure 3’s x-axis was adjusted to fit the data range for each subfigure.
+
+```{r figure3}
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+filename <- figure3.file
+caption_data3 <- "Figure 3.\n Dissolved organic carbon (DOC) in Pulehu soils.\n Color represents sugarcane growing stages (i.e., blue-tillering, \nyellow-grand growth, green-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each soil depth\n are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
+
+data3 <- read_csv(file = filename,
+                   skip = 1)
+data3$y <- factor(data3$y,
+                 levels = unique(data3$y))
+data3$`growing stage` <- factor(data3$`growing stage`,
+      levels = c("maturity", "grand growth", "tillering"))
+
+ggplot(data3, aes(x = y, y = x, fill = `growing stage`)) + scale_y_continuous(breaks = c(0, 30, 60, 100)) + coord_flip() + geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + facet_wrap(~ `site label`, scales = "free_x") + 
+  scale_fill_manual(
+    values = c("tillering" = "cyan",
+               "grand growth" = "darkgoldenrod2",
+               "maturity" = "chartreuse4")) +
+  labs(title = "Dissolved organic carbon in Pulehu soils",
+     caption = caption_data3,
+     x = unique(data3$`y axis label`),
+     y = unique(data3$`x axis label`)) + geom_text(aes(y = x + 2, label = footnote),
+  position = position_dodge(width = 0.9),
+  hjust = 0,
+  size = 2
+)
+```
+
+### Figure 4: Dissolved organic carbon in Molokai soils
+
+Figure 4 was modified to create a title from the site label and dashes were added in where no letter was provided. Figure 4’s x-axis was adjusted to fit the data range for each subfigure.
+
+```{r figure4}
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+filename <- figure4.file
+caption_data4 <- "Figure 4.\n Dissolved organic carbon (DOC) in Molokai soils.\n Color represents sugarcane growing stages (i.e., blue-tillering, \nyellow-grand growth, green-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each soil depth\n are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
+
+data4 <- read_csv(file = filename,
+                   skip = 1)
+data4$x <- as.numeric(data4$x)
+data4$y <- factor(data4$y,
+                 levels = unique(data4$y))
+data4$`growing stage` <- factor(data4$`growing stage`,
+      levels = c("maturity", "grand growth", "tillering"))
+
+ggplot(data4, aes(x = y, y = x, fill = `growing stage`)) + scale_y_continuous(breaks = c(0, 30, 60, 100)) + coord_flip() + geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + facet_wrap(~ `site label`, scales = "free_x") + 
+  scale_fill_manual(
+    values = c("tillering" = "cyan",
+               "grand growth" = "darkgoldenrod2",
+               "maturity" = "chartreuse4")) +
+  labs(title = "Dissolved organic carbon in Molokai soils",
+     caption = caption_data4,
+     x = unique(data4$`y axis label`),
+     y = unique(data4$`x axis label`)) + geom_text(aes(y = x + 2, label = footnote),
+  position = position_dodge(width = 0.9),
+  hjust = 0,
+  size = 2
+)
+```
+
+### Figure 9: Total carbon in the first 120 cm of soil accumulation
+
+Figure 9 was modified to create a title from the site label.
+
+```{r figure9}
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+filename <- figure9.file
+caption_data9 <- "Figure 9.\n Total Carbon (kg*m^-2) in the first 120 cm of soil accumulation\n in the different sugarcane cultivars over the sugarcane growing stages." #Fixed caption format issues
+
+data9 <- read.csv(file = filename,
+                 skip = 1)
+data9$graph.label <- factor(data9$graph.label,
+                    levels = c("Pulehu", "Molokai"))
+data9$growing.stage <- factor(data9$growing.stage, 
+      levels = c("tillering", "grand growth", "maturity"))
+ggplot(data9, aes(x = site.label, y = y, fill = `growing.stage`)) + 
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) + 
+  scale_y_continuous(breaks = c(0, 10, 20, 30, 40, 50, 60)) + 
+  facet_wrap(~ `graph.label`, scales = "free_y") + 
+  scale_fill_manual(
+    values = c("tillering" = "cyan",
+               "grand growth" = "darkgoldenrod2",
+               "maturity" = "chartreuse4")
+  ) + scale_x_discrete(expand = c(0.1,0.1)) +
+  labs(
+  title = "Total carbon in the first 120 cm of soil accumulation",
+  caption = caption_data9,
+  x = unique(data9$`x.axis.label`),
+  y = unique(data9$`y.axis.label`)
+  )
+
+```
+
+### Figure 10: Root carbon from sugarcane cultivars (2 weeks before harvest)
+
+Figure 10 was modified to create a title from the site label and dashes were added in where no letter was provided. It was also modified to drop the pattern key for a color key.
+
+```{r figure10}
+#| message: false
+#| code-fold: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+filename <- figure10.file
+caption_data10 <- "Figure 10.\n Root carbon (kg·m^−2) from sugarcane cultivars collected less than two weeks prior harvest date.\n Means from sugarcane cultivars bars followed by the same letter\n or no letters are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
+
+
+data10 <- read_csv(file = filename,
+                   skip = 1)
+data10$`site label` <- factor(data10$`site label`,
+      levels = c("H-87-4319", "H-86-3792", "H-78-3567", "H-65-7052"))
+
+data10$`graph label` <- factor(data10$`graph label`,
+      levels = c("Pulehu soils", "Molokai soils"))
+data10$y <- factor(data10$y,
+                 levels = unique(data10$y))
+data10$`error bar` <- as.numeric(data10$`error bar`)
+data10 <- data10 %>%
+  mutate(error_var = `error bar` - x)
+
+ggplot(data10, aes(x = y, y = x, fill = `site label`)) + 
+  scale_y_continuous(breaks = c(0, 0.5, 1.0, 1.5, 2.0, 2.5)) + 
+  geom_errorbar(aes
+      (ymin = x, ymax = x + error_var), position = position_dodge(width = 0.9), width = 0.3, color = "black", linewidth = 0.5) + coord_flip() + 
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  facet_wrap(~ `graph label`, scales = "free_x")  +
+  labs(title = "Root carbon from sugarcane cultivars (2 weeks before harvest)",
+     caption = caption_data10,
+     x = unique(data10$`y axis label`),
+     y = unique(data10$`x axis label`)) + geom_text(aes(y = x + 0.15, label = footnote),
+  position = position_dodge(width = 0.9),
+  hjust = 0,
+  size = 2
+)
+
+
+                                
+```
+{{< include Tirado-Corbala2015_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr Tirado-Corbala2015_Methods.md Tirado-Corbala2015_Methods_MB.md
+
+diff Tirado-Corbala2015_Table4_MB.csv Tirado-Corbala2015_Table4.csv
+
+diff Tirado-Corbala2015_Table3_MB.csv Tirado-Corbala2015_Table3.csv 
+
+diff Tirado-Corbala2015_Table2_MB.csv Tirado-Corbala2015_Table2.csv
+
+diff Tirado-Corbala2015_Figure1_MB.csv Tirado-Corbala2015_Figure1.csv
+
+diff Tirado-Corbala2015_Figure2_MB.csv Tirado-Corbala2015_Figure2.csv
+
+diff Tirado-Corbala2015_Figure3_MB.csv Tirado-Corbala2015_Figure3.csv 
+
+diff Tirado-Corbala2015_Figure4_MB.csv Tirado-Corbala2015_Figure4.csv
+
+diff Tirado-Corbala2015_Figure9_MB.csv Tirado-Corbala2015_Figure9.csv
+
+diff Tirado-Corbala2015_Figure10_MB.csv Tirado-Corbala2015_Figure10.csv
+```
+
+# Files
+
+These files are in the @Tirado-Corbala2015 data rescue.
+
+- [ReadMe](README_Tirado-Corbala.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Tirado-Corbala2015.bib](Tirado-Corbala2015.bib)
+  + citation for article transcribed
+- [Tirado-Corbala2015_Methods.bib](Tirado-Corbala2015_Methods.bib)
+  + citations for the methods section of the article
+- [Tirado-Corbala_Methods.md](Tirado-Corbala2015_Methods.md)
+  + methods transcribed from primary article
+- [Tirado-Corbala2015_Table2.csv](Tirado-Corbala2015_Table1.csv)
+  + table 2 from primary article with the soil total carbon and soil properties of the sites
+- [Tirado-Corbala2015_Table3.csv](Tirado-Corbala2015_Table2.csv)
+  + table 3 from primary article with the total carbon two weeks before harvest
+- [Tirado-Corbala2015_Table4.csv](Tirado-Corbala2015_Table3.csv)
+  + figure 1 from primary article with soil organic carbon accumulation from tillering to maturity
+- [Tirado-Corbala2015_Figure1.csv](Tirado-Corbala2015_Figure1.csv)
+  + figure 1 from primary article with total organic and inorganic carbon for the four sugarcane cultivars in Pulehu soils
+- [Tirado-Corbala2015_Figure2.csv](Tirado-Corbala2015_Figure2.csv)
+  + figure 2 from primary article with total organic and inorganic carbon for the four sugarcane cultivars in Molokai soils
+- [Tirado-Corbala2015_Figure3.csv](Tirado-Corbala2015_Figure3.csv)
+  + figure 3 from primary article with dissolved organic carbon in Pulehu soils
+- [Tirado-Corbala2015_Figure4.csv](Tirado-Corbala2015_Figure4.csv)
+  + figure 4 from primary article with dissolved organic carbon in Molokai soils
+- [Tirado-Corbala2015_Figure9.csv](Tirado-Corbala2015_Figure9.csv)
+  + figure 9 from primary article with total carbon in the first 120 cm cultivars of sugarcane over different growing stages
+- [Tirado-Corbala2015_Figure10.csv](Tirado-Corbala2015_Figure10.csv)
+  + figure 10 from primary article with root carbon from sugarcane cultivars collected less than two weeks
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 2-4 and figure 1-4 & 9-10
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables, figures and methods
+- [x] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Soil Survey Staff, Natural Resources Conservation Service, United States Department of Agriculture. Official Soil Series Descriptions, 2013. Available online: https://soilseries.sc.egov. usda.gov/OSD_Docs/C/CONSUMO.html. (accessed on 8 June 2014). 
+  + copy from bib
+- [x] Moore, R.C.; Fitschen, J.C. The drip irrigation revolution in the Hawaiian sugarcane industry. In Visions of the Future : Proceedings of the 3rd National Irrigation Symposium, Held in Conjunction with the 11th Annual International Irrigation Exposition, 1990, Phoenix Civic Plaza, Phoenix, AZ, USA. (accessed on 6 October 2011).
+  + copy from bib
+- [x] Thomas, G.W. Soil pH and Soil Acidity. In Methids of Soil Analysis: Chemical Methods. Part 3; Sparks, D.L., Ed.; Soil Science Society of America: Madison, WI, USA, 1996. 
+  + copy from bib
+- [x] Bouyoucos, G.J. Hydrometer method improved for making particle size analysis of soil. Agronomy J. 1962, 54, 464–465. 
+  + copy from bib
+- [x] Warncke, D.; Brown, J.R. Potassium and other basic cations. In Recommended Chemical Soil Test Procedures for the North Central Region; NCR Publication No. 221; Missouri Agri Exp Station: Columbia, MO, USA, 1998; pp. 31–33. 
+  + copy from bib
+
+# Level 0: raw data reads
+
+```{r readLevel0}
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table2 = 
+                                list(caption = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table3 = list(
+                                caption = read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              Table4 = list(
+                                caption = read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                              ),
+                              figure1 = 
+                                list(caption = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure2 = 
+                                list(caption = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure3 = 
+                                list(caption = 
+                                       read_csv(file = figure3.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure3.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                               figure4 = 
+                                list(caption = 
+                                       read_csv(file = figure4.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure4.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                                figure9 = 
+                                list(caption = 
+                                       read_csv(file = figure9.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure9.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              figure10 = 
+                                list(caption = 
+                                       read_csv(file = figure10.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure10.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )
+                                ))
+```

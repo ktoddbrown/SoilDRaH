@@ -1,0 +1,205 @@
+---
+title: "Data Curation: DeAD 2025"
+format:
+  html:
+    toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - DeAD2025.bib #contains citation that provide background on the project
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - curation: lead #review
+  - id: AshBonner310 #use the github name as an id
+    name:
+      given: Ashley
+      family: Bonner
+    orcid: 0000-0001-7882-6353
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity: 
+      description: Drafted initial template
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2025-12-07T1637
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      #duration: P1H15M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# Bibliograph files
+refernceCitation.file <- 'ProjectYYYY.bib'
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+# Purpose
+
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. 
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
+We are primarily interested in litter bag studies currently, but please contact us in the discussions if you have other datasets of interest.
+
+# Variables of interest
+
+<!--- Briefly describe what you want the data rescuers to look for when digitizing a data resource.---->
+
+  * **Location**: latitude/longitude, associated datum, geospatial method, precision
+  * **Duration**: start and end time of exposure to the day resolution if possible, month is acceptable
+  * **Mass loss**: Mass loss or decay rate or mass remaining of litter sample over duration
+  * **Solar exposure**: Degree of shading of litter bags relative to full sun
+
+We anticipate the following information to also be relevant for reanalysis.
+
+  - *Litter species*
+  - Microsite data including *vegetation coverage*
+  - *Litter chemical composition* including lignin content and C:N ration
+  - *Extracellular enzyme* and microbial *'omics*
+  - Microclimate *relative humidity*
+  - Litter bag *materials* and method including litter bag area and *mesh size*
+  - *Treatments* including rain out shelters or canopy shading or filters
+  - *Age* of ecosystem
+  - *Land management*/use or disturbances
+
+# Data sources
+
+For this project, we have identified the following data sources through personal communications with H Throop associated with @Throop2025.
+We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org/articles/14/3471/2022/).
+
+<!---- Move here to final table when data curation in process. ---->
+
+## Data Harmonized - tupled
+
+<!---- Move to this table when the data tuple harmonization is complete. --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link | Data Harmonization - GitHub Issue |
+|------------|-----------|----------|----------|--------|
+
+## Data Rescue - digitized
+
+<!---- Move to this table when the data rescue is complete and it is ready for tuple harmonization. --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link |
+|------------|-----------|----------|----------|
+
+
+## In process
+
+<!---- move files into this table when someone takes lead on the data rescue, update to add in git hub issue when it is create --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
+|------------|----------|-----------|----------|
+| Ares2001 | \@Ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | ktoddbrown |
+<!---- remove and replace the example above ---->
+
+## Imported to bib
+
+<!---- Move here when data source bib entry has been made ---->
+
+| AuthorYYYY | citation | 
+|------------|------------|
+| Austin2010 | @Austin2010 |
+| Wang2017 | @Wang2017 |
+| Santos1984 | @Santos1984 |
+| Barba 2016 | @Barba2016 |
+| Martínez 2010 | @Martinez2010 |
+
+## Identified
+
+  + [Blanco 2011](https://doi.org/10.1007/s10533-010-9518-2)
+  + [Rozema 1997](https://doi.org/10.1023/A:1009723210062)
+  + [LadoMonserrat 2016](https://doi.org/10.1007/s10342-015-0923-x)
+  + [Kemp 2003](https://doi.org/10.1006/jare.2002.1025)
+  + [Lyons 2010](https://doi.org/10.2111/REM-D-09-00077.1)
+  + [Almagro 2012](https://doi.org/10.1007/s11104-012-1187-6)
+  + [Duguay 2000](https://doi.org/10.1016/S0929-1393\(00\)00049-4)
+  + [Dirks 2010](https://doi.org/10.1111/j.1365-2486.2010.02172.x)
+  + [BravoOviedo 2017](https://doi.org/10.1016/j.foreco.2017.02.032)
+  + [Day 2007 ](https://doi.org/10.1007/s11258-006-9257-6)
+  + [Dimitrakopoulos 2010](https://doi.org/10.1093/jpe/rtq009)
+  + [Gaxiola 2015](https://doi.org/10.3389/fpls.2015.00140)
+  + [Kavvadias 2001](https://doi.org/10.1016/S0378-1127\(00\)00365-0)
+  + [Kumada 2008](https://doi.org/10.1016/j.ecolmodel.2008.02.022)
+  + [Gliksman 2016](https://doi.org/10.1111/gcb.13465)
+  + [Lin 2015](https://doi.org/10.1007/s11104-015-2551-0)
+  + [Qasemian 2014](https://doi.org/10.1016/j.scitotenv.2014.07.054)
+  + [Sagi 2020](https://doi.org/10.1098/rspb.2019.1647)
+  + [Bates 2007](https://www.doi.org/10.1016/j.jaridenv.2006.12.015)
+  + [dosSantos 2019](https://www.doi.org/10.18671/scifor.v47n124.08)
+  + [Bing 2018](https://doi.org/10.1007/s40333-018-0054-6)
+  + [Fraser 2013](https://doi.org/10.1016/j.jaridenv.2012.07.009)
+  + [Huang 2017](https://doi.org/10.1016/j.soilbio.2017.08.034)
+  + [Lin 2018](https://doi.org/10.1016/j.scitotenv.2017.09.239)
+  + [Mao 2016](https://doi.org/10.1007/s11676-015-0177-y)
+  + [HerreraArreola 2007](https://doi.org/10.1016/j.jaridenv.2006.11.014)
+  + [Gallo 2009](https://doi.org/10.1016/j.soilbio.2009.03.025)
+  + [Kotilainen 2009](https://doi.org/10.1007/s00442-009-1413-y)
+  + [Smith 2010](https://doi.org/10.1111/j.1365-2486.2009.01973.x)
+  + [DiazGuerra 2018](https://doi.org/10.1007/s11104-017-3485-5)
+  + [Lee 2014](https://doi.org/10.1016/j.soilbio.2014.01.027)
+  + [Barnes 2012](https://doi.org/10.1007/s10021-011-9511-1)
+  + [Gallo 2006](https://doi.org/10.1016/j.apsoil.2005.12.006)
+  + [Kirschbaum 2011](https://doi.org/10.1016/j.soilbio.2011.03.001)
+  + [delCid 2019](https://www.doi.org/10.1556/168.2019.20.3.10)
+  + [Foereid 2010](https://doi.org/10.1007/s11104-010-0342-1)
+  + [LaporteFauret 2021](https://doi.org/10.1016/j.ecoleng.2021.106181)
+  + [Arroita 2013](https://doi.org/10.1016/j.jhazmat.2013.06.049)
+  + [Brandt 2009](https://www.doi.org/10.1029/2008jg000772)
+
+# Data Level 1 
+
+```{r}
+#Source and append all the level 1 tuples
+
+```
+
+# Data Level 2
+
+```{r}
+#Map the comparable methods and align any needed vocabulary
+```
+
+```{r}
+#Data viz checks
+```
+
+# References
+
+<!---- This will be populated when you render the document.---->

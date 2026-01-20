@@ -1,5 +1,0 @@
-"is_type","of_variable","project_definition"
-"value","citation,doi,elevation,inital_planting,land_use_type,mean_air_temperature,mean_max_vapor_pressure_deficit,mean_solar_radiation,observation_year,region,soil_class,soil_nitrogen,soil_organic_carbon,soil_ph,soil_phosphorus,stand_age,stand_type,total_rainfall","the reported value of a variable, could be a mean, observed or measured value that is numerical, text, or control vocabulary"
-"method","elevation,mean_air_temperature,mean_max_vapor_pressure_deficit,mean_solar_radiation,soil_class,soil_nitrogen,soil_organic_carbon,soil_ph,soil_phosphorus,total_rainfall","what was the method used to record the value"
-"unit","elevation,mean_air_temperature,mean_max_vapor_pressure_deficit,mean_solar_radiation,soil_nitrogen,soil_organic_carbon,soil_phosphorus,stand_age,total_rainfall", "the unit that the value is in"
-"control_vocabulary","soil_class,stand_type","the control vocabulary used in the value"
