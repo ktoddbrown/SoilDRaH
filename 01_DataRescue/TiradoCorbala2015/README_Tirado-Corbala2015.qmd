@@ -31,7 +31,9 @@ author:
           city: Gainesville
           state: FL
           country: USA
-      role: "Transcription"
+      role:
+        - "Transcription"
+        - "Lead"
       note: https://github.com/SavaScott
   - name:
       given: Mirah
@@ -171,134 +173,36 @@ read_csv(file = filename,
 
 Figure 1 was adapted to switch the yellow-black columns and the green-black columns on each subset of the figures. It was also adapted to switch the black section of the column with the blue/green/yellow section.
 
-```{r figure1}
-#| code-fold: true
-#| message: false
+```{r}
 
-library(ggplot2)
-library(readr)
-library(dplyr) 
-library(tidyverse)
-library(kableExtra)
+figCaption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-figure1.file <- 'Tirado-Corbala2015_Figure1.csv'
-caption_data1 <- "Figure 1.\n Total organic (OC) and inorganic (IC) carbon for the four sugarcane cultivars grown\n in Pulehu soils. Black (solid) portion of the bars represent the \nIC and color portion represent OC for each soil depth and sugarcane growing stages\n (i.e., blue (open arrows)-tillering, yellow (irregular shape)-grand growth,\n green (light circles)-maturity) when the soil samples were collected. \nMeans followed by the same letter or no letters for the bars in \neach soil depth are not significantly different in the Tukey’s test at Pr < 0.05."
-#Fixed caption format issues - SRS
+figData <- read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(across(c("Total carbon (kg*m^-2)", "Inorganic carbon (kg*m^-2)"),
+                as.numeric),
+         stage = factor(stage, 
+                        levels = c("tillering", 'grand growth', 'maturity')),
+         `soil depth (cm)` = factor(`soil depth (cm)`,
+                                    levels = c('10', '30', '60', '100')))
 
-read_data <- read_csv(figure1.file, skip = 1) |> 
-  rename(total_C = x, 
-         depth_interval = y,
-         x_axis_label = `x axis label`,
-         y_axis_label = `y axis label`,
-         site_label = `site label`,
-         stage_color_ID = `color portion label`,
-         bar_color = `bar color`) |> 
-  mutate(stage = dplyr::case_when(
-    stringr::str_detect(stage_color_ID, "maturity - green") ~ "TC_maturity",
-    stringr::str_detect(stage_color_ID, "grand growth - yellow") ~ "TC_grand_growth",
-    stringr::str_detect(stage_color_ID, "tillering - blue") ~ "TC_tillering",
-    stringr::str_detect(stage_color_ID, "inorganic carbon - black") ~ "inorganic_C",
-    TRUE ~ NA_character_)) |> 
-  pivot_wider(names_from = stage,
-              values_from = total_C) |> 
-  group_by(depth_interval, site_label, bar_color) |> 
-  mutate(OC_stage_from_color = recode(bar_color,
-                                      "black-green" = "maturity",
-                                      "black-yellow" = "grand_growth",
-                                      "black-blue" = "tillering"),
-         TC = case_when(
-           stage_color_ID == "maturity - green" ~ TC_maturity,
-           stage_color_ID == "grand growth - yellow" ~ TC_grand_growth,
-           stage_color_ID == "tillering - blue" ~ TC_tillering,
-            TRUE ~ NA)) #|> 
-  # pivot_longer(cols = starts_with("TC"),
-  #           names_to = "total_C_calc",
-  #           values_to = 'C_value')
- # group_by(depth_interval, site_label, bar_color) |> 
-inorganic_C_subset <- read_data |> 
-  filter(!is.na(inorganic_C)) |> 
-  select(c(1:5,7:8, OC_stage_from_color),) # getting rid of all OC related cols
-TC_subset <- read_data |> 
-  filter(!is.na(TC)) |> 
-  select(c(1:5,7, OC_stage_from_color,TC),) # getting rid of all IC related cols
-# this outputs the data table with distinct cols for OC, IC & TC  
-full_dataset <- full_join(TC_subset, inorganic_C_subset) |> 
-  unique() |> 
-  mutate(OC = TC - inorganic_C) |> 
-  rename(growth_stage = OC_stage_from_color)
-factor(full_dataset$depth_interval, levels = c(10, 30, 60, 100))
-full_dataset$growth_stage <- factor(full_dataset$growth_stage,
-      levels = c("maturity", "grand_growth", "tillering"))
-#preparing data for plotting
-depth_levels <- c('10', '30', '60', '100')
-full_dataset <- full_dataset |> 
-  mutate(depth_interval = factor(depth_interval, depth_levels, ordered = T))
-
-long.df <- full_dataset |> 
- # select(site_label, depth_interval, growth_stage, inorganic_C, OC)
-  pivot_longer(cols = c(inorganic_C, OC),
-               names_to = "component",
-               values_to = "value")
-long.df <- full_dataset |>
-   pivot_longer(cols = c(inorganic_C, OC),
-               names_to = "component",
-               values_to = "value") |> 
-  mutate(grp = interaction(depth_interval, growth_stage, 
-                           drop = T, sep = "|"),
-          growth_stage_group = interaction(growth_stage, component,
-                           drop = T, sep = "|"))
-ggplot(long.df,
-       aes(x = as.numeric(grp), y = value, fill = growth_stage_group,
-           group = component,
-           colour = component)) +
-  geom_col(width = 0.45,
-           color = "black") +
-  geom_vline(xintercept = c(3.5 , 6.5, 9.5),
-             linetype = "dotted",
-             color = "red", linewidth = 0.5) +
+ggplot(figData) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Total carbon (kg*m^-2)`,
+               fill = stage), width = 0.15) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Inorganic carbon (kg*m^-2)`), 
+           color = 'black', width = 0.15) +
+  geom_vline(xintercept = -1*(1:3 +0.5), color = 'red', linetype = 2) +
   coord_flip() +
-  # scale_fill_manual(
-   #  values = c(inorganic_C = "black",
-  #              OC = "#77FFB7"),
-  #   labels = c(inorganic_C = "inorganic carbon (IC)",
-  #              OC = "organic carbon (OC)")) +
-  scale_fill_manual(
-    name = "growth_stage_group",
-    values = c("maturity|inorganic_C" = "black",
-               "maturity|OC" = "chartreuse4",
-               "grand_growth|inorganic_C" = "black",
-               "grand_growth|OC" = "darkgoldenrod2",
-               "tillering|inorganic_C" = "black",
-               "tillering|OC" = "cyan")) +
- # scale_x_discrete(labels = function(x) sub("\\|.*", "", x)) +
-   scale_x_continuous(
-    breaks = c(2.5, 5.5, 8.5, 11.5),
-    labels = c("10", "30", "60", "100"),
-  #  expand = expansion(mult = c(0.03, 0.12)),
-    trans = "reverse"
-  ) +
-  facet_wrap(~site_label) +
-  # geom_hline(yintercept = c(3.5 , 6.5, 9.5),
-  #            linetype = "dotted",
-  #            color = "red", linewidth = 0.3) +
-  labs(title = "Total organic (OC) and inorganic (IC) carbon for the four sugarcane cultivars
-grown in Pulehu soils.",
-     caption = caption_data1,
-     y = expression("Total Carbon (kg "  *m^-2*")"),
-     x = "Soil depth (in cm)",
-  position = position_dodge(width = 0.9)) + 
-  geom_text(
-  #fixing the issue with the double footnote at the end of column - SRS
-    data = subset(long.df, !grepl("inorganic_C", growth_stage_group)),
-    aes(x = as.numeric(grp), y = `TC`  + 0.13, label = footnote),
-  position = position_dodge(width = 0.9),
-  hjust = 0,
-  size = 2
-) +
-  theme_bw()
-
+  scale_x_continuous(breaks = -1*(1:4), 
+                     labels = rev(c("10", "30", "60", "100"))) +
+  facet_wrap(~site) +
+  labs(x='Soil depth (cm)')
 ```
-
 
 ### Figure 2: Total organic and inorganic carbon for the four sugarcane cultivars in Molokai soils
 
