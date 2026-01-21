@@ -140,48 +140,47 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Santos1984 | @Santos1984 |
 | Barba 2016 | @Barba2016 |
 | Martínez 2010 | @Martinez2010 |
+| Blanco 2011 | @Blanco2011 |
+| Rozema 1997 | @Rozema1997 |
+| LadoMonserrat 2016 | @LadoMonserrat2016 |
+| Kemp 2003 | @Kemp2003 |
+|Lyons 2010 | @Lyons2010 |
+| Almagro 2012 | @Almagro2012 |
+| Duguay 2000 | @Duguay2000 |
+| Dirks 2010 | @Dirks2010 |
+| BravoOvideo 2017 | @BravoOvideo2017 |
+| Day 2007 | @Day2007 |
+| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 |
+| Gaxiola 2015 | @Gaxiola2015 |
+| Kavvadias 2001 | @Kavvadias2001 |
+| Kumada 2008 | @Kumada2008 |
+| Gliksman 2016 | @Gliksman2016 |
+| Lin 2015 | @Lin2015 |
+| Qasemian 2014 | @Qasemian2014 |
+| Sagi 2019 | @Sagi2019 |
+| Bates 2007 | @Bates2007 |
+| dosSantos 2019 | @dosSantos2019 |
+| Bing 2018 | @Bing2018 |
+| Fraser 2013 | @Fraser2013 | 
+| Huang 2017 | @Huang2017 |
+| Lin 2018 | @Lin2018 |
+| Mao 2016 | @Mao2016 |
+| HerreraArreola 2007 | @HerreraArreola2007 |
+| Gallo 2009 | @Gallo2009 |
+| Kotilainen 2009 | @Kotilainen2009 |
+| Smith 2010 | @Smith2010 |
+| DíazGuerra 2018 | @DiazGuerra2018 |
+| Lee 2014 | @Lee2014 |
+| Barnes 2012 | @Barnes2012 |
+| Gallo 2006 | @Gallo2006 |
+| Kirschbaum 2011 | @Kirschbaum2011 |
+| delCid 2019 | @delCid2019 |
+| Foereid 2010 | @Foereid2010 |
+| LaporteFauret 2021 | @LaporteFauret2021 |
+| Arroita 2013 | @Arroita2013 |
+| Brandt 2009 | @Brandt2009 |
 
 ## Identified
-
-  + [Blanco 2011](https://doi.org/10.1007/s10533-010-9518-2)
-  + [Rozema 1997](https://doi.org/10.1023/A:1009723210062)
-  + [LadoMonserrat 2016](https://doi.org/10.1007/s10342-015-0923-x)
-  + [Kemp 2003](https://doi.org/10.1006/jare.2002.1025)
-  + [Lyons 2010](https://doi.org/10.2111/REM-D-09-00077.1)
-  + [Almagro 2012](https://doi.org/10.1007/s11104-012-1187-6)
-  + [Duguay 2000](https://doi.org/10.1016/S0929-1393\(00\)00049-4)
-  + [Dirks 2010](https://doi.org/10.1111/j.1365-2486.2010.02172.x)
-  + [BravoOviedo 2017](https://doi.org/10.1016/j.foreco.2017.02.032)
-  + [Day 2007 ](https://doi.org/10.1007/s11258-006-9257-6)
-  + [Dimitrakopoulos 2010](https://doi.org/10.1093/jpe/rtq009)
-  + [Gaxiola 2015](https://doi.org/10.3389/fpls.2015.00140)
-  + [Kavvadias 2001](https://doi.org/10.1016/S0378-1127\(00\)00365-0)
-  + [Kumada 2008](https://doi.org/10.1016/j.ecolmodel.2008.02.022)
-  + [Gliksman 2016](https://doi.org/10.1111/gcb.13465)
-  + [Lin 2015](https://doi.org/10.1007/s11104-015-2551-0)
-  + [Qasemian 2014](https://doi.org/10.1016/j.scitotenv.2014.07.054)
-  + [Sagi 2020](https://doi.org/10.1098/rspb.2019.1647)
-  + [Bates 2007](https://www.doi.org/10.1016/j.jaridenv.2006.12.015)
-  + [dosSantos 2019](https://www.doi.org/10.18671/scifor.v47n124.08)
-  + [Bing 2018](https://doi.org/10.1007/s40333-018-0054-6)
-  + [Fraser 2013](https://doi.org/10.1016/j.jaridenv.2012.07.009)
-  + [Huang 2017](https://doi.org/10.1016/j.soilbio.2017.08.034)
-  + [Lin 2018](https://doi.org/10.1016/j.scitotenv.2017.09.239)
-  + [Mao 2016](https://doi.org/10.1007/s11676-015-0177-y)
-  + [HerreraArreola 2007](https://doi.org/10.1016/j.jaridenv.2006.11.014)
-  + [Gallo 2009](https://doi.org/10.1016/j.soilbio.2009.03.025)
-  + [Kotilainen 2009](https://doi.org/10.1007/s00442-009-1413-y)
-  + [Smith 2010](https://doi.org/10.1111/j.1365-2486.2009.01973.x)
-  + [DiazGuerra 2018](https://doi.org/10.1007/s11104-017-3485-5)
-  + [Lee 2014](https://doi.org/10.1016/j.soilbio.2014.01.027)
-  + [Barnes 2012](https://doi.org/10.1007/s10021-011-9511-1)
-  + [Gallo 2006](https://doi.org/10.1016/j.apsoil.2005.12.006)
-  + [Kirschbaum 2011](https://doi.org/10.1016/j.soilbio.2011.03.001)
-  + [delCid 2019](https://www.doi.org/10.1556/168.2019.20.3.10)
-  + [Foereid 2010](https://doi.org/10.1007/s11104-010-0342-1)
-  + [LaporteFauret 2021](https://doi.org/10.1016/j.ecoleng.2021.106181)
-  + [Arroita 2013](https://doi.org/10.1016/j.jhazmat.2013.06.049)
-  + [Brandt 2009](https://www.doi.org/10.1029/2008jg000772)
 
 # Data Level 1 
 
