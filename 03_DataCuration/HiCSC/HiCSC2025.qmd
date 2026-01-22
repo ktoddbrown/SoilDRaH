@@ -1,0 +1,227 @@
+---
+title: "Data Curation: HiCSC 2025"
+format:
+  html:
+    toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - HiCSC2025.bib #contains citation that provide background on the project
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - curation: lead #review
+  - id: semantic-nomad #use the github name as an id
+    name:
+      given: Brandon
+      family: Whitehead
+    orcid: 0000-0002-0337-8610
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity: 
+      description: Drafted initial template
+      who: semantic-nomad #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-01-20T0123
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      #duration: P1H15M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# Bibliograph files
+refernceCitation.file <- 'ProjectYYYY.bib'
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+# Purpose
+
+The [Hawaiʻi Climate Smart Partnership](https://climatesmarthawaii.org/) seeks to accelerate the implementation of climate-smart practices centered on Hawaiʻi-based producers and ancestral practitioners who are supported by advocacy, incentives, technical assistance, and market development. As part of this project, we need to build a data base of soil carbon stocks found on different Hawaiian soil types under specific land uses and practices.
+
+# Variables of interest for this collection include:
+
+<!--- Briefly describe what you want the data rescuers to look for when digitizing a data resource.---->
+
+### Location
+  * region (restricted to the Hawaiian Islands)
+  * latitude/longitude and associated datum
+  * observation year
+  * depth of the top and bottom of the layer from surface
+
+### Soil carbon stock
+  * soil organic carbon fraction (any method)
+  * soil carbon density (any method)
+  * soil bulk density (any method)
+  * soil coarse fraction (any method)
+  * soil inorganic carbon fraction (any method)
+  * soil loss on ignition
+
+### Soil type
+  * soil taxonomy (suborder)
+  * soil mineralogy (high activity clay, low activity clay, sandy, poorly/noncrystalline)
+  * soil moisture regime (ustic vs udic)
+  
+### Land use or practice
+  * current land use (cropland, unmanaged, plantation, pasture, forest, agroforest, silvopasture, etc.)
+  * site history (intensive pineapple or sugarcane plantation agriculture, intensive ranching)
+
+
+# Data sources
+
+Specifically we would like to start by redo-ing the data rescue for the [Hawaii Soil Carbon database](https://osf.io/hmtv6/).
+
+<!---- Move here to final table when data curation in process. ---->
+
+## Data Harmonized - tupled
+
+<!---- Move to this table when the data tuple harmonization is complete. --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link | Data Harmonization - GitHub Issue |
+|------------|-----------|----------|----------|--------|
+
+## Data Rescue - digitized
+
+<!---- Move to this table when the data rescue is complete and it is ready for tuple harmonization. --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link |
+|------------|-----------|----------|----------|
+
+
+## In process
+
+<!---- move files into this table when someone takes lead on the data rescue, update to add in git hub issue when it is create --->
+
+| AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
+|------------|----------|-----------|----------|
+| Ares2001 | \@ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | @ktoddbrown |
+| Austin1998 | \@austin1998 | [102](https://github.com/ktoddbrown/SoilDRaH/issues/102) | @SavaScott |
+| Austin2010 | \@austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | @AshBonner310 |
+| Bashkin1998 | \@bashkin1998 | [79](https://github.com/ktoddbrown/SoilDRaH/issues/79) | @laylakalandjian |
+| Beilman2019 | \@beilman2019 | [146](https://github.com/ktoddbrown/SoilDRaH/issues/146) | @semantic-nomad |
+| Binkley1999 | \@binkley1999 | [76](https://github.com/ktoddbrown/SoilDRaH/issues/76) | @hannguyenuf |
+| Binkley2004 | \@binkley2004 | [78](https://github.com/ktoddbrown/SoilDRaH/issues/78) | @SavaScott |
+| Burke2003 | \@burke2003 | [80](https://github.com/ktoddbrown/SoilDRaH/issues/80) | @Misheph |
+| Crews1995 | \@crews1995 | [87](https://github.com/ktoddbrown/SoilDRaH/issues/87) | @laylakalandjian |
+| Crow2016 | \@crow2016 | [123](https://github.com/ktoddbrown/SoilDRaH/issues/123) | @waldera |
+| Crow2020 | \@crow2020 | [138](https://github.com/ktoddbrown/SoilDRaH/issues/138) | @laylakalandjian |
+| Elmore2006 | \@elmore2006 | [93](https://github.com/ktoddbrown/SoilDRaH/issues/93) | @SavaScott |
+| Giardina2014 | \@giardina2014 | [171](https://github.com/ktoddbrown/SoilDRaH/issues/171) | @ChaseSaxour |
+| Idol2007 |  \@idol2007 | [83](https://github.com/ktoddbrown/SoilDRaH/issues/83) | @waldera |
+| Kramer2012 | \@kramer2012 | [95](https://github.com/ktoddbrown/SoilDRaH/issues/95) | @SavaScott |
+| Kramer2016 | \@kramer2016 | [137](https://github.com/ktoddbrown/SoilDRaH/issues/137) | @laylakalandjian |
+| Li2010 | \@li2010 | [134](https://github.com/ktoddbrown/SoilDRaH/issues/134) | @Misheph |
+| Litton2008 | \@litton2008 | [91](https://github.com/ktoddbrown/SoilDRaH/issues/91) | @laylakalandjian |
+| Nusslein1999 | \@nusslein1999 | [105](https://github.com/ktoddbrown/SoilDRaH/issues/105) | @Misheph |
+| Perez2001 | \@perez2001 | [92](https://github.com/ktoddbrown/SoilDRaH/issues/92) | @SavaScott |
+| Scowcroft2004 | \@scowcroft2004 | [117](https://github.com/ktoddbrown/SoilDRaH/issues/117) | @SavaScott |
+| Stewart2011 | \@stewart2011 | [114](https://github.com/ktoddbrown/SoilDRaH/issues/114) | @Misheph |
+| Tirado-corbala2015 | \@tirado-corbala2015 | [110](https://github.com/ktoddbrown/SoilDRaH/issues/110) | @SavaScott |
+| Townsend1995 | \@townsend1995 | [74](https://github.com/ktoddbrown/SoilDRaH/issues/74) | @ktoddbrown |
+| Townsend1997 | \@townsend1997 | [167](https://github.com/ktoddbrown/SoilDRaH/issues/167) | @SavaScott |
+| Veldkamp1994 | \@veldkamp1994 | [94](https://github.com/ktoddbrown/SoilDRaH/issues/94) | @Misheph |
+| Youkhana2009 | \@youkhana2009 | [84](https://github.com/ktoddbrown/SoilDRaH/issues/84) | @SavaScott |
+
+## Imported to bib
+
+<!---- Move here when data source bib entry has been made ---->
+
+| AuthorYYYY | citation | 
+|------------|------------|
+| ares2001 | @ares2001 |
+| austin1998 | @austin1998 |
+| austin2010 | @austin2010 |
+| bashkin1998 | @bashkin1998 |
+| beilman2019 | @beilman2019 |
+| binkley1999 | @binkley1999 |
+| binkley2004 | @binkley2004 |
+| burke2003 | @burke2003 |
+| crews1995 | @crews1995 |
+| crow2016 | @crow2016 |
+| crow2020 | @crow2020 |
+| elmore2006 | @elmore2006 |
+| giardina2014 | @giardina2014 |
+| idol2007 |  @idol2007 |
+| kao-kniffin2008 | @kao-kniffin2008 |
+| kramer2012 | @kramer2012 |
+| kramer2016 | @kramer2016 |
+| krueger2021 | @krueger2021 |
+| li2010 | @li2010 |
+| litton2008 | @litton2008 |
+| meulemans2016 | @meulemans2016 |
+| nusslein1999 | @nusslein1999 |
+| perez2001 | @perez2001 |
+| riley1995 | @riley1995 |
+| scowcroft2004 | @scowcroft2004 |
+| stewart2011 | @stewart2011 |
+| tirado-corbala2015 | @tirado-corbala2015 |
+| townsend1995 | @townsend1995 |
+| townsend1997 | @townsend1997 |
+| veldkamp1994 | @veldkamp1994 |
+| youkhana2009 | @youkhana2009 |
+
+## Identified
+
+ + [kao-kniffin2008](https://doi.org/10.1007/s00248-007-9323-1)
+ + [krueger2021](http://hdl.handle.net/10125/75973)
+ + [meulemans2016](http://hdl.handle.net/10125/51342)
+ + [riley1995](https://doi.org/10.2307/1940650)
+ + soilsurvey2020 -- see Susan Crow
+ 
+
+# Data Level 1 
+
+```{r}
+#Source and append all the level 1 tuples
+
+```
+
+# Data Level 2
+
+```{r}
+#Map the comparable methods and align any needed vocabulary
+```
+
+```{r}
+#Data viz checks
+```
+
+# References
+
+<!---- This will be populated when you render the document.---->
