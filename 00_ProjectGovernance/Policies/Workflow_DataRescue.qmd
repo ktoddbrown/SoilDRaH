@@ -1,7 +1,7 @@
 ---
 title: "Data Rescue Workflow"
 format:
-  html:
+  gfm:
     toc: true
 date: last-modified
 date-format: YYYY-MMMM
@@ -68,9 +68,9 @@ This process should result in the following documentation:
     1) the original the data source(s)
     2) citations from the methods section
     
-# Understanding data source {#sec-UndertandingDataSource}
+## Understanding data source {#sec-UndertandingDataSource}
 
-## Identify, find, and read data source
+### Identify, find, and read data source
 
 Data sources can be identified in a number of different ways but will generally be nominated by an expert in the field in connection for a specific desired re-analysis.
 Reading the data source can include reviewing manuscripts from the primary literature and their supplemental information, or published agency reports.
@@ -81,7 +81,7 @@ Generally there will be a specific re-analysis identified and understanding shou
 
 > Townsend, A.R., Vitousek, P.M. and Trumbore, S.E. (1995), Soil Organic Matter Dynamics Along Gradients in Temperature and Land Use on the Island of Hawaii. Ecology, 76: 721-733. [https://doi.org/10.2307/1939339](https://doi.org/10.2307/1939339) is identified as a data source for the Hawai'i Soil Organic Carbon Database [https://osf.io/hmtv6/](https://osf.io/hmtv6/) as part of the [HiCSC](https://github.com/ktoddbrown/SoilDRaH/wiki/Hawaii-SOC).
 
-## Summarize and propose plan
+### Summarize and propose plan
 
 Write a short summary of the data in the data source.
 This should include an overview of all the data in the source and highlight specific sections or components for fit-for-purpose rescue.
@@ -89,7 +89,7 @@ You should identify key information in the methods section, individual tables an
 This summary is intended to provide a proposal for the data rescue plan to be reviewed by an expert.
 
 
-## Expert review
+### Expert review
 
 Pass the summary and proposed plan to a reviewer.
 This reviewer should have some degree of familiarity of the methodologies used in the study and the proposed reanalysis.
@@ -99,7 +99,7 @@ The reviewer should consider check that:
   -[ ] Does the identified elements in the data rescue plan serve the purpose of the reanalysis?
 
 
-# Transcribing data {#sec-TranscribingData}
+## Transcribing data {#sec-TranscribingData}
 
 
 Lead | Do | Measure |
@@ -118,11 +118,11 @@ Information like page number or headers/footers will also be read in sequentiall
 Tables will often have unclear column splits (as far as a text reader is concerned) and sub-tables may require additional considerations.
 Finally figures like graphs are completely cryptic to text readers.
 
-## Prep documents
+### Prep documents
 
 Generally you will have three types of data capture files: a [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) for the methods section, a spreadsheet for the table and figure captures, and software for the figure x-y captures.
 
-### Methods
+#### Methods
 
 Method sections are critical reference in the curation phase when deciding what measurements are equivalent for a given purpose and important for future data discovery.
 Thus the entire methods section should be transcribed, regardless of the specific data needs of the purpose.
@@ -138,7 +138,7 @@ With these two motivations in mind, here are some general practices to follow wh
 
 When in doubt, try something. Then bring it to a [SoilDRaH meeting](https://github.com/ktoddbrown/SoilDRaH/discussions) or make a common on the issue associated with the data rescue.
 
-### Tables
+#### Tables
 
 Tables in manuscripts are often formatted in such a way that they read well to humans but not to machines.
 The challenge with rescuing tables is to balance preservation of the original data model, which has information in it's structure about how the original authors saw their system, with ensuring that it is machine readable.
@@ -152,7 +152,7 @@ With this in mind, here are some general practices:
 3) Use the first row to copy the caption. This will ensure that the table and it's caption are always together. The compromise here is that you have to skip the first row when reading the final csv, no ideal but also not difficult.
 4) Sub-table headers may new columns or multi column entires should be repeated. While spreadsheets will merge cells for you, it does not export nicely to csv tables. You should strive to preserve the structure of the data by repeating entries either in the header or as a new column.
 
-# Reviewing transcripts {#sec-ReviewingTranscripts}
+## Reviewing transcripts {#sec-ReviewingTranscripts}
 
 
 Lead | Do | Measure
