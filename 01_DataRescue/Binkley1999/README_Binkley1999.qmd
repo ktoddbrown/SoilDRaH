@@ -195,3 +195,21 @@ data.lvl0.df <- list(citation =
                   ) 
 )
 ```
+
+# Level 1
+
+```{r}
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
+                   'region', 'value', '13 km NNE of downtown Hilo, HI', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
+                 #  'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
+                  # 'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
+                  # 'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
+                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
+
+```
+
+
+```
+
