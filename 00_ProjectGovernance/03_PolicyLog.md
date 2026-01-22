@@ -1,24 +1,24 @@
----
-title: "Policy Log"
-format:
-  gfm:
-    wrap: preserve
-bibliography: projectReferences.bib
-toc: true
----
+# Policy Log
+
+
+- [Mission and vision - 2026 May](#mission-and-vision---2026-may)
+- [Goals - 2025 May](#goals---2025-may)
+- [Community Norms - 2026 March](#community-norms---2026-march)
+- [Data rescue - 2026 February](#data-rescue---2026-february)
+- [Data harmonization - 2026 March](#data-harmonization---2026-march)
 
 This document is a policy log where we manage the review process and document any changes.
-We define a 'policy' as a decision that is applicable multiple situations.
-A policy is intended to reduce cognitive load by making a standard practice that reduces the need for groups of people to make similar decisions. 
-In most cases policies will be in the policy folder except for a few key, high level documents (like this one) that are in the primary governance folder. 
+We define a ‘policy’ as a decision that is applicable multiple situations.
+A policy is intended to reduce cognitive load by making a standard practice that reduces the need for groups of people to make similar decisions.
+In most cases policies will be in the policy folder except for a few key, high level documents (like this one) that are in the primary governance folder.
 In all cases a link will the provided to the document.
 
-A policy log can be thought of as similar to [https://github.com/joelparkerhenderson/architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record) and is based off of Sociocracy principles.
+A policy log can be thought of as similar to <https://github.com/joelparkerhenderson/architecture-decision-record> and is based off of Sociocracy principles.
 
 ## Mission and vision - 2026 May
 
-*Context:* We need a clear way to decern what is in scope and out of scope on the project, as well as a clear ask when inviting future collaboration. 
-The mission should help us define that scope and vision should tell us what the world might look like when we get there. 
+*Context:* We need a clear way to decern what is in scope and out of scope on the project, as well as a clear ask when inviting future collaboration.
+The mission should help us define that scope and vision should tell us what the world might look like when we get there.
 These will be aspirational and may not have clear metrics of success.
 
 *Policy:* [01_MissionVision.qmd](01_MissionVision.qmd)
@@ -31,23 +31,22 @@ These will be aspirational and may not have clear metrics of success.
 
 *Change log:*
 
-  + 20251124 - initial draft committed
-  + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
-  
+- 20251124 - initial draft committed
+- 20251120 - [\#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
 
 ## Goals - 2025 May
 
 *Context:* Given the broad vision for the project what are the 1-5 year goals we are organizing activities around?
-Activities on the project should be linked to specific goals that are all relevant to the overall mission/vision. 
+Activities on the project should be linked to specific goals that are all relevant to the overall mission/vision.
 These can include specific curation efforts as well as interconnected semantic development.
 
 *Policy:* [06_Goals.qmd](06_Goals.qmd)
 
 *Responsible:* ktoddbrown
 
-*Metric:* 
-  1) Conduct a file audit: Do all the files in the repository link to a specific goal? 
-  2) Ask community members: "Do the goals help you understand how we are furthering the broader mission and where their activities fit in?"
+*Metric:*
+1) Conduct a file audit: Do all the files in the repository link to a specific goal?
+2) Ask community members: “Do the goals help you understand how we are furthering the broader mission and where their activities fit in?”
 
 *Term:* 6 months - review May 2026
 
@@ -59,15 +58,15 @@ These can include specific curation efforts as well as interconnected semantic d
 
 *Responsible:* ktoddbrown
 
-*Metric:* We will ask those who write workflows if this 'who' captures the background needed to target documentation. We will ask a sample of participants to review the conflict resolution section and check how this lines up with their expectations and if the could see implementing this in practice.
+*Metric:* We will ask those who write workflows if this ‘who’ captures the background needed to target documentation. We will ask a sample of participants to review the conflict resolution section and check how this lines up with their expectations and if the could see implementing this in practice.
 
 *Term:* 3 months - review March 2026
 
 *Change log:*
 
-  + 20251124 - initial draft committed
-  + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
-  
+- 20251124 - initial draft committed
+- 20251120 - [\#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
+
 ## Data rescue - 2026 February
 
 *Context:* We need to document the workflow for data rescue that will guide folks doing the data rescue work. This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
@@ -82,9 +81,9 @@ These can include specific curation efforts as well as interconnected semantic d
 
 *Change log:*
 
-  + 20251207 - initial draft committed
-  + 20251123 - [#154](https://github.com/ktoddbrown/SoilDRaH/issues/154) created
-  
+- 20251207 - initial draft committed
+- 20251123 - [\#154](https://github.com/ktoddbrown/SoilDRaH/issues/154) created
+
 ## Data harmonization - 2026 March
 
 *Context:* We need to document the workflow for data harmonization that will guide the combination of digitized data into a single resource.
@@ -100,5 +99,5 @@ This should include needed references and guidance on how to get questions answe
 
 *Change log:*
 
-  + 20251207 - initial draft committed
-  + 20251123 - [#156](https://github.com/ktoddbrown/SoilDRaH/issues/156) created
+- 20251207 - initial draft committed
+- 20251123 - [\#156](https://github.com/ktoddbrown/SoilDRaH/issues/156) created
