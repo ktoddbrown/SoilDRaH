@@ -1,4 +1,4 @@
-# SoilDRaH: Project History
+# SoilDRaH: Recaps and Project History
 
 
 - [2026](#2026)
@@ -10,12 +10,17 @@
 ## 2026
 
 January saw a massive restructuring of the repository [1a09e78…](https://github.com/ktoddbrown/SoilDRaH/commit/1a09e78690eeb489564b1f3bd0404cfeb8712316) including a migration of the wiki into policy pages in the primary repository.
-We struggled a little with what shared planning might look like and are working on rethinking this (#169).
-Students continuing to work on the data rescues (see 00_ProjectGovernance/Policies/Workflow_DataRescue.qmd) and starting to tackle the harmonization (see 00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd) with meetings migrating to a git discussion format (#170, \#177).
+We struggled a little with what shared planning might look like and are working on rethinking this ([\#169](https://github.com/ktoddbrown/SoilDRaH/discussions/169)).
+Students continuing to work on the data rescues (see 00_ProjectGovernance/Policies/Workflow_DataRescue.qmd) and starting to tackle the harmonization (see 00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd) with meetings migrating to a git discussion format ([\#170](https://github.com/ktoddbrown/SoilDRaH/discussions/170), [\#177](https://github.com/ktoddbrown/SoilDRaH/discussions/177)).
 
 ## 2025
 
-TBD
+In 2025 we started the Hawaii data rescue that focused on primary literature data rescues.
+This uncovered some shortcomings with our annotation workflow developed in 2024 and we moved over to a three stage process of rescue (focused on as close as machine readable transcription), followed by harmonization and then curation.
+We focused on refining the data rescue element of this workflow and training undergraduates.
+At the end of 2025 we had 14 papers ‘rescued’ and an equal number in process.
+
+In the fall of 2025 we also drafted formal governance documentation as a first step to move the project beyond a single research lab.
 
 ## 2024
 
