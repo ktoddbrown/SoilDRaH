@@ -1,17 +1,12 @@
----
-title: "Governance"
-format:
-  gfm:
-    wrap: preserve
-bibliography: projectReferences.bib
----
+# Governance
+
 
 The governance of SoilDRaH is rooted in the principles of transparency, iterative improvement, and consent.
-Currently we operate under a Benevolent Dictator For Now ([BDFN](https://communityrule.info/templates/benevolent-dictator.html)) where project decisions are made by K. Todd-Brown ([https://github.com/ktoddbrown](https://github.com/ktoddbrown)) in consultation with those working on aspects of the project (generally students in her lab).
+Currently we operate under a Benevolent Dictator For Now ([BDFN](https://communityrule.info/templates/benevolent-dictator.html)) where project decisions are made by K. Todd-Brown (<https://github.com/ktoddbrown>) in consultation with those working on aspects of the project (generally students in her lab).
 We hope to transition to a circle (or committee) model in 2026.
 To support this transition, many practices here are designed for a circle decision structure rather then BDFN.
 Some sections reflect this future decision model.
-Practices here are based on Sociocracy or Dynamic Governance in the [Sociocracy for All ](https://www.sociocracyforall.org/) tradition (@Rau2018).
+Practices here are based on Sociocracy or Dynamic Governance in the [Sociocracy for All](https://www.sociocracyforall.org/) tradition (Rau and Koch-Gonzalez (2018)).
 
 ## Transparency
 
@@ -21,7 +16,7 @@ This includes what are the decisions that were made, how were they arrived at, a
 ## Iterative Improvement
 
 Iterative improvement in governance focuses on evolving decisions over time by incorporating regular feedback and formative evaluations.
-Decisions are termed for a specific time period (generally months-years) with metrics to evaluate their success and identified groups or individuals who are responsible for their evaluation. 
+Decisions are termed for a specific time period (generally months-years) with metrics to evaluate their success and identified groups or individuals who are responsible for their evaluation.
 
 ## Consent
 
@@ -35,14 +30,14 @@ These individuals are, in turn, responsible for having an informed background an
 An objection should be brought up if a decision would negatively affect the aims of the group, but decisions that are merely outside of a prefered solution should not be objected to.
 Objections can be integrated into a proposal in one of three ways generally:
 
-1) modify the metrics to watch for a concern,
-2) shorten the term to try things out, and/or
-3) modify the proposed course of action to address the concern.
+1)  modify the metrics to watch for a concern,
+2)  shorten the term to try things out, and/or
+3)  modify the proposed course of action to address the concern.
 
 # Steps for decision making
 
 Decisions making generally has three main steps: scoping, brainstorming, and deciding.
-*Scoping* entails defining the problem being addressed. 
+*Scoping* entails defining the problem being addressed.
 What has triggered the need for a group decision rather then an individual action?
 Who is affected by the problem and how does it align with the aims/goals of the group? *Brainstorming* is an idea generation phase that gathers possible options for consideration.
 What are the trade-offs for each idea?
@@ -58,10 +53,20 @@ Once the project transitions to circle governance, individuals on the circle wit
 Policies are decisions that are codified for repeated use to reduce the number of individual decisions that need to be made.
 Policies require documentation laid out in the Policy Log that includes:
 
-1) the context or scope of the decision
-2) what alternative solutions were considered
-3) metrics of success for the policy
-4) when and by whom will the policy be revised or iterated on
-5) a history of the evolution of the policy in question including summary of changes to the policy as well as any changes in the context.
+1)  the context or scope of the decision
+2)  what alternative solutions were considered
+3)  metrics of success for the policy
+4)  when and by whom will the policy be revised or iterated on
+5)  a history of the evolution of the policy in question including summary of changes to the policy as well as any changes in the context.
 
 # References
+
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+
+<div id="ref-Rau2018" class="csl-entry">
+
+Rau, Ted J., and Jerry Koch-Gonzalez. 2018. *Many Voices One Song: Shared Power with Sociocracy*. Amherst, MA, USA: Sociocracy For All.
+
+</div>
+
+</div>
