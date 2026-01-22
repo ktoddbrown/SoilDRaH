@@ -35,8 +35,16 @@ affiliations:
     
 timelog:
   - activity: 
+      description: revised execute with only provided files
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-01-22 T1400
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P45M
+  - activity: 
       description: Revise based on feedback
-      who: @ktoddbrown #github username
+      who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       end: 2025-11-26
       #start: YYYY-MM-DD THH:MM
@@ -67,9 +75,12 @@ figureM.file <- 'AuthorYYYY_FigureM.csv'
 primaryCitation.file <- 'AuthorYYYY.bib'
 methodsCitation.file <- 'AuthorYYYY_Methods.bib'
 
-# read function
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
 readsource.file <- '../../../R/readAuthorYYYY.R'
-source('readsource.file')
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -166,40 +177,56 @@ These files are in the AuthorYYYY data rescue.
 
 Table N was modified ....
 
-```{r table1}
+```{r}
+#| label: table1Check
+#| eval: false #remove when you have the file transcribed
 
-read_csv(file = tableN.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
+
+read_csv(file = tableN.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
 ```
 
-## Methods comparison
+## Methods
 
-```{bash eval=FALSE}
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.md
 ```
 
-## Methods Section Transcription
-
 {{< include AuthorYYYY_Methods.md >}}
 
+<!----
 ## Citation notes from Methods
 
 Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
 Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
 
 - [ ] short citation
   + copy from bib
   + manually entered or direct export
+---->
 
 # Level 0 Data rescue
 
 This level 0 data read parses the transcribed files with minimal cleaning or transformations.
 
-```{r readLevel0}
+```{r}
+#| label: readLevel0
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -220,12 +247,12 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = table1.file,
+      caption = read_csv(file = tableN.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = table1.file,
+      primary = read_csv(file = tableN.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element
@@ -235,18 +262,23 @@ data.lvl0.ls <- list(
 
 ```
 
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
 ```{r}
 #| label: checkReadFunction_lvl0
-
-datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
-                                    dataLevel = 'level0')
-
-if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
-  print('Read function matches code here.')
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
 }else{
-  print('There is a mismatch in the data objects between the code here and the read function.')
+  print('The read function does not exist.')
 }
-
 ```
 
 
