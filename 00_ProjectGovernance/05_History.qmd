@@ -5,6 +5,16 @@ format: html
 
 This repository is preceded by two repository (SOCDRaH, and SOCDRaH2) and the result of prior work of the International Soil Carbon Network.
 
+## 2026
+
+January saw a massive restrucuring of the repository (1a09e78690eeb489564b1f3bd0404cfeb8712316) including a migration of the wiki into policy pages in the primary repository. 
+We struggled a little with what shared planning might look like and are working on rethinking this (#169). 
+Students continuing to work on the data rescues (see 00_ProjectGovernance/Policies/Workflow_DataRescue.qmd) and starting to tackle the harmonization (see 00_ProjectGovernance/Policies/Workflow_DataHarmonize.qmd) with meetings migrating to a git discussion format (#170, #177).
+
+## 2025
+
+TBD
+
 ## 2024
 
 Over the last year we moved to a new repository [https://github.com/ktoddbrown/SoilDRaH](https://github.com/ktoddbrown/SoilDRaH) with an expanded mandate for harmonizing data beyond soil organic carbon quantifications to all soils data (hence the name change!).
