@@ -1,5 +1,5 @@
-"Fig. 6 *In situ* foliage decomposition of the dominant tree (DISA, *Diospyros sandwicensis*) was significantly higher with a non-native invasive grass in the understory (grass) than without (removal). In addition, grass foliage litter (PESE, *Pennisetum setaceum*) decomposed faster than tree litter from either treatment. Bars are treatment and species means (±1 SE; *n* = 4); means with different letters indicate statistically significant differences at α = 0.05 (Tukey's HSD multiple comparison test after one-way $_{ANOVA}$)."
-Mass remaining (%),SD High,SD Low,Type Label,Litter Type
-57.3,58.8,55.9,Removal,DISA
-46.2,48.2,44.3,Grass,DISA
-37.0,39.8,34.0,Grass,PESE
+"Fig. 6 *in situ* foliage decomposition of the dominant tree (DISA, *Diospyros sandwicensis*) was significantly higher with a non-native invasive grass in the understory (grass) than without (removal). In addition, grass foliage litter (PESE, *Pennisetum setaceum*) decomposed faster than tree litter from either treatment. Bars are treatment and species means (±1 SE; *n* = 4); means with different letters indicate statistically significant differences at α = 0.05 (Tukey's HSD multiple comparison test after one-way $_{ANOVA}$).",,,,,
+Mass remaining (%),SE High,SE Low,Type Label,Litter Type,Letter
+57.3,58.8,55.9,Removal,DISA,a
+46.2,48.2,44.3,Grass,DISA,b
+37.0,39.8,34.0,Grass,PESE,c
