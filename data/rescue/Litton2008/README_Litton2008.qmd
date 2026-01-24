@@ -109,7 +109,7 @@ read_csv(file = filename,
 
 ### Figure 6
 
-Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SD stands for Standard Deviation, Standard deviation high and lows from bar graph included as separate columns.
+Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SD stands for Standard Deviation, Standard deviation high and lows from bar graph included as separate columns. Letters indicating statistically significant differences were listed in a new column titled "letter".
 
 ```{r figure6}
 #| code-fold: true
@@ -166,14 +166,4 @@ These files are in the Litton2008 data rescue.
 - [x] add in citation links to methods
 - [x] cross check with second transcriber for tables and methods
 - [x] submit to independent review
-- [ ] archive on SoilDRaH
-
-
-## Citation notes from Methods
-
-Below are the citation notes from the methods section.
-Some citations are missing, those are noted here and how best guess were generated.
-
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
+- [x] archive on SoilDRaH
