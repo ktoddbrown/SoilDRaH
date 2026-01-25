@@ -195,52 +195,6 @@ data.lvl0.df <- list(citation =
                   ) 
 )
 ```
-
-# Level 1
-
-The final format of the data frame here will include the following 
-
-  + grouping ids
-  + `of_variable`
-  + `is_type`
-  + `with_entry`
-  + `source`
-
-The `of_variable` being used here are:
-
-+ citation
-+ doi
-+ region
-+ latitude
-+ longitude
-+ mean_air_temperature
-+ mean_rainfall
-+ elevation
-+ soil_ph
-+ soil_class
-+ inital_planting
-+ observation_year
-+ 
-
-```{r}
-
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
-                   'region', 'value', '13 km NNE of downtown Hilo, HI', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                   'latitude', 'value', '19°50\'28.1" N', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                   'longitude', 'value', '155°7\'28.3" W', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                   'mean_air_temperature', 'value', '21°C',paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                   'elevation', 'value', '350 m', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                   'mean_rainfall', 'value', '4 m yr<sup>-1</sup>', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')), 
-                   'soil_ph', 'value', 'pH 5-6 in water', paste('Method ln4:',paste(data.lvl0.df$method[4], collapse = ' ')),
-                   'soil_class', 'value', 'Kaiwiki thixotropic, isothermic Typic Hydrandepts', paste('Method ln4:',paste(data.lvl0.df$method[4], collapse = ' ')),
-                  'inital_planting', 'value', '1994', paste('Method ln11:', data.lvl0.df$method[11]),
-                  'observation_year', 'value', '1997', paste('Method ln23:', data.lvl0.df$method[23]),
-                  'core_description', 'value', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.df$method[12]),
-                   'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
-                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
-
 ```
 
-
-```
 
