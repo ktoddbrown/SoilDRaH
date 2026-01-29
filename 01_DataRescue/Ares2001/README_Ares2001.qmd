@@ -9,85 +9,108 @@ bibliography:
   - Ares2001_Methods.bib
   - Ares2001.bib
 authors:
-  - name:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
-    note: https://github.com/ktoddbrown
     affiliation:
       - ref: uf-ees
     role: 
-      - Transcription
-      - Review
-      - Standardization
-      - Harmonization
-
-  - name:
+      - transcription: review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: colbyGreen1520
+    name:
       given: Colby
       family: Green
     affiliation:
       - ref: uf-ees
-    role: Transcription
-    note: https://github.com/colbyGreen1520
-
-  - name:
+    role:
+      - transcription: lead
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
     affiliation:
       - ref: uf-ees
     role: Transcription
-    note: https://github.com/SavaScott
       
 affiliations:
   - id: uf-ees
     name: University of Florida
     department: Environmental Engineering Sciences
     city: Gainesville
-    state: FL
+    state: Florida
     country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
     url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+
+timelog:
+  - activity: 
+      description: update to new template
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-01-22 T1530
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P25M
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
 
-library(tidyverse)
-library(kableExtra)
-library(bibtex)
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
 
-#semantic files
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
-
-# data files
+# data files for level 0
 methods.file <- 'Ares2001_Methods.md'
 table1.file <- 'Ares2001_Table1.csv'
 table3.file <- 'Ares2001_Table3.csv'
+
+# Bibliography files
 primaryCitation.file <- 'Ares2001.bib'
 methodsCitation.file <- 'Ares2001_Methods.bib'
 
 # read function
-source('../../../R/readAres2001.R')
+readsource.file <- '../../02_DataHarmonization/readAres2001.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
 ```
 
-This documents the data transcription for @Ares2001 .
-For the discussion of this data rescue see Github [issue 77](https://github.com/ktoddbrown/SoilDRaH/issues/77) .
-
-> A. Ares and J. H. Fownes. Productivity, resource use, and competitive interactions of fraxinus uhdei in hawaii uplands. Canadian Journal of Forest Research, 31(1):132-142, [https://doi.org/10.1139/x00-156](https://doi.org/10.1139/x00-156). 2001 
 
 # Data Summary
 
-@Ares2001 primarily measures tree growth parameters (including litterfall) but also characterized elemental fractions of soil. They use this data to look at factors affecting a specific invasive tree growth in Hawaii including nitrogen and moisture gradients.
 
-## Fit for purpose: HiCSC
+> A. Ares and J. H. Fownes. Productivity, resource use, and competitive interactions of fraxinus uhdei in hawaii uplands. Canadian Journal of Forest Research, 31(1):132-142, [https://doi.org/10.1139/x00-156](https://doi.org/10.1139/x00-156). 2001 
 
-This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
+For the discussion of this data rescue of @Ares2001 see Github [issue 77](https://github.com/ktoddbrown/SoilDRaH/issues/77).
+Discussion on the data harmonization and curation see Github [issue 183](https://github.com/ktoddbrown/SoilDRaH/issues/183).
+Note that this is a prototype data source, issues will be non-standard.
 
-- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
-- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
-- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
-- Land use: Land use and history are clearly identified in methods.
+@Ares2001 primarily measures tree growth parameters (including litterfall) but also characterized elemental fractions of soil. 
+They use this data to look at factors affecting a specific invasive tree growth in Hawaii including nitrogen and moisture gradients.
 
-# Tables and figures
+## Tables and figures
 
 - Table 
   1) characteristics of stands including oc percent < -- oc == organic carbon -->
@@ -103,51 +126,21 @@ This data is identified as a data source for the [Hawai'i Soil Organic Carbon Da
   2) elevation vs productivity metrics
   3) nitrogen correlations
   4) light intercept vs nitrogen and water use efficiency metrics
-  
-### Table 1: Stand characteristics
-
-Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
-
-```{r table1}
-#| code-fold: true
-#| message: false
-
-read_csv(file = table1.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = table1.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
-
-### Table 3: Climate
-
-```{r table3}
-#| code-fold: true
-#| message: false
-
-read_csv(file = table3.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = table3.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
 
 
-{{< include Ares2001_Methods.md >}}
+## Fit for purpose: HiCSC
 
-<!--  # Transcription comparison
-what purpose does this serve? this file does not exist in this file group -BW
-This is here mostly to remind transcribers to cross check using diff the two transcripts. Let's keep this here but comment it out. -KTB
-```{bash eval=FALSE}
-diff Ares2001_Methods_CAG.md Ares2001_Methods.md
-```
- -->
- 
+This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
+The purpose of this project is to disentangle the effects of land use transitions, soil type, and soil carbon stock in Hawai'i.
+
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
+- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
+- Land use: Land use and history are clearly identified in methods.
+
 # Files
 
-These files are in the Ares2001 data rescue.
+These files are in the @Ares2001 data rescue.
 
 - [Readme](README_Ares2001.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -220,14 +213,54 @@ Some citations are missing, those are noted here and how best guess were generat
   + direct export
 --->
 
+### Table 1: Stand characteristics
+
+Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3: Climate
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table3.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Ares2001_Methods.md >}}
+
+<!--  # Transcription comparison
+what purpose does this serve? this file does not exist in this file group -BW
+This is here mostly to remind transcribers to cross check using diff the two transcripts. Let's keep this here but comment it out. -KTB
+```{bash eval=FALSE}
+diff Ares2001_Methods_CAG.md Ares2001_Methods.md
+```
+ -->
+
 # Level 0 data read
 
 This level 0 data read parses the transcribed files with minimal cleaning or transformations.
 
-```{r readLevel0}
-#This chunk has two purposes. 
-#...1) Check the formatting by reading in everything 
-#...2) Create a list of everything to process later in level 1
+```{r}
+#| label: readLevel0
+#| code-fold: true
+#| code-summary: "This code reads in all lvl0 data."
 
 data.lvl0.ls <- list(
   #Read in a list of all the bib files
@@ -266,8 +299,14 @@ data.lvl0.ls <- list(
 
 ```
 
+
+The code is also in `readAres2001.R` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
 ```{r}
 #| label: checkReadFunction_lvl0
+#| code-fold: true
+#| code-summary: "This code checks that the read function matches exactly."
 
 datafunction.lvl0.ls <- readAres2001(dataDir = '.',
                                     dataLevel = 'level0')
