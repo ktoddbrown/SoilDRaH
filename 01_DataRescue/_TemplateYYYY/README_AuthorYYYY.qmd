@@ -32,8 +32,23 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
     
 timelog:
+  - activity: 
+      description: add general UF affilation
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-01-29 T1530
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P05M
   - activity: 
       description: revised execute with only provided files
       who: ktoddbrown #github username
