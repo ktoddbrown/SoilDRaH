@@ -86,13 +86,13 @@ methods.file <- "AuthorYYYY_Methods.md"
 tableN.file <- 'AuthorYYYY_TableN.csv'
 figureM.file <- 'AuthorYYYY_FigureM.csv'
 
-# Bibliograph files
+# Bibliography files
 primaryCitation.file <- 'AuthorYYYY.bib'
 methodsCitation.file <- 'AuthorYYYY_Methods.bib'
 
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../../R/readAuthorYYYY.R'
+readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
