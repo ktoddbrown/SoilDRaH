@@ -19,6 +19,9 @@ authors:
       - ref: uf-ees
     role:
       - transcription: review
+    # - standardization:
+    #  - curation:
+
   - id: SavaScott
     name:
       given: Savannah
@@ -27,6 +30,9 @@ authors:
       - ref: uf-ees
     role:
       - transcription: lead
+    # - standardization:
+   #  - curation:
+    
   - id: laylakalandjian
     name:
       given: Layla
@@ -35,6 +41,8 @@ authors:
       - ref: uf-ees
     role:
       - transcription: secondary
+    # - standardization:
+   #  - curation:
 
 affiliations:
   - id: uf-ees
@@ -49,11 +57,19 @@ affiliations:
     
 timelog:
   - activity: 
-      description: Revise based on feedback
-      who: '@ktoddbrown'
-      end: 2025-12-15
-      start: 2025-12-10
-      duration: P30M #Period of 30M, ISO standard
+      description: Lead Transcription and ReadMe Update
+      who: Savascott
+      end: 2026-01-30
+      start: 2025-12-11
+      duration: PT4H30M
+
+      timelog:
+  - activity: 
+      description: Secondary Transcription
+      who: laylakalandjian
+      end: 2026-12-13
+      start: 2025-12-12
+      duration: PT1H30M
 ---
 
 
@@ -77,9 +93,12 @@ table1.file <- 'Townsend1997_Table1.csv'
 primaryCitation.file <- 'Townsend1997.bib'
 methodsCitation.file <- 'Townsend1997_Methods.bib'
 
-# read function ##running into problems with this, don't know what it is
-#readsource.file <- '../../../R/readTownsend1997.R'
-#source(readsource.file)
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../../R/readAuthorYYYY.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -95,7 +114,7 @@ TOWNSEND, A.R., VITOUSEK, P.M., DESMARAIS, D.J. et al. Soil carbon pool structur
 
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/167.
 
-This paper examines the respiration and δ^13C values of respired and soil carbon at specific sites in Hawaii.
+This paper examines the respiration and δ$^{13}$C values of respired and soil carbon at specific sites in Hawaii.
 They used this data to test common assumptions about soil organic matter (SOM) models.
 These assumptions were that active and intermediate SOM are distinct fractions, that the bulk of heterotrophic respiration comes from the decomposition of active SOM, and that the two pools do not differ in their response to a change in temperature.
 
@@ -119,7 +138,6 @@ These assumptions were that active and intermediate SOM are distinct fractions, 
 ## Fit for purpose: HiCSC
 
 This data is identified as a data source for HiCSC.
-The purpose of this HiCSC is... #what does here
 
   - Location: This study was conducted on sites on the northeast flank of the Mauna Kea volcano within the Laupahoehoe Forest Reserve and the Waipunalei tract. The pasture sites were taken at 100, 800, and 1700 m, while the forest sites were at 900 and 1500 m. The exact longitude and latitude of the sites were not provided in the paper.
   - Soil carbon stock: The Soil carbon % of each of the sites was provided in Table 1, along with vegetation type and elevation. Coarse fraction was not reported and does not appear to be included.
@@ -193,6 +211,7 @@ diff Townsend1997_Table1.csv Townsend1997_Table1_LK.csv
 
 {{< include Townsend1997_Methods.md >}}
 
+<!----
 ## Citation notes from Methods
 
 Below are the citation notes from the methods section.
@@ -213,6 +232,8 @@ Some citations are missing, those are noted here and how best guess were generat
 
 - [x] Coleman DC, Anderson RV, Cole CV, Elliot ET, Woods L & Campion MK (1977) Trophic interactions in soils as they affect energy and nutrient dynamics. IV. Flows of metabolic and biomass carbon. Microbial Ecol. 4: 373–380
   + copy from bib
+
+---->
 
 # Level 0 Data rescue
 
