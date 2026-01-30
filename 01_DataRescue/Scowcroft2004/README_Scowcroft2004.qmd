@@ -3,7 +3,6 @@ title: "Data Rescue: Scowcroft 2004"
 format:
   html:
     toc: true
-    eval: true #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -19,8 +18,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: #TODO define these roles and add reference
       - transcription: review #secondary, review
-      - standardization: #review
-      - curation: #review
+    #  - standardization: #review
+     # - curation: #review
 
   - id: SavaScott #use the github name as an id
     name:
@@ -30,8 +29,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: lead
-      - standardization: 
-      - curation:
+      #- standardization: 
+     # - curation:
   - id: waldera 
     name:
       given: Ashlynn
@@ -40,8 +39,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: secondary
-      - standardization: 
-      - curation:
+    #  - standardization: 
+    #  - curation:
 
   - id: vaasukimarupaka
     name:
@@ -51,8 +50,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
-      - standardization: 
-      - curation:
+     # - standardization: 
+    #  - curation:
 
   - id: semantic-nomad
     name:
@@ -62,8 +61,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
-      - standardization: 
-      - curation:
+   #   - standardization: 
+    #  - curation:
 
 affiliations:
   - id: uf-ees
@@ -121,7 +120,7 @@ methods.file <- "Scowcroft2004_Methods.md"
 table1.file <- 'Scowcroft2004_Table1.csv'
 
 
-# Bibliograph files
+# Bibliography files
 primaryCitation.file <- 'Scowcroft2004.bib'
 methodsCitation.file <- 'Scowcroft2004_Methods.bib'
 
