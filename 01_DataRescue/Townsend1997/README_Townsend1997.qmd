@@ -1,0 +1,274 @@
+---
+title: "Data Rescue: Townsend 1997"
+format:
+  html:
+    toc: true
+    eval: false 
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Townsend1997_Methods.bib
+  - Townsend1997.bib
+authors:
+  - id: ktoddbrown
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: review
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead
+  - id: laylakalandjian
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: '@ktoddbrown'
+      end: 2025-12-15
+      start: 2025-12-10
+      duration: P30M #Period of 30M, ISO standard
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+# data files for level 0
+methods.file <- "Townsend1997_Methods.md"
+table1.file <- 'Townsend1997_Table1.csv'
+
+# Bibliography files
+primaryCitation.file <- 'Townsend1997.bib'
+methodsCitation.file <- 'Townsend1997_Methods.bib'
+
+# read function ##running into problems with this, don't know what it is
+#readsource.file <- '../../../R/readTownsend1997.R'
+#source(readsource.file)
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+TOWNSEND, A.R., VITOUSEK, P.M., DESMARAIS, D.J. et al. Soil carbon pool structure and temperature sensitivity inferred using CO2 and 13CO2 incubation fluxes from five Hawaiian soils. Biogeochemistry 38, 1–17 (1997). https://doi.org/10.1023/A:1017942918708
+
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/167.
+
+This paper examines the respiration and δ^13C values of respired and soil carbon at specific sites in Hawaii.
+They used this data to test common assumptions about soil organic matter (SOM) models.
+These assumptions were that active and intermediate SOM are distinct fractions, that the bulk of heterotrophic respiration comes from the decomposition of active SOM, and that the two pools do not differ in their response to a change in temperature.
+
+## Tables and figures
+
+
+- Table 
+  1) Initial and intermediate respiration, with the estimates of SOC% and the fraction of initial respiration from all five sites.
+  2) Q$_{10}$'s for initial and intermediate respiration for all five sites.
+  3)  Estimates of turnover times in years for intermediate SOM.
+  4) δ^${13}$C values of the SOM and vegetation.
+
+- Figure 
+  1)  Theoretical contribution of active and intermediate SOM to respiration for long-term incubation.
+  2) Diagram for the setup of the incubated soil samples.
+  3) Respired carbon over time for the three different temperatures at all five sites.
+  4) Initial and intermediate respiration versus temperature for the five sites. 
+  5) CO$_2$ respiration versus time during the incubation for the pasture sites.
+  6) Average percent change in respiration between days 5 and 15 for different temperatures.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for HiCSC.
+The purpose of this HiCSC is... #what does here
+
+  - Location: This study was conducted on sites on the northeast flank of the Mauna Kea volcano within the Laupahoehoe Forest Reserve and the Waipunalei tract. The pasture sites were taken at 100, 800, and 1700 m, while the forest sites were at 900 and 1500 m. The exact longitude and latitude of the sites were not provided in the paper.
+  - Soil carbon stock: The Soil carbon % of each of the sites was provided in Table 1, along with vegetation type and elevation. Coarse fraction was not reported and does not appear to be included.
+  - Soil Type:  The soil type of the sites was found to be Andisols that were derived from a 12,000-20,000-year-old volcanic ash deposit.
+  - Land Use: The land use of the sites was found to consist of a native *Metrosideros polymorpha* dominated rainforests to pastures with the grass *Pennisetum clandestinum*. The mean annual rainfall and MAT of the site, and more in-depth land use, were provided in the subsection Study Sites.
+  
+## Files
+
+These files are in the @Townsend1997 data rescue.
+
+- [Readme](README_Townsend1997.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Townsend1997.bib](Townsend1997.bib)
+  + citation for article transcribed
+- [Townsend1997_Methods.bib](Townsend1997_Methods.bib)
+  + citations for the methods section of the article
+- [Townsend1997_Methods.md](Townsend1997_Methods.md)
+  + methods transcribed from primary article
+- [Townsend1997_Table1.csv](Townsend1997_Table1.csv)
+  + table 1 from primary article with soil carbon %
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Townsend1997'
+  - [x] Create a copy of this template folder and rename it to Townsend1997
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 was modified to add in markdown formatting characters to better represent the paper's table. 
+
+```{r table1, eval: true}
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+## Methods comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines Townsend1997_Methods.md Townsend1997_Methods_LK.md
+
+diff Townsend1997_Table1.csv Townsend1997_Table1_LK.csv
+```
+
+## Methods Section Transcription
+
+{{< include Townsend1997_Methods.md >}}
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Peterson DW & Moore RB (1987) Geologic history and evolution of geologic concepts, island of Hawaii. In: Volcanism in Hawaii (pp 149–189). USGS Prof. paper 1350
+  + copy from bib
+
+- [x] Juvik JO, Singleton DC & Clarke GG (1978) Climate and water balance on the island of Hawaii. In: Mauna Loa Observatory, a 20th Anniversary Report (pp 129–139). NOAA Special Report, Silver Spring, MD
+  + copy from bib 
+
+- [x] Townsend AR, Vitousek PM & Trumbore SE (1995) Soil organic matter dynamics along gradients in temperature and land use on the island of Hawaii. Ecology 76(3): 721–733
+  + copy from bib 
+
+- [x] Coleman DC, Anderson RV, Cole CV, Elliot ET, Woods L & Campion MK (1977) Trophic interactions in soils as they affect energy and nutrient dynamics. IV. Flows of metabolic and biomass carbon. Microbial Ecol. 4: 373–380
+  + copy from bib
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0, eval: true}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r, eval=FALSE}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- read(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
