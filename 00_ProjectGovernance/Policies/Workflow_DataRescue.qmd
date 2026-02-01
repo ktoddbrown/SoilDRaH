@@ -93,10 +93,17 @@ This summary is intended to provide a proposal for the data rescue plan to be re
 
 Pass the summary and proposed plan to a reviewer.
 This reviewer should have some degree of familiarity of the methodologies used in the study and the proposed reanalysis.
-The reviewer should consider check that: 
+The reviewer should: 
 
-  -[ ] Does the summary reflect the paper while being shorter then the paper itself? 
-  -[ ] Does the identified elements in the data rescue plan serve the purpose of the reanalysis?
+  1) Pull source paper and skim
+  2) Check for 'extra' data identified in plan
+  3) Check that the location of target data in the source document is included in the rescue plan and correct
+  4) Skim for additional data that got missed, often looking for components (e.g. bulk density, organic fraction, coarse fraction ...)
+  5) Access for unusual rescue methods that require follow up guidence/training
+    - high number of points in figures (>50, code or more people)
+    - very large tables (>2 pages, code or more people)
+    - information in archived data files (download rather then transcribe)
+    - information in proprietary format (export rather then transcribe, possible direct reformat)
 
 
 ## Transcribing data {#sec-TranscribingData}
