@@ -195,6 +195,3 @@ data.lvl0.df <- list(citation =
                   ) 
 )
 ```
-```
-
-
