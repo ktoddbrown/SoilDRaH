@@ -60,7 +60,7 @@ timelog:
       who: Savascott
       end: 2026-02-01
       start: 2025-12-11
-      duration: PT4H30M
+      duration: PT4H45M
 
       timelog:
   - activity: 
