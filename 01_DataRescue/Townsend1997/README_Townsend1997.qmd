@@ -3,7 +3,6 @@ title: "Data Rescue: Townsend 1997"
 format:
   html:
     toc: true
-    eval: false 
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -59,7 +58,7 @@ timelog:
   - activity: 
       description: Lead Transcription and ReadMe Update
       who: Savascott
-      end: 2026-01-30
+      end: 2026-02-01
       start: 2025-12-11
       duration: PT4H30M
 
@@ -125,7 +124,7 @@ These assumptions were that active and intermediate SOM are distinct fractions, 
   1) Initial and intermediate respiration, with the estimates of SOC% and the fraction of initial respiration from all five sites.
   2) Q$_{10}$'s for initial and intermediate respiration for all five sites.
   3)  Estimates of turnover times in years for intermediate SOM.
-  4) δ^${13}$C values of the SOM and vegetation.
+  4) δ$^{13}$C values of the SOM and vegetation.
 
 - Figure 
   1)  Theoretical contribution of active and intermediate SOM to respiration for long-term incubation.
@@ -232,6 +231,7 @@ Some citations are missing, those are noted here and how best guess were generat
 
 - [x] Coleman DC, Anderson RV, Cole CV, Elliot ET, Woods L & Campion MK (1977) Trophic interactions in soils as they affect energy and nutrient dynamics. IV. Flows of metabolic and biomass carbon. Microbial Ecol. 4: 373–380
   + copy from bib
+  + cited as Coleman1998 in methods, but citation found is Coleman1997
 
 ---->
 
