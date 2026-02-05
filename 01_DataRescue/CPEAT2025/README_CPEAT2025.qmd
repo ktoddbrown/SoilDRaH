@@ -123,8 +123,8 @@ They use this data to look at global peat stock patterns (@Loisel2021aa).
 ## Where is the data
 
 This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 870 unique DOIs.
-Some of these DOIs have been superceded and are flagged as 'replaced by'.
-All DOIs are listed in the methods BibTex file and can be compared to the `pangaear::pg_search` code in the `checkDOIs` chunk.
+Some of these DOIs have been superseded and are flagged as 'replaced by'.
+All DOIs are listed in the methods BibTex file and can be compared to the `pangaear::pg_search` code in the `checkDOIs` chunk that is hidden in the output.
 
 There is some one-off data collections for ingest that means we can not ensure that future data contributions will be consistent with what we present here.
 This should be a good starting point however for adding new contributions.
@@ -164,36 +164,40 @@ setdiff(paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"),
 #         paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"))
 ```
 
-## Fit for purpose: ProjectName
+## Fit for purpose: ISCN 2025
 
 <!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+This data is identified as a data source for ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
 
 <!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
 
-- Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-- Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+Pangaea files have graphical metadata appearing before a primary data table in each data download.
+We process this information into three data tables: a `study` table containing the table-formatted metadata that is not information about the columns of the primary data, a `columns` table contianing the units and method notes for the primary data, and a `primary` table contiaining the layer level information.
+These data tables are provided in a `<id>-of_variable-is_type-with_entry` tuple.
+
+- **Location**: The geo-location is header information and ends up in the `study` table of the processed level 0 data.
+- **Soil carbon stock**: Soil carbon stock, total organic carbon fraction, organic carbon fraction, and loss on ignition are all included in the primary data table and ends up in the `primary` table of the level 0 data. Coarse fraction was not reported and does not appear to be included.
+  * **Layer depth**: Depth of surveyed soil layer is in the `primary` table.
 
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the CPEAT2025 data rescue.
 
-- [Readme](README_AUTHORYYYY.qmd)
-+ This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
-+ citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
-+ citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
-+ methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-+ table N from primary article with ...
+- [Readme](README_CPEAT2025.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [CPEAT2025.bib](CPEAT2025.bib)
+  + citation for project website and primary journal article transcribed
+- [CPEAT2025_Methods.bib](CPEAT2025_Methods.bib)
+  + citations for the cores archived on Pangaea that make up the project
+- [CPEAT2025_Methods.md](CPEAT2025_Methods.md)
+  + transcription of the project website
 - [temp/](temp/)
-+ scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+  + the download location for CPEAT core files archived on Pangaea
 
 # Level 0 data
 
@@ -218,6 +222,7 @@ basenames.arr <- allURLs.df$downloadData |>
 download.flag <- !file.exists(file.path(dataDownload.dir, basenames.arr))
 
 if(any(download.flag)){
+  message("This download may take some time.")
   download.file(url = allURLs.df$downloadData[download.flag], 
                 destfile = file.path(dataDownload.dir,
                                      basenames.arr[download.flag]))
@@ -288,6 +293,8 @@ all.primary <- plyr::ldply(.data = all.text, .fun = function(file.str){
 ```
 
 Continue to parse the header information
+There was some decision to make here on if we are going to go with a core based list or data type. 
+We went with data type (`study`, `column`, `primary`) instead.
 
 ```{r}
 #| label: processHeader
@@ -477,7 +484,7 @@ study_meta.df <- all.meta |>
 
 ####Create level 0 data list####
 #put it all together
-lvl0_data.ls <- list(study = study_meta.df,
+lvl0_dataTables <- list(study = study_meta.df,
                      columns = column_meta.df,
                      primary = all.primary)
 
@@ -485,10 +492,12 @@ lvl0_data.ls <- list(study = study_meta.df,
 #rm(list = setdiff(ls(), variable_keep))
 ```
 
-There was some decision to make here on if we are going to go with a core based list or data type. 
-We went with data type (`study`, `column`, `primary`) instead.
+Put everything together with the primary citation and text, as well as the three main data tables into a level 0 list.
 
-```{r readLevel0}
+```{r}
+#| label: createLvl0
+#| code-fold: true
+
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -505,10 +514,12 @@ data.lvl0.ls <- list(
   method = read_lines(file = methods.file),
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
-  data = lvl0_data.ls
+  data = lvl0_dataTables
 )
 
 ```
+
+Finally make sure everything was copied over to the read function and the output matches the code documented here.
 
 ```{r}
 #| label: readFunction_lvl0
