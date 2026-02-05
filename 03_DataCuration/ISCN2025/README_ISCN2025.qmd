@@ -19,7 +19,7 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     affiliation:
       - ref: uf-ees
     role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
+      #- transcription: lead #secondary, review
       - standardization: lead #review
       - curation: lead #review
 
