@@ -7,7 +7,9 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - ISCN2025.bib #contains citation that provide background on the project
+  - ../../01_DataRescue/CPEAT2025/CPEAT2025.bib #CPEAT citation
+  - ../../01_DataRescue/CPEAT2025/CPEAT2025_Methods.bib #CPEAT source
+  - ../../01_DataRescue/ISCN3_2015/ISCN3_2015.bib #ISCN3 citation
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -83,7 +85,7 @@ These include:
 
 + CPEAT (@Loisel2021, @CPEAT_web)
   - This is a collection of peat cores (@PCPEAT)
-  - Status: Reprocessing into the new repository structure
+  - Status: Level 0 complete. Finalizing Level 1
 + FIA
   - This is a US Forest Service database.
   - Status: Reprocessing into the new repository structure
