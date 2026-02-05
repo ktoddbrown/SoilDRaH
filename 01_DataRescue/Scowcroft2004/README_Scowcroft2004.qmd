@@ -162,7 +162,6 @@ The study found that by reestablishing koa in higher-elevation grasslands in Haw
 ## Fit for purpose: ProjectName
 
 This data is identified as a data source for HiCSC.
-The purpose of this HiCSC is...
 
   - Location: Study was conducted on the windward slopes of Mauna Kea around 1970 to 1990 m asl. The coordinates of the study were between 155° 19′ 56″ W long., 19° 47′ 53″ N lat. and 155° 19′ 57″ W long., 19° 51′ 13″ N lat. The soil core depths were taken from the top 15 cm at each site.
   - Soil carbon stock: Bulk density and total carbon were recorded in Table 1, along with the pH, topographic position and vegetation type that corresponds with the data.
