@@ -313,6 +313,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
                                          dataLevel = 'level0')
@@ -354,6 +355,172 @@ The `of_variable` being used here are:
  + citation
  
  <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
 
 # References
 
