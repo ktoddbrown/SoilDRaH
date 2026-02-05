@@ -92,8 +92,8 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
 ```
 
@@ -323,7 +323,7 @@ if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
 
 This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
 
-- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert. Note this was not done in the current data recovery
 - Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
 - Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
 - Land use: Land use and history are clearly identified in methods.
@@ -369,8 +369,10 @@ The `of_variable` being used here are:
 ```{r}
 #| lable: constructLevel1
 
-#Create table with data that is consistent across the study
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
+#### Method section only data ####
+#Create a table for the data in the methods section that is not directly 
+#...associated with any table.
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
                    'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
                    'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
@@ -378,6 +380,8 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
                    'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                    'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
 
+
+#### Table 1 ####
 # Process the primary data from Table 1 by maintaining data groups and standardizing the variable name so that we can link this to the study metadata and data in the other tables when needed.
 Table1Primary <- data.lvl0.ls$data$Table1$primary |>
   #Add a row id preserving row grouping -- not unique
@@ -403,7 +407,7 @@ Table1Primary <- data.lvl0.ls$data$Table1$primary |>
            column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
            column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
   #Flag the source of this data as Table 1, this table is merged later with other data so this keeps track of where the data came from
-  mutate(source = 'Table 1')
+  mutate(from_source = 'Table 1')
 
 # Create the metadata for table one from the header information and cited methods
 Table1Meta <- Table1Primary |>
@@ -411,14 +415,14 @@ Table1Meta <- Table1Primary |>
   unique() |>
   #Grab everything between the parentheses as units and attribute the source as the column names.
   mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         source = 'Table 1 column names.') |>
+         from_source = 'Table 1 column names.') |>
   #If there aren't units then drop the row
   filter(!is.na(unit)) |>
   #Don't keep the column name now that you have the units, cross link via the variable
   select(-column_name) |>
   #Stack into the table the methods for each variable that we can find
   bind_rows(
-  tribble(~of_variable, ~method, ~source,
+  tribble(~of_variable, ~method, ~from_source,
             'soil_ph', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
             'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_nitrogen', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
@@ -426,7 +430,7 @@ Table1Meta <- Table1Primary |>
             'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
   #Stack onto the tables the controlled vocabulary used
   bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~source,
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
             'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
             'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
   ) |>
@@ -436,7 +440,7 @@ Table1Meta <- Table1Primary |>
                values_drop_na = TRUE,
                values_to = 'with_entry')
 
-
+#### Table 3 #####
 #The following is doing the same process as above but fitted to the data and formatting of Table3
 Table3Primary <- data.lvl0.ls$data$Table3$primary |>
   pivot_longer(cols = -variable,
@@ -454,7 +458,7 @@ Table3Primary <- data.lvl0.ls$data$Table3$primary |>
     column_name == "Mean maximum vapor pressure deficit (kPa)" ~ 'mean_max_vapor_pressure_deficit',
     column_name == "Elevation (m)" ~ 'elevation',
     TRUE ~ NA_character_)) |>
-  mutate(source = 'Table 3')
+  mutate(from_source = 'Table 3')
 
 Table3Meta <- Table3Primary |>
   select(column_name, of_variable) |>
@@ -464,11 +468,11 @@ Table3Meta <- Table3Primary |>
   select(-column_name) |>
   pivot_longer(cols = -of_variable,
                names_to = 'is_type', values_to = 'with_entry') |>
-  mutate(source = case_when(is_type == 'unit' ~ 'Table 3 column names.',
+  mutate(from_source = case_when(is_type == 'unit' ~ 'Table 3 column names.',
                             is_type == 'method' ~ 'Methods ln72-73',
                             TRUE ~ NA_character_))
 
-
+#### Create level 1 #####
 # Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
   meta = bind_rows(studyMeta, Table1Meta, Table3Meta),
@@ -477,7 +481,7 @@ data.lvl1.ls <- list(
            is_type = 'value',
            .by = row_id) |>
     arrange(row_id, elevation_id, column_name,
-            of_variable, is_type, with_entry, source)
+            of_variable, is_type, with_entry, from_source)
   )
 #View(data.lvl1.ls)
 
@@ -490,15 +494,23 @@ data.lvl1.ls <- list(
 ```{r}
 #| label: check_of_variable
 
+#Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
                                    show_col_types = FALSE)
 
-if(all(unique(c(data.lvl1.ls$meta$of_variable,
-            data.lvl1.ls$primary$of_variable)) %in% SoilDRaH_variable_list$of_variable)){
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
   print('All of_variables are in the SoilDRaH variable list. No additions required')
 }else{
-  print(paste0('Please start a issue for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
-            data.lvl1.ls$primary$of_variable)), SoilDRaH_variable_list$of_variable), ']'))
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
 }
 ```
 
@@ -509,17 +521,29 @@ if(all(unique(c(data.lvl1.ls$meta$of_variable,
 ```{r}
 #| label: check_is_type
 
+#read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
                                    show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
   select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
   separate_longer_delim(cols = 'of_variable', delim = ',')
 
-undefined_data_type <- data.lvl1.ls$meta |> 
-  select(of_variable, is_type) |> 
-  unique() |>
-  bind_rows(data.lvl1.ls$primary |> 
-              select(of_variable, is_type) |> 
-              unique()) |>
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
   #subset for variables that are not 'incomplete'
   semi_join(SoilDRaH_variable_list |>
               filter(project_status != 'incomplete'),
@@ -528,7 +552,7 @@ undefined_data_type <- data.lvl1.ls$meta |>
   anti_join(SoilDRaH_type_list,
             by = join_by(of_variable, is_type))
 
-
+#Tell the user what you found.
 if(nrow(undefined_data_type) == 0){
   print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
 }else{
@@ -536,19 +560,24 @@ if(nrow(undefined_data_type) == 0){
 }
 ```
 
+## Check function match
+
+Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
-
-datafunction.lvl1.ls <- readAres2001(dataDir = '.',
-                                    dataLevel = 'level1')
-
-if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
-  print('Read function matches code for level 1.')
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAres2001(dataDir = '.',
+                                       dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
 }else{
-  print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  print('No read function found. Moving on')
 }
-
 ```
 
 # Level 2 data: HiSOC Database
@@ -581,7 +610,7 @@ study.df <- data.lvl1.ls$meta |>
   #look for any of the HiSOC variables
   filter(of_variable %in% HISOC_variables) |>
   #Drop the source infomration. Here we don't care about the source although we can always go back and reconstruct it. 
-  select(-source) |> 
+  select(-from_source) |> 
   #elevation units are from two sources, remove duplicates
   unique() |> 
   #Spread this wider so that it's human friendly, ending up with one row table
@@ -624,7 +653,7 @@ layer.df <- data.lvl1.ls$primary |>
   #take the entries in HiSOC_variables taht are not in climate_var
   filter(of_variable %in% setdiff(HISOC_variables, climate_var)) |>
   #similar to above, identify based on of_variable and ignore the source
-  select(-c(column_name, source)) |>
+  select(-c(column_name, from_source)) |>
   unique() |>
   #make things wide for cleaner joins
   pivot_wider(names_from = c(of_variable, is_type), 

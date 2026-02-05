@@ -84,7 +84,7 @@ readAres2001 <- function(dataDir,
   #### Build level 1 data ####
   
   #Create table with data that is consistent across the study
-  studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~source,
+  studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                        'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
                        'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
                        'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
@@ -117,7 +117,7 @@ readAres2001 <- function(dataDir,
       column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
       column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
     #Flag the source of this data as Table 1, this table is merged later with other data so this keeps track of where the data came from
-    dplyr::mutate(source = 'Table 1')
+    dplyr::mutate(from_source = 'Table 1')
   
   # Create the metadata for table one from the header information and cited methods
   Table1Meta <- Table1Primary |>
@@ -125,14 +125,14 @@ readAres2001 <- function(dataDir,
     unique() |>
     #Grab everything between the parentheses as units and attribute the source as the column names.
     dplyr::mutate(unit = stringr::str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-           source = 'Table 1 column names.') |>
+           from_source = 'Table 1 column names.') |>
     #If there aren't units then drop the row
     dplyr::filter(!is.na(unit)) |>
     #Don't keep the column name now that you have the units, cross link via the variable
     dplyr::select(-column_name) |>
     #Stack into the table the methods for each variable that we can find
     dplyr::bind_rows(
-      tibble::tribble(~of_variable, ~method, ~source,
+      tibble::tribble(~of_variable, ~method, ~from_source,
               'soil_ph', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
               'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
               'soil_nitrogen', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
@@ -140,7 +140,7 @@ readAres2001 <- function(dataDir,
               'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
     #Stack onto the tables the controlled vocabulary used
     dplyr::bind_rows(
-      tibble::tribble(~of_variable, ~control_vocabulary, ~source,
+      tibble::tribble(~of_variable, ~control_vocabulary, ~from_source,
               'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
               'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
     ) |>
@@ -168,7 +168,7 @@ readAres2001 <- function(dataDir,
       column_name == "Mean maximum vapor pressure deficit (kPa)" ~ 'mean_max_vapor_pressure_deficit',
       column_name == "Elevation (m)" ~ 'elevation',
       TRUE ~ NA_character_)) |>
-    dplyr::mutate(source = 'Table 3')
+    dplyr::mutate(from_source = 'Table 3')
   
   Table3Meta <- Table3Primary |>
     dplyr::select(column_name, of_variable) |>
@@ -178,7 +178,7 @@ readAres2001 <- function(dataDir,
     dplyr::select(-column_name) |>
     tidyr::pivot_longer(cols = -of_variable,
                  names_to = 'is_type', values_to = 'with_entry') |>
-    dplyr::mutate(source = dplyr::case_when(is_type == 'unit' ~ 'Table 3 column names.',
+    dplyr::mutate(from_source = dplyr::case_when(is_type == 'unit' ~ 'Table 3 column names.',
                               is_type == 'method' ~ 'Methods ln72-73',
                               TRUE ~ NA_character_))
   
@@ -191,7 +191,7 @@ readAres2001 <- function(dataDir,
              is_type = 'value',
              .by = row_id) |>
       dplyr::arrange(row_id, elevation_id, column_name,
-              of_variable, is_type, with_entry, source)
+              of_variable, is_type, with_entry, from_source)
   )
   
   return(data.lvl1.ls)
