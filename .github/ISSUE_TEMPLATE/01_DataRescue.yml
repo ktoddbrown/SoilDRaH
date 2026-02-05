@@ -1,6 +1,6 @@
-name: DataRescue
+name: 01_NewDataRescue
 title: "[AuthorLastYYYY or ShortNameYYYY]"
-labels: ["DataRescue"]
+labels: "Data Rescue"
 description: "Make sure to hit all the main points for a data data rescue taking data from a non-machine readable format to a machine readable format."
 body:
   - type: markdown
