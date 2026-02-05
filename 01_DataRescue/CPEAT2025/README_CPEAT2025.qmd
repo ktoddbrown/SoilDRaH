@@ -45,6 +45,14 @@ affiliations:
     
 timelog:
   - activity: 
+    description: Documentation for level 0
+    who: ktoddbrown #github username
+    #when you started and ended, can be just a year or down to the minute
+    start: 2026-02-05T11:30
+    end: 2026-02-05T12:30
+    #alternatively duration can be combined with a being/end
+    #duration: P3H
+    - activity: 
     description: Review, comment, and finalize level 1
     who: ktoddbrown #github username
     #when you started and ended, can be just a year or down to the minute
