@@ -1,0 +1,169 @@
+---
+title: "Data Rescue: Litton 2008"
+format:
+  html:
+    toc: true
+date: 2025-07
+date-format: YYYY-MMMM
+bibliography:
+  - Litton2008_Methods.bib
+  - Litton2008.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Litton2008_Methods.md'
+table2.file <- 'Litton2008_Table2.csv'
+figure6.file <- 'Litton2008_Figure6.csv'
+primaryCitation.file <- 'Litton2008.bib'
+methodsCitation.file <- 'Litton2008_Methods.bib'
+```
+
+This documents the data transcription for Litton 2008.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/91.
+
+LITTON, C.M., SANDQUIST, D.R. and CORDELL, S. (2008), A non-native invasive grass increases soil carbon flux in a Hawaiian tropical dry forest. Global Change Biology, 14: 726-739. https://doi.org/10.1111/j.1365-2486.2008.01546.x
+
+# Data Summary
+
+This paper focuses on the invasion of non-native plants in terrestrial ecosystems, particularly by looking at the presence of *P. setaceum* in the Kaupulehu Dry Forest Preserve and its impact on underground C cycling. Litton examines both C pools and fluxes in invaded and non-invaded plots over a 2-year time period.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Latitude/Longitude as well as time of observation identified in methods section under *Study area* subsection.
+- Soil carbon stock: Depth of soil mentioned in methods section under *Soil C pools* subsection.
+- Soil type: Soil type identified in methods section. 
+- Land use: Identified in methods section under *Study area* subsection.
+
+# Tables and figures
+
+Figure 1: Two-year time course of treatment means for monthly soil-surface CO2 efflux, weekly soil temperature, and weekly soil water potential with weekly cumulative precipitation
+Figure 2: Soil surface CO2 efflux vs soil water potential
+Figure 3: Daily soil-surface CO2 efflux and precipitation
+Figure 4: Soil-surface CO2 efflux vs total leaf area index
+Figure 5: Two-year time course of monthly tree litterfall and total annual aboveground litterfall
+Figure 6: *In situ* foliage decomposition of dominant tree with non-native invasive grass vs without
+Figure 7: C4 grass contribution (%) to soil C pools and fluxes
+
+Table 1: Stand characteristics of study site with and without *Pennisetum setaceum*
+Table 2: Soil carbon pools in grass and grass removal plots
+Table 3: Cumulative annual flux of C from soils in grass and grass removal plots
+  
+### Table 2
+
+Table 2 was modified to combine row subheadings, separated with a hyphen. Column names were combined with sublabels. Additionally, notes at bottom of table combined with table title in the caption.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Figure 6
+
+Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SD stands for Standard Deviation, Standard deviation high and lows from bar graph included as separate columns. Letters indicating statistically significant differences were listed in a new column titled "letter".
+
+```{r figure6}
+#| code-fold: true
+#| message: false
+
+filename <- figure6.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Litton2008_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Litton2008_Table2.csv Litton2008_Table2_SRS.csv
+```
+
+# Files
+
+These files are in the Litton2008 data rescue.
+
+- [Readme](README_Litton2008.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Litton2008.bib](Litton2008.bib)
+  + citation for article transcribed.
+- [Litton2008_Methods.bib](Litton2008_Methods.bib)
+  + citations for the methods section of the article.
+- [Litton2008_Methods.md](Litton2008_Methods.md)
+  + methods transcribed from primary article.
+- [Litton2008_Table2.csv](Litton2008_Table2.csv)
+  + table 2 from primary article with Soil C values.
+- [Litton2008_Figure6.csv](Litton2008_Figure6.csv)
+  + figure 6 from primary article with litter decomposition.
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf documents.
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 2
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] use plot digitizer to pull figure 6
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [x] submit to independent review
+- [x] archive on SoilDRaH
