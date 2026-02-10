@@ -87,7 +87,6 @@ readAres2001 <- function(dataDir,
   studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                        'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
                       'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
-                      'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
                       'land_use', 'YYYY/YYYY', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
                       'observation_time', 'YYYY', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
                        'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
