@@ -87,8 +87,10 @@ readAres2001 <- function(dataDir,
   studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                        'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
                       'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
-                      'land_use', 'YYYY/YYYY', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
-                      'observation_time', 'YYYY', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                      'land_use', 'interval', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
+                      'land_use', 'interval_format', 'YYYY/YYYY', NA,
+                      'observation_time', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                      'observation_time', 'format', 'YYYY', NA,
                        'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                        'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
   
@@ -193,7 +195,8 @@ readAres2001 <- function(dataDir,
   
   # Pull everything together into by stacking the meta and primary data tables
   data.lvl1.ls <- list(
-    meta = dplyr::bind_rows(studyMeta, Table1Meta, Table3Meta),
+    study = studyMeta,
+    primary_meta = dplyr::bind_rows(Table1Meta, Table3Meta),
     primary = dplyr::bind_rows(Table1Primary, Table3Primary)|>
       dplyr::mutate(elevation_id = with_entry[of_variable == 'elevation'],
              is_type = 'value',
