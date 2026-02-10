@@ -513,7 +513,7 @@ if(length(new_variables) == 0){
   print('All of_variables are in the SoilDRaH variable list. No additions required')
 }else{
   cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
+               unique(new_variables), ']', sep = '', collapse = '\n'))
 }
 ```
 
@@ -533,7 +533,7 @@ SoilDRaH_type_list <- read_csv(file = is_type.file,
   #...entries here
   separate_longer_delim(cols = 'of_variable', delim = ',')
 
-#Pull all the of_variable-is_type pairs from the source data
+#Initialize variable for pulling all the of_variable-is_type pairs
 source_pairs <- tibble()
 
 #If there are a large number of entries, consider replacing this for-loop.
@@ -553,7 +553,8 @@ undefined_data_type <- source_pairs |>
             by = join_by(of_variable)) |>
   #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
   anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
+            by = join_by(of_variable, is_type)) |>
+  unique()
 
 #Tell the user what you found.
 if(nrow(undefined_data_type) == 0){
