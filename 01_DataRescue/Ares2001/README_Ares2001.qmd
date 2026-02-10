@@ -333,11 +333,25 @@ This information can be values, units, methods, or other useful notes and is man
 
 The final format of the data frame here will include the following 
 
-  + grouping ids
-  + `of_variable`
-  + `is_type`
-  + `with_entry`
-  + `source`
+  + study
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
+  + primary_meta
+    + `column_name` (id column)
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
+  + primary
+    + `row_id` (id column)
+    + `elevation_id` (id column)
+    + `column_name` (id column)
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
 
 The `of_variable` being used here are:
 
@@ -371,8 +385,10 @@ The `of_variable` being used here are:
 studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
                    'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
-                   'land_use', 'YYYY/YYYY', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
-                   'observation_time', 'YYYY', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'land_use', 'interval', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
+                   'land_use', 'interval_format', 'YYYY/YYYY', NA,
+                   'observation_time', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'observation_time', 'format', 'YYYY', NA,
                    'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                    'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
 
@@ -478,7 +494,8 @@ Table3Meta <- Table3Primary |>
 #### Create level 1 #####
 # Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta, Table3Meta),
+  study = studyMeta,
+  primary_meta = dplyr::bind_rows(Table1Meta, Table3Meta),
   primary = bind_rows(Table1Primary, Table3Primary)|>
     mutate(elevation_id = with_entry[of_variable == 'elevation'],
            is_type = 'value',
@@ -586,41 +603,92 @@ if(file.exists(readsource.file)){
 
 # Level 2 data: HiSOC Database
 
-The structure of level 2 data will change based on the target analysis however level 2 will always be generated from level 1.
+The variables of interest for the HiSOC database translate nicely into a set of four tables tables: source, site, layer, and land use. Rearranging the variables above we get:
+
+- source
+  + citation
+  + doi
+- site
+  + region
+  + elevation
+  + observation_time
+  + mean_air_temperature
+  + mean_max_vapor_pressure_deficit
+  + mean_solar_radiation
+  + total_rainfall
+  + soil_class
+- layer
+  + soil_organic_carbon
+  + soil_ph
+  + soil_phosphorus
+  + soil_nitrogen
+- site_history
+  + land_use
+
+This drops the following variables
+  - drop variables
+    + stand_type
+    + stem_density
+    + diameter_at_breast_height
+    + height
+    + 'mean_max_vapor_pressure_deficit'
+    + 'mean_solar_radiation'
 
 ```{r}
+#| label: buildLvl2
 
-# Define the variables that we want specificly for HiSOC database, this chould be expanded to other data collections later so we filter here even though it has no effect
-HISOC_variables <- c(
-  "citation",
-  "doi",
-  "region", 
-  "land_use_type",
-  "observation_year",
-  'elevation',
-  'mean_air_temperature',
-  'total_rainfall',
-  "soil_organic_carbon",
-  "soil_nitrogen",
-  "soil_phosphorus",
-  "soil_ph",
-  "soil_class",
-  "stand_age",
-  'stand_type'
+# Define the variables that we want specifically for HiSOC database, this could be expanded to other data collections later so we filter here even though it has no effect
+HISOC_variables <- list(
+  source = c('citation', 'doi'),
+  site = c('region', 'observation_time', #temporal-geolocation
+            #climate
+            'mean_air_temperature', 'total_rainfall',
+            #geology/geography
+            'elevation', 'soil_class'),
+  layer = c('layer_top', 'layer_bottom', #in methods
+            'soil_organic_carbon', 'soil_ph', 'soil_phosphorus', 'soil_nitrogen'),
+  site_history = c('land_use')
 )
+  
+source.df <- data.lvl1.ls$study |>
+  filter(of_variable %in% HISOC_variables$source) |>
+  mutate(study_id = 'Ares2001')  |>
+  select(study_id, of_variable, with_entry) |>
+  #all of the source information is from the same from_source value so this is easy
+  pivot_wider(names_from = of_variable, values_from = with_entry)
 
-# Pull the study table from the meta data
-study.df <- data.lvl1.ls$meta |>
-  #look for any of the HiSOC variables
-  filter(of_variable %in% HISOC_variables) |>
-  #Drop the source infomration. Here we don't care about the source although we can always go back and reconstruct it. 
-  select(-from_source) |> 
-  #elevation units are from two sources, remove duplicates
-  unique() |> 
-  #Spread this wider so that it's human friendly, ending up with one row table
-  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
-  #add the study id in prep for merging it with other datasets
-  mutate(study_id = 'Ares2001')
+site_history.df <- data.lvl1.ls$study |>
+  filter(of_variable %in% HISOC_variables$site_history) |>
+  mutate(from_source = from_source[is_type == 'value']) |>
+  mutate(is_type = case_match(is_type, 'value' ~ 'description',
+                              .default = is_type)) |>
+  mutate(column_name = paste0(of_variable, '::', is_type)) |>
+  select(column_name, with_entry) |>
+  pivot_wider(names_from = column_name, values_from=with_entry) |>
+  mutate(study_id = 'Ares2001',
+         land_use_id = 'LU1', #only one site in the study
+         land_use = 'Plantation') |>
+  select(study_id, land_use_id, land_use, 
+         'land_use::description', 'land_use::interval', 'land_use::interval_format')
+
+layer.df <- data.lvl1.ls$primary |>
+  filter(of_variable %in% HISOC_variables$layer) |>
+  #is_type == value so it can be dropped, column name is processed and can be dropped
+  select(-c(column_name, from_source, elevation_id))|>
+  bind_rows(data.lvl1.ls$primary_meta |>
+              filter(of_variable %in% HISOC_variables$layer) |>
+              select(of_variable, is_type, with_entry) |>
+              reframe(row_id = unique(data.lvl1.ls$primary$row_id),
+                      .by = everything()) 
+  ) |>
+  filter((any(is_type == 'value')), .by = row_id) |>
+  mutate(column_name = paste0(of_variable,'::',is_type)) |>
+  select(layer_id = row_id, site_id = elevation_id, column_name, with_entry) |>
+  pivot_wider(names_from = column_name, values_from = with_entry) |>
+  #layer information in methods for soil variables
+  mutate(`layer::top` = '0', `layer::bottom` = '15', 
+         `layer::unit` = 'cm')
+
   
 #The climate across various elevations needs to be gap-filled. Here we create a linear interpolation to gapfill the temperature and rainfall values based on elevation. Details on model fit are in the comments below and fitted from the data orginally provided.
 #
@@ -647,15 +715,18 @@ elevation.df <- data.lvl1.ls$primary|>
     #N = 3, Adjusted R-squared:  0.9886; p-value: 0.0482
     `total_rainfall::value` = if_else(is.na(`total_rainfall::value`),
                                       19078.83 - 9.97 * `elevation::value`, `total_rainfall::value`)) |>
+  mutate(`mean_air_temperature::method` = 'linear interpolation from provided elevation values',
+         `total_rainfall::method` = 'linear interpolation from provided elevation values')
   #convert everything back to characters for merging in with the rest of the data
   mutate(across(everything(), as.character)) |>
   #add on the study_id
-  mutate(study_id = 'Ares2001')
+  mutate(study_id = 'Ares2001',
+         land_use_id = site_history.df)
 
 # Pull in the data from the primary table that we did not interpolate above
-layer.df <- data.lvl1.ls$primary |>
+site.df <- data.lvl1.ls$primary |>
   #take the entries in HiSOC_variables taht are not in climate_var
-  filter(of_variable %in% setdiff(HISOC_variables, climate_var)) |>
+  filter(of_variable %in% setdiff(HISOC_variables$site, climate_var)) |>
   #similar to above, identify based on of_variable and ignore the source
   select(-c(column_name, from_source)) |>
   unique() |>
@@ -665,7 +736,12 @@ layer.df <- data.lvl1.ls$primary |>
   #row identifier is no longer needed
   select(-row_id) |>
   #add in the study id
-  mutate(study_id = 'Ares2001')
+  mutate(study_id = 'Ares2001',
+         land_use_id = site_history.df$land_use_id) |>
+  full_join(elevation.df,
+            by = join_by(elevation_id, study_id)) |>
+  rename(site_id = elevation_id)
+
 
 # join the temp dfs above together
 data.lvl2.df <- full_join(study.df,
