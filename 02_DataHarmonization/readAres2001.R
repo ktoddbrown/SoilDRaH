@@ -36,7 +36,7 @@ readAres2001 <- function(dataDir,
   
   #dataLevel <- 'level0'
   
-  ###Level 0 data read rescued from pdf ####
+  ### Build Level 0 data ####
   ###
   #This chunk has two purposes. 
   #...1) Check the formatting by reading in everything 
@@ -81,14 +81,15 @@ readAres2001 <- function(dataDir,
       return(data.lvl0.ls)
   }
   
-  #### Build level 1 data ####
+  ### Build level 1 data ###
   
   #Create table with data that is consistent across the study
   studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                        'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
-                       'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
-                       'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
-                       'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                      'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
+                      'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
+                      'land_use', 'YYYY/YYYY', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
+                      'observation_time', 'YYYY', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
                        'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                        'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
   
@@ -110,12 +111,13 @@ readAres2001 <- function(dataDir,
       column_name == 'Soil N (%)' ~ 'soil_nitrogen',
       column_name == 'Soil P (mg kg<sup>-1</sup>)' ~ 'soil_phosphorus',
       column_name == 'Stand age (years)' ~ 'stand_age',
-      column_name == '*F. uhdei* Stem density (trees / ha)' ~ 'stem_density_F_uhdei',
-      column_name == '*F. uhdei* Mean DBH (cm)' ~ 'diameter_at_breast_height_F_uhdei',
-      column_name == '*F. uhdei* Mean height(m)' ~ 'height_F_uhdei',
-      column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density_A_koa',
-      column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
-      column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
+           column_name == '*F. uhdei* Stem density (trees / ha)' ~ 'stem_density',
+           column_name == '*F. uhdei* Mean DBH (cm)' ~ 'diameter_at_breast_height',
+           column_name == '*F. uhdei* Mean height(m)' ~ 'height',
+           column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density',
+           column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height',
+           column_name == "*A. koa* Mean height(m)"~ 'height')) |>
+    dplyr::mutate(is_type = if_else(str_detect(column_name, 'Mean'), 'mean', 'value')) |>
     #Flag the source of this data as Table 1, this table is merged later with other data so this keeps track of where the data came from
     dplyr::mutate(from_source = 'Table 1')
   
@@ -125,11 +127,12 @@ readAres2001 <- function(dataDir,
     unique() |>
     #Grab everything between the parentheses as units and attribute the source as the column names.
     dplyr::mutate(unit = stringr::str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+                  species = case_when(str_detect(column_name, 'F. uhdei') ~ 'Fraxinus uhdei',
+                             str_detect(column_name, 'A. koa') ~ 'Acacia koa',
+                             .default = NA_character_),
            from_source = 'Table 1 column names.') |>
     #If there aren't units then drop the row
-    dplyr::filter(!is.na(unit)) |>
-    #Don't keep the column name now that you have the units, cross link via the variable
-    dplyr::select(-column_name) |>
+    dplyr::filter(!is.na(unit) | is.na(species)) |>
     #Stack into the table the methods for each variable that we can find
     dplyr::bind_rows(
       tibble::tribble(~of_variable, ~method, ~from_source,
@@ -137,15 +140,21 @@ readAres2001 <- function(dataDir,
               'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
               'soil_nitrogen', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
               'soil_phosphorus', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
-              'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
-    #Stack onto the tables the controlled vocabulary used
-    dplyr::bind_rows(
-      tibble::tribble(~of_variable, ~control_vocabulary, ~from_source,
-              'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
-              'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
-    ) |>
+              'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12')  |>
+        #Stack onto the tables the controlled vocabulary used
+        dplyr::bind_rows(
+          tibble::tribble(~of_variable, ~control_vocabulary, ~from_source,
+                          'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
+                          'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed') )|>
+        #put the column names back in
+        left_join(Table1Primary |>
+                    select(column_name, of_variable) |>
+                    unique(),
+                  by = join_by(of_variable))
+      
+    ) |> #close methods stack
     # Push the dimensions of the variable into a single column. Making this a long table.
-    tidyr::pivot_longer(cols = c(unit, method, control_vocabulary),
+    tidyr::pivot_longer(cols = c(unit, species, method, control_vocabulary),
                  names_to = 'is_type',
                  values_drop_na = TRUE,
                  values_to = 'with_entry')
