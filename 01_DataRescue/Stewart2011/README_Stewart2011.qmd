@@ -10,28 +10,28 @@ bibliography:
   - AuthorYYYY_Methods.bib #contains the citations in the methods section
   - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
-  - id: ktoddbrown #use the github name as an id
+  - id: ktoddbrown 
     name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
+    role: 
       - transcription: review
-      - standardization: #lead #review
-      - curation: lead #review
-  - id: semantic-nomad #use the github name as an id
+      - standardization: 
+      - curation: 
+  - id: semantic-nomad 
     name:
       given: Brandon
       family: Whitehead
     orcid: 
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
+    role: 
       - transcription: review
-      - standardization: #lead #review
-      - curation: #lead #review
+      - standardization: 
+      - curation: 
   - id: misheph
     name:
       given: Mirah
@@ -39,10 +39,10 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     orcid: N/A
     affiliation:
       - ref: uf-mae
-    role: #TODO define these roles and add reference
+    role: 
       - transcription: lead 
-      - standardization: #lead #review
-      - curation: #lead #review
+      - standardization:
+      - curation: 
   - id: SavaScott
     name:
       given: Savannah
@@ -50,10 +50,10 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     orcid: N/A
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
+    role: 
       - transcription: secondary
-      - standardization: #lead #review
-      - curation: #lead #review
+      - standardization: 
+      - curation: 
 
 affiliations:
   - id: uf-ees
@@ -65,17 +65,23 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address:
+    postal-code: "P.O Box 116250"
+    url:  32611
+    url: https://mae.ufl.edu/
     
 timelog:
   - activity: 
       description: Revise based on feedback
-      who: @Misheph #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2026-1-22
-      start: 2025-10
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-version: 'vs202512' #template version, remove before use
+      who: @Misheph 
+      end: 2026-1-31
+      start: 2025-10-25
 ---
 
 
