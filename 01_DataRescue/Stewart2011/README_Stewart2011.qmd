@@ -4,7 +4,7 @@ format:
   html:
     toc: true
     eval: false #default to not evaluating the chunks, override this the template is completed
-date: 2026-
+date: 2026-02-06
 date-format: YYYY-MMMM
 bibliography:
   - AuthorYYYY_Methods.bib #contains the citations in the methods section
