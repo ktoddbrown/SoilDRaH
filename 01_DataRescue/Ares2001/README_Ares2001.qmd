@@ -634,6 +634,9 @@ This drops the following variables
     + 'mean_max_vapor_pressure_deficit'
     + 'mean_solar_radiation'
 
+Note that the climate variables were provided for elevations that did not match the site elevation. 
+We used linear interpolation from the provided elevations to the needed elevations.
+
 ```{r}
 #| label: buildLvl2
 
@@ -652,8 +655,8 @@ HISOC_variables <- list(
   
 source.df <- data.lvl1.ls$study |>
   filter(of_variable %in% HISOC_variables$source) |>
-  mutate(study_id = 'Ares2001')  |>
-  select(study_id, of_variable, with_entry) |>
+  mutate(source_id = 'Ares2001')  |>
+  select(source_id, of_variable, with_entry) |>
   #all of the source information is from the same from_source value so this is easy
   pivot_wider(names_from = of_variable, values_from = with_entry)
 
@@ -665,41 +668,52 @@ site_history.df <- data.lvl1.ls$study |>
   mutate(column_name = paste0(of_variable, '::', is_type)) |>
   select(column_name, with_entry) |>
   pivot_wider(names_from = column_name, values_from=with_entry) |>
-  mutate(study_id = 'Ares2001',
-         land_use_id = 'LU1', #only one site in the study
-         land_use = 'Plantation') |>
-  select(study_id, land_use_id, land_use, 
+  mutate(source_id = 'Ares2001',
+         land_use_id = 'LU1', #only land use in the study
+         land_use = 'Plantation' #from discription
+         ) |>
+  select(source_id, land_use_id, land_use, 
          'land_use::description', 'land_use::interval', 'land_use::interval_format')
 
 layer.df <- data.lvl1.ls$primary |>
+  #pull the layer variables out of the primary data
   filter(of_variable %in% HISOC_variables$layer) |>
-  #is_type == value so it can be dropped, column name is processed and can be dropped
+  #rely on the row id and of variable to ID the elements
   select(-c(column_name, from_source, elevation_id))|>
-  bind_rows(data.lvl1.ls$primary_meta |>
-              filter(of_variable %in% HISOC_variables$layer) |>
-              select(of_variable, is_type, with_entry) |>
-              reframe(row_id = unique(data.lvl1.ls$primary$row_id),
-                      .by = everything()) 
+  bind_rows(#bind the primary data with associated meta data
+    #... generally this is the unit or methods
+    data.lvl1.ls$primary_meta |>
+      filter(of_variable %in% HISOC_variables$layer) |>
+      select(of_variable, is_type, with_entry) |>
+      reframe(row_id = unique(data.lvl1.ls$primary$row_id),
+              .by = everything()) 
   ) |>
+  # add back in the site/elevation ids now that we have the methods bound
+  left_join(data.lvl1.ls$primary |> select(row_id, elevation_id) |> unique(),
+            by = join_by(row_id)) |>
+  #only keep things if there is an associated value we want in the row
   filter((any(is_type == 'value')), .by = row_id) |>
+  #create new column names with the variable and type in it
   mutate(column_name = paste0(of_variable,'::',is_type)) |>
+  #covert things to more resonable named IDs and pull in the header-values
   select(layer_id = row_id, site_id = elevation_id, column_name, with_entry) |>
+  #make everything wide for the poor humans
   pivot_wider(names_from = column_name, values_from = with_entry) |>
-  #layer information in methods for soil variables
+  #layer information transcribed from methods for soil variables
   mutate(`layer::top` = '0', `layer::bottom` = '15', 
          `layer::unit` = 'cm')
 
   
-#The climate across various elevations needs to be gap-filled. Here we create a linear interpolation to gapfill the temperature and rainfall values based on elevation. Details on model fit are in the comments below and fitted from the data orginally provided.
-#
+#The climate across various elevations needs to be gap-filled. 
+#  Here we create a linear interpolation to gapfill the temperature and rainfall
+#  values based on elevation. Details on model fit are in the comments below and
+#  fitted from the data originally provided.
+
 climate_var <- c('mean_air_temperature', 'elevation', 'total_rainfall')
 
 #create an elevation identified climate table
 elevation.df <- data.lvl1.ls$primary|>
   filter(of_variable %in% climate_var) |>
-  # filter(of_variable %in% HISOC_variables,
-  #        !(str_detect(of_variable, 'soil') |
-  #          str_detect(of_variable, 'stand')))|>
   select(elevation_id, of_variable, with_entry, is_type) |>
   unique() |>
   #convert from character to do the math
@@ -716,12 +730,12 @@ elevation.df <- data.lvl1.ls$primary|>
     `total_rainfall::value` = if_else(is.na(`total_rainfall::value`),
                                       19078.83 - 9.97 * `elevation::value`, `total_rainfall::value`)) |>
   mutate(`mean_air_temperature::method` = 'linear interpolation from provided elevation values',
-         `total_rainfall::method` = 'linear interpolation from provided elevation values')
+         `total_rainfall::method` = 'linear interpolation from provided elevation values') |>
   #convert everything back to characters for merging in with the rest of the data
   mutate(across(everything(), as.character)) |>
-  #add on the study_id
-  mutate(study_id = 'Ares2001',
-         land_use_id = site_history.df)
+  #add on the source_id
+  mutate(source_id = 'Ares2001',
+         land_use_id = site_history.df$land_use_id |> unique())
 
 # Pull in the data from the primary table that we did not interpolate above
 site.df <- data.lvl1.ls$primary |>
@@ -735,30 +749,46 @@ site.df <- data.lvl1.ls$primary |>
               names_sep = '::', values_from = with_entry) |>
   #row identifier is no longer needed
   select(-row_id) |>
-  #add in the study id
-  mutate(study_id = 'Ares2001',
+  #add in the study id and land useID
+  mutate(source_id = 'Ares2001',
          land_use_id = site_history.df$land_use_id) |>
   full_join(elevation.df,
-            by = join_by(elevation_id, study_id)) |>
+            by = join_by(elevation_id, source_id, land_use_id)) |>
   rename(site_id = elevation_id)
 
 
-# join the temp dfs above together
-data.lvl2.df <- full_join(study.df,
-                          layer.df, 
-                          by = join_by(study_id)) |>
-  left_join(elevation.df, 
-            by = join_by(elevation_id, study_id)) |>
-  #Create a new row idea across the entire study
-  mutate(row_id = paste0('ID', 1:n())) |>
-  #Make this long again so we have the general data structure of
-  #...id - of_variable - is_type - with_entry
-  pivot_longer(cols = -c(study_id, elevation_id, row_id),
-               values_to = 'with_entry',
-               names_sep = '::',
-               names_to = c('of_variable', 'is_type'),
-               values_drop_na = TRUE) 
+# return a list of tables
 
+data.lvl2HiCSC.df <- list(
+  source = source.df,
+  #make sure the site_ids have a letter in front of them so it is not read in as a numerical when read/write to csv
+  site = site.df |>
+    mutate(site_id = paste0('S', site_id)),
+  site_history = site_history.df,
+  layer = layer.df|>
+    mutate(site_id = paste0('S', site_id))
+  )
+
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl2
+if(file.exists(readsource.file)){
+  datafunction.lvl2.ls <- readAres2001(dataDir = '.',
+                                       dataLevel = 'level2-HiSOC')
+  
+  if(isTRUE(all.equal(datafunction.lvl2.ls, data.lvl2HiCSC.df))){
+    print('Read function output matches ReadMe code for level 2 - HiSOC.')
+  }else{
+    print('There is a mismatch in the level level 2 - HiSOC data objects between the code here and the read function.')
+  }
+}else{
+  print('No read function found. Moving on')
+}
 ```
 
 

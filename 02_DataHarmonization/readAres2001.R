@@ -14,12 +14,13 @@
 #' @importFrom bibtex read.bib
 #' @importFrom readr read_lines read_csv cols col_character
 #' @importFrom tibble tribble
-#' @importFrom dplyr mutate n case_when bind_rows select filter arrange
+#' @importFrom dplyr mutate n case_when bind_rows select filter arrange join_by left_join full_join case_match across
 #' @importFrom tidyr pivot_longer pivot_wider
 #' @importFrom stringr str_extract
+#' @importFrom tidyselect everything
 #'
 readAres2001 <- function(dataDir,
-                         dataLevel = c('level0', 'level1')[1],
+                         dataLevel = c('level0', 'level1', 'level2-HiSOC')[1],
                          verbose = TRUE){
   
   #coment out this before leaving
@@ -81,7 +82,9 @@ readAres2001 <- function(dataDir,
       return(data.lvl0.ls)
   }
   
-  ### Build level 1 data ###
+  ### Build level 1 data ####
+  ### The purpose of this section is to create a harmonized data tuple that matches
+  ### the SoilDRaH data model and vocabularies
   
   #Create table with data that is consistent across the study
   studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
@@ -148,10 +151,10 @@ readAres2001 <- function(dataDir,
                           'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
                           'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed') )|>
         #put the column names back in
-        left_join(Table1Primary |>
-                    select(column_name, of_variable) |>
+        dplyr::left_join(Table1Primary |>
+                    dplyr::select(column_name, of_variable) |>
                     unique(),
-                  by = join_by(of_variable))
+                  by = dplyr::join_by(of_variable))
       
     ) |> #close methods stack
     # Push the dimensions of the variable into a single column. Making this a long table.
@@ -205,5 +208,145 @@ readAres2001 <- function(dataDir,
               of_variable, is_type, with_entry, from_source)
   )
   
-  return(data.lvl1.ls)
+  if(dataLevel == 'level1'){
+    return(data.lvl1.ls)
+  }
+  
+  ### Build level 2 - HiSOC ####
+  ### The purpose of this section is to create a curated element for the HiSOC data project
+  
+  # Define the variables that we want specifically for HiSOC database, this could be expanded to other data collections later so we filter here even though it has no effect
+  HISOC_variables <- list(
+    source = c('citation', 'doi'),
+    site = c('region', 'observation_time', #temporal-geolocation
+             #climate
+             'mean_air_temperature', 'total_rainfall',
+             #geology/geography
+             'elevation', 'soil_class'),
+    layer = c('layer_top', 'layer_bottom', #in methods
+              'soil_organic_carbon', 'soil_ph', 'soil_phosphorus', 'soil_nitrogen'),
+    site_history = c('land_use')
+  )
+  
+  source.df <- data.lvl1.ls$study |>
+    dplyr::filter(of_variable %in% HISOC_variables$source) |>
+    dplyr::mutate(source_id = 'Ares2001')  |>
+    dplyr::select(source_id, of_variable, with_entry) |>
+    #all of the source information is from the same from_source value so this is easy
+    pivot_wider(names_from = of_variable, values_from = with_entry)
+  
+  site_history.df <- data.lvl1.ls$study |>
+    dplyr::filter(of_variable %in% HISOC_variables$site_history) |>
+    dplyr::mutate(from_source = from_source[is_type == 'value']) |>
+    dplyr::mutate(is_type = dplyr::case_match(is_type, 'value' ~ 'description',
+                                .default = is_type)) |>
+    dplyr::mutate(column_name = paste0(of_variable, '::', is_type)) |>
+    dplyr::select(column_name, with_entry) |>
+    pivot_wider(names_from = column_name, values_from=with_entry) |>
+    dplyr::mutate(source_id = 'Ares2001',
+           land_use_id = 'LU1', #only land use in the study
+           land_use = 'Plantation' #from discription
+    ) |>
+    dplyr::select(source_id, land_use_id, land_use, 
+           'land_use::description', 'land_use::interval', 'land_use::interval_format')
+  
+  layer.df <- data.lvl1.ls$primary |>
+    #pull the layer variables out of the primary data
+    dplyr::filter(of_variable %in% HISOC_variables$layer) |>
+    #rely on the row id and of variable to ID the elements
+    dplyr::select(-c(column_name, from_source, elevation_id))|>
+    dplyr::bind_rows(#bind the primary data with associated meta data
+      #... generally this is the unit or methods
+      data.lvl1.ls$primary_meta |>
+        dplyr::filter(of_variable %in% HISOC_variables$layer) |>
+        dplyr::select(of_variable, is_type, with_entry) |>
+        reframe(row_id = unique(data.lvl1.ls$primary$row_id),
+                .by = tidyselect::everything()) 
+    ) |>
+    # add back in the site/elevation ids now that we have the methods bound
+    dplyr::left_join(data.lvl1.ls$primary |> dplyr::select(row_id, elevation_id) |> unique(),
+              by = dplyr::join_by(row_id)) |>
+    #only keep things if there is an associated value we want in the row
+    dplyr::filter((any(is_type == 'value')), .by = row_id) |>
+    #create new column names with the variable and type in it
+    dplyr::mutate(column_name = paste0(of_variable,'::',is_type)) |>
+    #covert things to more resonable named IDs and pull in the header-values
+    dplyr::select(layer_id = row_id, site_id = elevation_id, column_name, with_entry) |>
+    #make everything wide for the poor humans
+    pivot_wider(names_from = column_name, values_from = with_entry) |>
+    #layer information transcribed from methods for soil variables
+    dplyr::mutate(`layer::top` = '0', `layer::bottom` = '15', 
+           `layer::unit` = 'cm')
+  
+  
+  #The climate across various elevations needs to be gap-filled. 
+  #  Here we create a linear interpolation to gapfill the temperature and rainfall
+  #  values based on elevation. Details on model fit are in the comments below and
+  #  fitted from the data originally provided.
+  
+  climate_var <- c('mean_air_temperature', 'elevation', 'total_rainfall')
+  
+  #create an elevation identified climate table
+  elevation.df <- data.lvl1.ls$primary|>
+    dplyr::filter(of_variable %in% climate_var) |>
+    dplyr::select(elevation_id, of_variable, with_entry, is_type) |>
+    unique() |>
+    #convert from character to do the math
+    dplyr::mutate(with_entry = as.numeric(with_entry)) |>
+    #pivot things wider to make filling in missing values easier
+    pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
+    #apply fitted linear interpolation
+    dplyr::mutate(
+      #Figure out linear interpolation with
+      #lm(formula = `mean_air_temperature::value` ~ `elevation::value`, data = elevation.df)
+      #N = 3, Adjusted R-squared:  0.997 , p-value: 0.02449
+      `mean_air_temperature::value` = if_else(is.na(`mean_air_temperature::value`), 23.15 - 0.006429 * `elevation::value`, `mean_air_temperature::value`), 
+      #N = 3, Adjusted R-squared:  0.9886; p-value: 0.0482
+      `total_rainfall::value` = if_else(is.na(`total_rainfall::value`),
+                                        19078.83 - 9.97 * `elevation::value`, `total_rainfall::value`)) |>
+    dplyr::mutate(`mean_air_temperature::method` = 'linear interpolation from provided elevation values',
+           `total_rainfall::method` = 'linear interpolation from provided elevation values') |>
+    #convert everything back to characters for merging in with the rest of the data
+    dplyr::mutate(dplyr::across(tidyselect::everything(), as.character)) |>
+    #add on the source_id
+    dplyr::mutate(source_id = 'Ares2001',
+           land_use_id = site_history.df$land_use_id |> unique())
+  
+  # Pull in the data from the primary table that we did not interpolate above
+  site.df <- data.lvl1.ls$primary |>
+    #take the entries in HiSOC_variables taht are not in climate_var
+    dplyr::filter(of_variable %in% setdiff(HISOC_variables$site, climate_var)) |>
+    #similar to above, identify based on of_variable and ignore the source
+    dplyr::select(-c(column_name, from_source)) |>
+    unique() |>
+    #make things wide for cleaner joins
+    pivot_wider(names_from = c(of_variable, is_type), 
+                names_sep = '::', values_from = with_entry) |>
+    #row identifier is no longer needed
+    dplyr::select(-row_id) |>
+    #add in the study id and land useID
+    dplyr::mutate(source_id = 'Ares2001',
+           land_use_id = site_history.df$land_use_id) |>
+    dplyr::full_join(elevation.df,
+              by = dplyr::join_by(elevation_id, source_id, land_use_id)) |>
+    rename(site_id = elevation_id)
+  
+  
+  # return a list of tables
+  
+  data.lvl2HiCSC.df <- list(
+    source = source.df,
+    #make sure the site_ids have a letter in front of them so it is not read in as a numerical when read/write to csv
+    site = site.df |>
+      dplyr::mutate(site_id = paste0('S', site_id)),
+    site_history = site_history.df,
+    layer = layer.df|>
+      dplyr::mutate(site_id = paste0('S', site_id))
+  )
+  
+  if(dataLevel == 'level2-HiSOC'){
+    return(data.lvl2HiCSC.df)
+  }
+  
+  stop('Badly specified dataLevel flag')
 }
