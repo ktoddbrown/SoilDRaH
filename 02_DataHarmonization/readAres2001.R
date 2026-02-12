@@ -324,12 +324,21 @@ readAres2001 <- function(dataDir,
                 names_sep = '::', values_from = with_entry) |>
     #row identifier is no longer needed
     dplyr::select(-row_id) |>
+    dplyr::bind_cols( #pull in the variables in the study table like region and obs time
+      data.lvl1.ls$study |> 
+        dplyr::filter(of_variable %in% HISOC_variables$site) |>
+        dplyr::select(-from_source) |>
+        #make things wide for cleaner joins
+        tidyr::pivot_wider(names_from = c(of_variable, is_type),
+                    values_from = c(with_entry),
+                    names_sep = '::')
+    ) |>
     #add in the study id and land useID
     dplyr::mutate(source_id = 'Ares2001',
            land_use_id = site_history.df$land_use_id) |>
-    dplyr::full_join(elevation.df,
+    dplyr::left_join(elevation.df,
               by = dplyr::join_by(elevation_id, source_id, land_use_id)) |>
-    rename(site_id = elevation_id)
+    dplyr::rename(site_id = elevation_id)
   
   
   # return a list of tables
