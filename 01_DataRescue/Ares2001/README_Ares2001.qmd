@@ -670,7 +670,7 @@ site_history.df <- data.lvl1.ls$study |>
   pivot_wider(names_from = column_name, values_from=with_entry) |>
   mutate(source_id = 'Ares2001',
          land_use_id = 'LU1', #only land use in the study
-         land_use = 'Plantation' #from discription
+         land_use = 'Plantation' #from description
          ) |>
   select(source_id, land_use_id, land_use, 
          'land_use::description', 'land_use::interval', 'land_use::interval_format')
@@ -696,12 +696,12 @@ layer.df <- data.lvl1.ls$primary |>
   #create new column names with the variable and type in it
   mutate(column_name = paste0(of_variable,'::',is_type)) |>
   #covert things to more resonable named IDs and pull in the header-values
-  select(layer_id = row_id, site_id = elevation_id, column_name, with_entry) |>
+  select(row_id, elevation_id, column_name, with_entry) |>
   #make everything wide for the poor humans
   pivot_wider(names_from = column_name, values_from = with_entry) |>
   #layer information transcribed from methods for soil variables
   mutate(`layer::top` = '0', `layer::bottom` = '15', 
-         `layer::unit` = 'cm')
+         `layer::unit` = 'cm', layer_id = 'L1')
 
   
 #The climate across various elevations needs to be gap-filled. 
@@ -734,8 +734,7 @@ elevation.df <- data.lvl1.ls$primary|>
   #convert everything back to characters for merging in with the rest of the data
   mutate(across(everything(), as.character)) |>
   #add on the source_id
-  mutate(source_id = 'Ares2001',
-         land_use_id = site_history.df$land_use_id |> unique())
+  mutate(source_id = 'Ares2001')
 
 # Pull in the data from the primary table that we did not interpolate above
 site.df <- data.lvl1.ls$primary |>
@@ -747,8 +746,6 @@ site.df <- data.lvl1.ls$primary |>
   #make things wide for cleaner joins
   pivot_wider(names_from = c(of_variable, is_type), 
               names_sep = '::', values_from = with_entry) |>
-  #row identifier is no longer needed
-  select(-row_id) |>
   bind_cols( #pull in the variables in the study table like region and obs time
     data.lvl1.ls$study |> 
       filter(of_variable %in% HISOC_variables$site) |>
@@ -758,12 +755,11 @@ site.df <- data.lvl1.ls$primary |>
                   values_from = c(with_entry),
                   names_sep = '::')
   ) |>
-  #add in the study id and land useID
-  mutate(source_id = 'Ares2001',
-         land_use_id = site_history.df$land_use_id) |>
+  #add in the study id 
+  mutate(source_id = 'Ares2001') |>
+  #add in the interpolated elevation variables
   left_join(elevation.df,
-            by = join_by(elevation_id, source_id, land_use_id)) |>
-  rename(site_id = elevation_id)
+            by = join_by(elevation_id, source_id))
 
 
 # return a list of tables
@@ -772,10 +768,12 @@ data.lvl2HiCSC.df <- list(
   source = source.df,
   #make sure the site_ids have a letter in front of them so it is not read in as a numerical when read/write to csv
   site = site.df |>
-    mutate(site_id = paste0('S', site_id)),
+    mutate(site_id = paste0('S', elevation_id, row_id)) |>
+    select(-row_id),
   site_history = site_history.df,
-  layer = layer.df|>
-    mutate(site_id = paste0('S', site_id))
+  layer = layer.df |>
+    mutate(site_id = paste0('S', elevation_id, row_id)) |> 
+    select(-row_id)
   )
 
 ```
@@ -806,6 +804,13 @@ if(file.exists(readsource.file)){
 Create some basic histograms to check the ranges and tables.
 
 ```{r fig.width=7, fig.height=6}
+
+bigWide <- data.lvl2HiCSC.df$source |>
+  full_join(data.lvl2HiCSC.df$site_history, 
+            by = join_by(source_id)) |>
+  full_join(data.lvl2HiCSC.df$site, 
+            by = join_by(source_id)) |>
+  full_join(data.lvl2HiCSC.df$layer)
 
 #
 plot.df <- data.lvl2.df |>

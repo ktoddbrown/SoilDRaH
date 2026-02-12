@@ -271,12 +271,12 @@ readAres2001 <- function(dataDir,
     #create new column names with the variable and type in it
     dplyr::mutate(column_name = paste0(of_variable,'::',is_type)) |>
     #covert things to more resonable named IDs and pull in the header-values
-    dplyr::select(layer_id = row_id, site_id = elevation_id, column_name, with_entry) |>
+    dplyr::select(row_id, elevation_id, column_name, with_entry) |>
     #make everything wide for the poor humans
     pivot_wider(names_from = column_name, values_from = with_entry) |>
     #layer information transcribed from methods for soil variables
     dplyr::mutate(`layer::top` = '0', `layer::bottom` = '15', 
-           `layer::unit` = 'cm')
+                  `layer::unit` = 'cm', layer_id = 'L1')
   
   
   #The climate across various elevations needs to be gap-filled. 
@@ -309,8 +309,7 @@ readAres2001 <- function(dataDir,
     #convert everything back to characters for merging in with the rest of the data
     dplyr::mutate(dplyr::across(tidyselect::everything(), as.character)) |>
     #add on the source_id
-    dplyr::mutate(source_id = 'Ares2001',
-           land_use_id = site_history.df$land_use_id |> unique())
+    dplyr::mutate(source_id = 'Ares2001')
   
   # Pull in the data from the primary table that we did not interpolate above
   site.df <- data.lvl1.ls$primary |>
@@ -322,8 +321,6 @@ readAres2001 <- function(dataDir,
     #make things wide for cleaner joins
     pivot_wider(names_from = c(of_variable, is_type), 
                 names_sep = '::', values_from = with_entry) |>
-    #row identifier is no longer needed
-    dplyr::select(-row_id) |>
     dplyr::bind_cols( #pull in the variables in the study table like region and obs time
       data.lvl1.ls$study |> 
         dplyr::filter(of_variable %in% HISOC_variables$site) |>
@@ -333,12 +330,11 @@ readAres2001 <- function(dataDir,
                     values_from = c(with_entry),
                     names_sep = '::')
     ) |>
-    #add in the study id and land useID
-    dplyr::mutate(source_id = 'Ares2001',
-           land_use_id = site_history.df$land_use_id) |>
-    dplyr::left_join(elevation.df,
-              by = dplyr::join_by(elevation_id, source_id, land_use_id)) |>
-    dplyr::rename(site_id = elevation_id)
+    #add in the study id 
+    mutate(source_id = 'Ares2001') |>
+    #add in the interpolated elevation variables
+    left_join(elevation.df,
+              by = join_by(elevation_id, source_id))
   
   
   # return a list of tables
@@ -347,10 +343,12 @@ readAres2001 <- function(dataDir,
     source = source.df,
     #make sure the site_ids have a letter in front of them so it is not read in as a numerical when read/write to csv
     site = site.df |>
-      dplyr::mutate(site_id = paste0('S', site_id)),
+      mutate(site_id = paste0('S', elevation_id, row_id)) |>
+      select(-row_id),
     site_history = site_history.df,
-    layer = layer.df|>
-      dplyr::mutate(site_id = paste0('S', site_id))
+    layer = layer.df |>
+      mutate(site_id = paste0('S', elevation_id, row_id)) |> 
+      select(-row_id)
   )
   
   if(dataLevel == 'level2-HiSOC'){
