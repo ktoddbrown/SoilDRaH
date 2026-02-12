@@ -33,7 +33,7 @@
 
 readISCN3 <- function(dataDir,
                       annotationFilename,
-                      format = c('original', 'long', 'pivotBind',
+                      format = c('level0', 'long', 'pivotBind',
                                  'wide', 'joinPivot')[1],
                       verbose = TRUE){
   
@@ -107,8 +107,8 @@ readISCN3 <- function(dataDir,
   #### Return orginal ####
   # If the orginal format is asked for, then stop here and return the primary
   # ... data tables, download documentation, and the annotations.
-  if(format == 'original'){
-    return(list(original = c(orginalTables, 
+  if(format == 'level0'){
+    return(list(level0_data = c(orginalTables, 
                              list(files = download_table)),
                 annotation = annotations.df))
   }
