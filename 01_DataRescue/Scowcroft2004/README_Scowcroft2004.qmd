@@ -159,15 +159,26 @@ The study found that by reestablishing koa in higher-elevation grasslands in Haw
   1) Effects of vegetation type and topographic position on average (+1 SE) gross rates of production and immobilization of NH$_4$$^+$–N and NO$_3$$^−$–N in surface soils (0–15 cm).
   2) Rates (area basis, +1 SE) of gross production and immobilization of NH$_4$$^+$–N and NO$_3$$^−$–N as measured in spring (April) and fall (October) 1999 by the 15N pool dilution method in disturbed surface soils (0–15 cm), by vegetation type and topographic position.
 
-## Fit for purpose: ProjectName
+## Fit for purpose: HiCSC
 
 This data is identified as a data source for HiCSC.
+The [Hawaiʻi Climate Smart Partnership](https://climatesmarthawaii.org/) seeks to accelerate the implementation of climate-smart practices centered on Hawaiʻi-based producers and ancestral practitioners who are supported by advocacy, incentives, technical assistance, and market development. As part of this project, we need to build a data base of soil carbon stocks found on different Hawaiian soil types under specific land uses and practices.
 
-  - Location: Study was conducted on the windward slopes of Mauna Kea around 1970 to 1990 m asl. The coordinates of the study were between 155° 19′ 56″ W long., 19° 47′ 53″ N lat. and 155° 19′ 57″ W long., 19° 51′ 13″ N lat. The soil core depths were taken from the top 15 cm at each site.
-  - Soil carbon stock: Bulk density and total carbon were recorded in Table 1, along with the pH, topographic position and vegetation type that corresponds with the data.
-  - Soil type: Soil classification was reported under the subsection Study Sites. The grassland soil was found to be hydrous, amorphic, isomesic Acrudoxic Hydrudand of the Piihonua series. The forest soil was medial, amorphic, isomesic Typic Hydrudand of the Piha series.
-  - Land Use: The land use of the sites was described in the subsection Study Sites. The grasslands and planted-koa portions of the study was found within Hakalau Forest National Wildlife Refuge. The grassland was subjected to logging, pasture development, burning and cattle grazing in the 1800s. Cattle grazing ended in 1985 with the creation of the preserve.
-  
+# Variables of interest for this collection include:
+
+### Location
+  * Study was conducted on the windward slopes of Mauna Kea around 1970 to 1990 m asl. The coordinates of the study were between 155° 19′ 56″ W long., 19° 47′ 53″ N lat. and 155° 19′ 57″ W long., 19° 51′ 13″ N lat.
+  * The soil core depths were taken from the top 15 cm at each site.
+
+### Soil carbon stock
+  * Bulk density and total carbon were recorded in Table 1, along with the pH, topographic position and vegetation type that corresponds with the data.
+
+### Soil type
+  * Soil classification was reported under the subsection Study Sites. The grassland soil was found to be hydrous, amorphic, isomesic Acrudoxic Hydrudand of the Piihonua series. The forest soil was medial, amorphic, isomesic Typic Hydrudand of the Piha series.
+
+### Land use or practice
+  * The land use of the sites was described in the subsection Study Sites. The grasslands and planted-koa portions of the study was found within Hakalau Forest National Wildlife Refuge. The grassland was subjected to logging, pasture development, burning and cattle grazing in the 1800s. Cattle grazing ended in 1985 with the creation of the preserve.
+
 ## Files
 
 These files are in the @Scowcroft2004 data rescue.
