@@ -137,11 +137,25 @@ These assumptions were that active and intermediate SOM are distinct fractions, 
 ## Fit for purpose: HiCSC
 
 This data is identified as a data source for HiCSC.
+The [Hawaiʻi Climate Smart Partnership](https://climatesmarthawaii.org/) seeks to accelerate the implementation of climate-smart practices centered on Hawaiʻi-based producers and ancestral practitioners who are supported by advocacy, incentives, technical assistance, and market development.
+As part of this project, we need to build a data base of soil carbon stocks found on different Hawaiian soil types under specific land uses and practices.
 
-  - Location: This study was conducted on sites on the northeast flank of the Mauna Kea volcano within the Laupahoehoe Forest Reserve and the Waipunalei tract. The pasture sites were taken at 100, 800, and 1700 m, while the forest sites were at 900 and 1500 m. The exact longitude and latitude of the sites were not provided in the paper.
-  - Soil carbon stock: The Soil carbon % of each of the sites was provided in Table 1, along with vegetation type and elevation. Coarse fraction was not reported and does not appear to be included.
-  - Soil Type:  The soil type of the sites was found to be Andisols that were derived from a 12,000-20,000-year-old volcanic ash deposit.
-  - Land Use: The land use of the sites was found to consist of a native *Metrosideros polymorpha* dominated rainforests to pastures with the grass *Pennisetum clandestinum*. The mean annual rainfall and MAT of the site, and more in-depth land use, were provided in the subsection Study Sites.
+
+### Location
+
+  * This study was conducted on sites on the northeast flank of the Mauna Kea volcano within the Laupahoehoe Forest Reserve and the Waipunalei tract. The pasture sites were taken at 100, 800, and 1700 m, while the forest sites were at 900 and 1500 m. The exact longitude and latitude of the sites were not provided in the paper.
+
+### Soil carbon stock
+
+  * The Soil carbon % of each of the sites was provided in Table 1, along with vegetation type and elevation. Coarse fraction was not reported and does not appear to be included.
+  
+### Soil Type
+
+  * The soil type of the sites was found to be Andisols that were derived from a 12,000-20,000-year-old volcanic ash deposit.
+
+### Land Use
+
+  * The land use of the sites was found to consist of a native *Metrosideros polymorpha* dominated rainforests to pastures with the grass *Pennisetum clandestinum*. The mean annual rainfall and MAT of the site, and more in-depth land use, were provided in the subsection Study Sites.
   
 ## Files
 
