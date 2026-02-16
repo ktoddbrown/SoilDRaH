@@ -113,62 +113,7 @@ These files are in the ISCN3 data rescue.
 - [temp/](temp/)
   + the download location for ISCN3 files archived on EDI web portal
 
-# Level 0 data
-
-Data is available for download (@EDI portal).
-
-Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
-
-```{r}
-iscn.ls <- readISCN3(dataDir = dataDir,
-                     annotationFilename = dataAnnotations,
-                     format = 'level0')
-```
-
-## Table: `citation`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'citation') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `dataset`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'dataset') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `profile`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'profile') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `layer`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'layer') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
+### CONSTRUCTING ANNOTATIONS (machine readable)
 
 ## Extract annotations from ISCN template pdf file on edi portal. https://portal.edirepository.org/nis/dataviewer 
 
@@ -408,5 +353,75 @@ collapsed_fraction_table <- fraction_table |>
 
 ```{r}
 # disturbance table annotations
+
+disturbance_table <- big_stuff[737:829,]
+colnames(disturbance_table) <- as.character(unlist(disturbance_table[1, ]))
+disturbance_table <- disturbance_table[-1, -6]
+names(disturbance_table)[3:5] <- c("Units", "Description", "Page_number")
+
+collapsed_disturbance_table <- disturbance_table |> 
+  group_by(Variable) |> 
+    summarise(Name = collapse_tokens(Name),
+              Units = collapse_tokens(Units),
+              Description = collapse_tokens(Description),
+              .groups = "drop")
+
 ```
+
+# Level 0 data
+
+Data is available for download (@EDI portal).
+
+Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+
+```{r}
+iscn.ls <- readISCN3(dataDir = dataDir,
+                     annotationFilename = dataAnnotations,
+                     format = 'level0')
+```
+
+## Table: `citation`
+
+```{r}
+knitr::kable(iscn.ls$annotation |>
+               dplyr::filter(is_type == 'description',
+                      table_id == 'citation') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `dataset`
+
+```{r}
+knitr::kable(iscn.ls$annotation |>
+               dplyr::filter(is_type == 'description',
+                      table_id == 'dataset') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `profile`
+
+```{r}
+knitr::kable(iscn.ls$annotation |>
+               dplyr::filter(is_type == 'description',
+                      table_id == 'profile') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `layer`
+
+```{r}
+knitr::kable(iscn.ls$annotation |>
+               dplyr::filter(is_type == 'description',
+                      table_id == 'layer') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+```
+
 
