@@ -385,5 +385,28 @@ collapsed_layer_table <- layer_table |>
 
 ```
 
+```{r}
+# fraction table annotations
 
+fraction_table <- big_stuff[639:735,]
+colnames(fraction_table) <- as.character(unlist(fraction_table[1, ]))
+fraction_table <- fraction_table[-1, -6]
+names(fraction_table)[3:5] <- c("Units", "Description", "Page_number")
+
+fraction_table <- fraction_table |> 
+  mutate(Name = case_when(str_detect(Description, '^\\b(?:sample mass|sample carbon)\\b') ~
+           str_extract(Description, '^\\b(?:sample mass|sample carbon)\\b'),
+         TRUE ~ Name))
+
+collapsed_fraction_table <- fraction_table |> 
+  group_by(Variable) |> 
+    summarise(Name = collapse_tokens(Name),
+              Units = collapse_tokens(Units),
+              Description = collapse_tokens(Description),
+              .groups = "drop")
+```
+
+```{r}
+# disturbance table annotations
+```
 
