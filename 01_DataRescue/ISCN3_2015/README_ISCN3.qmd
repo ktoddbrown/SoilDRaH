@@ -122,73 +122,268 @@ Below is an example of how to use the `readISCN3` function and basic reporting o
 ```{r}
 iscn.ls <- readISCN3(dataDir = dataDir,
                      annotationFilename = dataAnnotations,
-                     format = 'original')
+                     format = 'level0')
 ```
 
 ## Table: `citation`
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
+knitr::kable(iscn.ls$annotation |>
                dplyr::filter(is_type == 'description',
-                      table_id == 'citation') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+                      table_id == 'citation') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `dataset`
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
+knitr::kable(iscn.ls$annotation |>
                dplyr::filter(is_type == 'description',
-                      table_id == 'dataset') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+                      table_id == 'dataset') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `profile`
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
+knitr::kable(iscn.ls$annotation |>
                dplyr::filter(is_type == 'description',
-                      table_id == 'profile') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+                      table_id == 'profile') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 ```
 
 ## Table: `layer`
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
+knitr::kable(iscn.ls$annotation |>
                dplyr::filter(is_type == 'description',
-                      table_id == 'layer') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+                      table_id == 'layer') |>
+               dplyr::select(column_id, of_variable, description = with_entry)) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 ```
 
 
-### NEEDS WORK!
+## Extract annotations from ISCN template pdf file on edi portal. https://portal.edirepository.org/nis/dataviewer 
+
+
 ```{r}
-tables <- extract_tables("~/Downloads/TemplateSubmit.pdf")
+#tables <- extract_tables("~/Downloads/TemplateSubmit.pdf")
 
-fix_pdf_table <- function(xx){
-  names(xx) <- as.character(unlist(xx[1,]))
-  xx <- xx[-1, , drop = F]
-  
-  xy <- xx |> 
-    mutate(row_id = cumsum(!is.na(Variable) & Variable != "")) |> 
-    group_by(row_id) |> 
-    summarise(Variable = first(na.omit(Variable)),
-              Name = first(na.omit(Name)),
-              Units = paste(na.omit(Units), collapse = " "),
-              Description = paste(na.omit(Description), collapse = " "),
-              .groups = "drop")
-}
+pdf.test <- pdf_text("~/Downloads/TemplateSubmit.pdf")
 
-xx <- tables[[1]]
-clean <- fix_pdf_table(tables[[1]])
+cells.ls <- str_split(pdf.test[[2]], pattern = '\\n') |>
+  unlist() |>
+  str_split( pattern = '\\s{2,}')
+
+colum_brakes <- plyr::ldply(cells.ls, function(xx){
+  pad <- rep(NA, (4-length(xx)))
+  return(c(pad, xx))
+  }
+)
+
+# col_3Lonely <- c('text', 'bc_units', 'Notes' )
+# col_2Lonely <- c('Code')
+
+keywords <- c("site", "profile", "layer", "fraction", "disturbance")
+
+big_stuff <- tibble(page_text = pdf.test) |>
+  mutate(page_number = 1:n()) |>
+  separate_longer_delim(cols = page_text, delim = '\n') |>
+  mutate(lone_words = str_detect(page_text, '^\\s+\\w+$')) |>
+  # separate_wider_position(cols = page_text, delim = regex('\\s{2,}'),
+  #                      names_sep = '_',
+  #                      too_few = 'align_end') |>
+   separate_wider_delim(cols = page_text, delim = regex('\\s{2,}'),
+                        names_sep = '_',
+                        too_few = 'align_end') |>
+  mutate(page_text_1 = if_else(is.na(page_text_1), page_text_2, page_text_1),
+         page_text_2 = if_else(page_text_1 == page_text_2, page_text_3, page_text_2),
+         page_text_3 = if_else(page_text_2 == page_text_3, NA_character_, page_text_3),
+         page_text_3 = if_else(page_text_2 == "deg", page_text_2, page_text_3),
+         page_text_2 = if_else(page_text_2 == "deg", NA_character_, page_text_2)) |> 
+        # page_text_2 = if_else(str_detect(page_text_2, 'Location Accuracy m'), 
+        #                       'Location Accuracy', page_text_2)) |> 
+  mutate(page_text_3 = case_when(# the word is in column 2
+  str_detect(page_text_2, '\\b(?:free|text)\\b') ~ str_extract(page_text_2, '\\b(?:free|text)\\b'),
+  # the word is in column 1
+  str_detect(page_text_1, '\\b(?:free|text)\\b') ~ str_extract(page_text_1, '\\b(?:free|text)\\b'),
+  # the word is in column 4  (if you have one otherwise delete this line) 
+  str_detect(page_text_4, '\\b(?:free|text)\\b') ~ str_extract(page_text_4, '\\b(?:free|text)\\b'),
+  # d) nothing found – keep whatever we had after the “deg” step
+  TRUE ~ page_text_3)) |> 
+  mutate(page_text_1 = if_else(str_detect(page_text_1, '\\b(?:free|text)\\b'),
+                               NA_character_, page_text_1),
+         page_text_2 = if_else(str_detect(page_text_2, '\\b(?:free|text)\\b'),
+                               NA_character_, page_text_2),
+         page_text_4 = if_else(str_detect(page_text_4, '\\b(?:free|text)\\b'),
+                               NA_character_, page_text_4)) |> 
+  mutate(page_text_3 = case_when(str_detect(page_text_2, '\\b(?:cm|m)\\b') ~
+                                   str_extract(page_text_2, '\\b(?:cm|m)\\b'),
+    TRUE ~ page_text_3)) |> 
+  mutate(page_text_2 = str_replace_all(page_text_2, "\\b(?:cm|m)\\b", "")) |> 
+  mutate(page_text_2 = if_else(page_text_1 == "vegclass_local_type Local Vegetation",
+      "Local Vegetation", page_text_2),
+    page_text_1 = if_else(page_text_1 == "vegclass_local_type Local Vegetation","vegclass_local_type",
+      page_text_1)) |>
+  mutate(page_text_3 = case_when(str_detect(page_text_4, '^\\b(?:degree|percent)\\b') ~
+        str_extract(page_text_4, '^\\b(?:degree|percent)\\b'),
+      TRUE ~ page_text_3),
+      page_text_4 = case_when(str_detect(page_text_4, '^\\b(?:degree|percent)\\b') ~
+        str_remove(page_text_4, '^\\b(?:degree|percent)\\b\\s*'),
+      TRUE ~ page_text_4)) |> 
+  mutate(page_text_3 = case_when(str_detect(page_text_2, '(?:°C)') ~ str_extract(page_text_2, '(?:°C)'),
+      TRUE ~ page_text_3),
+      page_text_2 = str_replace_all(page_text_2, '(?:°C)', '')) |> 
+  mutate(page_text_1 = if_else(str_detect(
+    page_text_4,"^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
+      "water_table_duration", page_text_1),
+    page_text_2 = if_else(str_detect(page_text_4, 
+                 "^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
+      "Wet Soil Moisture Duration", page_text_2),
+    page_text_3 = if_else(str_detect(page_text_4, 
+                 "^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
+      "days", page_text_3)) |> 
+   mutate(page_text_1 = if_else(str_detect(
+    page_text_4,"^standing water in an open bore-hole or well at the time of sampling.$"), "depth_water", page_text_1),
+    page_text_2 = if_else(str_detect(page_text_4, 
+                 "^standing water in an open bore-hole or well at the time of sampling.$"),
+      "Depth to Water Table", page_text_2),
+    page_text_3 = if_else(str_detect(page_text_4, 
+                 "^standing water in an open bore-hole or well at the time of sampling.$"),
+      "cm", page_text_3),
+    page_text_4 = if_else(str_detect(page_text_4, 
+                 "^standing water in an open bore-hole or well at the time of sampling.$"),
+      "Measure or estimate the depth from the ground surface to the stabilized contact with free-
+standing water in an open bore-hole or well at the time of sampling.", page_text_4)) |> 
+  mutate(page_text_3 = case_when(str_detect(page_text_4, '^\\b(?:g cm-2)\\b') ~
+        str_extract(page_text_4, '^\\b(?:g cm-2)\\b'),
+      TRUE ~ page_text_3),
+      page_text_4 = str_replace_all(page_text_4, '^\\b(?:g cm-2)\\b', '')) |> 
+ mutate(page_text_2 = case_when(
+      str_detect(page_text_4,
+        '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
+        Method|Layer\\ Count)\\b') ~
+        str_extract(page_text_4,
+          '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
+          Method|Layer\\ Count)\\b'),
+      TRUE ~ page_text_2), 
+      page_text_4 = str_replace_all(page_text_4,
+      '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
+      Method|Layer\\ Count)\\b', '')) |> 
+  mutate(page_text_3 = case_when(str_detect(page_text_4,
+        '^\\b(?:DD\\ or|MM/DD/YYYY)\\b') ~
+        str_extract(page_text_4,
+          '^\\b(?:DD\\ or|MM/DD/YYYY)\\b'),
+      TRUE ~ page_text_3), 
+      page_text_4 = str_remove(page_text_4,
+      '^\\b(?:DD\\ or|MM/DD/YYYY)\\b')) |> 
+   mutate(page_text_2 = case_when(str_detect(page_text_4,
+        '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b') ~
+        str_extract(page_text_4,
+          '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b'),
+      TRUE ~ page_text_2), 
+      page_text_4 = str_remove(page_text_4,
+      '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b')) |> 
+  mutate(page_text_2 = case_when(str_detect(page_text_4,
+        '^%\\s+Moisture\\b') ~
+        str_extract(page_text_4,
+          '^%\\s+Moisture\\b'),
+      TRUE ~ page_text_2), 
+      page_text_4 = str_remove(page_text_4,
+      '^%\\s+Moisture\\b')) |> 
+  mutate(page_text_2 = case_when(str_detect(page_text_4, '^\\b(?:Age Standard|Mass|Standard)') ~
+                                              str_extract(page_text_4, '^\\b(?:Age Standard|Mass|Standard)'),
+                                                          TRUE ~ page_text_2),
+         page_text_4 = str_remove(page_text_4,
+                                  '^\\b(?:Age Standard|Mass|Standard)')) |>
+  mutate(page_text_1 = if_else(str_detect(page_text_1, '^\\s*$'), NA_character_, page_text_1)) |>
+   fill(page_text_1, .direction = 'down')
+  #    mutate(page_text_2 = if_else(lone_words & page_text_4 %in% col_2Lonely, page_text_4, page_text_2),
+  #           page_text_3 = if_else(lone_words & page_text_4 %in% col_3Lonely, page_text_4, page_text_3),
+  #          # page_text_2 = if_else(lone_words & page_text_3 %in% col_3Lonely, page_text_4, page_text_2),
+  #           page_text_4 = if_else(lone_words, NA_character_, page_text_4)
 
 ```
+
+```{r}
+# site table annotations 
+
+collapse_tokens <- function(xx){
+  xx <- xx[!is.na(xx)]
+  xx <- xx[xx != ""]
+  paste(xx, collapse = " ")
+}
+
+site_table <- big_stuff[38:246,]
+colnames(site_table) <- as.character(unlist(site_table[1, ]))
+site_table <- site_table[-1, -6]
+names(site_table)[3:5] <- c("Units", "Description", "Page_number")
+
+collapsed_site_table <- site_table |> 
+  group_by(Variable) |> 
+    summarise(Name = collapse_tokens(Name),
+              Units = collapse_tokens(Units),
+              Description = collapse_tokens(Description),
+              .groups = "drop")
+
+```
+
+```{r}
+# profile table annotations
+
+profile_table <- big_stuff[248:336,]
+colnames(profile_table) <- as.character(unlist(profile_table[1, ]))
+profile_table <- profile_table[-1, -6]
+names(profile_table)[3:5] <- c("Units", "Description", "Page_number")
+
+collapsed_profile_table <- profile_table |> 
+  group_by(Variable) |> 
+    summarise(Name = collapse_tokens(Name),
+              Units = collapse_tokens(Units),
+              Description = collapse_tokens(Description),
+              .groups = "drop")
+
+```
+
+
+```{r}
+
+# layer table annotations
+layer_table <- big_stuff[338:637,]
+colnames(layer_table) <- as.character(unlist(layer_table[1, ]))
+layer_table <- layer_table[-1, -6]
+names(layer_table)[3:5] <- c("Units", "Description", "Page_number")
+
+# layer_table <- layer_table |> 
+#   mutate(Name = case_when(str_detect(Description,
+#         '\\[Al\\]|\\[Mn\\]|\\[Fe\\]') ~
+#         str_extract(Description,
+#           '\\[Al\\]|\\[Mn\\]|\\[Fe\\]'),
+#       TRUE ~ Name),
+#       Description = str_remove(Description, '\\[Al\\]|\\[Mn\\]|\\[Fe\\]')) |> 
+#   mutate(Name = if_else(Description ==  'Extractable Al,', Description, Name),
+#          Name = if_else(Description ==  'Fe, Mn units', Description, Name),
+#          Variable = if_else(Name ==  'Extractable Al,', 'al_fe_units ', Variable),
+#          Variable = if_else(Name ==  'Fe, Mn units', 'al_fe_units ', Variable),
+#          Description = str_remove(Description, 'Extractable Al,'),
+#          Description = str_remove(Description, 'Fe, Mn units')) |> 
+
+collapsed_layer_table <- layer_table |> 
+  group_by(Variable) |> 
+    summarise(Name = collapse_tokens(Name),
+              Units = collapse_tokens(Units),
+              Description = collapse_tokens(Description),
+              .groups = "drop")
+
+
+```
+
+
+
