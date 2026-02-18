@@ -1,0 +1,406 @@
+---
+title: "Data Rescue: Scowcroft 2004"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Scowcroft2004_Methods.bib #contains the citations in the methods section
+  - Scowcroft2004.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: review #secondary, review
+ #     - standardization: #review
+ #     - curation: #review
+
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+#      - standardization: 
+#      - curation:
+  - id: waldera 
+    name:
+      given: Ashlynn
+      family: Walder
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+ #     - standardization: 
+ #     - curation:
+
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review
+ #    - standardization: 
+#     - curation:
+
+  - id: semantic-nomad
+    name:
+      given: Brandon
+      family: Whitehead
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review
+  #   - standardization: 
+  #   - curation:
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: revised execute with only provided files
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-01-22 T1400
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P45M
+
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-01-22
+      start: 2025-09-09
+      duration: PT7H
+
+  - activity: 
+      description: Secondary Transcription
+      who: waldera #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-01-22
+      start: 2025-10-28
+      duration: PT4H30M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Scowcroft2004_Methods.md"
+table1.file <- 'Scowcroft2004_Table1.csv'
+
+
+# Bibliograph files
+primaryCitation.file <- 'Scowcroft2004.bib'
+methodsCitation.file <- 'Scowcroft2004_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../../R/readAuthorYYYY.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Scowcroft, P.G., Haraguchi, J.E. and Hue, N.V. (2004), Reforestation and Topography Affect Montane Soil Properties, Nitrogen Pools, and Nitrogen Transformations in Hawaii. Soil Sci. Soc. Am. J., 68: 959-968. https://doi.org/10.2136/sssaj2004.9590
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/117.
+
+
+@Scowcroft2004 examines how certain properties, such as N dynamics and total C, change in surface soil in montane forests, grasslands, and grasslands reforested with koa.
+They used the data to decide if factors such as type of vegetation or topographic position (along with their interaction) affect their selected properties.
+The study found that by reestablishing koa in higher-elevation grasslands in Hawai'i, the soil properties reverted within 10 years of koa planting to those found under forest cover.
+
+## Tables and figures
+- Table 
+  1) Average bulk density, pH, total C and N, C/N ratio, concentrations of Mehlich-3 extractable P, Ca, and Mg, and gravimetric soil water contents in March and October 1999 for surface soil.
+  2) Mean NH$_4$$^+$–N and NO$_3$$^−$–N concentrations in surface soil (0–15 cm), by topographic position and vegetation type between December 1998 and October 1999.
+  3) Average ratio of gross consumption of NH$_4$$^+$ and NH$_4$$^+$ immobilization to gross ammonification, NH$_4$$^+$ nitrification to gross NH$_4$$^+$ consumption and NO$_3$$^-$ immobilization to gross nitrification.
+  4) Average net ammonification, nitrification, and mineralization in surface soil (0-15 cm) by topographic position and vegetation type.
+- Figure 
+  1) Effects of vegetation type and topographic position on average (+1 SE) gross rates of production and immobilization of NH$_4$$^+$–N and NO$_3$$^−$–N in surface soils (0–15 cm).
+  2) Rates (area basis, +1 SE) of gross production and immobilization of NH$_4$$^+$–N and NO$_3$$^−$–N as measured in spring (April) and fall (October) 1999 by the 15N pool dilution method in disturbed surface soils (0–15 cm), by vegetation type and topographic position.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for HiCSC.
+The [Hawaiʻi Climate Smart Partnership](https://climatesmarthawaii.org/) seeks to accelerate the implementation of climate-smart practices centered on Hawaiʻi-based producers and ancestral practitioners who are supported by advocacy, incentives, technical assistance, and market development. As part of this project, we need to build a data base of soil carbon stocks found on different Hawaiian soil types under specific land uses and practices.
+
+# Variables of interest for this collection include:
+
+### Location
+  * Study was conducted on the windward slopes of Mauna Kea around 1970 to 1990 m asl. The coordinates of the study were between 155° 19′ 56″ W long., 19° 47′ 53″ N lat. and 155° 19′ 57″ W long., 19° 51′ 13″ N lat.
+  * The soil core depths were taken from the top 15 cm at each site.
+
+### Soil carbon stock
+  * Bulk density and total carbon were recorded in Table 1, along with the pH, topographic position and vegetation type that corresponds with the data.
+
+### Soil type
+  * Soil classification was reported under the subsection Study Sites. The grassland soil was found to be hydrous, amorphic, isomesic Acrudoxic Hydrudand of the Piihonua series. The forest soil was medial, amorphic, isomesic Typic Hydrudand of the Piha series.
+
+### Land use or practice
+  * The land use of the sites was described in the subsection Study Sites. The grasslands and planted-koa portions of the study was found within Hakalau Forest National Wildlife Refuge. The grassland was subjected to logging, pasture development, burning and cattle grazing in the 1800s. Cattle grazing ended in 1985 with the creation of the preserve.
+
+## Files
+
+These files are in the @Scowcroft2004 data rescue.
+
+- [Readme](README_Scowcroft2004.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Scowcroft2004.bib](Scowcroft2004.bib)
+  + citation for article transcribed
+- [Scowcroft2004_Methods.bib](Scowcroft2004_Methods.bib)
+  + citations for the methods section of the article
+- [Scowcroft2004_Methods.md](Scowcroft2004_Methods.md)
+  + methods transcribed from primary article
+- [Scowcroft2004_Table1.csv](Scowcroft2004_Table1.csv)
+  + table 1 from primary article with average bulk density and total C
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Scowcroft2004'
+  - [x] Create a copy of this template folder and rename it to Scowcroft2004
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 was modified to include the footnotes in the header and rstudio formatting to better represent the header and units. It was also modified to included () and [] when necessary to indicate a significance of interaction with the factor levels. The format of the table was also modified to move the sub header to the leftmost column, which led to shifts in some of the other data columns in the table. Dashes were added to mark empty columns.
+
+```{r}
+#| label: table1Check
+#| eval: true
+
+
+read_csv(file = table1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+## Methods
+
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y Scowcroft2004_Methods.md  Scowcroft2004_Methods_AW.md
+
+diff --strip-trailing-cr --suppress-common-lines -y Scowcroft2004_Table1.csv Scowcroft2004_Table1_AW.csv
+
+```
+
+{{< include Scowcroft2004_Methods.md >}}
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+  
+- [x] Sollins, P.Nutrient mobility in variable- and permanent-charge soils. Biogeochemistry1988 6 181199https://doi.org/10.1007/BF02182995http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=A1988R462700002&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4
+  + copy from bib
+  
+- [x] Wolfe, E.W., and J. Morris. 1996. Geologic map of the Island of Hawaii. USGS, Misc. Investigations Series, Map I-2524-A. U.S. Gov. Print. Office, Washington, DC.
+  + copy from bib
+  
+- [x] Peterson, D.W., and R.B. Moore. 1987. Geologic history and evolution of geologic concepts, island of Hawaii. p. 149–189. In R.W. Decker et al. (ed.) Volcanism in Hawaii. USGS Professional Paper 1350. U.S. Gov. Print. Office, Washington, DC.
+  + copy from bib
+
+- [x] Stearns, H.T., and G.A. Macdonald. 1946. Geology and ground-water resources of the Island of Hawaii. Bull. 9, Hawaii Dep. of Public Lands, Div. of Hydrography, Territory of Hawaii. 
+  + copy from bib
+
+- [x] Mears, P.T. Kikuyu (Pennisetum clandestinum) as a pasture grass—A review. Tropical Grasslands1970 4 139152
+  + copy from bib
+
+- [x] Wilen, C.A. Physiological mechanisms for the rapid growth of Pennisetum clandestinum in Mediterranean climates. Weed Res.1996 36 213225https://doi.org/10.1111/j.1365-3180.1996.tb01651.xhttp://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=A1996UU85500002&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4 
+  + copy from bib
+  
+- [x] Scowcroft, P.G. Potential significance of frost, topographic relief, and Acacia koa stands to restoration of mesic Hawaiian forests on abandoned rangeland. For. Ecol. Manage.1999 114 447458https://doi.org/10.1016/S0378-1127(98)00374-0http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=000078616600027&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4 
+  + copy from bib
+  
+- [x] Barrett, R.H.Habitat preferences of feral hogs, deer, and cattle on a Sierra foothill range. J. Range Manage.1982 35 342346https://doi.org/10.2307/3898314
+  + copy from bib
+
+- [x] Springer, F.J.Effects of wild pig rooting in a deciduous forest. J. Wildl. Manage.1984 48 464473https://doi.org/10.2307/3801179http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=A1984SY25100017&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4 
+  + copy from bib
+  
+- [x] Moody, A. Soil response to canopy position and feral pig disturbance beneath Quercus agrifolia on Santa Cruz Island, California. Appl. Soil Ecol.2000 14 269281https://doi.org/10.1016/S0929-1393(00)00053-6http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=000087237600009&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4 
+  + copy from bib
+
+- [x] Mehlich, A.Mehlich 3 soil test extractant: A modification of Mehlich 2 extractant. Commun. Soil Sci. Plant Anal.1984 15 14091416https://doi.org/10.1080/00103628409367568http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=A1984AER5700002&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4
+  + copy from bib
+
+- [x] Davidson, E.A. Measuring gross nitrogen mineralization, immobilization, and nitrification by 15N isotopic pool dilution in intact soil cores. J. Soil Sci.1991 42 335349https://doi.org/10.1111/j.1365-2389.1991.tb00413.x
+  + copy from bib
+
+- [x] Hart, S.C., J.M. Stark, E.A. Davidson, and M.K. Firestone. 1994. Nitrogen mineralization, immobilization, and nitrification. p. 985–1018. In R.W. Weaver et al. (ed.) Methods of soil analysis. Part 2. SSSA Book Ser. 5. ASA and SSSA, Madison, WI. 
+  + copy from bib
+
+- [x] Stark, J.M.Diffusion technique for preparing salt solutions, Kjeldahl digests, and persulfate digests for nitrogen-15 analysis. Soil Sci. Soc. Am. J.1996 60 18461855https://doi.org/10.2136/sssaj1996.03615995006000060033xhttp://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=A1996WA78600032&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4
+  + copy from bib
+
+- [x] Keeney, D.R., and D.W. Nelson. 1982. Nitrogen—Inorganic forms. p. 643–698. In A.L. Page et al. (ed.) Methods of soil analysis. Part 2. Agron. Monogr. 9, 2nd ed. ASA and SSSA, Madison, WI.
+  + copy from bib
+
+- [x] Mulvaney, R.L. 1996. Nitrogen—Inorganic forms. p. 1123–1184. In D.L. Sparks et al. (ed.) Methods of soil analysis. Part 3. SSSA Book Ser. 5. SSSA, Madison, WI.
+  + copy from bib
+
++ [x] Stark, J.M. 2000. Nutrient transformations. p. 215–234. In O.E. Sala et al. (ed.) Methods in ecosystem science Springer-Verlag, New York. 
+  + copy from bib
+
+- [x] Verchot, L.V.Gross vs. net rates of N mineralization and nitrification as indicators of functional differences between forest types. Soil Biol. Biochem.2001 33 18891901https://doi.org/10.1016/S0038-0717(01)00095-5http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=000172094900002&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4 
+  + copy from bib
+
+- [x] Wang, W.J.Nitrogen mineralization, immobilization and loss, and their role in determining differences in net nitrogen production during waterlogged and aerobic incubation of soils. Soil Biol. Biochem.2001 33 13051315https://doi.org/10.1016/S0038-0717(01)00034-7http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=000170533800002&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4
+  + copy from bib
+
+- [x] Carmosini, N.Gross nitrogen transformation in harvested and mature aspen-conifer mixed forest soils from the Boreal Plain. Soil Biol. Biochem.2002 34 19491951https://doi.org/10.1016/S0038-0717(02)00172-4http://gateway.isiknowledge.com/gateway/Gateway.cgi?GWVersion=2&SrcApp=PARTNER_APP&SrcAuth=agrocropsoil&KeyUT=000183851300014&DestLinkType=FullRecord&DestApp=WOS_CPL&UsrCustomerID=523bbf5d2a868de7bbaeea0bc70ec0e4
+  + copy from bib
+  
+- [x] Draper, N.R., and H. Smith. 1998. Applied Regression Analysis. 3rd ed. Wiley & Son, New York.
+  + copy from bib
+
+- [x] Duan, N.Smearing estimate: A nonparametric retransformation method. J. Stat. Assoc.1983 78 605610https://doi.org/10.2307/2288126
+   + copy from bib
+
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readSAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
