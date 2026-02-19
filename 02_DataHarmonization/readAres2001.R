@@ -93,7 +93,7 @@ readAres2001 <- function(dataDir,
                       'land_use', 'interval', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
                       'land_use', 'interval_format', 'YYYY/YYYY', NA,
                       'observation_time', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
-                      'observation_time', 'format', 'YYYY', NA,
+                      'observation_time', 'time_format', 'YYYY', NA,
                        'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                        'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
   
