@@ -3,15 +3,15 @@ title: "Data Rescue: ISCN3 Feb 2026"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
     code-fold: true
+    eval: false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - ISCN3_Contributions.bib  #contains the citations for contributed datasets by authors
+  #- ISCN3_Contributors.bib  #contains the citations for contributed datasets by authors
   - ISCN3_2015.bib #contains citation for the data source, generally a single citation of the primary paper
 nocite: |
-  @* #add all citations
+  @*  #add all citations 
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -58,7 +58,7 @@ The purpose of this document is to summarize the International Soil Carbon Netwo
 #| warning: false
 #| message: false
 #| echo: false
-#| eval: true
+
 
 
 # libraries
@@ -67,10 +67,10 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 library(pdftools)
 #install.packages("tabulapdf")
-library(tabulapdf)
+#library(tabulapdf)
 
 # data directory, primary annotations & control vocabularies
-dataDownload.dir <- 'temp/ISCN3'
+dataDownload.dir <- 'temp'
 dataAnnotations <- 'ISCN3Annotations.csv'
 controlVocabulary <- 'ISCN3_2015_Control_vocab.csv'
 
@@ -83,8 +83,8 @@ readsource.file <- '../../01_DataRescue/ISCN3_2015/readISCN3.R'
 source(readsource.file)
 
 #semantic files for level 1
-of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
 ```
 
@@ -100,275 +100,75 @@ These data annotation table is provided in a `<id>-of_variable-is_type-with_entr
 
 ## Files
 
-<!--- Include a brief explaination to all the files in the folder--->
+<!--- Include a brief explanation to all the files in the folder--->
 
 These files are in the ISCN3 data rescue.
 
-- [Readme](README_ISCN3.qmd)
+- [README_ISCN3.qmd](README_ISCN3.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
 - [ISCN3_2015.bib](ISCN3_2015.bib)
   + citation for project website and primary journal article transcribed
 - [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
-  + citations for the contributed datasets to ISCN
+  + citations for the contributed data sets to ISCN
 - [temp/](temp/)
   + the download location for ISCN3 files archived on EDI web portal
 
-### CONSTRUCTING ANNOTATIONS (machine readable)
+## Download ISCN3
 
-## Extract annotations from ISCN template pdf file on edi portal. https://portal.edirepository.org/nis/dataviewer 
-
+The ISCN3 is downloaded from EDI (@ISCN3).
+Below we loop through the files that are expected and download them.
 
 ```{r}
-#tables <- extract_tables("~/Downloads/TemplateSubmit.pdf")
+#| label: dataDownloadEDI
+#| code-summary: "Download and identify each file in the EDI package."
 
-pdf.test <- pdf_text("~/Downloads/TemplateSubmit.pdf")
+### Download the data ####
+# link the table name to the download url and file path(s) for data package
+pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
 
-cells.ls <- str_split(pdf.test[[2]], pattern = '\\n') |>
-  unlist() |>
-  str_split( pattern = '\\s{2,}')
+download_table <- tibble::tribble(
+  ~table, ~entity_id, ~file_name, 
+  'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
+  'profile', "40527580cc045d33d9a5aaf728bf204e", 'ISCN3_profile.csv',
+  'citation', "320e31ca911f187550ca2143c31fd408", 'ISCN3_citation.csv',
+  'dataset', "cdd0c7a4cac3f28d6d788c91f506775f", 'ISCN3_dataset.csv',
+  'control_vocabulary', "a8eef6e94b669b365e443c15d9402a03", 'ISCNTranscribed_TemplateCVs.xlsx',
+  'template', "cb5c1cd86e9ab17f699f7a05044325b7", 'ISCNtemplate.xlsx',
+  'other_pdfs', "eb320ae7b57296765f543cbb370b0f24", 'TemplateCVs.pdf',
+  'other_pdfs', "b81a7f4214d176280a5ff4e0f0d52d8b", 'TemplateSubmit.pdf')
 
-colum_brakes <- plyr::ldply(cells.ls, function(xx){
-  pad <- rep(NA, (4-length(xx)))
-  return(c(pad, xx))
+#One by one, download the data in each row from the download_table
+#... and store that in the appropriate file path location on your computer
+for(row_index in 1:nrow(download_table)){
+  if(!file.exists(file.path(dataDownload.dir,download_table$file_name[row_index]))){
+    print(paste('Download file:', 
+                download_table$file_name[row_index]))
+    utils::download.file(
+      paste0(pasta_package, download_table$entity_id[row_index]), 
+      file.path(dataDownload.dir,download_table$file_name[row_index]))
   }
-)
-
-# col_3Lonely <- c('text', 'bc_units', 'Notes' )
-# col_2Lonely <- c('Code')
-
-keywords <- c("site", "profile", "layer", "fraction", "disturbance")
-
-big_stuff <- tibble(page_text = pdf.test) |>
-  mutate(page_number = 1:n()) |>
-  separate_longer_delim(cols = page_text, delim = '\n') |>
-  mutate(lone_words = str_detect(page_text, '^\\s+\\w+$')) |>
-  # separate_wider_position(cols = page_text, delim = regex('\\s{2,}'),
-  #                      names_sep = '_',
-  #                      too_few = 'align_end') |>
-   separate_wider_delim(cols = page_text, delim = regex('\\s{2,}'),
-                        names_sep = '_',
-                        too_few = 'align_end') |>
-  mutate(page_text_1 = if_else(is.na(page_text_1), page_text_2, page_text_1),
-         page_text_2 = if_else(page_text_1 == page_text_2, page_text_3, page_text_2),
-         page_text_3 = if_else(page_text_2 == page_text_3, NA_character_, page_text_3),
-         page_text_3 = if_else(page_text_2 == "deg", page_text_2, page_text_3),
-         page_text_2 = if_else(page_text_2 == "deg", NA_character_, page_text_2)) |> 
-        # page_text_2 = if_else(str_detect(page_text_2, 'Location Accuracy m'), 
-        #                       'Location Accuracy', page_text_2)) |> 
-  mutate(page_text_3 = case_when(# the word is in column 2
-  str_detect(page_text_2, '\\b(?:free|text)\\b') ~ str_extract(page_text_2, '\\b(?:free|text)\\b'),
-  # the word is in column 1
-  str_detect(page_text_1, '\\b(?:free|text)\\b') ~ str_extract(page_text_1, '\\b(?:free|text)\\b'),
-  # the word is in column 4  (if you have one otherwise delete this line) 
-  str_detect(page_text_4, '\\b(?:free|text)\\b') ~ str_extract(page_text_4, '\\b(?:free|text)\\b'),
-  # d) nothing found – keep whatever we had after the “deg” step
-  TRUE ~ page_text_3)) |> 
-  mutate(page_text_1 = if_else(str_detect(page_text_1, '\\b(?:free|text)\\b'),
-                               NA_character_, page_text_1),
-         page_text_2 = if_else(str_detect(page_text_2, '\\b(?:free|text)\\b'),
-                               NA_character_, page_text_2),
-         page_text_4 = if_else(str_detect(page_text_4, '\\b(?:free|text)\\b'),
-                               NA_character_, page_text_4)) |> 
-  mutate(page_text_3 = case_when(str_detect(page_text_2, '\\b(?:cm|m)\\b') ~
-                                   str_extract(page_text_2, '\\b(?:cm|m)\\b'),
-    TRUE ~ page_text_3)) |> 
-  mutate(page_text_2 = str_replace_all(page_text_2, "\\b(?:cm|m)\\b", "")) |> 
-  mutate(page_text_2 = if_else(page_text_1 == "vegclass_local_type Local Vegetation",
-      "Local Vegetation", page_text_2),
-    page_text_1 = if_else(page_text_1 == "vegclass_local_type Local Vegetation","vegclass_local_type",
-      page_text_1)) |>
-  mutate(page_text_3 = case_when(str_detect(page_text_4, '^\\b(?:degree|percent)\\b') ~
-        str_extract(page_text_4, '^\\b(?:degree|percent)\\b'),
-      TRUE ~ page_text_3),
-      page_text_4 = case_when(str_detect(page_text_4, '^\\b(?:degree|percent)\\b') ~
-        str_remove(page_text_4, '^\\b(?:degree|percent)\\b\\s*'),
-      TRUE ~ page_text_4)) |> 
-  mutate(page_text_3 = case_when(str_detect(page_text_2, '(?:°C)') ~ str_extract(page_text_2, '(?:°C)'),
-      TRUE ~ page_text_3),
-      page_text_2 = str_replace_all(page_text_2, '(?:°C)', '')) |> 
-  mutate(page_text_1 = if_else(str_detect(
-    page_text_4,"^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
-      "water_table_duration", page_text_1),
-    page_text_2 = if_else(str_detect(page_text_4, 
-                 "^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
-      "Wet Soil Moisture Duration", page_text_2),
-    page_text_3 = if_else(str_detect(page_text_4, 
-                 "^The cumulative annual duration that a water table can be expected to exist in the soil\\.$"),
-      "days", page_text_3)) |> 
-   mutate(page_text_1 = if_else(str_detect(
-    page_text_4,"^standing water in an open bore-hole or well at the time of sampling.$"), "depth_water", page_text_1),
-    page_text_2 = if_else(str_detect(page_text_4, 
-                 "^standing water in an open bore-hole or well at the time of sampling.$"),
-      "Depth to Water Table", page_text_2),
-    page_text_3 = if_else(str_detect(page_text_4, 
-                 "^standing water in an open bore-hole or well at the time of sampling.$"),
-      "cm", page_text_3),
-    page_text_4 = if_else(str_detect(page_text_4, 
-                 "^standing water in an open bore-hole or well at the time of sampling.$"),
-      "Measure or estimate the depth from the ground surface to the stabilized contact with free-
-standing water in an open bore-hole or well at the time of sampling.", page_text_4)) |> 
-  mutate(page_text_3 = case_when(str_detect(page_text_4, '^\\b(?:g cm-2)\\b') ~
-        str_extract(page_text_4, '^\\b(?:g cm-2)\\b'),
-      TRUE ~ page_text_3),
-      page_text_4 = str_replace_all(page_text_4, '^\\b(?:g cm-2)\\b', '')) |> 
- mutate(page_text_2 = case_when(
-      str_detect(page_text_4,
-        '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
-        Method|Layer\\ Count)\\b') ~
-        str_extract(page_text_4,
-          '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
-          Method|Layer\\ Count)\\b'),
-      TRUE ~ page_text_2), 
-      page_text_4 = str_replace_all(page_text_4,
-      '^\\b(?:Stock\\ Profile|Stock\\ Depth|Stock\\ Method|Stock|Count|Deviation|Carbon\\ Stock|Depth|
-      Method|Layer\\ Count)\\b', '')) |> 
-  mutate(page_text_3 = case_when(str_detect(page_text_4,
-        '^\\b(?:DD\\ or|MM/DD/YYYY)\\b') ~
-        str_extract(page_text_4,
-          '^\\b(?:DD\\ or|MM/DD/YYYY)\\b'),
-      TRUE ~ page_text_3), 
-      page_text_4 = str_remove(page_text_4,
-      '^\\b(?:DD\\ or|MM/DD/YYYY)\\b')) |> 
-   mutate(page_text_2 = case_when(str_detect(page_text_4,
-        '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b') ~
-        str_extract(page_text_4,
-          '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b'),
-      TRUE ~ page_text_2), 
-      page_text_4 = str_remove(page_text_4,
-      '^\\b(?:Date|Accuracy|Flag|Method|Notes|Removed|Coarse|Fragments|Capacity|Sample|Number|Code)\\b')) |> 
-  mutate(page_text_2 = case_when(str_detect(page_text_4,
-        '^%\\s+Moisture\\b') ~
-        str_extract(page_text_4,
-          '^%\\s+Moisture\\b'),
-      TRUE ~ page_text_2), 
-      page_text_4 = str_remove(page_text_4,
-      '^%\\s+Moisture\\b')) |> 
-  mutate(page_text_2 = case_when(str_detect(page_text_4, '^\\b(?:Age Standard|Mass|Standard)') ~
-                                              str_extract(page_text_4, '^\\b(?:Age Standard|Mass|Standard)'),
-                                                          TRUE ~ page_text_2),
-         page_text_4 = str_remove(page_text_4,
-                                  '^\\b(?:Age Standard|Mass|Standard)')) |>
-  mutate(page_text_1 = if_else(str_detect(page_text_1, '^\\s*$'), NA_character_, page_text_1)) |>
-   fill(page_text_1, .direction = 'down')
-  #    mutate(page_text_2 = if_else(lone_words & page_text_4 %in% col_2Lonely, page_text_4, page_text_2),
-  #           page_text_3 = if_else(lone_words & page_text_4 %in% col_3Lonely, page_text_4, page_text_3),
-  #          # page_text_2 = if_else(lone_words & page_text_3 %in% col_3Lonely, page_text_4, page_text_2),
-  #           page_text_4 = if_else(lone_words, NA_character_, page_text_4)
-
-```
-
-```{r}
-# site table annotations 
-
-collapse_tokens <- function(xx){
-  xx <- xx[!is.na(xx)]
-  xx <- xx[xx != ""]
-  paste(xx, collapse = " ")
 }
 
-site_table <- big_stuff[38:246,]
-colnames(site_table) <- as.character(unlist(site_table[1, ]))
-site_table <- site_table[-1, -6]
-names(site_table)[3:5] <- c("Units", "Description", "Page_number")
-
-collapsed_site_table <- site_table |> 
-  group_by(Variable) |> 
-    summarise(Name = collapse_tokens(Name),
-              Units = collapse_tokens(Units),
-              Description = collapse_tokens(Description),
-              .groups = "drop")
-
 ```
 
-```{r}
-# profile table annotations
+# Data annotation
 
-profile_table <- big_stuff[248:336,]
-colnames(profile_table) <- as.character(unlist(profile_table[1, ]))
-profile_table <- profile_table[-1, -6]
-names(profile_table)[3:5] <- c("Units", "Description", "Page_number")
+Describe the construction of the data annotation as a manual process.
+Give the user part of the table to show what is in the annotation
 
-collapsed_profile_table <- profile_table |> 
-  group_by(Variable) |> 
-    summarise(Name = collapse_tokens(Name),
-              Units = collapse_tokens(Units),
-              Description = collapse_tokens(Description),
-              .groups = "drop")
-
-```
-
-
-```{r}
-
-# layer table annotations
-layer_table <- big_stuff[338:637,]
-colnames(layer_table) <- as.character(unlist(layer_table[1, ]))
-layer_table <- layer_table[-1, -6]
-names(layer_table)[3:5] <- c("Units", "Description", "Page_number")
-
-# layer_table <- layer_table |> 
-#   mutate(Name = case_when(str_detect(Description,
-#         '\\[Al\\]|\\[Mn\\]|\\[Fe\\]') ~
-#         str_extract(Description,
-#           '\\[Al\\]|\\[Mn\\]|\\[Fe\\]'),
-#       TRUE ~ Name),
-#       Description = str_remove(Description, '\\[Al\\]|\\[Mn\\]|\\[Fe\\]')) |> 
-#   mutate(Name = if_else(Description ==  'Extractable Al,', Description, Name),
-#          Name = if_else(Description ==  'Fe, Mn units', Description, Name),
-#          Variable = if_else(Name ==  'Extractable Al,', 'al_fe_units ', Variable),
-#          Variable = if_else(Name ==  'Fe, Mn units', 'al_fe_units ', Variable),
-#          Description = str_remove(Description, 'Extractable Al,'),
-#          Description = str_remove(Description, 'Fe, Mn units')) |> 
-
-collapsed_layer_table <- layer_table |> 
-  group_by(Variable) |> 
-    summarise(Name = collapse_tokens(Name),
-              Units = collapse_tokens(Units),
-              Description = collapse_tokens(Description),
-              .groups = "drop")
-
-
-```
-
-```{r}
-# fraction table annotations
-
-fraction_table <- big_stuff[639:735,]
-colnames(fraction_table) <- as.character(unlist(fraction_table[1, ]))
-fraction_table <- fraction_table[-1, -6]
-names(fraction_table)[3:5] <- c("Units", "Description", "Page_number")
-
-fraction_table <- fraction_table |> 
-  mutate(Name = case_when(str_detect(Description, '^\\b(?:sample mass|sample carbon)\\b') ~
-           str_extract(Description, '^\\b(?:sample mass|sample carbon)\\b'),
-         TRUE ~ Name))
-
-collapsed_fraction_table <- fraction_table |> 
-  group_by(Variable) |> 
-    summarise(Name = collapse_tokens(Name),
-              Units = collapse_tokens(Units),
-              Description = collapse_tokens(Description),
-              .groups = "drop")
-```
-
-```{r}
-# disturbance table annotations
-
-disturbance_table <- big_stuff[737:829,]
-colnames(disturbance_table) <- as.character(unlist(disturbance_table[1, ]))
-disturbance_table <- disturbance_table[-1, -6]
-names(disturbance_table)[3:5] <- c("Units", "Description", "Page_number")
-
-collapsed_disturbance_table <- disturbance_table |> 
-  group_by(Variable) |> 
-    summarise(Name = collapse_tokens(Name),
-              Units = collapse_tokens(Units),
-              Description = collapse_tokens(Description),
-              .groups = "drop")
-
-```
 
 # Level 0 data
+
+*TODO*:
+
+ 1) Transcribe all the excel and pdf tables as csv data rescue objects
+ 2) Read in the 'data' files, the annotation file, and the rescued data objects to a level 0
+ 3) update the read file (including the newly rescued elements)
+ 4) update the read function to include the new downloads table above
+ 5) Only call the read function to check that the level 0 output is identical to the code. Make the table reads below look like the template.
+ 6) remember to fix the bib file, note which dataset does not exist
+ 
+ **Be sure to render the quarto**
 
 Data is available for download (@EDI portal).
 
