@@ -54,19 +54,7 @@ Input: Understand data source @sec-UndertandingDataSource | Identify, find, and 
 Transformation: Transcribe the data @sec-TranscribingData | Prep the spreadsheets and any figure capture software | Transcribe data from text, tables, and figures | Compare and reconcile data from second transcriber 
 Output: Push rescue to github @sec-ReviewingTranscripts | Prep transcription package | Pull request to incorporate the data rescue into the repository | _Expert Review_: Does the pull request have the documentation identified below? Does the ReadMe render?
 
-This process should result in the following documentation:
-
-  - A ReadMe file with (qmd or Rmd)
-    * human readable summary of data source with context for data rescue 
-    * specific plan for fit-for-purpose data rescue
-    * all contributors identified in the metadata
-  - A data transcription(s) that have been reconciled from two independent data transcriptions. Data transcriptions may include,
-    * transcriptions of tables with fit for purpose information
-    * x-y extracted data points from figures
-    * transcription of methods section with paired BibTex formatted reference
-  - BibTex formatted file with reference to
-    1) the original the data source(s)
-    2) citations from the methods section
+{{< include FileDescription_01_DataRescue.md >}}
     
 ## Understanding data source {#sec-UndertandingDataSource}
 

@@ -1,6 +1,6 @@
 # Data Rescue Workflow
 Katherine Todd-Brown
-2026-January
+2026-February
 
 - [Understanding data source](#sec-UndertandingDataSource)
   - [Identify, find, and read data
@@ -34,21 +34,24 @@ who did this work.
 | Transformation: Transcribe the data <a href="#sec-TranscribingData" class="quarto-xref">Section 2</a> | Prep the spreadsheets and any figure capture software | Transcribe data from text, tables, and figures | Compare and reconcile data from second transcriber |
 | Output: Push rescue to github <a href="#sec-ReviewingTranscripts" class="quarto-xref">Section 3</a> | Prep transcription package | Pull request to incorporate the data rescue into the repository | *Expert Review*: Does the pull request have the documentation identified below? Does the ReadMe render? |
 
-This process should result in the following documentation:
+A data rescue should produce the following documentation:
 
-- A ReadMe file with (qmd or Rmd)
+- A ReadMe file with
   - human readable summary of data source with context for data rescue
   - specific plan for fit-for-purpose data rescue
-  - all contributors identified in the metadata
-- A data transcription(s) that have been reconciled from two independent
-  data transcriptions. Data transcriptions may include,
-  - transcriptions of tables with fit for purpose information
-  - x-y extracted data points from figures
-  - transcription of methods section with paired BibTex formatted
-    reference
-- BibTex formatted file with reference to
-  1)  the original the data source(s)
-  2)  citations from the methods section
+  - all contributors identified in the header metadata
+- Data transcription(s) that have been reconciled from two independent
+  data efforts.
+  - Data transcriptions may include,
+    - transcriptions of tables with fit for purpose information
+    - x-y extracted data points from figures
+    - transcription of methods section with paired BibTex formatted
+      reference
+  - a `temp` folder with the second transcription that is used to cross
+    check the primary transcriptions
+- Two BibTex formatted file with reference to
+  - the original the data source(s)
+  - citations from the methods section
 
 ## Understanding data source
 
@@ -86,11 +89,20 @@ to be reviewed by an expert.
 
 Pass the summary and proposed plan to a reviewer. This reviewer should
 have some degree of familiarity of the methodologies used in the study
-and the proposed reanalysis. The reviewer should consider check that:
+and the proposed reanalysis. The reviewer should:
 
--\[ \] Does the summary reflect the paper while being shorter then the
-paper itself? -\[ \] Does the identified elements in the data rescue
-plan serve the purpose of the reanalysis?
+1)  Pull source paper and skim
+2)  Check for ‘extra’ data identified in plan
+3)  Check that the location of target data in the source document is
+    included in the rescue plan and correct
+4)  Skim for additional data that got missed, often looking for
+    components (e.g. bulk density, organic fraction, coarse fraction …)
+5)  Access for unusual rescue methods that require follow up
+    guidence/training - high number of points in figures (\>50, code or
+    more people) - very large tables (\>2 pages, code or more people) -
+    information in archived data files (download rather then
+    transcribe) - information in proprietary format (export rather then
+    transcribe, possible direct reformat)
 
 ## Transcribing data
 
