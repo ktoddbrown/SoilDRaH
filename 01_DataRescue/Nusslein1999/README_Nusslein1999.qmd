@@ -3,8 +3,7 @@ title: "Data Rescue: Nusslein 1999"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
-date: 2026-001-22
+date: 2026-01-22
 date-format: YYYY-MM-DD
 bibliography:
   - Nusslein1999_Methods.bib #contains the citations in the methods section
@@ -19,19 +18,28 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: secondary, review
-      - standardization:
-      - curation:
+      #- standardization:
+      #- curation:
   - id: misheph
     name:
       given: Mirah
       family: Blanchard
-    orcid: N/A
     affiliation:
       - ref: uf-mae
     role:
       - transcription: lead 
-      - standardization:
-      - curation:
+      #- standardization:
+      #- curation:
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+      #- standardization: 
+      #- curation: 
 
 affiliations:
   - id: uf-ees
@@ -57,9 +65,10 @@ affiliations:
 timelog:
   - activity: 
       description: Revise based on feedback
-      who: @misheph
+      who: Misheph
       end: 2025-01-22
       start: 2025-11-01
+      duration: P10H
 
 ---
 
@@ -85,8 +94,8 @@ primaryCitation.file <- 'Nusslein1999.bib'
 methodsCitation.file <- 'Nusslein1999_Methods.bib'
 
 # read function
-readsource.file <- '../../../R/readNusslein1999.R'
-source('readsource.file')
+# readsource.file <- '../../../R/readNusslein1999.R'
+# source('readsource.file')
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -97,12 +106,14 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 # Data Summary
 
-> Nüsslein K, Tiedje JM1999.Soil Bacterial Community Shift Correlated with Change from Forest to Pasture Vegetation in a Tropical Soil. Appl Environ Microbiol65:.https://doi.org/10.1128/AEM.65.8.3622-3626.1999
+> Nüsslein K, Tiedje JM (1999). Soil Bacterial Community Shift Correlated with Change from Forest to Pasture Vegetation in a Tropical Soil. Appl Environ Microbiol65:.https://doi.org/10.1128/AEM.65.8.3622-3626.1999
 
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/105.
 
-This paper looks at the shift in the soil bacterial community associated with the vegetative change when going from forest to pasture soil. Researchers extracted soil samples from a forest site and a pasture site adjacent to it during three different years, and soil DNA was extracted to analyze differences in G+C content, rRNA copied from soil DNA, and phylogenetics of the most common bacteria. From this, the researchers determined there were distinct shifts in dominant bacterial groups going from forest to pasture soil, due to vegetation changes.
-measured and what the data was used for in. This should be <250 words.--->
+This paper looks at the shift in the soil bacterial community associated with the vegetative change when going from forest to pasture soil.
+Researchers extracted soil samples from a forest site and a pasture site adjacent to it during three different years, and soil DNA was extracted to analyze differences in G+C content, rRNA copied from soil DNA, and phylogenetics of the most common bacteria.
+From this, the researchers determined there were distinct shifts in dominant bacterial groups going from forest to pasture soil, due to vegetation changes.
+measured and what the data was used for in.
 
 ## Tables and figures
 
@@ -185,15 +196,43 @@ read_csv(file = table1.file,
                                  show_col_types = FALSE)$caption)
 ```
 
-## Methods comparison
+And is crosschecked with the secondary transcription
 
-```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y Nusslein1999_Methods_KTB.md Nusslein1999_Methods_MB.md
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Nusslein1999_Table1.csv Nusslein1999_Table1.csv
 ```
 
-## Methods Section Transcription
+## Methods
 
-{{< include Nusslein1999_Methods.md >}}
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Nusslein1999_Methods_KTB.md Nusslein1999_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
 
 ## Citation notes from Methods
 
@@ -282,6 +321,7 @@ data.lvl0.df <- list(
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 datafunction.lvl0.ls <- readNusslein1999(dataDir = '.',
                                     dataLevel = 'level0')

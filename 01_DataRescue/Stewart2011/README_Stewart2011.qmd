@@ -3,12 +3,11 @@ title: "Data Rescue: Stewart 2011"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: 2026-02-06
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Stewart2011_Methods.bib #contains the citations in the methods section
+  - Stewart2011.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown 
     name:
@@ -19,8 +18,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
-      - standardization: 
-      - curation: 
+      #- standardization: 
+      #- curation: 
   - id: semantic-nomad 
     name:
       given: Brandon
@@ -36,24 +35,22 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     name:
       given: Mirah
       family: Blanchard
-    orcid: N/A
     affiliation:
       - ref: uf-mae
     role: 
       - transcription: lead 
-      - standardization:
-      - curation: 
+      #- standardization:
+      #- curation: 
   - id: SavaScott
     name:
       given: Savannah
       family: Scott
-    orcid: N/A
     affiliation:
       - ref: uf-ees
     role: 
       - transcription: secondary
-      - standardization: 
-      - curation: 
+      #- standardization: 
+      #- curation: 
 
 affiliations:
   - id: uf-ees
@@ -71,17 +68,17 @@ affiliations:
     city: Gainesville
     state: Florida
     county: USA
-    address:
-    postal-code: "P.O Box 116250"
-    url:  32611
+    address: "P.O Box 116250"
+    postal-code: 32611
     url: https://mae.ufl.edu/
     
 timelog:
   - activity: 
       description: Revise based on feedback
-      who: @Misheph 
+      who: Misheph 
       end: 2026-1-31
       start: 2025-10-25
+      duration: P10H
 ---
 
 
@@ -106,12 +103,12 @@ primaryCitation.file <- 'Stewart2011.bib'
 methodsCitation.file <- 'Stewart2011_Methods.bib'
 
 # read function
-readsource.file <- '../../../R/readStewart2011.R'
-source('readsource.file')
+# readsource.file <- '../../../R/readStewart2011.R'
+# source('readsource.file')
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+#of_variable.file <- #'../../semantics/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -122,8 +119,11 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/114.
 
-This paper examines how vegetation type affects the chemistry of soil organic matter (SOM) in a Hawaiian forest. The researchers aimed to determine whether or not a significant difference in soil chemistry can be seen across different vegetation types, or if plant input was homogenized during decomposition. Samples were taken from soils beneath two different plant species (D. linearis and C. trigynum) at two different depths, then composition was analyzed using pyrolysis-gas chromatography/ mass spectrometry (py-GC/MS). Researchers found that SOM chemistry was surprisingly similar across soil fractions, with the most significant difference being between the soil layers. Although the plant matter had been processed, traces of original plant chemistry were still detectable, with root composition having a larger impact than that of above-ground plant matter.
-
+This paper examines how vegetation type affects the chemistry of soil organic matter (SOM) in a Hawaiian forest.
+The researchers aimed to determine whether or not a significant difference in soil chemistry can be seen across different vegetation types, or if plant input was homogenized during decomposition.
+Samples were taken from soils beneath two different plant species (D. linearis and C. trigynum) at two different depths, then composition was analyzed using pyrolysis-gas chromatography/ mass spectrometry (py-GC/MS).
+Researchers found that SOM chemistry was surprisingly similar across soil fractions, with the most significant difference being between the soil layers.
+Although the plant matter had been processed, traces of original plant chemistry were still detectable, with root composition having a larger impact than that of above-ground plant matter.
 
 ## Tables and figures
 
@@ -149,16 +149,12 @@ This paper examines how vegetation type affects the chemistry of soil organic ma
 
 This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
-
 - Location: No latitude and longitude provided, location briefly described in methods section under “Field Sampling”. Depth of sampling described in methods section. Observation years not given.
 - Soil carbon stock: Bulk density values and SOC fraction not reported, but %C in table 1.
 - Soil type: Soil classification given in methods section under “Field Sampling” (Hydric Hydrudand).
 - Land use and history not extensively described, brief mention of litter contributions from surrounding species given in methods section (“Field Sampling”).
   
 ## Files
-
-<!--- Include a brief explaination to all the files in the folder--->
 
 These files are in the AuthorYYYY data rescue.
 
@@ -204,7 +200,7 @@ These files are in the AuthorYYYY data rescue.
 
 ## Table 1
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+Table 1 was modified to move the description into the header.
 
 ```{r table1}
 #| code-fold: true
@@ -222,15 +218,43 @@ kable(table, caption = read_csv(file = table1.file,
                                 show_col_types = FALSE)$caption)
 ```
 
-## Methods comparison
+And is crosschecked with the secondary transcription
 
-```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y Stewart2011_Methods_SRS.md Stewart2011_Methods_MB.md
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Stewart2011_Table1.csv Stewart2011_Table1.csv
 ```
 
-## Methods Section Transcription
+## Methods
 
-{{< include Stewart2011_Methods.md >}}
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Stewart2011_Methods_SRS.md Stewart2011_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
 
 ## Citation notes from Methods
 
@@ -345,8 +369,9 @@ data.lvl0.df <- list(citation =
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
-datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+datafunction.lvl0.ls <- readStewart2011(dataDir = '.',
                                     dataLevel = 'level0')
 
 if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){

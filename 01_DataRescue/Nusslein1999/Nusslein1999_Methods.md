@@ -3,7 +3,7 @@
 ## Soil origin and sampling.
 
 The forest site is located within the Kohala Forest Reserve on the Big Island of Hawaii (20°03′N, 155°41′E) and has never been cleared by humans.
-The forest site is the same as the Kohala site in the study of a chronosequence by @Crews1995 [@Crews1995].
+The forest site is the same as the Kohala site in the study of a chronosequence by @Crews1995.
 The pasture site was cleared in the 1920's for ranchland and lies immediately adjacent to the forest.
 The pasture was seeded with the African grass *Pennisetum clandestinum*, which now dominates this species-poor site.
 Cattle graze the pasture.
@@ -23,7 +23,7 @@ Forest samples were from sites located 30 to 50 m apart, and pasture samples wer
 Samples were taken from the upper 8- to 10-cm layer of the umbric A horizon after removal of the overlaying organic root and litter layer and placed immediately in sterile plastic bags on wet ice.
 After 48 h samples were shipped on dry ice to our laboratory in Michigan and stored at −20°C.
 The soil moisture content was determined by drying soil overnight at 100°C.
-Soil mechanical and chemical analyses were done by the Soil Analysis Laboratory, Michigan State University, using the methods described in @Peck1988 [@Peck1988].
+Soil mechanical and chemical analyses were done by the Soil Analysis Laboratory, Michigan State University, using the methods described in @Peck1988.
 
 ## DNA extraction, purification, and G+C fractionation.
 
@@ -32,7 +32,7 @@ Extraction efficiency was determined by comparing the amount of DNA extracted wi
 DNA was quantified by fluorometry [@Nusslein1998].
 The amount of extracellular DNA was determined following extraction with sodium phosphate before lysis (data not shown).
 
-DNA fragments were separated according to G+C content following the procedure of @Holben1995 [@Holben1995].
+DNA fragments were separated according to G+C content following the procedure of @Holben1995.
 Briefly, DNA was mixed with the A- and T-specific dye bis-benzimidazole, and the buoyant density of the resulting DNA–bisbenzimide complex was decreased in proportion to the amount of dye bound.
 A gradient of percent G+C concentration was then established by equilibrium density gradient ultracentrifugation.
 The amount of DNA in each fraction was determined by absorption spectroscopy.
@@ -41,7 +41,7 @@ To allow PCR amplification DNA fractions were purified from the CsCl and the dye
 ## rRNA analysis.
 
 G+C fractions (with 63 and 35% G+C contents) derived from two subsamples of soil from composite samples representing a 20-cm<sup>2</sup> area each of forest and pasture were used to produce replicate SSU rRNA clone libraries.
-SSU rRNA genes were amplified by PCR from the DNA fractions by using the eubacterium-specific primers fD1 and rP2 of @Weisburg1991 [@Weisburg1991].
+SSU rRNA genes were amplified by PCR from the DNA fractions by using the eubacterium-specific primers fD1 and rP2 of @Weisburg1991.
 PCRs were performed with *Taq* DNA polymerase (Boehringer Mannheim, Indianapolis, Ind.) according to the manufacturer's protocol.
 To ensure that only soil bacterial rRNA genes were amplified the following quality control steps were implemented: determination of primer purity by using high-performance liquid chromatography, preparation of fresh oligonucleotide primers for each use, a preamplification heating step to maximize PCR sensitivity and specificity, and the use of stock solutions for negative controls [@Nusslein1998].
 Amplified products were separated in agarose gels, and the bands were visualized by UV excitation after ethidium bromide staining.
