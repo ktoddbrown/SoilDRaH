@@ -3,15 +3,15 @@ title: "Data Rescue: ISCN3 Feb 2026"
 format:
   html:
     toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
     code-fold: true
-    eval: false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  #- ISCN3_Contributors.bib  #contains the citations for contributed datasets by authors
+  - ISCN3_Contributions.bib  #contains the citations for contributed datasets by authors
   - ISCN3_2015.bib #contains citation for the data source, generally a single citation of the primary paper
 nocite: |
-  @*  #add all citations 
+  @* #add all citations
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
