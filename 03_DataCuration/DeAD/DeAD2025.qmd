@@ -47,6 +47,15 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       #duration: P1H15M
+
+  - activity: 
+      description: BibTeX references
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2025-01-20
+      start: 2025-01-21
+      #alternatively duration can be combined with a being/end
+      duration: P3H15M
 ---
 
 

@@ -1,0 +1,21 @@
+"*Table 1.* Initial (R$_i$) and intermediate (R$_{int}$) respiration, and estimates of % soil carbon respired, of ‘active’ soil carbon pool sizes, and of the fraction of initial respiration estimated to be from intermediate SOM. R$_i$ values are the fluxes on day 5 of the incubation, when both active and intermediate pools are contributing to respiration; R$_{int}$ values are the means of fluxes on days 135 and 225, when the active pool is assumed to have decomposed. Values for % soil C respired are from R$_{total}$/soil C x 100 (see Equation 3 in text for estimates of R$_{total}$). Active pool sizes are calculated from equations 2 and 3 in the text. The ratio R$_{int}$/R$_i$ is an estimate of the fraction of total heterotrophic respiration that is derived from intermediate SOM.",,,,,,,
+Site,Soil carbon (%),Temperature (°C),R$_i$ (*μ*gC/gsoil/d),R$_{int}$ (*μ*gC/soil/d),% Soil C (Respired),Active Soil C (% total soil C),R$_{int}$/R$_i$
+Pasture 100 m,9.6,20,128,19,5.8,1.4,.15
+Pasture 100 m,-,30,203,34,11.1,3.4,.17
+Pasture 100 m,-,40,251,49,15,3.8,.19
+Pasture 800 m,15.1,20,176,27,4.7,0.7,.15
+Pasture 800 m,-,30,278,54,10.6,2.7,.19
+Pasture 800 m,-,40,344,87,14.6,1.9,.25
+Pasture 1700 m,21.0,20,173,31,4.8,1.5,.18
+Pasture 1700 m,-,30,287,64,9.2,2.5,.22
+Pasture 1700 m,-,40,464,90,13.7,4.3,.19
+Forest 900 m,14.4,20,143,25,5.2,1.4,.18
+Forest 900 m,-,30,216,40,7.7,1.6,.19
+Forest 900 m,-,40,277,57,10.4,1.7,.21
+Forest 1500 m,26.0,20,217,53,5.7,1.2,.24
+Forest 1500 m,-,30,341,73,9.5,3.3,.21
+Forest 1500 m,-,40,537,90,11.6,4.0,.17
+**Means**,-,**20**,-,-,**5.2**,**1.3**,**.18**
+**Means**,-,**30**,-,-,**9.6**,**2.7**,**.20**
+**Means**,-,**40**,-,-,**13.1**,**3.1**,**.20**
+**Means**,-,**all**,-,-,-,**2.4**,**.19**
