@@ -63,7 +63,13 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # Bibliograph files
-refernceCitation.file <- 'ProjectYYYY.bib'
+refernceCitation.file <- 'HiCSC2025.bib'
+
+# Data sets
+rescueDirectory <- '../../01_DataRescue'
+harmonizeDirectory <- '../../02_DataHarmonization'
+
+dataID.ls <- list(Ares2001 = 'Ares2001')
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -115,6 +121,7 @@ Specifically we would like to start by redo-ing the data rescue for the [Hawaii 
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link | Data Harmonization - GitHub Issue |
 |------------|-----------|----------|----------|--------|
+| Ares2001 | \@ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | [01_DataRescue/Ares2001](../../01_DataRescue/Ares2001) |
 
 ## Data Rescue - digitized
 
@@ -130,7 +137,6 @@ Specifically we would like to start by redo-ing the data rescue for the [Hawaii 
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
 |------------|----------|-----------|----------|
-| Ares2001 | \@ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | @ktoddbrown |
 | Austin1998 | \@austin1998 | [102](https://github.com/ktoddbrown/SoilDRaH/issues/102) | @SavaScott |
 | Austin2010 | \@austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | @AshBonner310 |
 | Bashkin1998 | \@bashkin1998 | [79](https://github.com/ktoddbrown/SoilDRaH/issues/79) | @laylakalandjian |
@@ -205,20 +211,62 @@ Specifically we would like to start by redo-ing the data rescue for the [Hawaii 
  + soilsurvey2020 -- see Susan Crow
  
 
-# Data Level 1 
+# HiSOC data construction
 
 ```{r}
-#Source and append all the level 1 tuples
+#We have study, site, and layer tables
+
+HISOC_sourceVar <- c("source_id",
+                     "citation", 
+                     "doi")
+HISOC_siteVar <- c("site_id",
+                   "source_id",
+                   "land_use_id",
+                   "region", 
+                   "observation_time",
+                   'elevation',
+                   'mean_air_temperature',
+                   'total_rainfall',
+                   "soil_class")
+HISOC_site_history <- c( "land_use_id",
+                         "source_id",
+                         "land_use")
+HISOC_layerVar <- c("layer_id",
+                    "layer",
+                    "soil_organic_carbon",
+                    "soil_nitrogen",
+                    "soil_phosphorus",
+                    "soil_ph")
 
 ```
 
-# Data Level 2
-
 ```{r}
-#Map the comparable methods and align any needed vocabulary
+#| label: constructDatabase
+
+HiCSC.ls <- list(source = tibble(),
+                 site = tibble(),
+                 site_history = tibble(),
+                 layer = tibble())
+
+#Use a for-loop because we want to append multiple tables
+for(dataset.str in dataID.ls){
+  dataset.str <- dataID.ls[[1]]
+  dataset.ls <- do.call(paste0('read', dataset.str), 
+       list(dataDir = file.path(rescueDirectory, dataset.str),
+       dataLevel = 'level2-HiSOC')) 
+  HiCSC.ls$source <- bind_rows(HiCSC.ls$source,
+                               dataset.ls$source)
+  HiCSC.ls$site <- bind_rows(HiCSC.ls$site,
+                             dataset.ls$site)
+  HiCSC.ls$site_history <- bind_rows(HiCSC.ls$site_history,
+                                     dataset.ls$site_history)
+  HiCSC.ls$layer <- bind_rows(HiCSC.ls$layer,
+                              dataset.ls$layer)
+}
 ```
 
 ```{r}
+
 #Data viz checks
 ```
 
