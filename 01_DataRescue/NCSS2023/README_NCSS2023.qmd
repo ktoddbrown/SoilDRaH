@@ -212,7 +212,8 @@ These files are in the AuthorYYYY data rescue.
                                   dbname = sqlDownload)
 
 table_names <- c("lab_analysis_procedure", "lab_analyte",
-  "lab_chemical_properties",
+  "lab_chemical_properties", "lab_physical_properties",
+  "lab_calculations_including_estimates_and_default_values",
   'lab_area', "lab_pedon", "lab_layer", "lab_site",
   "lab_preparation", "lab_method_code")
 
