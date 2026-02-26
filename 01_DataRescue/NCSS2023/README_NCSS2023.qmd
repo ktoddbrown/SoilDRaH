@@ -211,7 +211,14 @@ These files are in the AuthorYYYY data rescue.
   myconnect <- RSQLite::dbConnect(drv = RSQLite::SQLite(), 
                                   dbname = sqlDownload)
 
-geolocation <- RSQLite::dbReadTable(myconnect, 'lab_area')
+table_names <- c("lab_analysis_procedure", "lab_analyte",
+  "lab_chemical_properties",
+  'lab_area', "lab_pedon", "lab_layer", "lab_site",
+  "lab_preparation", "lab_method_code")
+
+# lvl0.primary <- apply(table_names, 1, 
+#                       lab_area = 
+#                        RSQLite::dbReadTable(myconnect, 'lab_area')
 
 tableNames <- dbListTables(myconnect)
 ```
