@@ -1,0 +1,281 @@
+---
+title: "Data Rescue: Austin 2010"
+format:
+  html:
+    toc: true
+    eval: false #default to not evaluating the chunks, override this the template is completed
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Austin2010_Methods.bib #contains the citations in the methods section
+  - Austin2010.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ashbonner310 #use the github name as an id
+    name:
+      given: Ashley
+      family: Bonner
+    orcid: 0000-0001-7882-6353
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead 
+      
+  - id: ktoddbrown 
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review
+
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: New template 1 
+    description: Start moving rescue from old template to new template, particularly the README.
+    who: ashbonner310 
+    start: 2026-01-29 T16:45
+    end: 2026-01-29 T17:15
+    duration: P30M
+  - activity: New template 2
+    description: Continue moving rescue from old template to new template, particularly moving files other than README.
+    who: ashbonner310 
+    start: 2026-01-30 T15:02
+    end: 2026-01-30 T15:34
+    duration: P32M
+  - activity: New template 3
+    description: Finish moving rescue from old template to new template.
+    who: ashbonner310 
+    start: 2026-01-30 T17:51
+    end: 2026-01-30 T18:45
+    duration: P54M
+version: 'vs202512' 
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Austin2010_Methods.md"
+figure1.file <- 'Austin2010_Figure1.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Austin2010.bib'
+methodsCitation.file <- 'Austin2010_Methods.bib'
+
+# read function
+readsource.file <- '../../../R/readAustin2010.R'
+source('readsource.file')
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> A.T. Austin, & C.L. Ballaré, Dual role of lignin in plant litter decomposition in terrestrial ecosystems, Proceedings of the National Academy of Sciences. U.S.A. 107 (10) 4618-4622, https://doi.org/10.1073/pnas.0909396107 (2010).
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/119.
+
+@Austin2010 was interested in photodegredation rates of litter decomposition based on litter chemistry (specifically based on the levels of lignin and cellulose). 
+They also used wavelength-specific light attenuation filters to determine what wavelengths of light contribute to abiotic mass loss.
+
+## Tables and figures
+
+- Table
+<!-- This paper contains no tables --->
+
+- Figure 
+  1) Mass loss over experimental attenuation of specific regions of the solar spectrum; panel A covers mass loss of litter and panel B covers mass loss of a synthetic cellulose-lignin substrate.
+  2) Radiation absorbance spectra of synthetic cellulose-lignin substrates enriched with different quantities of lignin.
+  3) Degradation of synthetic cellulose-lignin substrates under biotic conditions and abiotic conditions with full solar radiation.
+  4) Panel A shows initial to final lignin concentrations of the synthetic cellulose-lignin substrate in both abiotic and biotic experiments, while panels B and C compare observed lignin loss compared to predictions based on the assumption that all degradation was due to biotic or abiotic conditions.
+
+Since we are only interested in the litter decay, we are rescuing only Figure 1.
+
+## Fit for purpose: DeAD
+
+This paper was identified for data rescue with the Decomposition Across Drylands (DeAD) project. 
+The DeAD data rescue project is concerned with documenting and preserving data which documents litter decay rates in arid and semi-arid ecosystems.
+
+The paper contains data from two seperate experiments, one using a synthetic cellulose-lignin substrate which we are not including in the data rescue, and an experiment using collected litter which we are rescuing.
+
+ - Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+ - Duration: 120 days
+ - Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+ - Solar exposure: Litter treated with filters (see treatments below)
+ - Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+ - Vegetation Coverage: Open Woodland
+ - Litter Chemistry: Found via standard acid detergent method:
+    + cellulose and sugars, 49.1 ± 0.4%
+    + hemicellulose, 37.3 ± 0.2%
+    + lignin,7.3 ± 0.2%.
+ - Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+ - Treatments: 
+    + Plastic box placed in chicken wire cage to allow for free flow of air.
+    + Rainout shelter
+    + No contact with ground; wire cage suspended 30cm above ground.
+    + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+
+
+## Files
+
+These files are in the Austin2010 data rescue.
+
+- [Readme](README_Austin2010.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Austin2010.bib](Austin2010.bib)
+  + citation for article transcribed
+- [Austin2010_Methods.bib](Austin2010_Methods.bib)
+  + citations for the methods section of the article
+- [Austin2010_Methods.md](Austin2010_Methods.md)
+  + methods transcribed from primary article
+- [Austin2010_Figure1.csv](Austin2010_TableN.csv)
+  + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure. 
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [X] Read the article or data resource and the discription of the target project
+  - [X] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Austin2010'
+  - [X] Create a copy of this template folder and rename it to Austin2010
+  - [X] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [X] Add the reviewer to the author list in the yml
++ Do
+  - [X] Extract points from Figure1 and export it to csv
+  - [X] Transcribe or copy the method section
+  - [X] Insert references to bib entries (note: none included in this paper's methods section.)
+  - [X] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [X] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [X] Create a bib file with the citations from the methods section (note: none included in this paper's methods section.)
+  - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Figure 1
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+Figure 1 is the only data retrieved from this paper as the rest of the data is using a synthetic substrate, and we are only interested in data on nonsynthetic litter decay.
+Initial digitization for Figure 1 was performed with the [Plot Digitization app](https://plotdigitizer.com/app).
+Values were rounded to one additional decimal place than the y-axis on the original graph.
+For this figure, the original bar graph had a y-axis labeled to the hundredths place, so the outputs from the digitizer were rounded to the thousandths place.
+
+The Figure csv has seven columns: index, substrate, transmitted wavelengths in nm, Mass Loss in $\%$ per day, height of the error bar, error (difference between mass loss and height of error bar, calculated after rounding to significant figures), and letters indicating significant differences for Tukey HSD post-hoc comparisons.
+
+```{r table1}
+
+read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+## Methods comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_ABC.md Austin2010_Methods_BCD.md
+```
+
+## Methods Section Transcription
+
+{{< include Austin2010_Methods.md >}}
+
+## Citation notes from Methods
+
+The methods sections for this paper contained no citations.
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAustin2010(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+

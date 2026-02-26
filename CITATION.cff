@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+title: 'SoilDRaH: Soil Data Rescue and Harmonization'
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - given-names: Katherine
+    family-names: Todd-Brown
+    affiliation: University of Florida
+    orcid: 'https://orcid.org/0000-0002-3109-8130'
+  - given-names: Layla
+    family-names: Kalandjian
+    affiliation: University of Florida
+  - given-names: Colby
+    family-names: Green
+    affiliation: University of Florida
+  - given-names: Savannah
+    family-names: Scott
+    affiliation: University of Florida
+  - given-names: Mirah
+    family-names: Blanchard
+    affiliation: University of Florida
+  - given-names: Brandon
+    family-names: Whitehead
+    affiliation: University of Florida
+    orcid: 'https://orcid.org/0000-0002-0337-8610'
+  - given-names: Vaasuki
+    family-names: Marupaka
+    affiliation: University of Florida
+repository-code: 'https://github.com/ktoddbrown/SoilDRaH'
+license: MIT

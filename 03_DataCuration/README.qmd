@@ -1,0 +1,15 @@
+---
+title: "README"
+format: html
+---
+
+*This is under development.*
+
+# Files and folders
+
+This includes a list of the files and folders with a once sentence purpose discription to help a contributor navigate files.
+
++ README.qmd - This is the primary landing file for the directory, you are here!
++ _CurationTemplate - This folder contains a template for new projects
+  + ProjectYYYY.qmd - The primary organizing document for new projects including the status of each proposed data source and whom to contact as project lead.
+  + ProjectYYYY.bib - A bib file primarily containing references to data sources but could also contain background citations.

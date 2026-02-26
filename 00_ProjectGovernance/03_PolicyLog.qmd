@@ -1,0 +1,101 @@
+---
+title: "Policy Log"
+format: html
+toc: true
+---
+
+This document is a policy log where we manage the review process and document any changes.
+We define a 'policy' as a decision that is applicable multiple situations.
+A policy is intended to reduce cognitive load by making a standard practice that reduces the need for groups of people to make similar decisions. 
+In most cases policies will be in the policy folder except for a few key, high level documents (like this one) that are in the primary governance folder. 
+In all cases a link will the provided to the document.
+
+A policy log can be thought of as similar to [https://github.com/joelparkerhenderson/architecture-decision-record](https://github.com/joelparkerhenderson/architecture-decision-record) and is based off of Sociocracy principles.
+
+# Mission and vision - 2026 May
+
+*Context:* We need a clear way to decern what is in scope and out of scope on the project, as well as a clear ask when inviting future collaboration. 
+The mission should help us define that scope and vision should tell us what the world might look like when we get there. 
+These will be aspirational and may not have clear metrics of success.
+
+*Policy:* [01_MissionVision.qmd](01_MissionVision.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* After presenting this to students involved with the project, new students starting on the project, and collaborators who are thinking about joining, are there common questions that surface that need to be addressed? Is this clear enough? Is it tightly scoped?
+
+*Term:* 6 months - review May 2026
+
+*Change log:*
+
+  + 20251124 - initial draft committed
+  + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
+  
+
+# Goals - 2025 May
+
+*Context:* Given the broad vision for the project what are the 1-5 year goals we are organizing activities around?
+Activities on the project should be linked to specific goals that are all relevant to the overall mission/vision. 
+These can include specific curation efforts as well as interconnected semantic development.
+
+*Policy:* [06_Goals.qmd](06_Goals.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* 
+  1) Conduct a file audit: Do all the files in the repository link to a specific goal? 
+  2) Ask community members: "Do the goals help you understand how we are furthering the broader mission and where their activities fit in?"
+
+*Term:* 6 months - review May 2026
+
+# Community Norms - 2026 March
+
+*Context:* We need to establish who is in the project community, understand their basic capasity, limitation, and incentives, and how we deal with conflicts. In the future it would be good to ensure that our community members are support in rewarding particpation by developing metrics but this feels a bit more overbuilt then we need right now.
+
+*Policy:* [04_CommunityNorms.qmd](04_CommunityNorms.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* We will ask those who write workflows if this 'who' captures the background needed to target documentation. We will ask a sample of participants to review the conflict resolution section and check how this lines up with their expectations and if the could see implementing this in practice.
+
+*Term:* 3 months - review March 2026
+
+*Change log:*
+
+  + 20251124 - initial draft committed
+  + 20251120 - [#153](https://github.com/ktoddbrown/SoilDRaH/issues/153) created
+  
+# Data rescue - 2026 February
+
+*Context:* We need to document the workflow for data rescue that will guide folks doing the data rescue work. This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
+
+*Policy:* [Policies/Workflow_DataRescue.qmd](Policies/Workflow_DataRescue.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
+
+*Term:* 2 months - review February 2026
+
+*Change log:*
+
+  + 20251207 - initial draft committed
+  + 20251123 - [#154](https://github.com/ktoddbrown/SoilDRaH/issues/154) created
+  
+# Data harmonization - 2026 March
+
+*Context:* We need to document the workflow for data harmonization that will guide the combination of digitized data into a single resource.
+This should include needed references and guidance on how to get questions answered. Ideally this should be a stand alone resource and not require additional guidance given a base 1st year college student background.
+
+*Policy:* [Policies/Workflow_DataHarmonize.qmd](Policies/Workflow_DataHarmonize.qmd)
+
+*Responsible:* ktoddbrown
+
+*Metric:* New data rescuers should be given this document and the data rescue template without an initial walk through. Then asked for clarifying questions and what should be added. Finally an orientation should be given and feedback sought again.
+
+*Term:* 3 months - review March 2026
+
+*Change log:*
+
+  + 20251207 - initial draft committed
+  + 20251123 - [#156](https://github.com/ktoddbrown/SoilDRaH/issues/156) created

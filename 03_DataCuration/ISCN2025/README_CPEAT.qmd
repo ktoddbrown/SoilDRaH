@@ -1,0 +1,579 @@
+---
+title: "Carbon in Peat on EArth through Time"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+authors:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliation:
+      - ref: uf-ees
+  - name:
+      given: Vaasuki
+      family: Marupaka
+    affiliation:
+      - ref: uf-ees
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: FL
+    country: USA
+    url: https://essie.ufl.edu/ees/
+---
+
+The purpose of this document is to summarize the portions of the Carbon in Peat on EArth through Time (C-PEAT) Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, data model description, data processing workflows, and visuals for the collection relevant variables.
+
+# What is C-PEAT
+
+The version of the Carbon in Peat on EArth through Time (C-PEAT) Database described here is the public facing version of the PANGAEA repository (https://www.pangaea.de).
+
+> **C-PEAT Database**
+> Peatlands played a key role in the global carbon cycle during the Holocene and previous interglacials. High-latitude and tropical peatlands have acted as net long-term atmospheric sinks for carbon dioxide (CO2). However, key uncertainties remain regarding many fundamental patterns and processes. C-PEAT aims to address these uncertainties.
+
+Quote from [https://pastglobalchanges.org/science/wg/former/peat-carbon/intro](https://pastglobalchanges.org/science/wg/former/peat-carbon/intro) (Accessed 17-June-2024)
+
+# Where is the data
+
+This data was downloaded from [https://www.pangaea.de/?q=project:label:PAGES_C-PEAT](https://www.pangaea.de/?q=project:label:PAGES_C-PEAT) using the project label `PAGES_C-PEAT` and the search function of the package `pangaear` to identify 850 unique DOIs.
+We have noticed that these DOIs have reduced over time, some of these were merged data sets (merging age and geochemistry from the same core into a single core, 10.1594/PANGAEA.890358 and 10.1594/PANGAEA.928557), others appear to be newly registered data, and others seem to disappear from new quires.
+We have provided a list of doi's retrieved at various points in the project as a `echo: false` chunk in the qmd code for documentation and the commented out `pangaear::pg_search` code.
+
+There is some one-off data collections for ingest that means we can not ensure that future data contributions will be consistent with what we present here.
+This should be a good starting point however for adding new contributions.
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+#library(pangaear)
+
+download.dir <- '../../../temp/CPEAT'
+#list.files(download.dir) |> length()
+
+verbose <- TRUE
+variable_keep <- c('variable_keep', 'download.dir', 'verbose', 
+                   'lvl0_data.ls', 'lvl1_data.ls', 'lvl2_data.ls')
+```
+
+```{r}
+#| label: doi_list
+#| echo: false
+
+#### Long doi list ####
+
+downloadUrl.arr <- read_csv(file = 'download_url_CPEAT.csv', col_names = FALSE, col_types = cols(col_character()))$X1
+
+#### Check pangaea search ####
+
+# temp.df <- pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', count = 500) |>
+#   bind_rows(
+#     pangaear::pg_search(query = 'project:label:PAGES_C-PEAT', offset = 500, count = 500))
+# 
+# #is there anything new?
+# setdiff(paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"),
+#         downloadUrl.arr)
+# #is there anything "lost" from the search
+# setdiff(downloadUrl.arr,
+#         paste0("https://doi.pangaea.de/",temp.df$doi, "?format=textfile"))
+```
+
+# Level 0 data
+
+```{r}
+#| label: downloadCPEAT
+
+basenames.arr <- downloadUrl.arr |> 
+  # start with:
+  # "https://doi.pangaea.de/10.1594/PANGAEA.889936?format=textfile"
+  str_extract(pattern = '(?<=pangaea.de/).*(?=.format)') |> 
+  # extract the string between the doi url and the format information:
+  # 10.1594/PANGAEA.889936
+  str_replace(patter = '/', replacement = '_') |>
+  # replace the forward slash so that it is not treated as a folder
+  # 10.1594_PANGAEA.889936
+  paste0('.txt')
+  # add the extension
+
+download.flag <- !file.exists(file.path(download.dir, basenames.arr))
+if(any(download.flag)){
+  download.file(url = downloadUrl.arr[download.flag], 
+                destfile = file.path(download.dir,
+                                     basenames.arr[download.flag]))
+}
+```
+
+```{r}
+#| label: loadPreLevel0
+
+#file.str <- readr::read_file(file.path(download.dir, basenames.arr[1]))
+#
+basenames.ls <- setNames(object = as.list(basenames.arr), str_remove(basenames.arr, '.txt'))
+all.text <- plyr::llply(.data = basenames.ls, 
+                        .fun = function(basename.str){
+  readr::read_file(file.path(download.dir, basename.str))
+})
+
+all.meta <- plyr::ldply(.data = all.text,
+                        .fun = function(file.str){
+  #### Parse the first level of the metadata ####
+  #file.str <- all.text$`10.1594_PANGAEA.928061`
+  header.str <- file.str |>
+    str_extract(regex('(?<=/\\* ).*(?=\\*/)', multiline=TRUE, dotall=TRUE))
+  
+  meta.df <- header.str |>
+    str_split_1('(?<=\\n)[^\\t]*\\:') |>
+    as.list() |>
+    setNames(c('meta', str_extract_all(header.str, '(?<=\\n)[^\\t]*\\:') |> 
+                 unlist() |>
+                 str_remove('\\:$'))) |>
+    as_tibble_row()
+  return(meta.df)
+}, .id = 'doi') 
+
+all.primary <- plyr::ldply(.data = all.text, .fun = function(file.str){
+  
+#### Parse the primary data file ####
+
+  header.str <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n)[^\\n]*', multiline=TRUE, dotall=TRUE)) |>
+    str_split(patter = '\\t') |>
+    unlist()
+  
+  #"10.1594_PANGAEA.928439" index 388 has an extra 3 at the end of the file randomly, this throws a warning but does not affect how the data is read in
+primary.df <- file.str |> #all.text[388] |> #
+  str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
+  read_tsv(col_types = cols(.default = col_character()),
+           skip = 1, col_names = FALSE) |>
+  mutate(across(.cols = everything(), .fns = trimws)) |>
+  mutate(row_id = paste0('R',1:n())) |>
+  pivot_longer(cols = -row_id, 
+               names_to = 'column_index', values_to = 'with_entry') |>
+  full_join(tibble(column_index = paste0('X', 1:length(header.str)),
+                   column_name = header.str),
+            by = join_by(column_index))
+
+  return(primary.df)
+}, .id = 'doi')
+
+
+```
+
+
+```{r}
+#| label: processHeader
+# 
+# study.df <- all.meta |>
+#   select(doi, citation = Citation, 
+#          replaced_by = `Replaced by`, related_to = `Related to`,
+#          further_details = `Further details`,
+#          projects = `Project(s)`,
+#          change_history = `Change history`,
+#          license = License,
+#          size = Size, abstract = Abstract,
+#          keyword = `Keyword(s)`, status = Status) |>
+#   mutate(across(everything(), trimws)) |>
+#   mutate(across(c(projects, license, keyword, status), as.factor)) |>
+#   mutate(replaced_by_doi = str_extract(replaced_by, '10\\.1594/PANGAEA\\.\\d*') |>
+#            str_replace('/', '_'))
+
+
+#### core data (pre-processing) ####
+#### to be broken up into coverage, event, and parameter information
+core.df <- all.meta |>
+  select(doi, coverage = Coverage,
+         event = `Event(s)`, parameters = `Parameter(s)`) |>
+  separate_wider_delim(cols = parameters, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start')
+
+
+#identfy and process the sub-patterns
+structures.df <- all.meta |>
+  select(Coverage, `Event(s)`, Size, `Parameter(s)`) |>
+  mutate(
+    Coverage_pattern = 
+      str_replace_all(Coverage, '\\-?\\d*\\.?\\d+', '%d'),
+    Events_pattern = 
+      str_replace(`Event(s)`, '^[^\\*]*\\*', '%s') |>
+      str_replace(':[^\\*]*$', ': %s') |>
+      str_replace_all(':[^\\*]*\\*', ': %s'),
+    Size_pattern = 
+      str_replace_all(Size, '\\d+', '%d'))
+
+  ##Do this --
+  ## - [x] Coverage: Separate variables based on * and \n, then by [name] : [entry], then extract unit from entry. Strip white space
+  ## - [x] Events: Separate variables based on * , then by [name] : [entry], process Comments via ; split, then by [name] : [entry]
+  ## -[x] Parameters: Separate and process the parameter descriptions by str subtraction
+
+### size data ####
+### number of data points for each doi
+size.df <- all.meta |>
+  select(doi, Size) |>
+  mutate(value = str_extract(Size, '\\d+'),
+         unit = str_remove(Size, '\\d+'),
+         of_variable = 'data_size') |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry') |>
+  select(doi, of_variable, is_type, with_entry)
+
+#### coverage data ####
+#### lat/long and core depth interval
+coverage.df <- all.meta |>
+  select(doi, temp_str = Coverage) |>
+  mutate(temp_str = trimws(temp_str)) |>
+  separate_longer_delim(temp_str, delim = stringr::regex('\\*|\\n')) |>
+  separate_wider_delim(temp_str, delim = ':', names = c('of_variable', 'text')) |>
+  mutate(across(everything(), trimws)) |>
+  mutate(value = str_remove(text, ' c?m$'),
+         unit = trimws(str_extract(text, ' c?m$'))) |>
+  select(-text) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(across(everything(), trimws))
+  
+#### event data (pre-processing) ####
+#### lat/long, location (region), elevation, method and device (coring), core recovery length, core penetration depth, and structured comments (processed next)
+events.df <- all.meta |>
+  select(doi, temp_str = `Event(s)`) |>
+  mutate(core_name = str_extract(temp_str, '^.*(?= \\* LATITUDE)')) |>
+  mutate(temp_str = str_remove(temp_str, '^.* \\* (?=LATITUDE)')) |>
+  separate_wider_delim(temp_str, names = paste0('X', 1:10), 
+                       delim = ' * ',
+                       too_few = "align_start") |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'drop_names',
+               values_to = 'component',
+               values_drop_na = TRUE) |>
+  mutate(is_type = str_extract(component, '^[^:]+'),
+         with_entry = str_remove(component, '^[^:]+: ')) |>
+  select(doi, is_type, with_entry) |>
+  mutate(across(everything(), trimws)) |>
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
+### event comment data ####
+### coring year, peatland type, basal age, basal age depth, core microtopography, core length, number of dates, carbon rate site, peat properties sample size, bulk density sample volumne, surface age, altitude, site name, and comment
+events_comment.df <- events.df |>
+  select(doi, COMMENT) |>
+  #remove refernce to core name in comments
+  mutate(COMMENT = str_remove(COMMENT,'^.*e[ta]+ils.*(?=c|Coring year)')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'sphagnum, Volume of bulk density samples', 'sphagnum; Volume of bulk density samples')) |>#X3
+  mutate(COMMENT = str_replace(COMMENT, 'Stordalen_core2 Dominant peat type', 'Stordalen_core2; Dominant peat type')) |> #X2
+  mutate(COMMENT = str_replace(COMMENT, 'KOE.', 'KOE')) |>
+  mutate(COMMENT = str_replace(COMMENT, '17 samples:', '17 samples - ')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'uncal., basal', 'uncal.; basal')) |>
+  mutate(COMMENT = str_replace(COMMENT, 'basal age 1', 'basal age: 1')) |>
+  separate_longer_delim(cols = 'COMMENT', delim = ';') |>
+  mutate(COMMENT = trimws(COMMENT)) |>
+separate_wider_delim(cols = COMMENT, delim = ':',
+                       names = c('of_variable', 'with_entry'), too_few = 'align_end') |>
+  filter(!(is.na(with_entry) & is.na(of_variable))) |>
+  mutate(of_variable = if_else(is.na(of_variable), 
+                               'COMMENT', of_variable)) |>
+  mutate(of_variable = paste0('EVENT::COMMENT::',str_to_lower(of_variable)))
+
+### event (clean) data ####
+### lat/long, location (region), elevation, method and device (coring), core recovery length, and core penetration depth
+### Note structured comments are processed above seperately
+events_clean.df <- events.df |>
+  select(-COMMENT) |>
+  pivot_longer(-doi, names_to = 'of_variable', values_to='temp',
+               values_drop_na = TRUE) |>
+  mutate(value = str_remove(temp, ' c?m$'),
+         unit = trimws(str_extract(temp, ' c?m$'))) |>
+  select(-temp) |>
+  pivot_longer(cols = c(value, unit), names_to = 'is_type', values_to = 'with_entry', values_drop_na = TRUE) |>
+  mutate(of_variable = paste0('EVENT::', of_variable))
+
+#### column information ####
+#### column data model includes column index, name as `of_variable`, and `is_type` including: description, unit, comment, MethodDevice, geocode, and PI
+column_meta.df <- all.meta |>
+  select(doi, `Parameter(s)`) |>
+  separate_wider_delim(cols = `Parameter(s)`, 
+                       delim = '\t',
+                       names = paste0('X', 0:14),
+                       too_few = 'align_start') |>
+  select(-X0) |>
+  pivot_longer(cols = starts_with('X'),
+               names_to = 'column_index',
+               values_to = 'column_name',
+               values_drop_na = TRUE) |>
+  #mutate(column_name_match = str_detect(column_name, '^.+ \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(comment = str_extract(column_name, '(?<= \\* COMMENT:).+$'),
+         MethodDevice = str_extract(
+           str_remove(column_name, '( \\* COMMENT:.+)?$'), #trim the end
+           '(?<= \\* METHOD/DEVICE:).+$'), #extraction pattern
+         PI = str_extract(
+           str_remove(column_name, 
+                      '( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$'), #trim
+           '(?<= PI: ).+$'), #extract
+         geocode = str_extract(column_name, 'GEOCODE'),
+         temp = str_remove(column_name, ' \\*( GEOCODE \\*)? PI:.+( \\* METHOD/DEVICE:.+)?( \\* COMMENT:.+)?$')) |>
+  mutate(description = str_remove(temp, '[\\[\\(].*$'),
+         unit = str_extract(temp, '(?<=\\[).+(?=\\])'),
+         of_variable = str_extract(temp, '(?<=\\().+(?=\\))')) |>
+  select(!c(column_name, temp)) |>
+  mutate(across(everything(), trimws)) |>
+  pivot_longer(cols = -c(doi, column_index, of_variable),
+               names_to = 'is_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE)
+  
+###Compile study-level data####
+###put everything together except the column and layer data
+study_meta.df <- all.meta |>
+  #trim out the things that don't need heavy processing
+  select(doi, citation = Citation, 
+         replaced_by = `Replaced by`, 
+         related_to = `Related to`, 
+         further_details = `Further details`,
+         projects = `Project(s)`, 
+         change_history = `Change history`, 
+         license = License, 
+         abstract = Abstract, 
+         keywords = `Keyword(s)`, 
+         status = Status, 
+         header_comment = Comment) |>
+  pivot_longer(cols = -doi, 
+               names_to = 'of_variable', values_to = 'with_entry',
+              values_drop_na = TRUE) |>
+  mutate(is_type = 'value') |>
+  #pull in the processed data
+  bind_rows(size.df,
+            events_clean.df,
+            events_comment.df,
+            coverage.df) |>
+  mutate(across(everything(), trimws))
+
+####Create level 0 data list####
+#put it all together
+lvl0_data.ls <- list(study = study_meta.df,
+                columns = column_meta.df,
+                primary = all.primary)
+
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+# Level 1 data
+
+```{r}
+
+### Remove replaced cores####
+### Also check to make sure we have their replacements
+replaced_core <- lvl0_data.ls$study |>
+  #remove 112 dois that have been replaced
+  filter(of_variable %in% 'replaced_by') |>
+  mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$') |>
+           str_replace(pattern = '/', replacement = '_'))
+
+if(all(replaced_core$replacement_doi %in% lvl0_data.ls$study$doi)){
+  if(verbose) message('Replacement cores present in dataset')
+}else{
+  warning('There are missing replacement cores.')
+}
+
+# Take the cores out of each of the data frames
+study.df <- lvl0_data.ls$study |>
+  filter(! (doi %in% replaced_core$doi))
+
+column.df <- lvl0_data.ls$columns|>
+  filter(! (doi %in% replaced_core$doi))
+
+primary.df <- lvl0_data.ls$primary |>
+  filter(! (doi %in% replaced_core$doi))
+
+#### Move the PI info to the study data ####
+pi.df <- column.df |>
+  filter(is_type == 'PI') |>
+  select(doi, with_entry) |>
+  unique() |>
+  # #Confirm none of dois have more then one PI, moving information to study.df
+  # filter(n() > 1,
+  #        .by = doi)
+  mutate(of_variable = 'PI',
+         is_type = 'value')
+
+#remove PI from the column.df
+column_noPI.df <- column.df |>
+  filter(is_type != 'PI') |>
+  #drop geocode
+  filter(is_type != 'geocode') |>
+  mutate(across(everything(), trimws))
+
+####Map core to ISCN4 #####
+core.df <- study.df |>
+  #add the PI to the study.df
+  bind_rows(pi.df) 
+
+####Create unique variable groups and map to ISCN4 ####
+####some of the variables have the same name but different methods, within the 
+####same core (!). Go through and add in an index to group the unique variable
+####dimensions
+
+unique_column.df <- column_noPI.df |>
+  pivot_wider(names_from = is_type, values_from = with_entry) |>
+  reframe(doi_list = str_c(doi, column_index, sep = '$', collapse = ';'),
+          .by = -c(doi, column_index))|>
+  mutate(variable_id = paste0('V',1:n()) )
+####Move variable ID over to primary data####
+
+expanded_primary.df <- primary.df |>
+  full_join(unique_column.df |>
+              pivot_longer(cols = c('description', 'unit', 'comment', 'MethodDevice'),
+                           names_to = 'is_type', 
+                           values_to = 'with_entry', values_drop_na = TRUE)|>
+              separate_longer_delim(cols = doi_list, delim = ';') |>
+              separate_wider_delim(cols = doi_list, delim = '$', 
+                                   names = c('doi', 'column_index')) |>
+              select(doi, column_index, variable_id, of_variable) |>
+              unique(),
+            by = join_by(doi, column_index))
+
+lvl1_data.ls <- list(core = core.df,
+                     variable = unique_column.df,
+                     primary = expanded_primary.df)
+
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+# Level 2 data - ISCN4
+
+```{r}
+#| label: mapISCN4
+
+site.df <- lvl1_data.ls$core |>
+  mutate(of_variable_ISCN4 = case_when(
+    of_variable == 'citation' ~ 'citation',
+    of_variable == 'related_to' ~ 'related_research',
+    of_variable == 'projects' ~ 'projects',
+    of_variable == 'license' ~ 'data_license',
+    of_variable == 'header_comment' ~ 'core_comment',
+    of_variable == "EVENT::LATITUDE" ~ 'latitude',
+    of_variable == "EVENT::LONGITUDE" ~ 'longitude',
+    of_variable == "EVENT::LOCATION" ~ 'region',
+    of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
+    of_variable == "EVENT::ELEVATION" ~ 'elevation',
+    of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
+    of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
+    of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
+    of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+    of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+    of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
+    of_variable == 'PI' ~ 'principal_investigator',
+  TRUE ~ NA_character_
+  )) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  mutate(is_type = if_else(is.na(is_type), 'value', is_type)) |>
+  select(doi, of_variable_ISCN4, is_type, with_entry) |>
+  #filter(length(unique(with_entry)) > 1,
+  #        .by = c(doi, of_variable_ISCN4, is_type))
+  pivot_wider(names_from = is_type, values_from = with_entry, 
+              values_fn = function(xx)(paste(xx, collapse = ' ')))
+
+variable.df <- lvl1_data.ls$variable |>
+  mutate(of_variable_ISCN4 = case_when(
+    of_variable == 'C' ~ 'carbon_percent',
+    of_variable == 'TC' ~ 'total_carbon_percent',
+    of_variable == 'TIC' ~ 'inorganic_carbon_percent',
+    of_variable == 'TOC' ~ 'organic_carbon_percent',
+    of_variable == 'Corg dens' ~ 'organic_carbon_density',
+    of_variable == 'DBD' ~ 'dry_bulk_density',
+    of_variable == 'Depth bot' ~ 'layer_bottom',
+    of_variable == 'Depth top' ~ 'layer_top',
+    of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+    of_variable == 'Depth sed' ~ 'layer_middle',
+    of_variable == 'Samp thick' ~ 'layer_thickness',
+    of_variable == 'LOI' ~ 'loss_on_ignition',
+    of_variable == 'OM' ~ 'organic_matter_percent',
+    of_variable == 'OM dens' ~ 'organic_matter_density',
+    of_variable == "Water wm" ~ 'field_water_percent',
+    TRUE ~ NA_character_
+  )) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  select(variable_id, of_variable_ISCN4, description, unit, comment, MethodDevice)
+
+primary.df <- lvl1_data.ls$primary |>
+  left_join(variable.df |>
+              select(variable_id, of_variable_ISCN4) |>
+              unique(),
+            by = join_by(variable_id)) |>
+  filter(!is.na(of_variable_ISCN4)) |>
+  select(doi, row_id, variable_id, 
+         of_variable_ISCN4, with_entry) |>
+  filter(!is.na(with_entry)) |>
+  pivot_wider(names_from = c(of_variable_ISCN4, variable_id), 
+              names_sep = '::',
+              values_from = with_entry) |>
+  pivot_longer(cols = -c(doi, row_id, starts_with('layer'))) |>
+  filter(!is.na(value)) |>
+  select(where(function(xx){any(!is.na(xx))})) |>
+  pivot_wider() |>
+  pivot_longer(-c(doi, row_id), values_to = 'with_entry', values_drop_na = TRUE) |>
+  separate_wider_delim(cols = name, delim = '::', names = c('of_variable_ISCN4', 'variable_id')) |>
+  ## filter(length(unique(variable_id)) > 1,
+  ##        .by = c(doi, row_id, of_variable_ISCN4))
+  #select(-variable_id) |>
+  #pivot_wider(names_from = 'of_variable_ISCN4', values_from = 'with_entry')
+  select(doi, variable_id, layer_id = row_id, of_variable_ISCN4, value = with_entry)
+
+lvl2_data.ls <- list(study = variable.df,
+                     site = site.df,
+                     layer = primary.df)
+
+# memory management
+rm(list = setdiff(ls(), variable_keep))
+```
+
+## Figures
+
+```{r}
+wide_site <- lvl2_data.ls$site |>
+  select(doi, of_variable_ISCN4, value) |>
+  pivot_wider(names_from = of_variable_ISCN4,
+              values_from = value) |>
+  mutate(elevation = if_else(is.na(elevation), elevation_start, elevation)) |>
+  select(-c(elevation_start, elevation_end, site_name)) |>
+  mutate(across(c(latitude, longitude, elevation, observation_year), .fns = as.numeric)) |>
+  mutate(across(c(projects, data_license, region, sampling_method, principal_investigator), as.factor))
+
+wide_layers <- lvl2_data.ls$layer |>
+  select(doi, layer_id, of_variable_ISCN4, value) |>
+  pivot_wider(names_from = of_variable_ISCN4, values_from = value) |>
+  mutate(layer_middle = if_else(is.na(layer_middle_LOI), layer_middle, layer_middle_LOI)) |>
+  select(-c(layer_id, layer_middle_LOI)) |>
+  unique() |>
+  mutate(across(-doi, as.numeric)) |>
+  mutate(layer_top = c(0, layer_middle[-n()]),
+         layer_bottom = layer_middle,
+         .by = doi)
+
+temp <- wide_layers |>
+  select(-layer_thickness) |>
+  reframe(layers_included = paste0(layer_middle, collapse = ';'),
+          .by = -layer_middle)
+```
+
+### Where is the data located?
+
+```{r}
+
+countries <- map_data('world')
+ggplot(wide_site) +
+  geom_polygon(data = countries, aes(x=long, y = lat, group=group),
+               fill = NA, color = 'black') +
+  geom_point(aes(x=longitude, y =latitude, color = observation_year)) +
+  theme_bw()
+```
+
+```{r}
+
+```

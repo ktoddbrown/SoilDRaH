@@ -53,6 +53,14 @@ docs
 # temp folder where we stash a lot of data
 temp/*
 */temp/*
+temp*
 
 #MacOS files
 *DS_Store
+
+#Quarto files
+*/*_files/*
+*/*/*_files/*
+*/*/*/*_files/*
+*.html
+*.pdf

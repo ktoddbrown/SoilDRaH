@@ -1,0 +1,17 @@
+"TABLE 2. Seasonal variation in soil respiration, surface soil temperature ($\approx$ 2-3 cm depth), and gravimetric soil moisture content. Values are means of 24-h samples taken one day in each month (*N* = 15).",,,,,,,,,,,,,
+,Site,Nov 1991 mean,Nov 1991 SE,Jan 1992 mean,Jan 1992 SE,Mar 1992 mean,Mar 1992 SE,Jun 1992 mean,Jun 1992 SE,Jul 1992 mean,Jul 1992 SE,Sep 1992 mean,Sep 1992 SE
+Soil respiration (g m<sup>-2</sup> d<sup>-1</sup>),Pasture (100 m),8.33,0.40,8.97,0.37,7.76,0.38,11.02,0.62,8.32,0.35,7.88,0.42
+Soil respiration (g m<sup>-2</sup> d<sup>-1</sup>),Pasture (800 m),9.44,0.46,7.23,0.29,8.34,0.34,9.65,0.41,6.78,0.39,6.32,0.37
+Soil respiration (g m<sup>-2</sup> d<sup>-1</sup>),Pasture (1700 m),7.67,0.32,6.08,0.34,5.67,0.29,5.46,0.32,6.97,0.37,5.32,0.35
+Soil respiration (g m<sup>-2</sup> d<sup>-1</sup>),Forest (900 m),6.05,0.31,7.99,0.25,6.77,0.33,8.54,0.40,7.15,0.26,6.78,0.33
+Soil respiration (g m<sup>-2</sup> d<sup>-1</sup>),Forest (1500 m),6.04,0.47,7.69,0.25,6.34,0.24,7.77,0.35,5.67,0.34,5.99,0.48
+Soil temperature (degrees C),Pasture (100 m),26.0,0.48,26.3,0.76,25.1,0.68,27.3,0.77,26.3,0.76,25.3,0.87
+Soil temperature (degrees C),Pasture (800 m),21.6,0.73,20.3,0.54,20.0,0.47,21.3,0.49,20.9,0.44,20.2,0.39
+Soil temperature (degrees C),Pasture (1700 m),15.5,0.38,14.8,0.35,14.6,0.25,15.1,0.21,15.3,0.30,15.0,0.22
+Soil temperature (degrees C),Forest (900 m),19.2,0.32,18.9,0.23,18.7,0.21,19.7,0.38,19.4,0.21,19.0,0.33
+Soil temperature (degrees C),Forest (1500 m),16.4,0.33,16.6,0.22,16.2,0.34,16.3,0.24,16.1,0.27,16.0,0.27
+Soil moisture (% moisture),Pasture (100 m),43.1,0.89,44.3,0.84,40.2,0.61,46.0,0.58,42.8,0.55,41.2,0.66
+Soil moisture (% moisture),Pasture (800 m),48.3,0.95,48.6,1.13,44.9,1.53,52.7,0.84,49.9,1.07,48.2,0.89
+Soil moisture (% moisture),Pasture (1700 m),50.2,1.24,52.3,0.95,46.2,0.84,55.5,1.10,51.8,0.89,50.9,1.15
+Soil moisture (% moisture),Forest (900 m),58.8,0.98,59.2,1.10,52.0,0.89,59.0,1.36,58.0,1.59,57.9,1.36
+Soil moisture (% moisture),Forest (1500 m),65.1,1.07,63.7,0.78,56.8,0.81,65.9,0.95,64.1,1.36,62.3,1.44

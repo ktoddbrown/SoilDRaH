@@ -1,0 +1,643 @@
+---
+title: "Forest Inventory Analysis Database"
+date: "Summer 2024"
+output: 
+  html_document: 
+    toc: true
+    number_sections: true
+    code_folding: show
+---
+
+The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+# What is the FIADB
+
+The version of the US Forest Service's Forest Inventory Analysis Database described here is the public facing version of the Forest Inventory and Analysis program.
+
+> **Forest Inventory and Analysis**
+For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
+
+Taken from [https://www.fs.usda.gov/research/programs/fia](https://www.fs.usda.gov/research/programs/fia) (Accessed 16-May-2024)
+
+Documentation for this database is concentrated in two documents below:
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+
+The annotations table draws heavily on these two documents with augmentation from private communication with Forest Service scientist.
+
+# Data processing
+
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+
+library(readr) # read in the csv tables
+library(tibble) # use tibbles instead of a data frame
+library(plyr) # transform a list into a data frame for the bind
+library(dplyr) # work with data tables filters/joins/reframes
+library(tidyr) # work with data table pivots
+library(ggplot2) # make plots
+library(stringr) # extract text from descriptions
+library(knitr) # make prettier tables
+library(kableExtra) #make tables scrollable
+
+source("../../R/readFIA.R", local = knitr::knit_global())
+source('../../R/checkAnnotations.R')
+
+#locate the data locally
+dataDir <- '../temp/FS_FIA'
+dataAnnotations <- '../../data/FIA_Annotations.csv'
+
+#knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE}
+#Change this file to run locally for you
+dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/FS_FIA'
+```
+
+To read in the data base use the `readFIA` function.
+
+```{r, warning=FALSE}
+fia.ls <- readFIA(dataDir, 
+                  annotationFilename = dataAnnotations, 
+                  verbose = TRUE, #when first running, switch this to true 
+                  format = 'long')
+
+fia.ls$long %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Tables
+
+There are six tables currently annotated in the FIADB data collection.
+This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
+Below are the descriptions of data columns organized by table.
+
+Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
+
+## Table: `ENTIRE_SURVEY`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SURVEY') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_PLOT`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_PLOT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_VISIT`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_SAMPLE_LOC` 
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_SAMPLE_LOC') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_EROSION`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Table: `ENTIRE_SOILS_LAB`
+
+```{r}
+knitr::kable(fia.ls$annotations %>%
+               filter(is_type == 'description',
+                      table_id == 'ENTIRE_SOILS_VISIT') %>%
+               select(column_id, of_variable, description = with_entry)) %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Data processing
+
+
+
+# Subseting for soil carbon
+
+There is a lot of data here but not all of it is of interest for all purposes.
+In this example we are interested in layer-level soil carbon related measurements, there location, and their observation year.
+Note that we are NOT checking any of the quality control flags here which you would want to do if using this for research purposes.
+
+```{r}
+
+soil_carbon.df <- fia.ls$annotations %>%
+  #identify the variables that we are interested in
+  filter(of_variable %in% c(
+             'Inventory_year',
+             'Longitude', 'Latitude', 'State',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         #limit these to tables since some of them are duplicates
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         #only look at those that map to the data as marked by '--'
+         with_entry == '--') %>%
+  #create a table for exclusive join
+  select(table_id, column_id, of_variable, is_type) %>%
+  #down select the data that matches the variables of interest above
+  left_join(fia.ls$joinPivot,
+            by = join_by(table_id, column_id),
+            relationship = "many-to-many")  %>%
+  #only take the values, just incase there are any methods or units in the table
+  filter(is_type == 'value') %>%
+  #remove the table and column is by keeping the row id (CN), variables (new columns) and entries (new values)
+  select(starts_with('CN'), of_variable, with_entry) %>%
+  unique() %>%
+  #make a single row ID
+  tidyr::unite(col = row_id, starts_with('CN.'), sep = '::') %>%
+  #widen the data table using the row_id
+  pivot_wider(names_from = of_variable,
+               values_from = with_entry) %>%
+  #discard the row_id now that the data is wide and it's implied
+  select(-row_id)
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+# Working with control vocabulary
+
+Two of these variables (`Layer_type` and `State`) have control vocabularies stored in their annotations.
+In this section parse the control vocabularies from the annotations and apply them to the data table to populate the human readable values.
+
+```{r}
+controlVocab <- fia.ls$annotations %>%
+  #using the same list of variables as above, even though it's overkill here
+  filter(of_variable %in% c(
+             'Inventory_year',
+             'Longitude', 'Latitude', 
+             'State', #control vocabular
+             'Layer_type', #control vocabular
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'),
+         is_type == 'control_vocabulary') %>% #look for the control_vocabulary entry
+  #discard everything except the variable of interest
+  select(of_variable, with_entry) %>%
+  unique() %>%
+  #split out the different key-definitions into their own rows
+  separate_longer_delim(cols = with_entry, delim = ';') %>%
+  #then split the key and definition in to their own columns
+  separate_wider_delim(cols = with_entry, delim = '|', names =  c('value', 'definition'))
+
+controlVocab %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+### State names
+
+Then populate the state names.
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join(controlVocab %>%
+              filter(of_variable == 'State') %>%
+              select('state_name'= definition, value),
+            by = join_by(State == value))
+```
+
+### Layer bounds
+
+Followed by the layer names, which take a little more text parsing to extract the upper and lower bounds as well as associated unit.
+
+```{r}
+soil_carbon.df <- soil_carbon.df %>%
+  left_join( controlVocab %>%
+               filter(of_variable == 'Layer_type') %>%
+               mutate(Layer_type.upper = str_extract(definition, pattern = regex('^\\d(?=\\-\\d inch)')),
+                      Layer_type.lower = str_extract(definition, pattern = regex('(?<=\\d\\-)\\d(?= inch)')),
+                      Layer_type.unit = 'inch') %>%
+               select(value, Layer_type.definition = definition, Layer_type.upper, Layer_type.lower, Layer_type.unit),
+            by = join_by(Layer_type == value))
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+```
+
+## Casting values
+
+Finally make sure that the numbers are actually numbers.
+
+```{r}
+
+soil_carbon.df <- soil_carbon.df %>%
+  mutate(across(.cols = all_of(c("Inventory_year",
+                               "Bulk_density", "coarse_fraction", 
+                               "organic_carbon", 
+                               "inorganic_carbon", "carbon_fraction", 
+                               "Latitude", "Longitude", 
+                               'Layer_type.upper', 'Layer_type.lower')), as.numeric))
+
+soil_carbon.df %>%
+  slice_head(n=100) %>%
+  knitr::kable() %>%
+  kable_paper() %>%
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+## Make small tables
+
+Often this data is presented in three tables: a site level table with lat/lon and year, a layer level table with the depth and physiochemical information, and a meta table with information on the units and descriptions.
+We given an example below of how this might be organized.
+
+```{r}
+site.df <- soil_carbon.df %>%
+  select(Latitude, Longitude, Inventory_year) %>%
+  unique()
+
+layer.df <- soil_carbon.df %>%
+  select(Latitude, Longitude, Inventory_year, 
+         Layer_type, Layer_type.definition, Layer_type.upper, Layer_type.lower,
+         Bulk_density, coarse_fraction,
+         organic_carbon, inorganic_carbon)
+
+meta.df <- fia.ls$annotations %>%
+  filter(of_variable %in% c(
+             'Inventory_year', #an identifier
+             'Longitude', 'Latitude', 'State',
+             #'Forest_floor_depth_avg', 'Litter_layer_depth_avg',
+             'Layer_type',
+             'Bulk_density',
+             'coarse_fraction',
+             'organic_carbon',
+             'carbon_fraction',
+             'inorganic_carbon'),
+         table_id %in% c('ENTIRE_PLOT', 'ENTIRE_SOILS_LAB'))
+```
+
+# Figures and report
+
+Below are some general figures that might be of interest if you are evaluating this database for use in a study.
+
+## Location over time
+
+```{r, fig.width = 6, fig.height = 9}
+ggplot(site.df %>%
+         mutate(decade = floor(Inventory_year/5)*5)) +
+  geom_point(aes(x=Longitude, y = Latitude), alpha = .1) +
+  facet_wrap(~decade, ncol = 1)
+```
+
+## Layer histograms
+
+```{r, fig.width = 6, fig.height = 6}
+ggplot(layer.df %>%
+         pivot_longer(cols = where(is.numeric), values_drop_na = TRUE)) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~name, scales='free')
+```
+
+## Bulk density vs organic carbon
+
+```{r, fig.width = 6, fig.height = 6}
+
+ggplot(layer.df) +
+  geom_point(aes(x=Bulk_density, y = organic_carbon), alpha = 0.1) +
+  facet_wrap(~Layer_type, scales='free')
+```
+
+# Process the database: `readFIA` function
+
+The process of transforming the data tables into a single long table requires a dive into the data model and specific code written for the dataset.
+This would need to be extended to include other data tables.
+
+```{r, file= '../../R/readFIA.R'}
+```
+
+# Checking format
+
+```{r}
+# read_csv('../../data/FIA_Annotations.csv', 
+#          col_types = cols(.default = col_character())) %>%
+#   write_delim(file = '../../data/FIA_Annotations.csv', delim = ';')
+
+#temp %>% filter(with_entry == '--') %>% View()
+if(checkAnnotations(filename = 'FIA_Annotations.csv',
+                    annotationsDirectory = '../../data') == 0){
+  print('Annotations check out!')
+}
+
+```
+
+
+
+# Text extraction *experimental*
+
+Below is an experimental example of text processing based on the PDF documentation.
+Some of this was used to populate the control vocabularies but this primarily intended as an informative example.
+Code execution is turned off.
+
+```{r}
+
+library(tidyverse)
+library(pdftools)
+library(tidyr)
+
+knitr::opts_chunk$set(
+  eval = FALSE, #don't actually run the code below this point
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Purpose
+
+Like many large databases the FIADB has existing documentation with valuable metadata in it that we would like to capture for our data annotations.
+Unfortunately it is locked up as a PDF document and not in a JSON or similar format.
+This document walks through recovering some of that information for our data annotations.
+Initially the data annotations table was compiled by colleagues at the Forest Service so this is only a partial recovery and is meant to be an example of how you can use `R`'s `pdftools` library and regular expression processes to generate some of the metadata.
+
+```{r }
+stop('this should not execute')
+#Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+
+dataDictionary_pdf <- file.path(dataDir, 'wo-fiadb_user_guide_p2_9-1_final.pdf')
+
+#also refer to 
+#Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+
+```
+
+FIA has a robust data documentation that is unfortunately in a PDF form BUT it is also fairly structured.
+This document is an attempt to create a data annotations from this PDF.
+
+Annotations will only be pulled for three tables covering the soil sample physio-chemistry, depth, colleciton date, and geo-location.
+
+```{r}
+#FIADB User Guide P2 (v 09.2023)
+#Chapter 8 address soil tables (SUBP_SOIL_SAMPLE_LOC and SUBP_SOIL_SAMPLE_LAYER) pages 461-466 and 467-475
+#State codes are in Appendix B pgs 813-815 with county codes pgs 816-936
+#Locations can be pulled from the PLOT table pg 63-81
+
+dataDictionary <- pdf_text(dataDictionary_pdf)
+
+#print(dataDictionary[461])
+temp <- tibble(text = str_extract(dataDictionary[461], 
+            pattern = regex('8\\.1\\.1.*(?=\n\n\n\nFIA)', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n (?=8)')) %>%
+  separate_wider_delim(cols = text,
+                      names = c('Subsection', 'Column name (attribute)', 'Descriptive name', 'Oracle data'),
+                       delim = regex(' {2,}'),
+                      too_few = "debug", too_many = 'merge')
+#TODO Need to clean up two line cells
+
+print(dataDictionary[462])
+
+temp <- tibble(text = str_extract(dataDictionary[462], 
+            pattern = regex('8\\.1\\.1.*(?=\n\n\n\n)', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n\n +(?=8\\.1\\.\\d)', dotall = TRUE, multiline = TRUE)) %>%
+  mutate(id = str_extract(text, '^8.1.\\d'),
+         column_name = trimws(str_extract(text, '(?<=8.1.\\d).*\n')),
+         long_name = trimws(str_extract(text, '(?<=\n)[^\\.]+.')),
+         description = str_remove(text, '^8.1.\\d[^\\.]+.')) %>%
+  mutate(across(.cols = everything(), .fns = trimws))
+
+## Extract the text first, then paste the pages together, then parse the sections
+temp2 <- tibble(text = paste(str_extract(dataDictionary[463:466], 
+            pattern = regex('(?<=\n{3}).*(?=\n\n\n\n)', dotall = TRUE, multiline = TRUE) ), collapse = '')) %>%
+  separate_longer_delim(text, delim = regex('\n\n +(?=8\\.1\\.\\d)', dotall = TRUE, multiline = TRUE)) %>%
+  mutate(text = trimws(text)) %>%
+  mutate(id = str_extract(text, '^8.1.\\d+'),
+         column_name = trimws(str_extract(text, '(?<=8.1.\\d.).*\n')),
+         long_name = trimws(str_extract(text, '(?<=\n)[^\\.]+.')),
+         description = str_remove(text, '^8.1.\\d+[^\\.]+.')) %>%
+  mutate(across(.cols = everything(), .fns = trimws))
+
+sample_loc.data_annotations <- temp %>%
+  bind_rows(temp2) %>%
+  mutate(table_name = 'SUBP_SOIL_SAMPLE_LOC')
+
+sample_layer.data_annotations <- tibble(text = paste(str_extract(dataDictionary[469:475], 
+             pattern = regex('(?<=\n{3}).*(?=\n\n\n\n)', dotall = TRUE, multiline = TRUE) ), collapse = '')) %>%
+  separate_longer_delim(text, delim = regex('\n\n +(?=8\\.2\\.\\d)', dotall = TRUE, multiline = TRUE)) %>%
+  mutate(text = trimws(text)) %>%
+  mutate(id = str_extract(text, '^8.2.\\d+'),
+         column_name = trimws(str_extract(text, '(?<=8.2.\\d.).*\n')),
+         long_name = trimws(str_extract(text, '(?<=\n)[^\\.]+.')),
+         description = str_remove(text, '^8.2.\\d+[^\\.]+.')) %>%
+  mutate(across(.cols = everything(), .fns = trimws))
+
+```
+
+```{r}
+state_codes <- tibble(pages = dataDictionary[813:814]) %>%
+  mutate( pages = str_remove(string = pages,
+                             pattern = regex('\n{4,}.*FIA Database Description.*\n$', multiline = TRUE))) %>%
+  mutate(pages = str_remove(string = pages, 
+                            patter = regex('^.*Station code\n', multiline = TRUE, dotall=TRUE))) %>%
+  separate_longer_delim(col = pages, delim = '\n') %>%
+  separate_wider_delim(cols = pages, delim = regex('\\s{2,}'), names = c('State', 'State code', 'State abbreviation', 'Research station', 'Region or Station code'), too_few = 'align_start') %>%
+  mutate(State = case_when(State == " Federated States of" ~ 'Federated States of Micronesia',
+                           State == ' Northern Mariana' ~ 'Northern Mariana Islands',
+                           TRUE ~ State)) %>%
+  filter(! is.na(`State code`)) %>%
+  mutate(across(everything(), trimws))
+
+#create the control vocabulary for the data annotations
+paste(sprintf('%s|%s', state_codes$`State code`, state_codes$`State`), collapse = ';')
+```
+
+```{r eval=FALSE}
+#Appendix G: Forest Inventory and Analysis (FIA) Plot Design Codes and Definitions by FIA Work Unit
+#pages 981-986
+
+# columns span multiple rows so it's challening to parse, spitting out the text and then formatting it into a tribble string. This is long so surpressing the next chunk of code
+cat(dataDictionary[981:986])
+```
+
+```{r echo=FALSE, eval=FALSE}
+appendixG <- tribble(~`FIA Work Unit`, ~`Plot Design code (DESIGNCD)`, ~Definition,
+ '^a NRS-NE,^b NRS-NC,^c SRS,^d RMRS, ^e PNWRS', '1', 'National plot design consists of four 24-foot fixed-radius subplots for trees 5 inches d.b.h., and four 6.8-foot fixed-radius microplots for seedlings and trees 1 and <5 inches d.b.h. Subplot 1 is the center plot, and subplots 2, 3, and 4 are located 120.0 feet, horizontal, at azimuths of 360, 120, and 240, respectively. The microplot center is 12 feet east of the subplot center. Four 58.9-foot fixed-radius macroplots are optional. A plot may sample more than one condition. When multiple conditions are encountered, condition boundaries are delineated (mapped).',
+ '^a NRS-NE', '101', 'Various plot designs. Converted from Eastwide Database format, some fields may be null.',
+'^a NRS-NE', '111', 'Four-subplot design similar to DESIGNCD 1, except the microplot for seedlings is 1/1000 acre (3.7-foot radius). If the plot is used for growth estimates, it is overlaid on a 5 subplot design, where remeasurement of trees (5 inches) is on subplot 1 only. Poletimber-sized trees remeasured on a 24-foot radius plot, sawtimber-sized trees remeasured on a 49-foot radius plot. If the plot is not used for growth estimates, it is an initial plot establishment.',
+'^a NRS-NE', '112', 'DESIGNCD 111, except that if the plot is used for growth estimates, the remeasurement of trees (5 inches) is on the 24-foot-radius subplot 1 only, regardless of tree size or previous plot size or type (varied).',
+'^a NRS-NE', '113', 'DESIGNCD 111, except that if the plot is used for growth estimates, the remeasurement of trees (5 inches) is on the 24-foot-radius subplot 1 only, regardless of tree size or previous plot size or type (single subplot 1/5 acre).',
+'^a NRS-NE', '115', 'DESIGNCD 1. Overlaid on a FHM 4-subplot plot design. These plots are not used in change estimates.',
+'^a NRS-NE', '116', 'DESIGNCD 1. Overlaid on 1/5 acre plot for all trees 5 inches d.b.h. (1/5 acre plot was an initial measurement). Remeasurement of subplot 1 is only on the 24-foot-radius plot for all trees (5 inches), regardless of tree size or previous plot size.',
+'^a NRS-NE', '117', 'DESIGNCD 1. Overlaid on 1/5 acre plot for all trees 5 inches d.b.h. (1/5 acre plot was remeasurement). Remeasurement of subplot 1 is only on the 24-foot-radius plot for all trees (5 inches), regardless of tree size or previous plot size.',
+'^a NRS-NE', '118', 'DESIGNCD 1. Overlaid on 10-subplot, variable-radius design. Remeasurement of trees (5 inches) on 5 of the 10 subplots; ingrowth based on trees (5 inches) that grew onto five 6.8-foot radius subplots.',
+'^b NRS-NC', '301', 'Various plot designs. Converted from Eastwide Database format, some fields may be null.',
+'^b NRS-NC', '311', 'Four-subplot design similar to DESIGNCD 1, except the 1/24 acre and 1/300 acre plots have common centers. Conditions are mapped and boundaries may be within the plots.',
+'^b NRS-NC', '312', 'DESIGNCD 1. Initial plot establishment.',
+'^b NRS-NC', '313', 'DESIGNCD 311. Overlaid on previous plots, no remeasurements.',
+'^b NRS-NC', '314', 'DESIGNCD 1. Overlaid on previous plots, no remeasurements',
+'^b NRS-NC', '315', 'DESIGNCD 311. Overlaid on same design. Only trees 5 inches d.b.h. are remeasured.',
+'^b NRS-NC', '316', 'DESIGNCD 1. Overlaid on DESIGNCD 311. Only trees 5 inches d.b.h. are remeasured.',
+'^b NRS-NC', '317', 'DESIGNCD 1. Overlaid on DESIGNCD 326. Only the first 5 points (trees 5 inches d.b.h.) and first 3, 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured, but conditions were not re-mapped.',
+'^b NRS-NC', '318', 'DESIGNCD 311. Overlaid on DESIGNCD 325. Only the first 5 points (trees 5 inches d.b.h.) and first 3, 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '319', 'DESIGNCD 1. Overlaid on DESIGNCD 325. Only the first 5 points (trees 5 inches d.b.h.) and first 3, 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '320', 'DESIGNCD 311. Overlaid on modified DESIGNCD 325. Only the first 5 points (trees 5 inches d.b.h.) and first 3 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '321', 'DESIGNCD 1. Overlaid on modified DESIGNCD 325. Only the first 5 points (trees 5 inches d.b.h.) and first 3 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '322', 'DESIGNCD 311. Overlaid on DESIGNCD 327. Only the first 5 points (trees 5 inches d.b.h.) and first 3, 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '323', 'DESIGNCD 1. Overlaid on DESIGNCD 327. Only the first 5 points (trees 5 inches d.b.h.) and first 3 1/300 acre plots (trees 1 and <5 inches d.b.h.) are remeasured.',
+'^b NRS-NC', '325', 'Ten variable-radius, 37.5 BAF points, 70 feet apart, for trees 5 inches d.b.h. and 10, 1/300 acre plots for seedlings and trees 1 and <5 inches d.b.h. Point and plot center were coincident. Conditions were not mapped. Instead, points were rotated into forest or nonforest based off the condition at point center.',
+'^b NRS-NC', '326', 'Ten variable-radius, 37.5 BAF points, 70 feet apart, for trees 5 and <17.0 inches d.b.h., 10 1/24 acre plots for trees 17.0 inches d.b.h., and 10, 1/300 acre plots for seedlings and trees 1 and <5 inches d.b.h. Point and plot center were coincident. Conditions were mapped.',
+'^b NRS-NC', '327', 'Ten variable-radius, 37.5 BAF points, 70 feet apart, for trees 5 inches d.b.h. and 10, 1/300 acre plots for seedlings and trees 1 and <5 inches d.b.h. Point and plot center were coincident. Conditions were not mapped. Instead, points were rotated into forest or nonforest based on the condition at point center. Diameters were estimated with a model, but all dead and cut trees were recorded.',
+'^b NRS-NC', '328', 'DESIGNCD 1. Overlaid on DESIGNCD 311. All trees and saplings are remeasured.',
+'^c SRS', '210', 'Other plot design installed by previous research stations within the 13-State Southern area not described by DESIGNCD 211-219.',
+'^c SRS', '211', 'Ten variable-radius, 37.5 BAF points, 70 feet apart. Remeasure first 3 points of same design or new/replacement plot.',
+'^c SRS', '212', 'Five variable-radius, 37.5 BAF points, 70 feet apart. Remeasure first 5 points of DESIGNCD 211 or new/replacement plot.',
+'^c SRS', '213', 'Five variable-radius, 37.5 BAF points, 70 feet apart. Remeasure DESIGNCD 212.',
+'^c SRS', '214', 'Ten variable-radius, 37.5 BAF points, 66 feet apart. Remeasure same design or new/replacement plot.',
+'^c SRS', '215', 'Five variable-radius, 37.5 BAF points, 66 feet apart. Remeasure first 5 points of DESIGNCD 214 or new/replacement plot.',
+'^c SRS', '216', 'Ten variable-radius, 37.5 BAF points, 66 feet apart. Remeasure DESIGNCD 215.',
+'^c SRS', '217', 'Five point cluster plot, point 1 is 1/5th acre sawtimber plot and 1/10th acre poletimber plot, points 2-5 are 37.5 BAF prism points. No remeasurement.',
+'^c SRS', '218', 'Remeasurement of DESIGNCD 217, point 1 only. Used only for change estimates.',
+'^c SRS', '219', 'Three point, 2.5 BAF metric prism plot, points 25 meters apart. Remeasure same design or new/replacement plot.',
+'^c SRS', '220', 'Four 1/24 acre plots for trees 5 inches d.b.h. and 4, 1/300 acre plots for seedlings and trees 1 and <5 inches d.b.h. The 1/24 acre and 1/300 acre plots have common centers. Conditions are mapped and boundaries may be within the plots. Remeasurement plot not described by 221-229.',
+'^c SRS', '221', 'DESIGNCD 220. Remeasure same design or new/replacement plot.',
+'^c SRS', '222', 'DESIGNCD 220. Overlaid on and remeasurement of DESIGNCD 212 or 213.',
+'^c SRS', '223', 'DESIGNCD 220. Overlaid on and remeasurement of first 5 points of DESIGNCD 214 or 216.',
+'^c SRS', '230', 'DESIGNCD 1. Remeasurement plot not described by DESIGNCD 231-239.',
+'^c SRS', '231', 'DESIGNCD 1. Overlaid on and remeasurement of DESIGNCD 212 or DESIGNCD 213.',
+'^c SRS', '232', 'DESIGNCD 1. Overlaid on and remeasurement of first 5 points of DESIGNCD 214 or 216.',
+ '^c SRS', '233', 'DESIGNCD 1. Overlaid on and remeasurement of DESIGNCD 220, 221, 222, or 223.',
+ '^c SRS', '240', 'DESIGNCD 1. Collected in metric and converted to English in the database. Remeasurement not described by 241-249.',
+ '^c SRS', '241', 'DESIGNCD 1. Collected in metric and converted to English in the database. Remeasure same design or new/replacement plot.',
+ '^c SRS', '242', 'DESIGNCD 1. Overlaid on and remeasurement of DESIGNCD 219. Collected in metric and converted to English in the database.',
+ '^c SRS', '299', 'Other plot design not described in DESIGNCD 200-298.',
+ '^d RMRS', '403', 'One 1/10th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber and woodland tree species <5.0 inches d.r.c. tallied on microplot.',
+ '^d RMRS', '404', 'One 1/20th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber and woodland tree species <5.0 inches d.r.c. tallied on microplot.',
+ '^d RMRS', '405', 'One 1/5th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber and woodland tree species <5.0 inches d.r.c. tallied on microplot.',
+ '^d RMRS', '410', '40 BAF variable-radius plots and 1/300th acre fixed-radius microplots; number of microplots = number of points installed. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '411', '40 BAF variable-radius plots and 1/300th acre fixed-radius microplots; 3 microplots installed on points 1, 2, and 3. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '412', '40 BAF variable-radius plots and 1/300th acre fixed-radius microplots; 3 microplots installed on points 1, 2, and 5. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '413', '20 BAF variable-radius plots and 1/300th acre fixed-radius microplots; number of microplots = number of points installed. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '414', '20 BAF variable-radius plots and 1/300th acre fixed-radius microplots; 3 microplots installed on points 1, 2, and 3. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '415', '20 BAF variable-radius plots and 1/300th acre fixed-radius microplots; 3 microplots installed on points 1, 2, and 5. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '420', 'One 1/10th acre fixed-radius plot and one centered 1/100th acre microplot. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '421', 'One 1/20th acre fixed-radius plot and one centered 1/100th acre microplot. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '422', 'One 1/5th acre fixed-radius plot and one centered 1/100th acre microplot. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '423', 'One 1/10th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '424', 'One 1/20th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^d RMRS', '425', 'One 1/5th acre fixed-radius plot divided into 4 quadrants and four 1/300th acre fixed-radius microplots. Timber tree species <5.0 inches d.b.h.; woodland tree species <3.0 inches d.r.c. measured on microplot.',
+ '^e PNWRS', '501', 'DESIGNCD 1 with optional macroplot. Trees 24 inches d.b.h. are tallied on macroplot.',
+ '^e PNWRS', '502', 'DESIGNCD 1 with optional macroplot. Trees 30 inches d.b.h. are tallied on macroplot.',
+ '^e PNWRS', '503', 'DESIGNCD 1 with optional macroplot. Trees 4 inches d.b.h. are tallied on macroplot. Trees 32 inches d.b.h. are tallied on one 1-hectare plot.',
+ '^e PNWRS', '504', 'DESIGNCD 1 with optional macroplot. Trees 24 inches d.b.h. are tallied, on macroplot. Trees 48 inches d.b.h. are tallied on one 1-hectare plot.',
+ '^e PNWRS', '505', 'DESIGNCD 1 with optional macroplot. Trees 30 inches d.b.h. are tallied on macroplot. Trees 48 inches d.b.h. are tallied on one 1-hectare plot.',
+ '^e PNWRS', '506', 'DESIGNCD 1 using larger microplots. Each microplot has a radius of 9.6 feet. Eight 20x50cm microquadrats are established on each subplot for ground layer protocols.',
+ '^e PNWRS', '550', 'Five 30.5 BAF points for trees 5 inches and <35.4 inches d.b.h.; five 55.8 foot fixed-radius plots for trees 35.4 inches d.b.h.; and five 7.7-foot fixed-radius plots for seedlings and saplings <5 inches d.b.h. Point and plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '551', 'Five 20 BAF points for trees 5 inches and <35.4 inches d.b.h.; five 55.6 foot fixed-radius plots for trees 35.4 inches d.b.h.; and five 9.7-foot fixed-radius plots for seedlings and saplings <5 inches d.b.h. Point and plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '552', 'Five 30 BAF points for trees 5 inches and <35.4 inches d.b.h.; five 55.6-foot fixed-radius plots for trees 35.4 inches d.b.h.; and five 7.9-foot fixed-radius plots for seedlings and saplings <5 inches d.b.h. Point and plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '553', 'Four 1/24 acre plots for live trees and four 58.9-foot fixed-radius plots for trees 11.8 inches d.b.h. Plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '554', 'Four 1/24 acre plots for live trees and four 58.9-foot fixed-radius plots for trees 19.7 inches d.b.h. Plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '555', 'Five 30.5 BAF points for trees 6.9 inches and <35.4 inches d.b.h.; five 55.8-foot fixed-radius plots for trees 35.4 inches d.b.h.; and five 10.8-foot fixed-radius plots for seedlings and saplings <6.9 inches d.b.h. Point and plot centers are coincident. Conditions are mapped.',
+ '^e PNWRS', '556', 'Five 30.5 BAF points for trees 6.9 inches and <35.4 inches d.b.h.; five 55.8-foot fixed-radius plots for trees 35.4 inches d.b.h.; five 10.8-foot fixed-radius plots for saplings 5 inches and <6.9 inches d.b.h.; and the northeast quadrant of each of the five 10.8-foot fixed-radius plots for trees <5 inches d.b.h. Point and plot centers are coincident. Conditions are not mapped.',
+ '^e PNWRS', '557', 'Five 40 BAF points for trees 5 inches d.b.h.; and five 6.9-foot fixed-radius plots for saplings 1 and <5 inches d.b.h. Point and plot centers are coincident. Conditions are not mapped.',
+ '^e PNWRS', '558', 'Three 30.5 BAF points for trees 6.9 inches and <35.4 inches d.b.h.; three 55.8-foot fixed-radius plots for trees 35.4 inches d.b.h.; three 10.8-foot fixed-radius plots for saplings 5 inches and <6.9 inches d.b.h.; and the northeast quadrant of each of the three 10.8-foot fixed-radius plots for trees <5 inches d.b.h. Point and plot centers are coincident. Conditions are mapped, only condition class 1 measured. Overlaid on and remeasurement of same design.',
+ '^e PNWRS', '559', 'Four 40 BAF points for trees 5 inches d.b.h.; and four 6.9-foot fixed-radius plots for saplings 1 and <5 inches d.b.h. Point and plot centers are coincident. Conditions are mapped, only condition class 1 measured. Overlaid on and remeasurement of same design.',
+ '^e PNWRS', '601', 'South East Coastal Alaska periodic grid plot design. Similar to DESIGNCD 1 with exceptions including: subplots are 7.3 m (23.95 foot) fixed-radius; the four microplots are 2.0 m (6.56 foot) fixed-radius and are centered on each subplot; subplots 2, 3, and 4 are spaced 36.6 m (120.08 feet) from subplot 1, at azimuths of 360, 120, and 240, respectively; condition classes are based on forest stand origin, forest stand size, and forest density in 10% classes; not all annual attributes were collected and additional non-annual attributes were collected.',
+ '^e PNWRS', '602', 'South Central Coastal Alaska periodic grid plot design, similar to DESIGNCD 601 except for variations in annual and non-annual attributes collected.',
+ '^e PNWRS', '603', 'South Central Coastal Alaska periodic grid plot design for Kodiak and Afognak islands. Similar to DESIGNCD 602 except for reduced (one quarter) sampling intensity.',
+ '^a NRS-NE, ^b NRS-NC, ^c SRS, ^d RMRS, ^e PNWRS', '999', 'A plot record created to represent reserved or other nonsampled or undersampled areas where there were no ground plots; the plot has no design type; rather, it is a placeholder for area estimates. In all cases where DESIGNCD 999 plots are present, they are only used for estimates of area; they are not used in estimates of numbers of trees, volume or change (e.g., tree-level estimates).')
+
+knitr::kable(appendixG)
+```
+
+```{r}
+testingRead <- read_csv('../data/fia_annotations.csv')
+```
+
+```{r}
+fia_subplot <- read_csv("~/Dropbox (UFL)/Analysis/ISCN4/data/Raw/FS-FIA/September 2025 download/CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv", 
+                        col_type = readr::cols(
+                                        .default = readr::col_character()))
+
+fia_subplot_loc <- read_csv("~/Dropbox (UFL)/Analysis/ISCN4/data/Raw/FS-FIA/September 2025 download/CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv",
+                            col_type = readr::cols(
+                                        .default = readr::col_character()))
+
+fia_entire_soils <- fia.original.ls$original$ENTIRE_SOILS_LAB
+
+fia_entire_soils_loc <- fia.original.ls$original$ENTIRE_SOILS_SAMPLE_LOC
+
+test <- anti_join(fia_entire_soils, fia_subplot)
+
+setdiff(fia_subplot, fia_entire_soils)
+
+```
+
+```{r}
+# extract metadata from the pdf file 
+dataDictionary_pdf <- file.path(dataDir, 'wo-v9-4_Aug2025_UG_FIADB_database_description_NFI.pdf')
+dataDictionary <- pdf_text(dataDictionary_pdf)
+
+temp <- tibble(text = str_extract(dataDictionary[453], 
+            pattern = regex('Code .*(?=\n\n\n\n )', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n\n?')) |> # '?' is matching the preceeding expression 
+  filter(!grepl("Code", text)) |> 
+  mutate(text = trimws(text)) |> 
+  filter(text != "") |> 
+  separate_wider_delim(cols = text,
+                      names = c('Layer_type_code', 'description'),
+                      delim = regex(' {2,}')) |> 
+  mutate(Soil_sample_method_code = c(rep("when SOILS_SAMPLE_METHOD_CD = 1 (P3 Soils)", 4),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 2 (Interior Alaska pilot)", 4),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 3 (Interior Alaska)", 6),
+                                     rep("when SOILS_SAMPLE_METHOD_CD = 4 (Hawaii)", 5)))
+
+temp_method <- tibble(text = str_extract(dataDictionary[453], 
+            pattern = regex('Code .*(?=\n\n\n\n )', dotall = TRUE, multiline = TRUE) )) %>%
+  separate_longer_delim(text, delim = regex('\n\n?')) |> # '?' is matching the preceeding expression 
+  filter(!grepl("Code ", text)) |> 
+  mutate(text = trimws(text)) |> 
+  filter(text != "") |> 
+  slice(c(5,10,17)) |> 
+  rep()
+
+```
+

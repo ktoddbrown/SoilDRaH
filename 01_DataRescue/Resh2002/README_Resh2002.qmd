@@ -1,0 +1,363 @@
+---
+title: "Data Rescue: Resh 2002"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Resh2002_Methods.bib
+  - Resh2002.bib
+  - Resh2002_Table1.bib
+  - Resh2002_Table2.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role:
+        - "Transcription"
+        - "Lead"
+      note: https://github.com/SavaScott
+  - name:
+      given: Mirah
+      family: Blanchard
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/Misheph
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+
+methods.file <- 'Resh2002_Methods.md'
+table1.file <- 'Resh2002_Table1.csv'
+table1Citation.file <- 'Resh2002_Table1.bib'
+table2.file <- 'Resh2002_Table2.csv'
+table2Citation.file <- 'Resh2002_Table2.bib'
+figure1.file <- 'Resh2002_Figure1.csv'
+figure2.file <- 'Resh2002_Figure2.csv'
+primaryCitation.file <- 'Resh2002.bib'
+methodsCitation.file <- 'Resh2002_Methods.bib'
+```
+
+This documents the data transcription for @Resh2002.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/136.
+
+> Resh, S., Binkley, D. & Parrotta, J. Greater Soil Carbon Sequestration under Nitrogen-fixing Trees Compared with Eucalyptus Species. Ecosystems 5, 217–231 (2002). https://doi.org/10.1007/s10021-001-0067-3
+
+# Data Summary
+
+@Resh2002 examines the soil carbon sequestration caused by Nitrogen-fixing trees compared to *Eucalyptus* species. The researchers studied 7- to 16-year-old plantations with N-fixer and *Eucalyptus* species in Hawai'i and Puerto Rico. They found that there were greater SOC pools with N-fixer species compared to non-N-fixer species, and suggest that reforestation of N-fixer species could lead to a greater reduction in C emissions.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: This study was conducted at four sites, two in Hawaii and two in Puerto Rico. The coordinates of those sites are listed in Table 1 of the paper. More in-depth descriptions of the site are found within the method section, subsection, the Study Site.
+- Soil carbon stock: Soil bulk density and SOC of the sites are found within Table 2, separated per site and soil depth.
+- Soil type: The soil classification and surface soil pH are found within Table 1.
+- Land use:  Table 1 presents data on plantation establishment, including land use at the time of planting and plant age at sampling. Further details on site land use are provided in the Study Site subsection of the Methods section.
+
+# Tables and figures
+
+- Table 
+  1) Description of the Four Study Sites
+  2)  Soil Bulk Density, pH, Effective Cation Exchange Capacity, Base Saturation, N, C, and ${13}$^C Concentrations for the Four Study Sites
+  3) Site and Species C$_3$ and C$_4$ Endpoints from Equation 2
+
+- Figure 
+  1) Aggregated SOC changes since plantation establishment across the four study sites
+  2) SOC pools to 40 cm for each species at the 4 study sites
+  3) Soil N pools up to 40 cm
+  4) Cumulative loss of SOC$_3$ from N-fixer and *Eucalyptus* soil during 4- and 8-months of laboratory incubations
+  5) Soil nitrogen accretion vs SOC$_4$ retention and SOC$_T$ difference under the N-fixers
+  
+### Table 1
+
+Table 1 was modified to combine the columns with subsections in the characteristic column in the same cell. RMarkdown format such as Latex have been also added to better represent the format of the table. 
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 2
+
+Table 2 was modified to remove the sub-tables, and created a two new column conditions instead, with location and species. The Parratto Unpublished citation in the caption also was not rendering, so it has been excluded in the bib file for the table.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table2.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+
+```
+
+### Figure 1
+
+Figure 1 was modified to include the y-axis label for each figure at the top of the sub figure, due to issues with it on the y-axis. The data was also modified to include markdown format and utilizes _ to represent a subscript.
+
+```{r figure1}
+#| code-fold: true
+#| message: false
+
+
+figData <- read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(across(.cols = c('lower error', 'lower SOC',
+                          'upper SOC', 'upper error'), .fns = as.numeric),
+         `species` = factor(`species`,
+                            levels = c("non-N-fixers", "N-fixers")))
+
+figCaption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+ggplot(figData) +
+  geom_errorbar(aes(x = as.numeric(species),
+               ymin = `lower error`, ymax = `upper error`), width = 0.2) +
+  geom_rect(aes(xmin = as.numeric(species) - 0.4, xmax = as.numeric(species) + 0.4,
+               ymin = `lower SOC`, ymax = `upper SOC`)) +
+  scale_x_continuous(breaks = c(1,2), labels = c('non-N-fixers', 'N-fixers')) +
+  facet_wrap(~label, ncol = 1, scales = 'free_y') +
+  labs(y = 'SOC [kg C m-2 y-1]') +
+  theme(axis.title.x = element_blank())
+```
+
+### Figure 2
+
+Figure 2 was modified to included markdown format within the caption.
+
+```{r}
+#| label: figure2
+#| code-fold: true
+#| message: false
+
+figData <- read_csv(file = figure2.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(site = factor(site, levels = c("Kamae", "Lajas", "Chinchuck", "Toa Baja")),
+         species = factor(species, levels = c("Euc", "Alb", "Cane",
+                                              "Cas", "Leu", "Pasture")),
+         across(starts_with('SOC'), as.numeric))
+
+figCaption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+ggplot(figData) +
+  geom_col(aes(x = species, y = SOC_T)) +
+  geom_col(aes(x=species, y = SOC_4), fill = 'lightgrey') +
+  geom_errorbar(aes(x=species, ymin = SOC_lower, ymax = SOC_upper)) +
+  facet_wrap(~site, scales= 'free_x') +
+  labs(y = unique(figData$unit))
+```
+
+
+{{< include Resh2002_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff Resh2002_Table1_MB.csv Resh2002_Table1.csv 
+diff Resh2002_Table2_MB.csv Resh2002_Table2.csv
+diff --strip-trailing-cr Resh2002_Methods_MB.md Resh2002_Methods.md
+diff Resh2002_Figure1_MB.csv Resh2002_Figure1.csv
+diff Resh2002_Figure2_MB.csv Resh2002_Figure2.csv
+```
+
+# Files
+
+These files are in the @Resh2002 data rescue.
+
+- [ReadMe](Resh2002_ReadMe.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Resh2002.bib](Resh2002.bib)
+  + citation for article transcribed
+- [Resh2002_Methods.bib](Resh2002_Methods.bib)
+  + citations for the methods section of the article
+- [Resh2002_Methods.md](Resh2002_Methods.md)
+  + methods transcribed from primary article
+- [Resh2002_Table1.csv](Resh2002_Table1.csv)
+  + table 1 from primary article with the description of the four study sites
+- [Resh2002_Table1.bib](Resh2002_Table1.bib)
+ + citations for the table 1 of the article
+- [Resh2002_Table2.csv](Resh2002_Table1.csv)
+  + table 2 from primary article with the soil properties of the four study sites
+- [Resh2002_Table2.bib](Resh2002_Table2.bib)
+ + citations for the table 2 of the article
+- [Resh2002_Figure1.csv](Resh2002_Figure1.csv)
+  + figure 1 from primary article with the aggregated SOC changes along the four study sites
+- [Resh2002_Figure2.csv](Resh2002_Figure2.csv)
+  + figure 2 from primary article with the SOC pools up to 40 cm for each of the species at the four study sites
+
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 1 and 2
+- [x] create excel sheet with Figures 1 and 2
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] Turk D, Keyser HH. 1992. Rhizobia that nodulate tree legumes: specificity of the host for nodulation and effectiveness. Can J Microbiol 38:451–60.
+  + copy from bib
+- [x] Binkley D, Giardina C. 1997. Nitrogen fixation in tropical forest plantations. In: Sadanandan Nambiar EK, Brown AG, (editors).
+Management of soil, nutrients and water in tropical plantation forests. ACIAR monograph no. 43. Canberra: CSIRO.
+  + copy from bib
+- [x] Little EL Jr, Skolmen RG. 1989. Common forest trees of Hawaii (native and introduced). Agriculture handbook no. 679. Washington (DC): USDA Forest Service.
+  + copy from bib
+- [x] Parrotta JA. 1992. Leucaena leucocephala (Lam.) de Wit. Silvics of
+forest trees of the American tropics. SO-ITF-SM-56. New Orleans: US Department of Agriculture, Forest Service, Inst. Trop. For., Southern Forest Exp. Stn.
+  + copy from bib
+- [x] Zabala NQ, editor. 1997. International Workshop on Albizia and Paraserianthes species. Forest, farm, and community tree research reports. Special issue. Morrilton (AK): Winrock International.
+  + copy from bib
+- [x] Parrotta JA, Baker DD, Fried M. 1996. Changes in dinitrogen fixation in maturing stands of Casuarina equisetifolia and Leucaena leucocephala. Can J For Res 26:1684–91.
+  + copy from bib
+- [x] Subbarao NS, Rodriquez-Barrueco C. 1995. Casuarinas. Lebanon (NH): Science Publishers.
+  + copy from bib
+- [x] Parrotta JA. 1993. Casuarina equisetifolia L. ex J. R. & G. Forst. Silvics of forest trees of the American tropics. SO-ITF-SM-56. New Orleans: US Department of Agriculture, Forest Service, Inst. Trop. For., Southern Forest Exp. Stn.
+  + copy from bib
+- [x] Parrotta JA, Baker DD, Fried M. 1994. Application of 15N–enrichment methodologies to estimate nitrogen fixation in Casuarina equisetifolia. Can J For Res 24:201–7.
+  + copy from bib
+- [x] Parrotta JA, Baker DD, Fried M. 1996. Changes in dinitrogen fixation in maturing stands of Casuarina equisetifolia and Leucaena leucocephala. Can J For Res 26:1684–91.
+  + copy from bib
+- [x] Garcia-Montiel DC, Binkley D. 1998. Effect of Eucalyptus saligna and Albizia falcataria on soil processes and nitrogen supply in Hawaii. Oecologia 113:547–56.
+  + copy from bib
+- [x] Lugo AE, Wang D, Bormann FH. 1990. A comparative analysis of biomass production in five tropical tree species. For Ecol Manag 31:153–66.
+  + copy from bib
+- [x] Wang D, Bormann FH, Lugo AE, Bowden RD. 1991. Comparison of nutrient-use efficiency and biomass production in five tropical tree taxa. For Ecol Manage 46:1–21.
+  + copy from bib
+- [x] Parrotta JA. 1999. Productivity, nutrient cycling, and succession
+in single- and mixed-species plantations of Casuarina equisetifolia, Eucalyptus robusta, and Leucaena leucocephala in Puerto Rico. For Ecol Manage 124:45–77.
+  + copy from bib
+- [x] Ehleringer JR. 1991. 13C/12C fractionation and its utility in terrestrial plant studies. In: Coleman DC, Fry B, editors. Carbon isotope techniques. SanDiego: Academic Press. pp. 187–200.
+  + copy from bib
+- [x] Cerri CC, Feller C, Balesdent J, Victoria R, Plenecassagne A. 1985. Application du trac¸age isotopique naturel en 13C, a l’etude de la dynamique de la matie` re organique dans le sols. Comptes Rendus Acad Sci Paris T.300, II, 9:423–8.
+  + copy from bib
+- [x] Bashkin MA, Binkley D. 1998. Changes in soil carbon following afforestation in Hawaii. Ecology 79:828–33.
+  + copy from bib
+- [x] Resh SC. 1999. Nitrogen-fixing tropical trees sequester soil carbon [dissertation]. Fort Collins (CO): Colorado State University.
+  + copy from bib
+- [x] Burke IC, Yonker CM, Parton WJ, Cole CV, Flach K, Schimel DS. 1989. Texture, climate, and cultivation effects on soil organic matter content in U.S. grassland soils. Soil Sci Soc Am J 53:800–5.
+  + copy from bib
+- [x] Schimel D, Braswell BH, Holland EA, McKeown R, Ojima DS, Painter TH, Townsend AR. 1994. Climatic, edaphic, and biotic controls over storage and turnover of carbon in soils. Global Biogeochem Cycles 8:279–93.
+  + copy from bib
+
+# Level 0 data
+
+```{r readLevel0}
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file),
+                          table1 = 
+                           read.bib(file = table1Citation.file),
+                         table2 = 
+                           read.bib(file = table2Citation.file)
+                    ),
+                  method = read_lines(file = methods.file),
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Table2 = list(
+                                caption = read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                               Figure1 = 
+                                list(caption = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                ),
+                              Figure2 = 
+                                list(caption = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = figure2.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )
+                              ))
+```
+
+# References

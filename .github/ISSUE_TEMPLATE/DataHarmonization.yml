@@ -1,58 +1,34 @@
-name: NewData
-title: "[AuthorLastYYYY or ShortNameYYYY] "
-labels: ["New Data"]
-description: "Make sure to hit all the main points for a data harmonization taking data from it's orginal format (data model) to a common format."
+name: DataHarmonization
+title: "[AuthorLastYYYY or ShortNameYYYY]-Level 1 data"
+labels: ["Data Harmonization"]
+
+description: "This issue tracks a data contribution as it moves from a level 0 data rescue to a level 1 data harmonization. See (the wiki)[https://github.com/ktoddbrown/SoilDRaH/wiki] for more details."
+
 body:
-  - type: markdown
-    attributes:
-      value: |
-        This template is for proposed new data contributions. 
-        Please refer to the wiki (specifically https://github.com/ktoddbrown/SoilDRaH/wiki/Open-Ticket) for additional guidence.
   - type: input
     attributes:
-      label: "Name"
-      description: "What should we call this data collection?"
-      placeholder: "Internatinal Soil Carbon Network vs 3"
-    validations:
-        required: true
-  - type: input
-    attributes:
-      label: "Download url"
-      description: "Where is the data downloaded? Should be a url."
-      placeholder: "https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba"
-  - type: input
+      label: "Data rescue issue"
+      description: "What is the data rescue issue?"
+      placeholder: "#102"
+  - type: textarea
     attributes:
       label: Citation
-      description: "What is the full citation for the dataset?"
-      placeholder: "Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-03)."
-    validations:
-      required: true
+      description: "What is the orginal source citation?"
+      placeholder: "Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405"
   - type: textarea
     attributes:
-      label: Abstract
-      description: "What is the data about? Data abstract is prefered here."
-      placeholder: "The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/."
+      label: "Description and purpose"
+      description: "Give a brief discription of the data and the purpose for the data curation. This may be copied from the data rescue issue."
+      placeholder: "This paper examines how soil and foliar nutrients vary across five native Hawaiian forests that differ in annual rainfall (ranging from 500 mm to 5500 mm), but are otherwise held constant in terms of elevation, substrate age, and dominant vegetation (primarily Metrosideros polymorpha). They used this data to evaluate changes in leaf mass per area, lignin content, δ¹⁵N, and δ¹³C.
+      This is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC. As such it needs information on geolocation, mineral status, and soil carbon."
   - type: textarea
     attributes:
-      label: Papers
-      description: "List known papers that are associated with this dataset. Generally the first paper or set of papers that use this data."
-      placeholder: "No obvious papers found."
-  - type: textarea
-    attributes:
-      label: "Mode of discovery"
-      description: "How did you find this dataset?"
-      placeholder: "Conversation by KTB at workshop in 2017."
-    validations:
-      required: true
-  - type: textarea
-    attributes:
-      label: "Point of contact"
-      description: "Are there known points of contact for this dataset?"
-      placeholder: "Dr J Doe at XYZ University is listed point of contact. KTB knows them and can facilitate questions."
-  - type: textarea
-    attributes:
-      label: License
-      description: "What is the release license? For example CC-BY. Link or copy exact text where possible."
-      placeholder: "Data use: Use of data assumes that the user has joined the ISCN and will act according to the mission and guidelines stated in the Charter. Phase II data are available to select users on the condition that contributors will be invited to assist with interpretation, presentations, and publications, if these tasks are being performed by a user other than the original contributor of the data (such as a colleague of the contributor). When using Phase III data, users are encouraged to contact original data contributors for questions or clarifications; users agree to cite and/or acknowledge the data contributors and the ISCN in presentations and publications. References of all accepted papers developed from ISCN data products must be sent to the ISCN Coordinator. Although these policies are intended to encourage communication between data contributors and data users, the interpretation of data and adherence to fair use guidelines are ultimately the responsibility of the user of ISCN products."
-    validations:
-      required: true
+      label: of_variable
+      description: "What SoilDRaH variables do you expect to use?"
+      value: |
+        Using the `of_variable` list (here)[https://github.com/ktoddbrown/SoilDRaH/blob/main/data/semantics/SoilDRaHVocabulary_of_variable.csv] we expect to use the following variables:
+      
+        - region
+        - soil_organic_carbon	
+        - land_use_type
+        - ...
