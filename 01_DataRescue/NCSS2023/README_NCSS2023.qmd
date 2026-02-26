@@ -149,11 +149,13 @@ For this analysis we are interested in:
 
 ```{r}
 #| label: findCross
-temp <- read_csv(file = 'Relationships.csv')
+read_csv(file = 'Relationships.csv', show_col_types = FALSE) |>
+  kable() |>
+  kable_paper()
   
 ```
 
-We also need `lab_pedon`
+We also need `lab_pedon`, `lab_preparation`, `lab_method_code`, `lab_analyte` and `lab_analysis_procedure` based on the table above  and some light exploration.
 
   
 ## Files
