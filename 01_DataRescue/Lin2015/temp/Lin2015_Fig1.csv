@@ -1,0 +1,8 @@
+"Effects of UV manipulation and exposure periods (summer, summer-winter, and 1 year) on subsequent cumulative microbial respiration from Bromus diandrus litter measured in a laboratory incubation. Mean and standard errors are shown (n?=?4). **P?<?0.05",,,,,
+y,y value positve SE,y axis label,x axis label,UV Treatment,P value
+60.3,64.5,Cumulative microbial respiration (mg C g^{-1} litter),Summer,UV Block,-
+47.2,50.0,,Summer,UV Pass,P < 0.05
+49.6,52.4,,Summer-winter,UV Block,-
+49.4,53,,Summer-winter,UV Pass,-
+49.0,52.7,,one year,UV Block,-
+44.8,47.6,,one year,UV Pass,-
