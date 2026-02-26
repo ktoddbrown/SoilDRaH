@@ -1,0 +1,341 @@
+---
+title: "Data Rescue: Nusslein 1999"
+format:
+  html:
+    toc: true
+date: 2026-01-22
+date-format: YYYY-MM-DD
+bibliography:
+  - Nusslein1999_Methods.bib #contains the citations in the methods section
+  - Nusslein1999.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown 
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary, review
+      #- standardization:
+      #- curation:
+  - id: misheph
+    name:
+      given: Mirah
+      family: Blanchard
+    affiliation:
+      - ref: uf-mae
+    role:
+      - transcription: lead 
+      #- standardization:
+      #- curation:
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+      #- standardization: 
+      #- curation: 
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address:
+    postal-code: "P.O Box 116250"
+    url:  32611
+    url: https://mae.ufl.edu/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: Misheph
+      end: 2025-01-22
+      start: 2025-11-01
+      duration: P10H
+
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- 'Nusslein1999_Methods.md'
+table1.file <- 'Nusslein1999_Table1.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Nusslein1999.bib'
+methodsCitation.file <- 'Nusslein1999_Methods.bib'
+
+# read function
+# readsource.file <- '../../../R/readNusslein1999.R'
+# source('readsource.file')
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Nüsslein K, Tiedje JM (1999). Soil Bacterial Community Shift Correlated with Change from Forest to Pasture Vegetation in a Tropical Soil. Appl Environ Microbiol65:.https://doi.org/10.1128/AEM.65.8.3622-3626.1999
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/105.
+
+This paper looks at the shift in the soil bacterial community associated with the vegetative change when going from forest to pasture soil.
+Researchers extracted soil samples from a forest site and a pasture site adjacent to it during three different years, and soil DNA was extracted to analyze differences in G+C content, rRNA copied from soil DNA, and phylogenetics of the most common bacteria.
+From this, the researchers determined there were distinct shifts in dominant bacterial groups going from forest to pasture soil, due to vegetation changes.
+measured and what the data was used for in.
+
+## Tables and figures
+
+- Table 
+  1)  forest vs pasture soil properties (pH, total C, N, CEC, bulk density)
+  2)  dominant SSU rDNA phylotypes
+  3)  sequence similarities among dominant SSU rDNA clones
+
+- Figure 
+  1)  forest vs pasture G+C content profiles
+  2)  SSU rDNA phylotype frequency distribution
+  3)  pasture rDNA clone ARDRA profiles
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Latitude and longitude for forest site given in methods section; pasture site coordinates not given but described as “immediately adjacent” to forest. Observation years and depth from the surface also given in method section.
+- Soil carbon stock: Soil bulk density given in table 1. Soil organic carbon not given specifically, but total carbon % in table 1.
+- Soil type: Soil type (Typic Placandept, suborder) given in method section.
+- Land use: Current land use and site history detailed in method section for both sites.
+  
+## Files
+
+These files are in the Nusslein1999 data rescue.
+
+- [Readme](README_Nusslein1999.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Nusslein1999.bib](Nusslein1999.bib)
+  + citation for article transcribed
+- [Nusslein1999_Methods.bib](Nusslein1999_Methods.bib)
+  + citations for the methods section of the article
+- [Nusslein1999_Methods.md](Nusslein1999_Methods.md)
+  + methods transcribed from primary article
+- [Nusslein1999_Table1.csv](Nusslein1999_Table1.csv)
+  + table 1 from primary article with forest vs pasture soil properties
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to Nusslein1999
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 was modified by moving table notes to same line as the heading.
+
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Nusslein1999_Table1.csv Nusslein1999_Table1.csv
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Nusslein1999_Methods_KTB.md Nusslein1999_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Crews et al., 1995
+  + Crews, T. E., K. Kitayama, J. H. Fownes, R. H. Riley, D. A. Herbert, D. Mueller-Dombois, and P. M. Vitousek. 1995. Changes in soil phosphorous fractions and ecosystem dynamics across a long chronosequence in Hawaii. Ecology 76:1407±1424.
+  + direct export
+- [x] Department of Geography, University of Hawaii, 1983
+  + Department of Geography, University of Hawaii. Atlas of Hawaii. 1983. University of Hawaii Press, Honolulu, Hawaii.
+  + direct export
+- [x] Giambelluca et al., 1986
+  + Giambelluca, T. W., M. A. Nullet, and T. A. Schroeder. 1986. Rainfall atlas of Hawaii. Department of Land and Natural Resources, Honolulu, Hawaii.
+  + direct export
+- [x] Riley and Vitousek, 1995
+  + Riley, R. H., and P. M. Vitousek. 1995. Nutrient dynamics and nitrogen trace gas flux during ecosystem development in montane rain forest. Ecology 76:292±304.
+  + direct export
+- [x] Huston 1994
+  + Huston, M. A. 1994. Biological diversity. Cambridge University Press, Cambridge, England.
+  + direct export
+- [x] Peck et al., 1988
+  + Peck, T. R., D. Megel, K. Eik, D. A. Whitney, D. Warncke, R. C. Munter, J. R. Brown, D. Knudsen, W. C. Dahnke, D. J. Eckert, D. Beegle, P. E. Fixen, and E. E. Schulte. 1988. Recommended chemical soil test procedure for the north central region. North Dakota Agricultural Experiment Station, North Dakota State University, Fargo, N. Dak.
+  + direct export
+- [x] Holben 1994
+  + Holben, W. E. 1994. Isolation and puri®cation of bacterial DNA from soil, p. 727±751. In R. Weaver et al. (ed.), Methods of soil analysis, part 2. Microbiological and biochemical properties. Soil Science Society of America book series 5. Soil Science Society of America, Madison, Wis.
+  + direct export
+- [x] Maidak et al., 1999
+  + Maidak, B. L., J. R. Cole, C. T. Parker, Jr., G. M. Garrity, N. Larsen, B. Li, T. G. Lilburn, M. J. McCaughey, G. J. Olsen, R. Overbeek, S. Pramanik, T. M. Schmidt, J. M. Tiedje, and C. R. Woese. 1999. A new version of the RDP (Ribosomal Database Project). Nucleic Acids Res. 27:171±173.
+  + direct export
+- [x] Holben and Harris 1995
+  +  Holben, W. E., and D. Harris. 1995. DNA-based monitoring of total bacterial community structure in environmental samples. Mol. Ecol. 4:627±631.
+  + direct export
+- [x] Nusslein and Tiedje 1998
+  + NuÈsslein, K., and J. M. Tiedje. 1998. Characterization of the dominant and rare members of a young Hawaiian soil bacterial community with small subunit ribosomal DNA ampli®ed from DNA fractionated on the basis of its guanine and cytosine composition. Appl. Environ. Microbiol. 64:1283±1289.
+  + direct export
+- [x] Weisburg et al., 1991
+  + Weisburg, W. W., S. M. Barns, D. A. Pelletier, and D. J. Lane. 1991. 16S ribosomal DNA ampli®cation for phylogenetic study. J. Bacteriol. 173:697±703.
+  + direct export
+- [x] Zhou et al. 1997
+  + Zhou, J., M. E. Davey, J. B. Figueras, E. Rivkina, D. Gilichinsky, and J. M. Tiedje. 1997. Phylogenetic diversity of a bacterial community determined from Siberian tundra soil DNA. Microbiology 143:3913±3919.
+  + direct export
+- [x] Komatsoulis and Waterman 1997
+  + Komatsoulis, G. A., and M. S. Waterman. 1997. A new computational method for detection of chimeric 16S rRNA artifacts generated by PCR amplification from mixed bacterial populations. Appl. Environ. Microbiol. 63:2338±2346.
+  + direct export
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.df <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: false
+
+datafunction.lvl0.ls <- readNusslein1999(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
