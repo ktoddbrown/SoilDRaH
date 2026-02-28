@@ -276,7 +276,6 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                 'initial_planting', 'value', '1994', paste('Method ln11:', data.lvl0.df$method[11]),
                 'soil_pH_water', 'min', '5', paste('Method ln4:', data.lvl0.df$method[4]),
                 'soil_pH_water', 'max', '6', paste('Method ln4:', data.lvl0.df$method[4]),
-
                 'observation_year', 'value', '1997', paste('Method ln23:', data.lvl0.df$method[23]),
                 'sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.df$method[22]),
                 'core_description', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.df$method[12]),
@@ -356,4 +355,5 @@ data.lvl1.df <- list(
 View(data.lvl1.df)
 
 ```
+
 
