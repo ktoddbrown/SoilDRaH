@@ -215,6 +215,7 @@ Table 1 was modified to include latex superscripts.
 ```{r}
 #| label: table1Check
 
+
 read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
@@ -227,6 +228,17 @@ read_csv(file = table1.file, #read in the specific file
                            show_col_types = FALSE #do not return messages
                            )$caption #and take it out of the table
   )
+```
+
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table1.csv temp/Lin2015_Table1_CS.csv
 ```
 
 
@@ -252,6 +264,18 @@ read_csv(file = table2.file, #read in the specific file
                            )$caption #and take it out of the table
   )
 ```
+
+```{bash}
+#| label: compareTable2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table2.csv temp/Lin2015_Table2_CS.csv
+```
+
+
 
 ## Figure 1
 
@@ -301,6 +325,16 @@ ggplot(fig1Data, aes(x = `x axis label`, y = y, fill = `UV treatment`)) +
 
 ```
 
+```{bash}
+#| label: compareFigure1
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure1.csv temp/Lin2015_Figure1_CS.csv
+```
+
 ## Figure 2
 
 Figure 2 was modified to drop the units from the y-axis due to size constraints. 
@@ -346,6 +380,17 @@ ggplot(fig2Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill 
   )
  
 ```
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure2.csv temp/Lin2015_Figure2_CS.csv
+```
+
 
 ## Figure 3
 
@@ -409,6 +454,16 @@ scale_shape_manual(
     y = "Cumulative microbial respiration") +
    theme_classic()
 
+```
+
+```{bash}
+#| label: compareFigure3
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure3.csv temp/Lin2015_Figure3_CS.csv
 ```
 
 ## Methods
