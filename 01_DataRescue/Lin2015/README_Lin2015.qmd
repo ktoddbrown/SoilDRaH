@@ -3,7 +3,6 @@ title: "Data Rescue: Lin 2015"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -15,6 +14,17 @@ authors:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: review
+     # - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: AshBonner310
+    name:
+      given: Ashley
+      family: Bonner
     affiliation:
       - ref: uf-ees
     role:
@@ -58,20 +68,18 @@ affiliations:
     
 timelog:
   - activity: 
-      description: Primary Transcription and ReadMe Update
+      description: Primary Transcription and PR Finalization
       who: SavaScott
       start: 2025-01-30
-    #  end: 
-      duration: P45M
+      end: 2025-03-01
+      duration: PT11H45M
       
   - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P30M
+      description: Secondary Transcription
+      who: ChaseSaxour
+      end: 2026-02-26
+      start: 2026-01-30
+      duration: PT3H
 ---
 
 
@@ -126,11 +134,11 @@ Finally, the paper emphasized the importance of the seasonal patterns (solar rad
 
 ## Tables and figures
 
-- Table 
+- Tables 
   1) Table 1. *Bromus diandrus* litter samples and their field UV exposure characteristics
   2) Table 2. Effects of UV treatment on chemical characteristics of the litter
 
-- Figure 
+- Figures 
   1) Effects of UV manipulation and exposure periods on microbial respiration in the litter.
   2) Figure 2. Subsequent microbial respiration from the litter as a function of time for litter exposed during summer.
   3) Figure 3. Relationship between litter N concentration and cumulative microbial respiration during the periods.
@@ -152,9 +160,9 @@ This paper has been identified as a source for the information above.
 
 ### Other Relevant Variables
   - Litter Species: The litter that this study is looking at is the California grass, *Bromus diandrus*, from UC Sedgwick Reserve in Santa Ynez, California, USA.
-  - Microsite data: More of the microsite data is found within a previous paper by Lin and King (2014).
+  - Microsite data: More of the microsite data is found within a previous paper by @Lin2014.
   - Litter chemical composition, including lignin content and C: N ratio: The litters' chemical characteristics, such as carbon %, nitrogen %, and lignin %, can be found in Table 2. This table varies these percentages by the UV treatment period and the type of UV treatment the litter was subjected to.
-  - Microclimate relative humidity: The microclimate's relative humidity is recorded in another paper, Lin and King (2014).
+  - Microclimate relative humidity: The microclimate's relative humidity is recorded in another paper, @Lin2014.
   - Litter bag materials and method, including litter bag area and mesh size: The *B. diandrus* litter was sealed within 20 by 20 cm aluminium bags with a 1.5 mm mesh size.
   - Treatments, including rain-out shelters, canopy shading, or filters: The aluminum bags were suspended at 5 cm under louvers (10 pairs of each test variable) with UV pass or UV block screens. They were supported below by a stainless steel screen. UV screens were identical in design throughout the study. Screens allowed rainfall and were controlled for heating, with no difference in effects between UV block and pass screens.
   
@@ -162,7 +170,7 @@ This paper has been identified as a source for the information above.
 
 These files are in the @Lin2015 data rescue.
 
-- [Readme](README_Lin2015.qmd)
+- [ReadMe](README_Lin2015.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
 - [Lin2015.bib](Lin2015.bib)
   + citation for article transcribed
@@ -194,17 +202,17 @@ These files are in the @Lin2015 data rescue.
   - [x] Add the reviewer to the author list in the yml
 + Do
   - [x] Create a spreadsheet with Table1 and 2 and export it to csv
-  - [ ] Extract points from Figure1-3 and export it to csv
+  - [x] Extract points from Figure1-3 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
   - [x] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
@@ -214,6 +222,8 @@ Table 1 was modified to include latex superscripts.
 
 ```{r}
 #| label: table1Check
+#| code-fold: true
+#| message: false
 
 
 read_csv(file = table1.file, #read in the specific file
@@ -235,9 +245,6 @@ read_csv(file = table1.file, #read in the specific file
 #| label: compareTable1
 #| eval: false
 
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-
 diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table1.csv temp/Lin2015_Table1_CS.csv
 ```
 
@@ -248,8 +255,8 @@ Table 1 was modified to include latex format to bold and italics sections of tex
 
 ```{r}
 #| label: table2Check
-#| eval: false #remove when you have the file transcribed
-
+#| code-fold: true
+#| message: false
 
 read_csv(file = table2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -282,7 +289,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table2.csv temp/Lin2
 Figure 1 was modified to add an x-axis label of exposure period. It was also adjusted in the csv to only mark one of UV treatment of having 'P < 0.05' to better fit the coding process. 
 
 ```{r}
-
+#| label: figure1Check
+#| code-fold: true
+#| message: false
 
 fig1Caption <- read_csv(file = figure1.file, 
                                  n_max = 1, col_names = 'caption', 
@@ -340,6 +349,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure1.csv temp/Lin
 Figure 2 was modified to drop the units from the y-axis due to size constraints. 
 
 ```{r}
+#| label: figure2Check
+#| code-fold: true
+#| message: false
 
 fig2Caption <- read_csv(file = figure2.file, 
                                  n_max = 1, col_names = 'caption', 
@@ -397,6 +409,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure2.csv temp/Lin
 Figure 3 was modified to create a subtitle from the different graph labels. Due to the large label for the y-axis, the units were dropped in the image, but can still be found in the csv. The trendline was also dropped from the image, as we are only recording data points.
 
 ```{r}
+#| label: figure3Check
+#| code-fold: true
+#| message: false
 
 library(dplyr)
 
@@ -516,6 +531,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -528,25 +544,45 @@ data.lvl0.ls <- list(
     #Citations for all referenced articles
     methods = read.bib(file = methodsCitation.file)
   ),
-  #Read in the text transcription of the article's methods section
   method = read_lines(file = methods.file),
-  #Read in the results as tables or figure transcriptions. This includes
-  #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
-                         skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
-   ) #end 'data' element
+                         skip = 1)),
+    Table1 = list(
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1))
+      
+   )
 )
 
 ```

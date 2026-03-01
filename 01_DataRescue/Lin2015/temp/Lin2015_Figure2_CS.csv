@@ -1,36 +1,36 @@
-Fig. 2 Subsequent microbial respiration rate from *Bromus diandrus*litter as a function of time for litter exposed during summer. Mean and standard errors are shown (*n*=4). *P < 0.1 and **P < 0.05,,,,,,
-x value,y value,y value SE difference,UV Treatment,x value unit,y value unit,P value
-1.0,11.59,0.97,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-1.01,29.95,4.83,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-2.02,279.23,26.09,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-2.02,373.91,28.99,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-3.02,218.36,6.76,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-3.02,202.9,20.29,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-4.01,157.49,10.63,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-4.01,162.32,15.46,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-4.99,125.6,11.59,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-5.04,131.4,11.59,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-6.02,111.11,4.83,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-6.02,120.77,12.56,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-7.03,97.58,7.73,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-7.01,103.38,12.56,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-7.99,93.72,6.76,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-7.99,104.35,11.59,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-9.02,69.57,5.8,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-9.02,83.09,6.76,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-11.01,57,3.86,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-11.01,74.4,3.86,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-13,66.67,6.76,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-13.03,75.36,2.9,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-15.02,76.33,2.9,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-15.02,90.82,4.83,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-17.01,40.58,11.59,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-17.01,57,2.9,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-19,45.41,1.93,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-19,70.53,8.7,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-21.02,51.21,1.93,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),**
-21.02,84.06,11.59,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-22.98,50.24,0,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),*
-23.01,80.19,13.53,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
-25,46.38,3.86,UV Pass,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),*
-25,70.53,10.63,UV Block,Days since start of incubation,Microbial Respiration (μg  C g^{-1} litter hr^{-1}),-
+Fig. 2 Subsequent microbial respiration rate from *Bromus diandrus* litter as a function of time for litter exposed during summer. Mean and standard errors are shown (*n*=4). *P < 0.1 and **P < 0.05,,,,,,
+x value,y value,y value SE difference,UV treatment,x value unit,y value unit,P value
+1.0,11.7,0.97,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+1.0,29.7,3.8,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+2.0,280.0,26.0,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+2.0,375.2,27.3,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+3.0,218.2,8.1,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+3.0,203.0,20.7,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+4.0,157.9,8.5,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+4.0,162.4,15.4,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+5.0,125.6,11.6,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+5.0,132.8,10.7,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+6.0,111.5,5.8,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+6.0,122.8,11.7,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+7.0,98.8,7.7,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+7.0,104.7,10.4,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+8.0,94.4,7.0,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+8.0,105.6,9.8,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+9.0,69.8,5.7,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+9.0,83.7,5.0,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+11.0,57.5,4.2,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+11.0,75.0,5.2,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+13.0,67.4,6.6,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+13.0,77.1,2.1,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+15.0,76.3,2.7,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+15.0,90.8,4.8,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+17.0,41.0,1.7,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+17.0,57.5,3.3,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+19.0,46.4,2.6,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+19.0,71.9,8.0,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+21.0,52.5,3.0,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),**
+21.0,84.8,11.4,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+23.0,50.8,3.2,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),*
+23.0,81.6,13.5,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-
+25.0,47.8,4.7,UV pass,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),*
+25.0,71.8,10.6,UV block,Days since the start of incubation,Microbial respiration (μg C g^{-1} litter hr^{-1}),-

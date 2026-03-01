@@ -1,26 +1,26 @@
 "Fig. 3 Relationship between litter N concentration and cumulative microbial respiration when the treatments were applied during a summer, b summer-winter, and c 1 year. *r*, Pearson correlation coefficient",,,,,,
 x value,y value,x axis label,y axis label,graph label,UV treatment,r and P values
-0.53,41.4,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV pass,"r = 0.928, P < 0.001"
-0.53,45.5,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV pass ,-
-0.52,46.5,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV pass,-
-0.58,55.4,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV pass,-
-0.63,56.3,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV block,-
-0.64,52.2,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV block,-
-0.72,60.5,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV block,-
-0.76,72,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),a) Summer,UV block,-
-0.51,42.7,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV pass,"r = 0.669, P = 0.070"
-0.55,52.3,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV pass,-
-0.64,43.8,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV pass,-
-0.66,58.4,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV pass,-
-0.52,41.5,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV block,-
-0.58,48.4,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV block,-
-0.63,53.9,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV block,-
-0.65,53.8,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),b) Summer-winter,UV block,-
-0.60,41.2,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV pass,"r = 0.575, P = 0.136"
-0.63,44.7,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV pass,-
-0.68,46.0,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV pass,-
-0.67,47.6,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV pass,-
-0.61,44.8,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV block,-
-0.65,41.2,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV block,-
-0.68,50.7,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV block,-
-0.67,58.8,Litter N%,Cumulative microbial respiration (mg g$^{-1}$ litter),c) One year,UV block,-
+0.52,46.5,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV pass,"r = 0.928, P < 0.001"
+0.53,41.5,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV pass,-
+0.54,45.7,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV pass,-
+0.58,55.4,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV pass,-
+0.63,56.3,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV block,-
+0.64,52.2,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV block,-
+0.72,60.5,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV block,-
+0.76,71.9,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),a) Summer,UV block,-
+0.51,42.7,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV pass,"r = 0.669, P = 0.070"
+0.55,52.4,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV pass,-
+0.64,43.8,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV pass,-
+0.66,58.4,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV pass,-
+0.52,41.6,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV block,-
+0.58,48.6,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV block,-
+0.62,53.9,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV block,-
+0.65,53.8,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),b) Summer-winter,UV block,-
+0.60,41.2,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV pass,"r = 0.575, P = 0.136"
+0.63,44.7,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV pass,-
+0.67,47.6,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV pass,-
+0.67,46.0,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV pass,-
+0.61,44.8,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV block,-
+0.65,41.2,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV block,-
+0.66,58.7,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV block,-
+0.68,50.8,Litter N%,Cumulative microbial respiration (mg C g$^{-1}$ litter),c) One year,UV block,-
