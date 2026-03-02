@@ -1,0 +1,88 @@
+﻿VARIABLE,NAME,UNITS,DESCRIPTION
+site_name,Site Name,free text,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”"
+site_note,Site Notes,free text,"Various notes on and descriptions of the site other than C flux, climate, photo or vegetation. May include local names for physiographic features, which may or may not appear on USGS Topographic Quadrangles.
+Examples include: ""Biliau Hill"", ""Warner Valley"", ""Mudsock"""
+country,Country,free text,"Nation of origin of the data.
+Controlled vocabulary: country"
+province,Province,free text,"A politically defined sub-region of a country, for any country that does not describe these sub-divisions as ""states""."
+state,State,CV,"State or territory. At output, may also include province for any contry that does not describe political subdivision as ""states"".
+Controlled vocabulary: state_province"
+county,County,free text,"For data collected in the U.S., the county of origin within a U.S. State."
+lat,Latitude,dec. deg,"The latitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred).
+Examples include: “64.67083”"
+long,Longitude,dec. deg,"The longitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred).
+Examples include: “-148.32683”"
+datum,Latitude/Longitude Datum,CV,"Latitude/Longitude datum against which Latitude and Longitude are reported. If left blank, WGS84 will be assumed.
+Controlled vocabulary: datum"
+location_acc,Location Accuracy,m,"Estimated accuracy of the location of the site. Site origin has a 95% or greater probability of being within this many meters of the reported location.
+Examples include: “100”, “2”"
+elevation,Elevation,m,"The elevation at the site as determined by topo map, GPS, altimeter, etc. Contributed value is assumed accurate within several meters regardless of method used."
+vegclass_nat,US National Vegetation Classification Standard,free text,"The type of vegetation at the site, described according to the Federal Geographic Data Committee’s classification scheme (http://www.fgdc.gov/standards/projects/FGDC-standards-projects/vegetation/NVCS_V2_FINAL_2008-02.pdf). Classify the site according to the four uppermost descriptive levels (Class, Subclass, Formation, Division).
+Examples include: “1.C.2”, “3.A.1”, “4.C.1”"
+vegclass,Vegetation Classification Code,free text,"The type of vegetation at the site, described according to a TBD international classification scheme."
+vegclass_local,Local Vegetation Classification Code,free text,"The type of vegetation at the site, described according to the classification scheme commonly used at the site. Indicate the scheme in the Local Vegetation Classification Type. Leave blank if unknown or no local classification applies.
+Examples include: For Alaska, level IV or V is preferred, but when this is not possible, use Level II or III. Examples include “1.C.2”, “3.A.1”, “4.C.1”."
+vegclass_local_type,Local Vegetation Classification Type,free text,"Indicate the local classification scheme used at this site.
+Examples include: For Alaska, The Alaska vegetation classification http://www.treesearch.fs.fed.us/pubs/6941"
+veg_note,Additional Vegetation Data Notes,free text,"Provide references or links here if additional site-level vegetation data are available (e.g. species composition, basal area, aboveground biomass).
+Examples include: “DBH and tree heights available for this site. See Bonanza Creek LTER online database (http://www.lter.uaf.edu/site_search.cfm).”"
+landscape,Landscape,CV,"The type of Landscape on which the site occurs, according to USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 3-11) This information can be arranged in hierarchy above Landform and 2D Position to describe the geographic setting of the site.
+Examples include: “alluvial plain”, “river valley”, “mountain range”, “shore complex”
+Controlled vocabulary: landscape"
+landform,Landform,CV,"The type of Landform on which the site is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-12 through 3-16). This information can be nested between Landscape and 2D Position to describe the setting of the site.
+Examples include: “alluvial fan”, “beach”, “escarpment”, “flood plain”, “hill”, “mountain”, “plain”, “sea cliff”, “terrace”, “tidal flat”
+Controlled vocabulary: landform"
+2d_position,2D Position,CV,"2-dimensional position of the site on the Landform on which it is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-38 through 3-41). This information supplements Landscape and Landform to describe the geographic setting of the site.
+Examples include: “summit”, “shoulder”, “backslope”, “toeslope”, “base slope”, “riser”, “mountainflank”, “dip”
+Controlled vocabulary: 2d_position"
+landform_note,Landform Notes,free text,Additional notes about the Landform (e.g. microtopography) in this site.
+parent,Parent Material,free text,"The geologic or organic precursors to the soil at the site.
+Examples include: “loess”, “glacial till”, “dolomite residuum”"
+aspect_deg,Site Aspect,degree,"The numerical observation of aspect at the site. The compass bearing (corrected for declination) that a slope faces, looking downslope. If the site has no slope leave blank.
+Examples include: A numerical value between 0 and 360, or ""no slope"""
+aspect_cl,Site Aspect Class,CV,"The cardinal direction that the slope faces at a site. Use this field if only if you do not provide the azimuth of the Site Aspect in compass degrees.
+Controlled vocabulary: direction"
+slope,Slope,%,The angle of the ground surface through the site and in the direction that overland water would flow. Make observations facing downslope to avoid errors associated with some brands of clinometers. If the site has no slope leave blank.
+stand_age,Maximum Stand Age,years,The maximum stand age at the site in years.
+stand_maturity,Stand Maturity,CV,"If the site is forested, how mature was the stand at the time of sampling? The class may be determined by tree cores if available. If stand age is known, then 0-4 years: “young, regenerative”, 4-79 years: “even-aged, aggrading, and 80+ years: “mature even-age” or “mature, uneven-age”. Choose “not applicable” for grassland or agricultural areas. If unknown, leave blank.
+Controlled vocabulary: stand_age"
+successional_status,Successional Status,free text,Description of the assumed successional status at the site. This description is of necessity hihgly subjective
+drainagecl,Drainage Class,CV,"The drainage class of the soil sampled at the site according to the specific terminology employed in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 1-10).
+Controlled vocabulary: drainage"
+depth_water,Depth to Water Table,cm,Measure or estimate the depth from the ground surface to the stabilized contact with free- standing water in an open bore-hole or well at the time of sampling.
+thaw_depth_site,Thaw Depth of the Site,cm,The depth at which permafrost will usually thaw each summer for the site. Usually an average of many measurements over the site. This may or may not be from the thaw depth measured from individual profiles and hence may be different from Thaw Depth of the profile.
+bedrock_depth,Depth to Bedrock,cm,The observed depth to the top of the bedrock layer.
+climate_station,Meterological Station,free text,"Name of nearest climate station.
+Examples include: ""Van Riper State Park"", ""Bald Mtn. SNOTEL"", ""Grayson 3SW"", ""DTW"""
+ffdays,Frost Free Days,days,The expected number of days between the last freezing temperature (0 degrees Celsius) in spring and the first freezing in fall.
+flood_freq,Flooding Frequency,CV,"The annual probability of a flood event expressed as a class according to the terminology employed in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002, pg. 1-11).
+Controlled vocabulary: flood_freq"
+geo_form,Geologic Formation,free text,"The basic lithostratigraphic unit used to describe, delimit, and interpret sedimentary, extrusive igneous, metavolvanic, and metasedimentary or sediment bodies (excludes metamorphic and intrusive igneous rocks), based on lithic characteristics and stratigraphic position. A formation is commonly, but not necessarily, tabular and stratified and is of sufficient extent to be mappable at the earth's surface or traceable in the subsurface at convenient map scales.
+Examples include: ""Mount Spokane Gneiss"", ""Martinsburg Shale"", ""Jacobsville Sandstone"""
+map,Mean Annual Precipitation,mm,"The arithmetic average of the total annual (liquid) precipitation , preferably taken over the standard ""normal"" period, 1961-1990."
+mat,Mean Annual Temperature,°C,"The arithmetic average of the daily maximum and minimum temperatures for a calendar year, preferably taken over the standard ""normal"" period, 1961."
+mast,Mean Annual Soil Temperature,°C,"The mean annual soil temperature, preferably measured at a depth of 50 cm below the soil surface, or at the upper boundary of a root-limiting layer."
+pond_freq,Ponding Frequency,CV,"The number of times ponding occurs over a period of time.
+Controlled vocabulary: pond_freq"
+runoff,Local Runoff Class,CV,"Runoff potential class for the soil, assigned based on local/state/MLRA criteria.
+Controlled vocabulary: runoff"
+site_perm,Site Permeability,CV,"A class rating of the overall ability of air and water to move through the soil profile. The class limits are as defined in the National Soil Survey Handbook.
+Controlled vocabulary: site_perm"
+water_table_duration,Wet Soil Moisture Duration,days,The cumulative annual duration that a water table can be expected to exist in the soil.
+cflux_note,C Flux Notes,free text,"Provide references or links to carbon flux measurements that have been conducted at the site.
+Examples include: “http://www.fluxdata.org/Data%20Browsing/Documents%20Free/FluxMetSummary.aspx”, “Gough et al. 2007 Legacy of harvest…”"
+climate_note,Climate Notes,free text,"Provide references or links to climate data for the site.
+Examples include: “http://www.lternet.edu/sites/hbr/”, “Nave et al. 2009 Contribution of atmospheric deposition…”"
+eco_note,Ecoregion Note,free text,Special information about the site that makes it anomalous from the USDA Omernik ecoregion in which it is located.
+photo_note,Photo Notes,free text,"References or links to photos from the site.
+Examples include: “Available at http://lter.kbs.msu.edu/photos/index.php”"
+soiltemp_note,Soil Temperature Notes,free text,Indicate information about additional soil temperature data available about this site. Please include references and links if possible.
+add_note,Additional Data Note,free text,"Add links or publication references for any additional belowground data available for the site (soil chemistry, microbial measurements)."
+soc,Site Calculated Soil Organic Carbon Stock,g cm-2,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+soc_type,Site Calculated Soil Organic Carbon Stock Type,CV,"An indication of which portion of the profile (organic, mineral, organic + mineral) is described by the contributor's calculated soil organic carbon stock at the site, cluster, profile or layer level.
+Controlled vocabulary: ccon_type"
+soc_pcount,Site Calculated Soil Organic Carbon Stock Profile Count,free text,The number of profiles used in the calculation of the mean site or cluster-level soil organic carbon stocks.
+soc_depth,Site Calculated Soil Organic Carbon Stock Depth,cm,"The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks."
+soc_sigma,Site Calculated Soil Organic Carbon Stock Standard Deviation,g cm-2,"The standard deviation of the site, cluster, profile, or layer-level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements)."
+soc_method,Site Calculated Soil Organic Carbon Stock Method,free text,"A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks."
