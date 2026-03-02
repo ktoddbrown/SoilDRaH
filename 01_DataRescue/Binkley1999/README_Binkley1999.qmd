@@ -280,7 +280,7 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                 'sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.df$method[22]),
                 'core_description', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.df$method[12]),
                  'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
-                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation')
+                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal  citation')
     
 #### Table 1 ####
                 
@@ -300,14 +300,26 @@ Table1Primary <- data.lvl0.df$data$Table1$primary |>
       column_name == "C K† (mmol m<sup>-2</sup>)" ~ "control_potassium_stock",
       column_name == "F K† (mmol m<sup>-2</sup>)" ~ "fertilized_potassium_stock",
       column_name == "Al (mmol m<sup>-2</sup>)" ~ "soil_aluminum_stock")) |>
-  reframe(of_type = case_when(
-    str_detect(with_entry, '\\d+\\-\\d+') ~ c('upperbound', 'lowerbound'),
-    str_detect(with_entry, '.+ \\(.+\\)') ~ c('mean', 'standard error'),
-    .default = 'value'
-  ), 
-  .by=everything())
-   mutate(from_source = 'Table 1')
+#reframe(of_type = case_when(
+ #   str_detect(with_entry, '\\d+\\-\\d+') ~ c('upperbound', 'lowerbound'),
+  #  str_detect(with_entry, '.+ \\(.+\\)') ~ c('mean', 'standard error'),
+   # .default = 'value'
+#  ), 
+ # .by=everything()) |>
 
+mutate(lowerbound = str_extract(with_entry, '^\\d+(?=-)'),
+         upperbound = str_extract(with_entry, '(?<=\\d-)\\d+$'),
+         mean = str_extract(with_entry, '^-?\\d*\\.?\\d+(?=\\s*\\()'),
+         'standard error' = str_extract(with_entry, '(?<=\\()[0-9.]+(?=\\))'),
+         value = str_extract(with_entry, '^-?\\d+\\.?\\d+$'))|>
+  select(-with_entry) |>
+  
+  pivot_longer(cols = c('lowerbound', 'upperbound', 'mean', 'standard error', 'value'),
+               names_to = 'of_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+mutate(from_source = 'Table 1')
+#Still working on table 1; don't know how to deal with the C/F marked plots or the final row
 Table1Meta <- Table1Primary |>
   select(column_name, of_variable) |>
   unique() |>
