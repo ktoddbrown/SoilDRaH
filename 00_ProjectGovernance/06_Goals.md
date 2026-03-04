@@ -1,39 +1,34 @@
----
-title: "Goals"
-format:
-  gfm:
-    wrap: preserve
-bibliography: projectReferences.bib
----
+# Goals
+
 
 The current goals of the SoiDRaH project broadly fall into three main categories: data products, semantic resources, and organizational documentation.
 
 ## Data products
 
-These are analysis-ready data products. 
+These are analysis-ready data products.
 They have specific fit-for-purpose goals and leads who are planning analysis of these projects.
 
-  1) [ISCN4](../02_DataCuration/ISCN2025)
+1)  [ISCN4](../02_DataCuration/ISCN2025)
     - *Purpose question*: How are soil carbon stocks distributed geo-spatially (surface and depth)?
     - *Stage*: Finalizing curation
     - *Lead*: vmarupaka
-  2) [HiSOC](../02_DataCuration/HiSOC)
+2)  [HiSOC](../02_DataCuration/HiSOC)
     - *Purpose question*: What is the soil carbon stock across different land use and soil types in Hawaii?
     - *Stage*: Starting curation
     - *Lead*: bwhitehead
-  3) [DeAD](../02_DataCuration/DeAD)
+3)  [DeAD](../02_DataCuration/DeAD)
     - *Purpose question*: How quickly does litter decay in dryland systems?
     - *Stage*: Starting rescue
     - *Lead*: ktoddbrown
 
 ## Semantic support
 
-  1) Dictionary of DRaH terms
-  2) Methods tree
+1)  Dictionary of DRaH terms
+2)  Methods tree
 
 ## Organization
 
-Community development and maintenance of 
-    1) Decision making structures and strategic direction of project
-    2) Semantic tools
-    3) Workflows for rescue, harmonization and curation
+Community development and maintenance of
+1) Decision making structures and strategic direction of project
+2) Semantic tools
+3) Workflows for rescue, harmonization and curation
