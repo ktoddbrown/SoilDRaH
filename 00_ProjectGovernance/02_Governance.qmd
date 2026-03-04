@@ -1,10 +1,12 @@
 ---
 title: "Governance"
-format: gfm
+format:
+  gfm:
+    wrap: preserve
 bibliography: projectReferences.bib
 ---
 
-The governance of SoilDRaH is rooted in the principles of transparency, iterative improvement, and consent
+The governance of SoilDRaH is rooted in the principles of transparency, iterative improvement, and consent.
 Currently we operate under a Benevolent Dictator For Now ([BDFN](https://communityrule.info/templates/benevolent-dictator.html)) where project decisions are made by K. Todd-Brown ([https://github.com/ktoddbrown](https://github.com/ktoddbrown)) in consultation with those working on aspects of the project (generally students in her lab).
 We hope to transition to a circle (or committee) model in 2026.
 To support this transition, many practices here are designed for a circle decision structure rather then BDFN.

@@ -1,0 +1,82 @@
+# Community Norms
+
+
+- [Incentives, limitations, and capasities](#incentives-limitations-and-capasities)
+  - [Undergraduate students](#undergraduate-students)
+  - [Graduate students and postdoctoral scholars](#graduate-students-and-postdoctoral-scholars)
+  - [University faculty (pre-tenure)](#university-faculty-pre-tenure)
+- [Conflict resolution](#conflict-resolution)
+- [Abuse and misconduct](#abuse-and-misconduct)
+- [References](#references)
+
+We strive to create a supportive and inclusive community that fosters responsible and responsive data stewardship.
+Here we discuss the incentive, limitation, and capacities of project participants (as this is currently designed for), provide guidance on how to approach conflict on thie project, and finally how to report abuse and misconduct.
+
+## Incentives, limitations, and capasities
+
+Participants in the project are currently university academics.
+We are looking to expand this to government scientists and corporate partners in the future.
+
+### Undergraduate students
+
+Undergraduate students are incentivized to work on this project as a way to gain experience in domain research and acquire skills in data science.
+These participants are limited by their available time due to class commitments and relative inexperience.
+However they are often curious and ask excellent questions, they can be good collaborators to develop clear workflows and make steady incremental progress on larger projects that span beyond their tenure.
+
+### Graduate students and postdoctoral scholars
+
+Graduate students and postdoctoral scholars need academic publications to further their careers and, as such, are incentivized to complete curated date products and resulting analysis as publications.
+Secondarily these participants are also looking to acquire skills in data or domain science and project management.
+These participants are also time limited, work should directly result in a publication within their tenure on a project.
+These participants are excellent at pulling a curated data project into publication and over those last few months, they may also be uniquely situated to place the data analysis within the current trends in scientific literature.
+
+### University faculty (pre-tenure)
+
+University faculty pre-tenure are primarily motivated by academic publications and grant awards.
+These participants are often juggling many projects at once, as well as teaching and supervision duties so are also time limited.
+Often these participants have an expertise in either domain or data science that makes them extremely productive contributors in relatively short amounts of time.
+
+## Conflict resolution
+
+**Before it escalates (Compassionate Communication and Resolution):** Conflict, or a serious and sometimes protracted struggle or clash of interests, in the workplace occurs regardless of how harmonious or productive a team is.
+Individuals and organizations have different responsibilities, cultures, personalities, perspectives, and ways of approaching a situation, so diverse attitudes, emotions, personalities, or goals can sometimes lead to conflicts or disputes.
+
+Resolving conflicts is rarely easy.
+It is expected that project members will, at some point on this project, have conflict with a colleague or experience a fissure between organizations controlling different aspects of our work.
+Project members are encouraged to take a step back (i.e., disengage, with intent to re-engage after further thought and research) attempt to resolve conflicts amongst themselves and below are some useful strategies to think about as one moves through this process.
+
+1.  **Assume good intent and confirm it.** Start from the assumption that everyone intends to be a reliable coworker, colleague, and collaborator and wants to see the project succeed. When there is conflict, it is often useful to take a step back and articulate specific broad-scale common goals like: “We both want to see this process well documented in a clear and concise way.”  
+2.  **Separate observations and feelings.** Wrapping up feelings with observations can lead to implied judgment about the value of an action. Oftentimes these judgements will cause someone to feel attacked and alienated. Instead, stating what happened and how it made you feel as two separate statements, can allow a person to see themselves as separate from the action and give them space to change that action moving forward. For example: “When I do not get a response to my email, I cannot plan my next phase of work. I feel anxious when this happens.”  
+3.  **Be curious and listen**. Ask honest curious questions when someone seems to be acting against a stated aim or value. Everyone is the hero of their own story, and most goals are held in tension or balance with a second goal. Get curious where someone else is coming from in a conflict and incorporate this into an active listening practice where you reflect what is being said to you. “I’m curious if there is a reason why I’m not getting a response from you on this email. Are you using this email as a to-do list? Do you feel like you have to give me a certain kind of response instead of just acknowledging that you received my email? Is there something you are avoiding in our interactions?”  
+4.  **Clarify your needs and bring a request.** Come into a conversation with a clear understanding of what your professional needs are. For example, this might be a need for timely information for rapid turnaround or a distraction free work environment. Then bring a request that might address this need. Keep in mind that the difference between a request and a demand is that a request can be turned down, except there may be a negotiation as everyone tries to get their needs met in this situation. “For my schedule, I need to know this a week in advance to act on it; could you get back to me on Friday?”  
+5.  **Write it down**. Consider writing down a shared understanding of your conversation, especially if there has been repeated conflict and miscommunication. Oftentimes it is easier to have a similar understanding of the written word compared to spoken.
+
+These steps are based on Nonviolent Communication (Rosenberg (2015)) strategies.
+
+[The Wildfire Project](https://wildfireproject.org/six-elements/) also offers guidance for “generative conflict”, where natural conflict may be engaged in ways that generate possibilities, foster connections, and express feelings rather than shutting them down (“The Wildfire Project: Six Elements” (n.d.)).
+
+## Abuse and misconduct
+
+Abuse and misconduct moves beyond conflict that is internally resolvable within the project.
+Please contact the home institutions of the parties involved to report instances of abuse.
+Below are some links to get you started:
+
+- University of Florida <https://report.ufl.edu/>
+
+## References
+
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+
+<div id="ref-Rosenberg2015" class="csl-entry">
+
+Rosenberg, Marshall B. 2015. *Nonviolent Communication: A Language of Life*. 3rd ed. Encinitas, CA: PuddleDancer Press.
+
+</div>
+
+<div id="ref-WildfireProject" class="csl-entry">
+
+“The Wildfire Project: Six Elements.” n.d. <https://wildfireproject.org/six-elements/>.
+
+</div>
+
+</div>
