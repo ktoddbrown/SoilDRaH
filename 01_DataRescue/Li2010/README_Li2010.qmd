@@ -230,7 +230,7 @@ ggplot(fig2, aes(x = `x label`, y = y, fill = ecosystem)) +
   ) +
   labs(
     x = "", # no x label
-    y = expression("Soil C pools Mg ha"^-1) #expression() for the exponent
+    y = expression(Soil~C~pools~(Mg~ha^{-1})) #expression() for the exponent
   ) +
   
   
@@ -266,7 +266,7 @@ Some citations are missing, those are noted here and how best guess were generat
   + Bashkin MA, Binkley D (1998) Changes in soil carbon following afforestation in Hawaii. Ecology 79:828–833
   + direct export
 - [x] (Hue et al. 2000) @Hue2000
-  + Hue NV, Uchida R, Ho MC (2000) Sampling and analysis of soils and plant tissues: how to take representative samples, how the samples are tested. In: Silva JA, Uchida RS (eds) Plant nutrient management in Hawaii=s soils: approaches for tropical and subtropical agriculture. CTAHR, Univ. of Hawaii, Manoa, pp 23–30
+  + Hue NV, Uchida R, Ho MC (2000) Sampling and analysis of soils and plant tissues: how to take representative samples, how the samples are tested. In: Silva JA, Uchida RS (eds) Plant nutrient management in Hawaii's soils: approaches for tropical and subtropical agriculture. CTAHR, Univ. of Hawaii, Manoa, pp 23–30
   + direct export
 - [x] (Shuman and Duncan 1990) @Shuman1990 
   + Shuman LM, Duncan RR (1990) Soil exchangeable cations and aluminum measured by ammonium chloride, potassium chloride, and ammonium acetate. Commun Soil Sci Plant Anal 21:1217–1228
@@ -320,6 +320,7 @@ data.lvl0.ls <- list(
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 datafunction.lvl0.ls <- readLi2010(dataDir = '.',
                                     dataLevel = 'level0')
