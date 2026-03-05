@@ -4,7 +4,7 @@ format:
   html:
     toc: true
     eval: true
-date: 2026-01-30
+date: 2026-03-01
 date-format: YYYY-MM-DD
 bibliography:
   - Li2010_Methods.bib #contains the citations in the methods section
@@ -25,24 +25,22 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     name:
       given: Savannah
       family: Scott
-    orcid: N/A
     affiliation:
       - uf-ees
     role:
       - transcription: secondary
-      - standardization:
-      - curation:
+      #- standardization:
+      #- curation:
   - id: Misheph
     name:
       given: Mirah
       family: Blanchard
-    orcid: N/A
     affiliation:
       - uf-mae
     role: 
       - transcription: lead
-      - standardization: 
-      - curation: 
+      #- standardization: 
+      #- curation: 
 
 
 affiliations:
@@ -71,8 +69,8 @@ timelog:
       description: Revise based on feedback
       who: @Misheph #github username
       start: 2025-11-01
-      end: 2026-1-12
-      duration: 10H
+      end: 2026-3-01
+      duration: 15H
 ---
 
 
