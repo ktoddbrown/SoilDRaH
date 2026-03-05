@@ -19,8 +19,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - uf-ees
     role: #TODO define these roles and add reference
       - transcription: review
-      - standardization: #lead #review
-      - curation: #lead #review
+      #- standardization: #lead #review
+      #- curation: #lead #review
   - id: SavaScott
     name:
       given: Savannah
@@ -186,58 +186,61 @@ fig2 <- read_csv(
   show_col_types = FALSE
 )
 
-fig2 <- fig2 %>% #modify fig2 and pass back in
+fig2 <- fig2 %>% # modify fig2 and pass back in
   mutate(
     y = as.numeric(y),
     `error bar` = as.numeric(`error bar`),
-    `graph label` = factor(`graph label`,
-      levels = c("A", "B"), # A first and then B
+    `graph label` = factor(
+      `graph label`,
+      levels = c("A", "B"), # A first and then B, top to bottom
       labels = c("0–10 cm", "10–25 cm")
     ),
-    `x label` = factor(`x label`, levels = c("TC", "SOC4", "SOC3")), #change to factor to control order of bars
-    ecosystem = factor(ecosystem,
-      levels = c("S. Forest", "Pastures") #control fill colors and legend order
+    `x label` = factor(
+      `x label`,
+      levels = c("TC", "SOC4", "SOC3") # control order of bars
+    ),
+    ecosystem = factor(
+      ecosystem,
+      levels = c("S. Forest", "Pastures") # control fill colors and legend order
     )
   )
 
 # plot figure
-ggplot(fig2, aes(x = `x label`, y = y, fill = ecosystem)) +
+ggplot(fig2, aes(x = `x label`, y = y, fill = ecosystem)) + # initialize bar chart with height and fill according to ecosystem
   geom_col(
     position = position_dodge(width = 0.8),
     width = 0.7
   ) +
   geom_errorbar(
-    aes(ymin = y, ymax = `error bar`),
+    aes(ymin = y, ymax = `error bar`), # start error bar at y value, extend to error bar value
     position = position_dodge(width = 0.8),
     width = 0.2
   ) +
   geom_text(
-    aes(label = footnote, y = `error bar` + 2),
+    aes(label = footnote, y = `error bar` + 2), # annotate above each error bar
     position = position_dodge(width = 0.8),
     vjust = 0
   ) +
   facet_wrap(~ `graph label`, ncol = 1) +
   scale_y_continuous(
-    breaks = c(0, 20, 40, 60, 80, 100),
+    breaks = c(0, 20, 40, 60, 80, 100), # set y axis values
     limits = c(0, 100)
   ) +
   scale_fill_manual(
-    values = c("S. Forest" = "red", "Pastures" = "blue"),
+    values = c("S. Forest" = "red", "Pastures" = "blue"), # set color of ecosystem
     name = ""
   ) +
   labs(
     x = "", # no x label
-    y = expression(Soil~C~pools~(Mg~ha^{-1})) #expression() for the exponent
+    y = expression(Soil~C~pools~(Mg~ha^{-1})) # exponent formatting
   ) +
-  
-  
   theme_classic() +
   theme(
     legend.position = "top",
     strip.text = element_blank()
   )
-
 ```
+
 ## Methods comparison
 
 ```{bash eval=FALSE}
