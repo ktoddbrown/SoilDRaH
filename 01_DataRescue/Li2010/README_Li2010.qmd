@@ -59,15 +59,14 @@ affiliations:
     city: Gainesville
     state: Florida
     county: USA
-    address:
-    postal-code: "P.O Box 116250"
-    url:  32611
+    address: "P.O Box 116250"
+    postal-code: 32611
     url: https://mae.ufl.edu/
     
 timelog:
   - activity: 
       description: Revise based on feedback
-      who: @Misheph #github username
+      who: Misheph #github username
       start: 2025-11-01
       end: 2026-3-01
       duration: 15H
@@ -164,15 +163,15 @@ These files are in the Li2010 data rescue.
 + Do
   - [x] Extract points from Figure2 and export it to csv
   - [x] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
