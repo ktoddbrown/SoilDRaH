@@ -135,8 +135,8 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
 |------------|----------|-----------|----------|
-| Ares2001 | \@Ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | ktoddbrown |
-<!---- remove and replace the example above ---->
+| Lin2015 | \@Lin2015 | [185](https://github.com/ktoddbrown/SoilDRaH/issues/185) | SavaScott |
+
 
 ## Imported to bib
 
@@ -164,7 +164,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Kavvadias 2001 | @Kavvadias2001 |
 | Kumada 2008 | @Kumada2008 |
 | Gliksman 2016 | @Gliksman2016 |
-| Lin 2015 | @Lin2015 |
 | Qasemian 2014 | @Qasemian2014 |
 | Sagi 2019 | @Sagi2019 |
 | Bates 2007 | @Bates2007 |
