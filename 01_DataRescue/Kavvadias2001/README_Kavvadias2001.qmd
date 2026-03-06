@@ -68,7 +68,8 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Kavvadias2001_Methods.md"
-tableN.file <- 'Kavvadias2001_TableN.csv'
+table1.file <- 'Kavvadias2001_Table1.csv'
+table2.file <- 'Kavvadias2001_Table2.csv'
 figureM.file <- 'Kavvadias2001_FigureM.csv'
 
 # Bibliograph files
@@ -171,22 +172,22 @@ These files are in the Kavvadias2001 data rescue.
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
-## Table N
+## Table 1
 
 <!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
 
-Table N was modified ....
+Table 1 was modified ....
 
 ```{r}
 #| label: table1Check
 #| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -195,6 +196,56 @@ read_csv(file = tableN.file, #read in the specific file
                            )$caption #and take it out of the table
   )
 ```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+```
+
+## Table 2
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 2 was modified ....
+
+```{r}
+#| label: table2Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = table2.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+```
+
 
 ## Methods
 
