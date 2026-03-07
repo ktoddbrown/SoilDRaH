@@ -3,7 +3,6 @@ title: "Data Rescue: Kavvadias2001"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -35,22 +34,18 @@ affiliations:
     
 timelog:
   - activity: 
-      description: revised execute with only provided files
-      who: ktoddbrown #github username
+      description: reviewed data issue
+      who: ktoddbrown 
       #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
-  - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
+      start: 2026-03-06
+      end: 2026-03-06
       duration: P30M
-version: 'vs202512' #template version, remove before use
+  - activity: 
+      description: Primary Transcription
+      who: ktoddbrown #github username
+     # end: YYYY-MM-DD
+      start: 2026-02-13 
+      duration: PT3H
 ---
 
 
@@ -70,7 +65,9 @@ library(bibtex) # reading in BibTex files to R
 methods.file <- "Kavvadias2001_Methods.md"
 table1.file <- 'Kavvadias2001_Table1.csv'
 table2.file <- 'Kavvadias2001_Table2.csv'
-figureM.file <- 'Kavvadias2001_FigureM.csv'
+table6.file <- 'Kavvadias2001_Table6.csv'
+table7.file <- 'Kavvadias2001_Table7.csv'
+figure2.file <- 'Kavvadias2001_Figure2.csv'
 
 # Bibliograph files
 primaryCitation.file <- 'Kavvadias2001.bib'
@@ -92,39 +89,69 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 # Data Summary
 
-<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
+Kavvadias, V. A., Alifragis, D., Tsiontsis, A., Brofas, G., & Stamatelos, G. (2001). Litterfall, litter accumulation and litter decomposition rates in four forest ecosystems in northern Greece. Forest ecology and management, 144(1-3), 113-127. https://doi.org/10.1016/S0378-1127(00)00365-0
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/202.
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
-
-<!--- After you read through the paper write a brief summary of what the study
-measured and what the data was used for in. This should be <250 words.--->
-
-Kavvadias2001 primarily measures ... 
-They use this data to look at ...
+This paper looks at four natural forest sites of *Pinus pinaster* Aiton, *Pinus nigra* Arn., *Abies borisii* regis, Matf. and *Fagus silvatica* L., focusing on the difference in litterfall nutrients and element concentrations of the different species.
+They used this data to determine how the differences in ecosystem conditions needed to be accounted for when evaluating site residence times.
+Residence times of the litter mass in this study were found to be substantially greater compared to other studies in the Mediterranean environment.
+The paper also assessed the turnover rates of these forest ecosystems.
 
 ## Tables and figures
 
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
-
 - Table 
-  1) Describe the data in the first table.
+  1) The age, stocking, basal area, and mean height of maritime pine, black pine, fir, and beech sites.
+  2) Mean physical and chemical soil characteristics of maritime pine, black pine, fir, and beech sites
+  3) Analysis of variance of the nutrient concentration of the forest floor.
+  4)  Analysis of variance of the total mass, organic matter, and nutrient accumulation in the forest floor.
+  5) Mean element concentrations of the litterfall at the coniferous and deciduous species.
+  6) Mean organic matter, element concentrations, and C:N and C:P ratios of the forest floor.
+  7) Turnover time of forest floor mass and nutrients in maritime pine, black pine, fir, and beech sites.
 
 - Figure 
-  1)  Describe the data in the first figure
+  1) Map of Greece showing the sites under investigation
+  2) Total mass of litterfall and litter accumulation at the two site qualities.
+  3) The mass of nutrients accumulated on the forest floor horizons at the two site qualities.
+  4) The quantities of nutrients in the litterfall at the two site qualities.
 
-## Fit for purpose: ProjectName
+## Fit for purpose: DeAD & ISCN4
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies.
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+This data is identified as a data source for ISCN4.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data, we will examine the assumption of steady state on field surveyed organic carbon.
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+  - Location:
+    - The paper was evaluating 4 different sites.
+    - The maritime pine site was found in Kilkis at 41°06′N, 22°53′E, around 70 km north of Thessaloniki. This site tended to have a semi-arid Mediterranean climate, with an average forest depth of 1-3 cm.
+    - The black pine site was located on the northwest slope of the Pieria mountains at 40°23′N, 22°32′E. This site's climate was identified as a sub-Mediterranean to temperate ecosystem. The average forest depth was 1.1 to 4.4 cm.
+    - The fir site was located in Pertouli at 39°30′N, 21°25′E on the Pindos mountain. The site's climate was sub-Mediterranean to temperate.
+    - The beech site was located at the northeast slope of mountain Ossa at 39°50′N, 22°30′E. This site's climate was sub-Mediterranean with rainy winter conditions. The soil depth was 1.5 to 5.4 cm thick.
+
+  - Duration:  The litter fall was collected from January 1994 to December 1995 at monthly intervals.
+  
+  - Mass loss: The turnover time of the forest mass and nutrients was found in Table 7. The time was estimated using Olson's formula with data from Figures 1-3.
+  
+  - Solar exposure: Sites were separated into two site qualities, high and low. These site quality rankings were determined from @Apatsidis1990 and @Panagiotidis1981. Could not determine if solar exposure was included in the site quality determination.
+
+  - Soil organic carbon stocks: The mean and S.D. of the organic matter can be found in Table 6. Within this table, there is also the N, P, K, and C:N ratio. 
+
+Other Relevant Variables:
+
+  - Litter species:  The litter species in this study are maritime pine (*Pinus pinaster* Aiton), black pine (*Pinus nigra* Arn.), Bulgarian fir (*Abies borissi* regis, Matf.), and beech (*Fagus silvatica*, L.).
+  
+  - Microsite data: The microsite data is found within the 2.1. Study Site subsection, as well as the stand characteristics, are found within Table 1.
+  
+  - Litter chemical composition ncluding lignin content and C:N ratio: The chemical soil characteristics are given within Table 2 for each of the litter species.
+  
+  - Litter bag materials and method, including litter bag area and mesh size: The twelve litter traps were 0.5 m$^2$, with 2 mm mesh nylon, which were suspended 40 cm above the ground.
+
+
   
 ## Files
 
@@ -137,11 +164,19 @@ These files are in the Kavvadias2001 data rescue.
 - [Kavvadias2001.bib](Kavvadias2001.bib)
   + citation for article transcribed
 - [Kavvadias2001_Methods.bib](Kavvadias2001_Methods.bib)
-  + citations for the methods section of the article
+  + citations for the methods and sample collection section of the article
 - [Kavvadias2001_Methods.md](Kavvadias2001_Methods.md)
-  + methods transcribed from primary article
-- [Kavvadias2001_TableN.csv](Kavvadias2001_TableN.csv)
-  + table N from primary article with ...
+  + methods and sample collection section transcribed from primary article
+- [Kavvadias2001_Table1.csv](Kavvadias2001_Table1.csv)
+  + table 1 from primary article with the site characteristics.
+- [Kavvadias2001_Table2.csv](Kavvadias2001_Table2.csv)
+  + table 2 from primary article with the mean physical and chemical soil characteristics
+- [Kavvadias2001_Table6.csv](Kavvadias2001_Table6.csv)
+  + table 6 from primary article with mean organic matter and element concentration
+- [Kavvadias2001_Table7.csv](Kavvadias2001_Table7.csv)
+  + table 7 from primary article with turnover times
+- [Kavvadias2001_Figure2.csv](Kavvadias2001_Figure2.csv)
+  + figure 2 from primary article with total mass of litterfall and litter accumulation
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -150,20 +185,20 @@ These files are in the Kavvadias2001 data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Kavvadias2001'
-  - [ ] Create a copy of this template folder and rename it to Kavvadias2001
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Kavvadias2001'
+  - [x] Create a copy of this template folder and rename it to @Kavvadias2001
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
+  - [x] Create a spreadsheet with Table1-2 and Table 6-7 and export it to csv
+  - [ ] Extract points from Figure2 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
   - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
@@ -174,14 +209,13 @@ These files are in the Kavvadias2001 data rescue.
 
 ## Table 1
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+Table 1 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption.
 
-Table 1 was modified ....
 
 ```{r}
 #| label: table1Check
-#| eval: false #remove when you have the file transcribed
-
+#| code-fold: true
+#| message: false
 
 read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -211,14 +245,12 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.m
 
 ## Table 2
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table 2 was modified ....
+Table 2 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption.
 
 ```{r}
 #| label: table2Check
-#| eval: false #remove when you have the file transcribed
-
+#| code-fold: true
+#| message: false
 
 read_csv(file = table2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -238,6 +270,79 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTable2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+```
+
+
+## Table 6
+
+Table 6 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption and dashes where there was no data in the cell.
+
+```{r}
+#| label: table6Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table6.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table6.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable6
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+```
+
+
+
+## Table 7
+
+Table 7 was modified include markdown format in the table. It was also modified to include the footnotes in the caption.
+
+```{r}
+#| label: table7Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table7.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table7.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable7
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
@@ -278,6 +383,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: false
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -318,6 +424,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readKavvadias2001(dataDir = '.',
                                          dataLevel = 'level0')
