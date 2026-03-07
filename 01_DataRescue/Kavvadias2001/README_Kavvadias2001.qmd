@@ -193,7 +193,7 @@ These files are in the Kavvadias2001 data rescue.
   - [x] Add the reviewer to the author list in the yml
 + Do
   - [x] Create a spreadsheet with Table1-2 and Table 6-7 and export it to csv
-  - [ ] Extract points from Figure2 and export it to csv
+  - [x] Extract points from Figure2 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -350,6 +350,47 @@ And is crosschecked with the secondary transcription
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
 ```
+
+
+## Figure 2
+
+Figure 2 was modified ...
+
+```{r}
+#| label: figure2Check
+#| code-fold: true
+#| message: false
+
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  mutate(across(c("y top value_AOO", "y bottom value_ AO"),
+                as.numeric),
+         stage = factor(stage, 
+                        levels = c("Maritime pine", 'Black pine', 'Fir', 'Beech')),
+                        `soil depth (cm)` = factor(`species`))
+
+#still working on it; using Tirado-Corbala Fig1 as temp
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+```
+
 
 
 ## Methods
