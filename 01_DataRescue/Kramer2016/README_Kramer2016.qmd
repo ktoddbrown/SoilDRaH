@@ -3,7 +3,7 @@ title: "Data Rescue: Kramer2016"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
+    eval: true #default to not evaluating the chunks, override this the template is completed
 date: 2026-01
 date-format: YYYY-MMMM
 bibliography:
@@ -176,7 +176,7 @@ These files are in the Kramer2016 data rescue.
   - [x] Create a copy of this template folder and rename it to Kramer2016
   - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
   - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [x] Add the reviewer to the author list in the yml
 + Do
   - [x] Create a spreadsheet with Table1 and export it to csv
   - [x] Create a spreadsheet with Table2 and export it to csv
@@ -190,8 +190,8 @@ These files are in the Kramer2016 data rescue.
   - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [x] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
