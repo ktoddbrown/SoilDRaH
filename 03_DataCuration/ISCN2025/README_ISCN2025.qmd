@@ -7,7 +7,9 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - ISCN2025.bib #contains citation that provide background on the project
+  - ../../01_DataRescue/CPEAT2025/CPEAT2025.bib #CPEAT citation
+  - ../../01_DataRescue/CPEAT2025/CPEAT2025_Methods.bib #CPEAT source
+  - ../../01_DataRescue/ISCN3_2015/ISCN3_2015.bib #ISCN3 citation
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -17,7 +19,7 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     affiliation:
       - ref: uf-ees
     role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
+      #- transcription: lead #secondary, review
       - standardization: lead #review
       - curation: lead #review
 
@@ -32,6 +34,14 @@ affiliations:
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
 timelog:
+    - activity: 
+      description: Sort through migration conflicts for issue 191
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-02-05T14:15
+      end: 2026-02-05T14:45
+      #alternatively duration can be combined with a start or end
+      #duration: P1H15M
   - activity: 
       description: Draft inital readme
       who: ktoddbrown #github username
@@ -83,7 +93,7 @@ These include:
 
 + CPEAT (@Loisel2021, @CPEAT_web)
   - This is a collection of peat cores (@PCPEAT)
-  - Status: Reprocessing into the new repository structure
+  - Status: Level 0 complete. Finalizing Level 1
 + FIA
   - This is a US Forest Service database.
   - Status: Reprocessing into the new repository structure
@@ -91,7 +101,7 @@ These include:
   - This is a US NRCS database.
   - Status: Reprocessing into the new repository structure
 + ISCN3 (@ISCN3)
-  - This database was orginally compiled in 2015, we want to update the NCSS data.
+  - This database was originally compiled in 2015, we want to update the old NCSS data.
   - Status: Reprocessing into the new repository structure
 
 
