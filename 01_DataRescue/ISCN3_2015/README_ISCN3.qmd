@@ -62,12 +62,12 @@ library(bibtex) # reading in BibTex files to R
 library(stringr) # regular expressions
 
 # data directory, primary annotations & control vocabularies
-dataDownload.dir <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/temp/ISCN3'
-dataAnnotations <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/ISCN_dataAnnotations2026.csv'
-controlVocabulary <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/ISCN3_2015_Control_vocab.csv'
+dataDownload.dir <- 'temp'
+dataAnnotations <- 'ISCN_dataAnnotations2026.csv'
+controlVocabulary <- 'ISCN3_2015_Control_vocab.csv'
 
 # The below csv tables are used to conctruct annotations for ISCN4
-Annotations <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/ISCN3_NewAnnotations1March2026/'
+Annotations <- 'ISCN3_NewAnnotations1March2026'
 ISCN3_layerAnnotations <- file.path(Annotations, 'ISCN3_layerAnnotations.csv')
 ISCN3_profileAnnotations <- file.path(Annotations, 'ISCN3_profileAnnotations.csv')
 ISCN3_siteAnnotations <- file.path(Annotations, 'ISCN3_siteAnnotations.csv')
@@ -76,11 +76,11 @@ ISCN3_disturbance <- file.path(Annotations, 'ISCN3_disturbanceAnnotations.csv')
 ISCN3_fractionAnnotations <- file.path(Annotations, 'ISCN3_fractionAnnotations.csv')
 
 # Bibliograph files
-primaryCitation.file <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/ISCN3_2015.bib'
-contributionsCitation.file <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/ISCN3_Contributors.bib'
+primaryCitation.file <- 'ISCN3_2015.bib'
+contributionsCitation.file <- 'ISCN3_Contributors.bib'
 
 # read function
-readsource.file <- '~/Documents/GitHub/SoilDRaH_forked/01_DataRescue/ISCN3_2015/readISCN3.R'
+readsource.file <- 'readISCN3.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -93,18 +93,23 @@ is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
 # Data Summary
 
-The purpose of this document is to summarize the International Soil Carbon Network Database and demonstrate how to use the `readISCN3` function.
-
-> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/.
+> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers.
 
 *Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2026-03-01).
 
 ## Fit for purpose: ISCN4
 
-This data is identified as a data source for ISCN2025. The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles. With this data we will examine the assumption of steady state on field surveyed organic carbon.
+This data is identified as a data source for ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
 
-ISCN3 contains four primary data tables:: a `profile` table containing the profile information, a `layer` table containing layer level data for the different soil profiles, a `citation` table containing the citation and additional references information for the contributed datasets and finally a `dataset` table with study information. 
-For the above These data annotation table is provided in a `<id>-of_variable-is_type-with_entry` tuple data model.
+ISCN3 contains four primary data tables:
+
+  * `profile` containing the profile information including geolocation and site information, 
+  * `layer` containing layer level soil characterizations, 
+  * `citation` containing the citation and additional references information for the contributed datasets,
+  * `dataset` with study information that extends the basic citation
+
 
 ## Files
 
@@ -137,21 +142,22 @@ These files are in the ISCN3 data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Code up data download from EDI
+  - [ ] Transcribe the EDI `TemplateSubmit.pdf` into `TemplateSubmit.csv` with header text as comments
+  - [ ] Transcribe the EDI `TemplateCV.pdf` into `TemplateCV.csv` with header text as comments
+  - [X] Create a bib file with the recommended citations
+  - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
+  - [ ] Read in primary tables and template information
+  - [ ] push annotations into an `old` folder as a place holder
+  - [ ] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
+  - [ ] push everything to the lead fork
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
@@ -257,7 +263,11 @@ ISCN_dataAnnotations <- bind_rows(ISCN_baseAnnotations, ISCN_methodAnnotations) 
 
 # Level 0 data
 
-Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+```{r}
+#| label: readISCN
+#| file: readISCN3.R
+#| echo: true
+```
 
 ```{r}
 #| label: pullDatalevel0
