@@ -1,7 +1,6 @@
 #' Load ISCN3
 #'
-#' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database into 4 distinct data frames.
-#' It also loads in the annotation table for ISCN3 into a data frame.
+#' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database as well as the annotation table for ISCN3 into a data frame.
 #' 
 #' Generally QA/QC is not done in this read function.
 #' However there are data model relevant currents that need to be imposed in the long table
