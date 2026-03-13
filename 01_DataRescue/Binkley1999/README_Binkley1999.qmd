@@ -286,7 +286,7 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                 
 Table1Primary <- data.lvl0.df$data$Table1$primary |>
    mutate(row_id = paste0('R', 1:n())) |>
-    pivot_longer(cols = -row_id,
+   pivot_longer(cols = -row_id,
                names_to = 'column_name', values_to = 'with_entry',
                values_drop_na = TRUE) |>
     mutate(of_variable = case_when(
@@ -300,6 +300,8 @@ Table1Primary <- data.lvl0.df$data$Table1$primary |>
       column_name == "C K† (mmol m<sup>-2</sup>)" ~ "control_potassium_stock",
       column_name == "F K† (mmol m<sup>-2</sup>)" ~ "fertilized_potassium_stock",
       column_name == "Al (mmol m<sup>-2</sup>)" ~ "soil_aluminum_stock")) |>
+    mutate(is_type = if_else(str_detect(column_name, 'Mean'), 'mean', 'value')) |>
+
 #reframe(of_type = case_when(
  #   str_detect(with_entry, '\\d+\\-\\d+') ~ c('upperbound', 'lowerbound'),
   #  str_detect(with_entry, '.+ \\(.+\\)') ~ c('mean', 'standard error'),
@@ -307,8 +309,12 @@ Table1Primary <- data.lvl0.df$data$Table1$primary |>
 #  ), 
  # .by=everything()) |>
 
-mutate(lowerbound = str_extract(with_entry, '^\\d+(?=-)'),
-         upperbound = str_extract(with_entry, '(?<=\\d-)\\d+$'),
+mutate(lowerbound = ifelse(
+  column_name == "Age (mo)" & with_entry == "Change", str_extract(with_entry, '^\\d+(?=-)'),
+  str_extract(with_entry, '-?\\d+\\.?\\d*(?=\\s*to)')),
+  upperbound = ifelse(column_name == "Age (mo)" & with_entry == "Change", 
+                      str_extract(with_entry, '(?<=\\d-)\\d+$'),
+                    #working on this string first  str_extract(with_entry, '')),
          mean = str_extract(with_entry, '^-?\\d*\\.?\\d+(?=\\s*\\()'),
          'standard error' = str_extract(with_entry, '(?<=\\()[0-9.]+(?=\\))'),
          value = str_extract(with_entry, '^-?\\d+\\.?\\d+$'))|>
@@ -319,7 +325,9 @@ mutate(lowerbound = str_extract(with_entry, '^\\d+(?=-)'),
                values_to = 'with_entry',
                values_drop_na = TRUE) |>
 mutate(from_source = 'Table 1')
-#Still working on table 1; don't know how to deal with the C/F marked plots or the final row
+
+#Still working on table 1
+
 Table1Meta <- Table1Primary |>
   select(column_name, of_variable) |>
   unique() |>
