@@ -418,13 +418,14 @@ Table1Meta <- Table1Primary |>
     tribble(~of_variable, ~method, ~from_source,
             'delta_13_carbon', paste0(data.lvl0.df$method[c(99,103:106)], collapse = ' '), 'Methods ln99;103-106',
             'dry_bulk_density', paste0(data.lvl0.df$method[96], collapse = ' '), 'Methods ln96',
-           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln96;96;98') ) |>
+           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln96;96;98') |>
   
    left_join(Table1Primary |>
                   select(column_name, of_variable) |>
                   unique(),
-                by = join_by(of_variable)))|>
-   pivot_longer(cols = c(unit, species, method, control_vocabulary),
+                by = join_by(of_variable))) |>
+  
+   pivot_longer(cols = c(unit, method),
                names_to = 'is_type',
                values_drop_na = TRUE,
                values_to = 'with_entry')
