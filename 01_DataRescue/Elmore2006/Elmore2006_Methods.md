@@ -25,7 +25,7 @@ Between 1968 and 1980, this location became the central hub of a ‘Savory metho
 Cattle were rotated between paddocks as grass conditions allowed.
 In the last century, and in particular from 1968 to 1980, cattle grazed most of the ranch, but the region around the central water and supplemental feeding station underwent the highest intensity of grazing.
 Stocking rates from 1968–1980 were ∼450 cattle in the 1106 ha area surrounding the central water and feed station, but decreased to 300–350 cattle after 1980 to adjust for the effects of drought.
-Annual stocking rates throughout this period were, thus, 0.32–0.41 head ha$^{−1}$ (Micky Kato, ranch manager, personal communication).
+Annual stocking rates throughout this period were, thus, 0.32–0.41 head ha$^{−1}$ [@KatoUnpublished].
 
 ## Remote Sensing
 
@@ -93,7 +93,7 @@ The SOC concentration (kg C kg$^{−1}$ soil) in each soil core was thus convert
 
 ${\text{SOC}} = \text{CL}\rho_b \times 10^3$,
 
-where C is the SOC concentration, $\rho_b$ (g cm$^-3$) is the soil bulk density, and L(m) is the soil depth, adjusted for compaction as described above.
+where C is the SOC concentration, $\rho_b$ (g cm$^{-3}$) is the soil bulk density, and L(m) is the soil depth, adjusted for compaction as described above.
 
 The SOC of each core is the sum of residual SOC derived from forest sources (SOC$_f$) and SOC accumulated since forest conversion to pasture (SOC$_p$).
 C from these sources differs in its $\delta^{13}C$ ratio, and therefore, the contribution of the two sources to total SOC was calculated using a pool mixing model [@Vitorello1989]:

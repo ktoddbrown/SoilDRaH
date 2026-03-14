@@ -8,44 +8,95 @@ date-format: YYYY-MMMM
 bibliography:
   - Elmore2006_Methods.bib
   - Elmore2006.bib
-author:
-  - name:
+authors:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Transcription"
-        - "Review"
-  - name:
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+      - standardization: review
+    #  - curation: lead #review
+  
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/SavaScott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead
+      - standardization: lead 
+   #   - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+  
+timelog:
+  - activity: 
+      description: Secondary Transcription and Review
+      who: ktoddbrown
+      start: 2025-05-31
+      end: 2025-06-09
+      duration: PT2H30M
+      
+  - activity: 
+      description: Primary and ReadMe Update
+      who: SavaScott
+      start: 2025-05-31
+      end: 2025-06-09
+      duration: PT5H
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
-library(tidyverse)
-library(kableExtra)
-library(bibtex) #read in the bib file to dataframe
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
 
-methods.file <- 'Elmore2006_Methods.md'
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Elmore2006_Methods.md"
 table1.file <- 'Elmore2006_Table1.csv'
+
+# Bibliography files
 primaryCitation.file <- 'Elmore2006.bib'
 methodsCitation.file <- 'Elmore2006_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../02_DataHarmonization/readElmore2006.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+
 ```
 
 This documents the data transcription for @Elmore2006.
@@ -57,15 +108,6 @@ For the discussion of this data rescue see the Github issue: https://github.com/
 
 This study investigates the impact of livestock grazing on soil carbon (C) levels following the clearing of dry tropical forests in Hawaii.
 The findings show that long-term grazing reduces soil organic carbon, with the extent of these changes increasing at higher elevations.
-
-## Fit for purpose: HiCSC
-
-This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
-
-- Location:  Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, in-depth description found in the materials and methods section, subsection Site description.
-- Soil carbon stock: The depth of the soil and SOC cores were taken, and total SOC was determined using a pool modeling model.
-- Soil type: Volcanic ash (about ~200 to 3500-year-old basaltic lava flows), with forest converted to pasture lands
-- Land use:  Land use of the soil was primary pasture, converted from dry tropical forest 100 years prior. In-depth land use is in the methods and materials section, subsection Site description.
 
 # Tables and figures
 
@@ -81,36 +123,16 @@ This source is identified as a data source for the Hawai'i Soil Organic Carbon D
   4) The relationship between remotely sensed nonphotosynthetic vegetation fraction and Pennisetum Setaceum cover.
   5)  Mean changes in plant and soil properties along elevation transects: (a) remotely sensed fractional cover of photosynthetic and nonphotosynthetic vegetation cover and base substrate; (b) soil organic C (SOC); (c) SOC derived from forest soils; (d) SOC derived from pasture grasses.
   6) The relationship between total soil organic carbon (SOC) from soil cores to 10cm depth and nonphotosynthetic vegetation from imaging spectroscopy.
+
+## Fit for purpose: HiCSC
+
+This source is identified as a data source for the Hawai'i Soil Organic Carbon Database as part of the HiCSC.
+
+- Location:  Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, in-depth description found in the materials and methods section, subsection Site description.
+- Soil carbon stock: The depth of the soil and SOC cores were taken, and total SOC was determined using a pool modeling model.
+- Soil type: Volcanic ash (about ~200 to 3500-year-old basaltic lava flows), with forest converted to pasture lands
+- Land use:  Land use of the soil was primary pasture, converted from dry tropical forest 100 years prior. In-depth land use is in the methods and materials section, subsection Site description.
   
-### Table 1
-
-Table 1 was not modified during the transcription process. 
-
-```{r table1}
-#| code-fold: true
-#| message: false
-
-filename <- 'Elmore2006_Table1.csv'
-read_csv(file = filename,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
-
-
-{{< include Elmore2006_Methods.md >}}
-
-# Transcription comparison
-
-```{bash eval=FALSE, echo=FALSE}
-
-diff --strip-trailing-cr Elmore2006_Methods.md Elmore2006_Methods_KTB.Rmd
-diff --strip-trailing-cr Elmore2006_Table1.csv Elmore2006_Table1_KTB.csv
-
-```
-
 # Files
 
 These files are in the @Elmore2006 data rescue.
@@ -126,23 +148,91 @@ These files are in the @Elmore2006 data rescue.
 - [Elmore2006_Table1.csv](Elmore2006_Table1.csv)
   + table N from primary article with  Soil data collected along gradients in grazing intensity (G) and elevation (E).
 
-# Working notes 
+# Data Rescue working notes 
 
 ## Data Rescue Plan
 
-- [x] describe files in human readable form inside ReadMe
-- [x] description with Git issue with link
-- [ ] add contribution yaml
-- [x] create csv with Table 1
-  + in this case it was easier to copy-paste directly to csv and replace the ' ' with ','
-- [x] copy over methods section into markdown
-- [x] pull down citations in methods section to bib file
-- [x] add in citation links to methods
-- [x] cross check with second transcriber for tables and methods
-- [ ] submit to independent review
-- [ ] archive on SoilDRaH
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with TableN and export it to csv
+  - [x] Extract points from FigureM and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions in your pull request review
+  - [x] celebrate!
+
+## Table 1
+
+Table 1 was modified to included markdown format. 
+
+```{r}
+#| label: table1Check
+#| message: false
+
+filename <- table1.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable1
+#| eval: false
 
 
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Table1_KTB.md AuthorYYYY_Table1.md
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr Elmore2006_Methods.md Elmore2006_Methods_KTB.Rmd
+
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
 ## Citation notes from Methods
 
 Below are the citation notes from the methods section.
@@ -186,10 +276,11 @@ Some citations are missing, those are noted here and how best guess were generat
   + direct export
 - [x] Townsend AR, Vitousek PM, Trumbore SE (1995) Soil organic-matter dynamics along gradients in temperature and land-use on the Island of Hawaii. Ecology, 76, 721–733.
   + direct export
-  
+---->
+
 # Level 0: raw reads
 
-The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
+The Level 0 data in this package include the tables above (Table 1) as well as the methods section.
 Here we draft the read function that will be transferred to the R scripts.
 In the future this draft will be echoed from the R scripts.
 
@@ -218,3 +309,138 @@ data.lvl0.df <- list(
 )
 ```
 
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.df <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.df, data.lvl0.df))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+
+# Level 1 data - CURATION HiCSC
+
+This data is identified as a data source for the HiCSC.
+Broad classes of information that we are looking for include:
+
+- Location: Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, in-depth description found in the materials and methods section, subsection Site description.
+- Soil carbon stock: The depth of the soil and SOC cores were taken, and total SOC was determined using a pool modeling model.
+- Soil type: volcanic ash (about ~200 to 3500-year-old basaltic lava flows)
+- Land use: Land use of the soil was primary pasture, converted from dry tropical forest 100 years prior. In-depth land use is in the methods and materials section, subsection Site description.
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ + doi
+ + elevation
+ + carbon_percent
+ + total_organic_carbon
+ + dry_bulk_density
+ + delta_13_carbon
+ + soil_class
+ + soil_age
+ + precipitation
+ + land_use
+ + core_depth_interval
+ + land_use
+ 
+```{r}
+#| lable: constructLevel1
+
+#### Method section only data ####
+#Create a table for the data in the methods section that is not directly 
+#...associated with any table.
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                    'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
+                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation',
+                   'region', 'value', "portion of Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, on the Island of Hawai'i", paste('Method ln1:', paste(data.lvl0.df$method[1], collapse = ' ')),
+                   'elevation', 'min', '850', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation', 'max', '1100', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation', 'unit', 'm', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'soil_age', 'min', '2500', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
+                   'soil_age', 'max', '3500', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
+                   'soil_age', 'unit', 'yrs', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
+                   'precipitation', 'min', '625', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
+                   'precipitation', 'max', '900', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
+                   'precipitation', 'unit', 'mm', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
+                   'land_use', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use', 'interval_format', 'YYYY', NA)
+
+#### Table 1 ####
+Table1Primary <- data.lvl0.df$data$Table1$primary |>
+  mutate(row_id = paste0('R', 1:n())) |>
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+ values_drop_na = TRUE) |>
+  
+   mutate(of_variable = case_when(
+           column_name == "Sample #" ~ "sample_id",
+           column_name == "Distance (m)" ~ "grazing_distance",
+           column_name == "Elevation (m)" ~ "elevation",
+           column_name == '% C' ~ "carbon_percent",
+           column_name == 'delta$^{13}$ C' ~ "delta_13_carbon",
+           column_name == "rho (g cm$^{-3}$)" ~ "dry_bulk_density",
+           column_name == "TOC (kg C m$^{-2}$)" ~ "total_organic_carbon")) |>
+    mutate(from_source = 'Table 1')
+
+Table1Meta <- Table1Primary |>
+ select(column_name, of_variable) |>
+  unique() |>
+ mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+  from_source = 'Table 1 column names.') |>
+   filter(!is.na(unit)) |>
+   bind_rows(
+    tribble(~of_variable, ~method, ~from_source,
+            'delta_13_carbon', paste0(data.lvl0.df$method[c(99,103:106)], collapse = ' '), 'Methods ln99;103-106',
+            'dry_bulk_density', paste0(data.lvl0.df$method[96], collapse = ' '), 'Methods ln96',
+           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln96;96;98') ) |>
+  
+   left_join(Table1Primary |>
+                  select(column_name, of_variable) |>
+                  unique(),
+                by = join_by(of_variable)))|>
+   pivot_longer(cols = c(unit, species, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+data.lvl1.df <- list(
+  study = studyMeta,
+  primary_meta = dplyr::bind_rows(Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    mutate(elevation_id = with_entry[of_variable == 'elevation'],
+           is_type = 'value',
+           .by = row_id) |>
+    arrange(row_id, elevation_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+ 
+ 
