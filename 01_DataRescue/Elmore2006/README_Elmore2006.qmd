@@ -356,6 +356,7 @@ The `of_variable` being used here are:
 
  + citation
  + doi
+ + region
  + elevation
  + carbon_percent
  + total_organic_carbon
@@ -364,9 +365,9 @@ The `of_variable` being used here are:
  + soil_class
  + soil_age
  + precipitation
- + land_use
+ + land_use_type
  + core_depth_interval
- + land_use
+
  
 ```{r}
 #| lable: constructLevel1
@@ -387,9 +388,9 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'precipitation', 'min', '625', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
                    'precipitation', 'max', '900', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
                    'precipitation', 'unit', 'mm', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
-                   'land_use', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
-                   'land_use', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
-                   'land_use', 'interval_format', 'YYYY', NA)
+                   'land_use_type', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use_type', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use_type', 'interval_format', 'YYYY', NA)
 
 #### Table 1 ####
 Table1Primary <- data.lvl0.df$data$Table1$primary |>
