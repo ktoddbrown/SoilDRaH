@@ -357,16 +357,19 @@ The `of_variable` being used here are:
  + citation
  + doi
  + region
- + elevation
+ + elevation_start
+ + elevation_end
  + carbon_percent
  + total_organic_carbon
  + dry_bulk_density
  + delta_13_carbon
- + soil_class
  + soil_age
  + precipitation
  + land_use_type
- + core_depth_interval
+ + core_comment
+ + sample_id
+ + grazing_distance
+ + elevation
 
  
 ```{r}
@@ -379,9 +382,10 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                     'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
                    'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal citation',
                    'region', 'value', "portion of Pu'u Wa'awa'a Ranch on the north side of Hualalai volcano, on the Island of Hawai'i", paste('Method ln1:', paste(data.lvl0.df$method[1], collapse = ' ')),
-                   'elevation', 'min', '850', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
-                   'elevation', 'max', '1100', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
-                   'elevation', 'unit', 'm', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation_start', 'value', '850', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation_end', 'value', '1100', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation_end', 'unit', 'm', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
+                   'elevation_start', 'unit', 'm', paste('Method ln8:', paste(data.lvl0.df$method[8], collapse = ' ')),
                    'soil_age', 'min', '2500', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
                    'soil_age', 'max', '3500', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
                    'soil_age', 'unit', 'yrs', paste('Method ln6:', paste(data.lvl0.df$method[6], collapse = ' ')),
@@ -390,7 +394,8 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'precipitation', 'unit', 'mm', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
                    'land_use_type', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
                    'land_use_type', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
-                   'land_use_type', 'interval_format', 'YYYY', NA)
+                   'land_use_type', 'interval_format', 'YYYY', NA,
+'core_comment', 'comment', 'soil cores were collected at 25 m intervals close to the grazing center, and spaced to 50 and 100 m further from the center',  paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')) )
 
 #### Table 1 ####
 Table1Primary <- data.lvl0.df$data$Table1$primary |>
@@ -419,7 +424,7 @@ Table1Meta <- Table1Primary |>
     tribble(~of_variable, ~method, ~from_source,
             'delta_13_carbon', paste0(data.lvl0.df$method[c(99,103:106)], collapse = ' '), 'Methods ln99;103-106',
             'dry_bulk_density', paste0(data.lvl0.df$method[96], collapse = ' '), 'Methods ln96',
-           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln96;96;98') |>
+           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln94;96;98') |>
   
    left_join(Table1Primary |>
                   select(column_name, of_variable) |>
