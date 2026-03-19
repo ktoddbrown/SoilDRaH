@@ -3,8 +3,8 @@
 Soil profiles were sampled down to intact (consolidated) material (~0.5-1 m depth).
 The soils are formed in an aerially extensive covering of volcanic ejecta that formed during late-stage alkalic eruptions.
 The deposits are assigned an age of ~20 kyr in part because they have been disrupted by the most recent glacial moraines near the top of the mountain [@Wolf1996].
-The soils formed on hawaiite (Laupahoehoe) lava and cinders, but vary with climate (mean annual temperature=0-3°C, mean annual precipitation$\approx$250-500mm; @Raine1939, @Woodcock1966, @Woodcock1974; Fig. 1A, B).
-The vegetation on these surfaces range from sparse grass on the upper two elevation sites, to grass and shrub (*M$\bar{a}$mane Sophora chrysophila* '$\bar{A}$heahea [*Chenopodium oahuense*]) at the lower two sites.
+The soils formed on hawaiite (Laupahoehoe) lava and cinders, but vary with climate (mean annual temperature=0-3°C, mean annual precipitation ≈250-500mm; @Raine1939, @Woodcock1966, @Woodcock1974; Fig. 1A, B).
+The vegetation on these surfaces range from sparse grass on the upper two elevation sites, to grass and shrub (*Māmane Sophora chrysophila* 'Āheahea [*Chenopodium oahuense*]) at the lower two sites.
 Common grasses include two native grasses, alpine hairgrass (*Deschampsia nubigena*) and pili uka (*Trisetum glomeratum*; @Hartt1940).
 
 ## *Soil sampling*
@@ -41,7 +41,7 @@ The New Zealand P retention [@Blakemore1987] was determined the initial P concen
 SRO minerals were quantified using hydroxylamine.
 The soil was extracted using 0.275 mol/L sodium hydroxlamine, pH 3.25, 1:100 soil:extractant [@Burt2004].
 Hydroxlamine selectively removes short-range-ordered hydrous oxides of Fe and Al such as allophane and ferrihydrite, but is a poor extractant of imogolite and layer silicates and does not extract crystalline hydrous oxides of Fe and Al, opal, or crystalline silicate [@Wada1989].
-Most commonly Fe, Al, and Si in the supernatant are measured as an indicator of SRO mineral quantity, but in this case, the mass of SRO mineral was also determined by recording weight loss after extraction [@Visoutek1997, @Chadwick2003].
+Most commonly Fe, Al, and Si in the supernatant are measured as an indicator of SRO mineral quantity, but in this case, the mass of SRO mineral was also determined by recording weight loss after extraction [@Vitousek1997, @Chadwick2003].
 Hydroxlamine-extractable organic carbon released into solution during SRO mineral dissolution was determined (using the same approach as @Kramer2012); by measuring dissolved organic carbon (DOC) in solution and then subtracting out the background hydrloxlamine C concentration.
 Carbon and SRO mineral dissolution and release in deionized water was used as a control.
 
@@ -59,6 +59,6 @@ Samples were analysed at the light stable isotope facility of the University of 
 We compared the amount of DOC contained within the SRO minerals across the high-elevation Mauna Kea climate gradient with lower-elevation, moist-mesic, long substrate age gradient (LSAG; 2,500 mm rainfall) sites across Hawaii.
 We also compared the bulk soil C concentration observed relative to SRO mineral content with the 2,500-mm rainfall LSAG sites and a xeric (1,000-mm rainfall) site on Mount Shasta [@Takahashi1993, @Kramer2012].
 
-Using results from @LongathanandSwindale1969 as well as @Kramer2012, we extended the range of our high-elevation climate sequence from the 250-500 mm rainfall gradient by adding five additional lower-elevation sites, which increased in rainfall up to 2,500 mm on Mauna Kea.
+Using results from @LoganathanandSwindale1969 as well as @Kramer2012, we extended the range of our high-elevation climate sequence from the 250-500 mm rainfall gradient by adding five additional lower-elevation sites, which increased in rainfall up to 2,500 mm on Mauna Kea.
 We evaluated carbon content in the deep subsoil relative to rainfall between ~250 mm rainfall up to 2,500 mm at nine elevation (and consequently rainfall) sites.
 We also plotted C/N ratio against rainfall across the entire (250-2,500 mm) climate sequence of Mauna Kea.
