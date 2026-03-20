@@ -1,0 +1,436 @@
+---
+title: "Data Rescue: Kramer2016"
+format:
+  html:
+    toc: true
+    eval: true #default to not evaluating the chunks, override this the template is completed
+date: 2026-01
+date-format: YYYY-MMMM
+bibliography:
+  - Kramer2016_Methods.bib #contains the citations in the methods section
+  - Kramer2016.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Kramer2016_IntroSite.bib #contains the citations in the introduction site description section
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: laylakalandjian #use the github name as an id
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+      
+  - id: ktoddbrown
+    name:
+      given: Katherine
+      family: Todd-Brown
+    affiliation:
+      - ref: uf-ees
+    role:
+      transcription: review
+      
+  - id: SavaScott
+    name:
+      given: Savanna
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+      
+  - id: ChaseSaxour
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: laylakalandjian #github username
+      end: 2026-03-05
+      start: 2025-12-15
+      duration: 13H
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Kramer2016_Methods.md"
+sitedescription.file <- "Kramer2016_IntroSite.md"
+table1.file <- 'Kramer2016_Table1.csv'
+table2.file <- 'Kramer2016_Table2.csv'
+figure3A.file <- 'Kramer2016_Figure3A.csv'
+figure3B.file <- 'Kramer2016_Figure3B.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Kramer2016.bib'
+methodsCitation.file <- 'Kramer2016_Methods.bib'
+intrositeCitation.file <- 'Kramer2016_IntroSite.bib'
+
+# read function
+# readsource.file <- '../../../R/readAuthorYYYY.R'
+# source('readsource.file')
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
+
+Kramer, M.G. and Chadwick, O.A. (2016), Controls on carbon storage and weathering in volcanic soils across a high-elevation climate gradient on Mauna Kea, Hawaii. Ecology, 97: 2384-2395. https://doi.org/10.1002/ecy.1467
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#137.
+
+This paper looks at soil organic matter and development in Mauna Kea, Hawaii. Specifically, soil was analyzed in four sites for organic Carbon, Nitrogen, pH, and other parameters. The paper looks to gain a greater understanding of carbon storage processes in volcanic soils and the early stages of ecosystem development. It also quantifies the carbon storage ability of these soils and places it within a broader context of volcanic soils.
+
+## Tables and figures
+
+- Table 
+  1) Soil properties from various sites across Mauna Kea, including elevation, rainfall, depth, soil fraction, carbon, pH, base saturation, and other properties.
+  2) Soil fraction elements such as SiO2, Fe2O3, MgO, etc.
+
+- Figure 
+  1) Mauna Kea climate gradient with location, rainfall, and elevation.
+  2) Images of highest and lowest elevation sites.
+  3) Soil depth profiles of three pits at four sites with varying elevations; Carbon stocks (mean and SE) at each high-elevation site.
+  4) Depth profiles of Si depletion and enrichment of three pits at four sites.
+  5) NaF pH vs short-range-ordered (SRO) mineral abundance; P sorption % vs SRO mineral abundance
+  6) Carbon concentration % and SRO mineral abundance vs. changes in rainfall
+  7) Soil carbon retained at multiple sites vs SRO mineral abundance; Carbon concentration % vs SRO mineral abundance
+  8) Carbon content % and C/N ratio % vs rainfall across Mauna Kea
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Identified in introduction, with lat/lon coordinates given for Mauna Kea. Specific sites shown in Figure 1 vicinity map, but lat/lon not provided for each specific site.
+- Soil carbon stock: Soil profile depth provided in Table 1 and Table 2, bulk density and coarse fraction techniques discussed in methods section.
+- Soil type: Soil horizon and coarse fraction given in Table 1.
+- Land use: Sites identified as sparsely vegetated, but land use otherwise unidentified.
+  
+## Files
+
+<!--- Include a brief explanation to all the files in the folder--->
+
+These files are in the Kramer2016 data rescue.
+
+- [Readme](README_Kramer2016.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Kramer2016.bib](Kramer2016.bib)
+  + citation for article transcribed
+- [Kramer2016_Methods.bib](Kramer2016_Methods.bib)
+  + citations for the methods section of the article
+- [Kramer2016_IntroSite.bib](Kramer2016_IntroSite.bib)
+  + citations for the site description in the introductory section of the article
+- [Kramer2016_IntroSite.md](Kramer2016_IntroSite.md)
+  + site description transcribed from primary article located in the introduction section, included for lat/lon coordinates and location description
+- [Kramer2016_Methods.md](Kramer2016_Methods.md)
+  + methods transcribed from primary article
+- [Kramer2016_Table1.csv](Kramer2016_Table1.csv)
+  + table 1 from primary article with soil properties from various sites across Mauna Kea, including elevation, rainfall, depth, soil fraction, carbon, pH, base saturation, and other properties.
+- [Kramer2016_Table2.csv](Kramer2016_Table2.csv)
+  + table 2 from primary article with major elements with depth from sample sites including elevation, rainfall, major elements, and LOI.
+- [Kramer2016_Figure3A.csv](Kramer2016_Figure3A.csv)
+  + figure 3A from primary article with soil depth profiles of three pits at four sites with varying elevations.
+- [Kramer2016_Figure3B.csv](Kramer2016_Figure3B.csv)
+  + figure 3B from primary article with Carbon stocks (mean and SE) at each high-elevation site.
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main
+  - [x] Create a copy of this template folder and rename it to Kramer2016
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Create a spreadsheet with Table2 and export it to csv
+  - [x] Create a spreadsheet with Figure3 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Transcribe Site Description section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 1 was modified to combine subheadings and headings under Soil Fraction (%). The notes below the table in the source article were combined into the caption.
+
+```{r table1}
+#| label: table1Check
+
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()),
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Table1_SRS.csv Kramer2016_Table1.csv
+
+```
+
+## Table 2
+
+Table 2 was modified to combine subheadings and headings under Soil fraction (%). The note following the table in the source article was combined into the caption. Empty values were replaced with a single hyphen.
+
+```{r table2}
+
+read_csv(file = table2.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, 
+                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()), 
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable2
+#| eval: true
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Table2_SRS.csv Kramer2016_Table2.csv
+
+```
+
+## Figure 3A
+
+Figure 3 was modified to split Figure 3A and Figure 3B into separate csv files. All points were converted to a table format using Plot Digitizer with a column for Pit #, Depth (cm), Organic carbon content (%), and Site elevation (m). Figure 3's caption was similarly split into their respective files. Blank plots in Figure 3A were denoted with NA.
+
+```{r figure3A}
+
+read_csv(file = figure3A.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure3A.file, 
+                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()), 
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure3A
+#| eval: true
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Figure3_A_SRS.csv Kramer2016_Figure3A.csv
+
+```
+
+## Figure 3B
+
+Figure 3 was modified to split Figure 3A and Figure 3B into separate csv files. All values in original bar graph were converted to points in a table, including SE values.
+
+```{r figure 3B}
+
+read_csv(file = figure3B.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure3B.file, 
+                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()), 
+                                 show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure3B
+#| eval: true
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Figure3_B_SRS.csv Kramer2016_Figure3B.csv
+
+```
+
+## Site Description from Introduction Section
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareIntroSite
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Kramer2016_IntroSite.md temp/Kramer2016_IntroSite_SRS.md
+```
+
+### Site Description - Text
+
+The final text transcription of the Site Description from the Introduction section is rendered below.
+
+```{r}
+#| label: readIntroSite
+#| output: asis
+#| eval: true
+
+methodsLines <- readLines(sitedescription.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Kramer2016_Methods.md temp/Kramer2016_Methods_CS.md
+```
+
+### Methods - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles in methods section
+    methods = read.bib(file = methodsCitation.file),
+    #Citations for all referenced articles in site description
+    sitedescriptions = read.bib(file = intrositeCitation.file)
+  ),
+  #Read in the text transcription of the article's site description in introduction section
+  sitedescription = read_lines(file = sitedescription.file),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table1' element
+    Table2 = list(
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()), n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure3A = list(
+      caption = read_csv(file = figure3A.file,
+                         col_types = cols(.default = col_character()), n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3A.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure3B = list(
+      caption = read_csv(file = figure3B.file,
+                         col_types = cols(.default = col_character()), n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3B.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+
