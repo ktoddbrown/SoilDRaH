@@ -93,8 +93,8 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
 
 ```
@@ -360,12 +360,12 @@ The `of_variable` being used here are:
  + elevation_start
  + elevation_end
  + carbon_percent
- + total_organic_carbon
+ + soil_organic_carbon
  + dry_bulk_density
  + delta_13_carbon
  + soil_age
  + precipitation
- + land_use_type
+ + land_use
  + core_comment
  + sample_id
  + grazing_distance
@@ -392,10 +392,10 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'precipitation', 'min', '625', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
                    'precipitation', 'max', '900', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
                    'precipitation', 'unit', 'mm', paste('Method ln7:', paste(data.lvl0.df$method[7], collapse = ' ')),
-                   'land_use_type', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
-                   'land_use_type', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
-                   'land_use_type', 'interval_format', 'YYYY', NA,
-'core_comment', 'comment', 'soil cores were collected at 25 m intervals close to the grazing center, and spaced to 50 and 100 m further from the center',  paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')) )
+                   'land_use', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
+                   'land_use', 'interval_format', 'YYYY', NA,
+'core_comment', 'value', 'soil cores were collected at 25 m intervals close to the grazing center, and spaced to 50 and 100 m further from the center',  paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')) )
 
 #### Table 1 ####
 Table1Primary <- data.lvl0.df$data$Table1$primary |>
@@ -411,7 +411,7 @@ Table1Primary <- data.lvl0.df$data$Table1$primary |>
            column_name == '% C' ~ "carbon_percent",
            column_name == 'delta$^{13}$ C' ~ "delta_13_carbon",
            column_name == "rho (g cm$^{-3}$)" ~ "dry_bulk_density",
-           column_name == "TOC (kg C m$^{-2}$)" ~ "total_organic_carbon")) |>
+           column_name == "TOC (kg C m$^{-2}$)" ~ "soil_organic_carbon")) |>
     mutate(from_source = 'Table 1')
 
 Table1Meta <- Table1Primary |>
@@ -424,7 +424,7 @@ Table1Meta <- Table1Primary |>
     tribble(~of_variable, ~method, ~from_source,
             'delta_13_carbon', paste0(data.lvl0.df$method[c(99,103:106)], collapse = ' '), 'Methods ln99;103-106',
             'dry_bulk_density', paste0(data.lvl0.df$method[96], collapse = ' '), 'Methods ln96',
-           'total_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln94;96;98') |>
+           'soil_organic_carbon',  paste0(data.lvl0.df$method[c(94, 96, 98)], collapse = ' '), 'Methods ln94;96;98') |>
   
    left_join(Table1Primary |>
                   select(column_name, of_variable) |>
@@ -450,4 +450,96 @@ data.lvl1.df <- list(
 
 ```
  
- 
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file = of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.df, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               unique(new_variables), ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Initialize variable for pulling all the of_variable-is_type pairs
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.df){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type)) |>
+  unique()
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+if(file.exists(readsource.file)){
+  datafunction.lvl1.df <- readElmore2006(dataDir = '.',
+                                       dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('No read function found. Moving on')
+}
+```
