@@ -44,6 +44,15 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: Vaasuki Marupaka
+      end: 2026-03-25
+      start: 2026-02-06
+      duration: PT30H
+      timelog:
 ---
 
 ```{r}
@@ -63,17 +72,21 @@ library(stringr) # regular expressions
 
 # data directory, primary annotations & control vocabularies
 dataDownload.dir <- 'temp'
-dataAnnotations <- 'ISCN_dataAnnotations2026.csv'
 controlVocabulary <- 'ISCN3_2015_Control_vocab.csv'
 
-# The below csv tables are used to conctruct annotations for ISCN4
-Annotations <- 'ISCN3_NewAnnotations1March2026'
-ISCN3_layerAnnotations <- file.path(Annotations, 'ISCN3_layerAnnotations.csv')
-ISCN3_profileAnnotations <- file.path(Annotations, 'ISCN3_profileAnnotations.csv')
-ISCN3_siteAnnotations <- file.path(Annotations, 'ISCN3_siteAnnotations.csv')
-ISCN3_citationAnnotations <- file.path(Annotations, 'ISCN3_citationAnnotations.csv')
-ISCN3_disturbance <- file.path(Annotations, 'ISCN3_disturbanceAnnotations.csv')
-ISCN3_fractionAnnotations <- file.path(Annotations, 'ISCN3_fractionAnnotations.csv')
+# The below csv tables are used to construct annotations for ISCN4
+AnnotationsDir <- 'level0_ISCN3_dataAnnotations'
+ISCN3_layerAnnotations <- 'ISCN3_layer.csv'
+ISCN3_profileAnnotations <- 'ISCN3_profile.csv'
+ISCN3_siteAnnotations <- 'ISCN3_site.csv'
+ISCN3_disturbanceAnnotations <- 'ISCN3_disturbance.csv'
+ISCN3_fractionAnnotations <- 'ISCN3_fraction.csv'
+
+annotationFilenames <- c(layerAnnotations = ISCN3_layerAnnotations,
+                          profileAnnotations = ISCN3_profileAnnotations,
+                          siteAnnotations = ISCN3_siteAnnotations,
+                          disturbanceAnnotations = ISCN3_disturbanceAnnotations,
+                          fractionAnnotations = ISCN3_fractionAnnotations)
 
 # Bibliograph files
 primaryCitation.file <- 'ISCN3_2015.bib'
@@ -123,8 +136,8 @@ These files are in the ISCN3 data rescue.
     -   citation for project website and primary journal article transcribed
 -   [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
     -   citations for the contributed datasets to ISCN
-    [ISCN3_dataAnnotations2026](ISCN3_dataAnnotations2026)
-    -   this includes the annotations constructed using csv tables pulled from edi
+    [level0_ISCN3_dataAnnotations](level0_ISCN3_dataAnnotations)
+    -   this includes the annotations constructed using template.pdfs tables pulled from edi
 -   [temp/](temp/)
     -   the download location for ISCN3 files archived on EDI web portal
     -   this folder includes the following files:
@@ -200,64 +213,24 @@ for(row_index in 1:nrow(download_table)){
       extra  = "--max-time 300")
   }
 }
-
 ```
 
-## Constructing Annotations
-
-The metadata along with control vocabulary for the data variables are provided on EDI (@ISCN3). From the [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx) file, we will extract the annotations for our profile, layer, citation tables. For dataset table, there are no additional annotations available on the edi portal.
+Using the [TemplateCVs.pdf](TemplateCVs.pdf) and [TemplateSubmit.pdf](TemplateSubmit.pdf), we manually transcribe the annotations into different tables; layer, profile, site, disturbance, and fraction for level0. These annotations will further be extended to a standard data model for our level01 data.
 
 ```{r}
-#| label: constructAnnotations
-#| code-summary: "Identify and extract each annotation csv in the EDI package"
+annotations <- lapply(annotationFilenames, function(xx) {
+  readr::read_delim(
+    file = file.path(AnnotationsDir, xx),
+    delim = ",",
+    col_types = readr::cols(.default = readr::col_character())
+  )
+})
 
-# read in the csv here for the different annotation table
-ISCN_baseAnnotations <- read_csv(file = ISCN3_layerAnnotations,
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |> 
-  mutate(table_id = 'layer') |> 
-  bind_rows(read_csv(file = ISCN3_profileAnnotations, 
-                     col_types = cols(.default = col_character())) |> 
-              mutate(table_id = 'profile')) |> 
-  bind_rows(read_csv(file = ISCN3_siteAnnotations,
-                     col_types = cols(.default = col_character())) |> 
-              mutate(table_id = 'site')) |> 
-  bind_rows(read_csv(file = ISCN3_citationAnnotations, 
-                     col_types = cols(.default = col_character())) |> 
-              mutate(table_id = 'citation')) |> 
-  pivot_longer(cols = c(UNITS, DESCRIPTION),
-               names_to = "source",
-               values_to = "with_entry",
-               values_drop_na = T) |> 
-  mutate(is_type = case_when(
-    source == 'UNITS' & with_entry == 'CV' ~ 'control vocabulary',
-    source == 'UNITS' ~ 'units',
-    source == 'DESCRIPTION' ~ 'description')) |> 
-  select(-source) |> 
-  select(table_id, 
-         column_id = VARIABLE,
-         of_variable = NAME,
-         is_type,
-         with_entry) 
-
-ISCN_methodAnnotations <- ISCN_baseAnnotations |> 
-  dplyr::filter(stringr::str_detect(of_variable,
-                                    regex('\\bmethod\\b', 
-                                          ignore_case = T))) |> 
-  dplyr::transmute(column_id, 
-            of_variable, 
-            table_id,
-            is_type = 'method',
-            with_entry = of_variable)
-
-ISCN_dataAnnotations <- bind_rows(ISCN_baseAnnotations, ISCN_methodAnnotations) |> 
-  mutate(is_type = factor(is_type, 
-                          levels = c('description', 'units',
-                                     'method', 'control vocabulary'))) |> 
- # arrange(table_id, VARIABLE, is_type) |> 
-  unique() # 337 obs of 5 vars
-
-#write_csv(ISCN_dataAnnotations, "ISCN_dataAnnotations2026.csv")
+### Read in control vocabulary###
+controlVocabulary.df <- readr::read_delim(
+  file = controlVocabulary,
+  delim = ',', 
+  col_types = readr::cols(.default = readr::col_character()))
 
 ```
 
@@ -274,10 +247,8 @@ ISCN_dataAnnotations <- bind_rows(ISCN_baseAnnotations, ISCN_methodAnnotations) 
 #| code-summary: "pull level 0 data using readISCN3 function"
 
 iscn.ls <- readISCN3(dataDir = dataDownload.dir,
-                     annotationFilename = dataAnnotations,
+                     annotationFilenames = annotationFilenames,
                      controlVocabularyFile = controlVocabulary,
-                     primaryBibFile = primaryCitation.file,
-                     contributedBibfile = contributionsCitation.file,
                      format = 'level0')
 
 ```
@@ -292,46 +263,24 @@ knitr::kable(iscn.ls$level0_data$layer |>
 
 ```
 
-## Table: `citation`
+## Primary annotations: layer table
 
 ```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'citation') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
+knitr::kable(iscn.ls$annotations$layerAnnotations |> 
+               head()) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
+
 ```
 
-## Table: `site`
+```{r eval=FALSE}
+Bibliography <- list(primary = NULL, contributed = NULL)
+  if(!is.null(primaryCitation.file) && file.exists(primaryCitation.file)){
+    Bibliography$primary <- bibtex::read.bib(primaryCitation.file)
+  }
 
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'site') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
+  if(!is.null(contributionsCitation.file) && file.exists(contributionsCitation.file)){
+    Bibliography$contributed <- bibtex::read.bib(contributionsCitation.file)
+  }
 ```
 
-## Table: `profile`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'profile') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `layer`
-
-```{r}
-knitr::kable(iscn.ls$annotation |>
-               dplyr::filter(is_type == 'description',
-                      table_id == 'layer') |>
-               dplyr::select(column_id, of_variable, description = with_entry)) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-```
