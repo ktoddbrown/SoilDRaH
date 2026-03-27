@@ -72,10 +72,10 @@ library(stringr) # regular expressions
 
 # data directory, primary annotations & control vocabularies
 dataDownload.dir <- 'temp'
-controlVocabulary <- 'ISCN3_2015_Control_vocab.csv'
+controlVocabulary <- 'ISCN3_TemplateCVs.csv'
 
 # The below csv tables are used to construct annotations for ISCN4
-AnnotationsDir <- 'level0_ISCN3_dataAnnotations'
+AnnotationsDir <- '.'
 ISCN3_layerAnnotations <- 'ISCN3_layer.csv'
 ISCN3_profileAnnotations <- 'ISCN3_profile.csv'
 ISCN3_siteAnnotations <- 'ISCN3_site.csv'
@@ -163,13 +163,17 @@ These files are in the ISCN3 data rescue.
   - [x] Add the reviewer to the author list in the yml
 + Do
   - [x] Code up data download from EDI
-  - [ ] Transcribe the EDI `TemplateSubmit.pdf` into `TemplateSubmit.csv` with header text as comments
-  - [ ] Transcribe the EDI `TemplateCV.pdf` into `TemplateCV.csv` with header text as comments
+  - [x] Transcribe the EDI tables in `TemplateSubmit.pdf` into `ISCN3_TemplateSubmit_TableX.csv` 
+  - [ ] Transcribe `TemplateSubmit.pdf` markdown for preamble text
+  - [X] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
+  - [ ] Transcribe `TemplateCV.pdf` markdown for preamble text
   - [X] Create a bib file with the recommended citations
+  - [ ] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
   - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
-  - [ ] Read in primary tables and template information
-  - [ ] push annotations into an `old` folder as a place holder
-  - [ ] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
+  - [ ] Read in primary tables and template information 
+  - [ ] read function match `02_DataHarmonization/readAres2001.R` function inputs and output formats
+  - [x] push annotations into an `old` folder as a place holder
+  - [x] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
   - [ ] push everything to the lead fork
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
@@ -177,6 +181,10 @@ These files are in the ISCN3 data rescue.
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
+
+## Citation notes
+
+  - `AK DSC Project SOC stock computation` had a bad url for the doi that linked to a spam site. Updating doi with the EDI pasta link.
 
 ## Download ISCN3
 
