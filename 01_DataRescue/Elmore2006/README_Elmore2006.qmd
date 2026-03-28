@@ -17,7 +17,7 @@ authors:
     affiliation:
       - ref: uf-ees
     role:
-      - transcription: secondary
+      - transcription: lead
       - standardization: review
     #  - curation: lead #review
   
@@ -28,7 +28,7 @@ authors:
     affiliation:
       - ref: uf-ees
     role:
-      - transcription: lead
+      - transcription: secondary
       - standardization: lead 
    #   - curation: lead #review
 
