@@ -9,88 +9,54 @@ bibliography:
   - Binkley1999_Methods.bib
   - Binkley1999.bib
 author:
-  - id: ktoddbrown #use the github name as an id
-    name:
+  - name:
       given: Katherine
       family: Todd-Brown
-    orcid: 0000-0002-3109-8130
-    affiliation:
-      - ref: uf-ees
-    role:
-      - transcription: secondary, review
-      - standardization: review
-   #   - curation: lead #review
-
-  - id: hannguyenuf #use the github name as an id
-    name:
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+  - name:
       given: Han
       family: Nguyen
-    affiliation:
-      - ref: uf-e
-    role:
-      - transcription: lead #secondary, review
-
-  - id: SavaScott #use the github name as an id
-    name:
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/hannguyenuf
+  - name:
       given: Savannah
       family: Scott
-    affiliation:
-      - ref: uf-ees
-    role:
-      - transcription: review
-      - standardization: lead
-affiliations:
-  - id: uf-ees
-    name: University of Florida
-    department: Environmental Engineering Sciences
-    city: Gainesville
-    state: Florida
-    country: USA
-    address: "365 Weil Hall \nP.O. Box 116580"
-    postal-code: 32611
-    url: https://essie.ufl.edu/ees/
-  - id: uf-e
-    name: University of Florida
-    city: Gainesville
-    state: Florida
-    country: USA
-    address: "300 Weil Hall \nP.O. Box 116550"
-    postal-code: 32611
-    url: https://www.eng.ufl.edu/
-  - activity: 
-      description: Lev1 standardization
-      who: SavaScott
-      start: 2026-01-24
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: PT2H 
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(kableExtra)
 library(bibtex)
-library(formula.tools)
 
-# data files for level 0
-methods.file <- "Binkley1999_Methods.md"
+methods.file <- 'Binkley1999_Methods.md'
 table1.file <- 'Binkley1999_Table1.csv'
-
-# Bibliograph files
 primaryCitation.file <- 'Binkley1999.bib'
 methodsCitation.file <- 'Binkley1999_Methods.bib'
-
-# read function; you will need to create this function after you have your data
-#... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../../R/readAuthorYYYY.R'
-if(file.exists(readsource.file)){
-  source(readsource.file)
-}
-
-#semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
-
 ```
 
 This documents the data transcription for @Binkley1999 .
@@ -229,151 +195,3 @@ data.lvl0.df <- list(citation =
                   ) 
 )
 ```
-
-# Level 1
-The final format of the data frame here will include the following 
-
-  + grouping ids
-  + `of_variable`
-  + `is_type`
-  + `with_entry`
-  + `source`
-
-The `of_variable` being used here are:
-
-+ citation
-+ doi
-+ region
-+ latitude
-+ longitude
-+ mean_air_temperature
-+ mean_rainfall
-+ elevation 
-+ soil_class
-+ initial_planting
-+ observation_year
-+ core_description
-+ soil_ph
-+ sample_prep
-
-```{r}
-#| label: constructLevel1
-
-#### Method section only ####
-
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                     'region', 'value', '13 km NNE of downtown Hilo, HI', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'latitude', 'value', '19 50 28.1 North', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                 'longitude', 'value', '155 7 28.3 West', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'mean_air_temperature', 'value', '21',paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'mean_air_temperature', 'unit', '°C',paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'mean_rainfall', 'min', '300', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'mean_rainfall', 'max', '400', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'mean_rainfall', 'unit', 'mm mo<sup>-1</sup>', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'elevation', 'value', '350', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'elevation', 'unit', 'm', paste('Method ln3:', paste(data.lvl0.df$method[3], collapse = ' ')),
-                'soil_class', 'value', 'Kaiwiki thixotropic, isothermic Typic Hydrandepts', paste('Method ln4:',paste(data.lvl0.df$method[4], collapse = ' ')),
-                'initial_planting', 'value', '1994', paste('Method ln11:', data.lvl0.df$method[11]),
-                'soil_pH_water', 'min', '5', paste('Method ln4:', data.lvl0.df$method[4]),
-                'soil_pH_water', 'max', '6', paste('Method ln4:', data.lvl0.df$method[4]),
-                'observation_year', 'value', '1997', paste('Method ln23:', data.lvl0.df$method[23]),
-                'sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.df$method[22]),
-                'core_description', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.df$method[12]),
-                 'citation', 'value', format(data.lvl0.df$citation$primary), 'journal citation',
-                   'doi', 'value', data.lvl0.df$citation$primary$doi, 'journal  citation')
-    
-#### Table 1 ####
-                
-Table1Primary <- data.lvl0.df$data$Table1$primary |>
-   mutate(row_id = paste0('R', 1:n())) |>
-   pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-    mutate(of_variable = case_when(
-      column_name == "Age (mo)" ~ "plant_age",
-      column_name == "Depth (cm)" ~ "soil_depth",
-      column_name == "C (g m<sup>-2</sup>)" ~ "organic_carbon_density",
-      column_name == "N (g m<sup>-2</sup>)" ~ "nitrogen_density",
-      column_name == "pH<sub>CaCl2</sub>" ~ "soil_pH_calcium_chloride",
-      column_name == "Ca (mmol m<sup>-2</sup>)" ~ "soil_calcium_stock",
-      column_name == "Mg (mmol m<sup>-2</sup>)" ~ "soil_magensium_stock",
-      column_name == "C K† (mmol m<sup>-2</sup>)" ~ "control_potassium_stock",
-      column_name == "F K† (mmol m<sup>-2</sup>)" ~ "fertilized_potassium_stock",
-      column_name == "Al (mmol m<sup>-2</sup>)" ~ "soil_aluminum_stock")) |>
-    mutate(is_type = if_else(str_detect(column_name, 'Mean'), 'mean', 'value')) |>
-
-#reframe(of_type = case_when(
- #   str_detect(with_entry, '\\d+\\-\\d+') ~ c('upperbound', 'lowerbound'),
-  #  str_detect(with_entry, '.+ \\(.+\\)') ~ c('mean', 'standard error'),
-   # .default = 'value'
-#  ), 
- # .by=everything()) |>
-
-mutate(lowerbound = ifelse(
-  column_name == "Age (mo)" & with_entry == "Change", str_extract(with_entry, '^\\d+(?=-)'),
-  str_extract(with_entry, '-?\\d+\\.?\\d*(?=\\s*to)')),
-  upperbound = ifelse(column_name == "Age (mo)" & with_entry == "Change", 
-                      str_extract(with_entry, '(?<=\\d-)\\d+$'),
-                    #working on this string first  str_extract(with_entry, '')),
-         mean = str_extract(with_entry, '^-?\\d*\\.?\\d+(?=\\s*\\()'),
-         'standard error' = str_extract(with_entry, '(?<=\\()[0-9.]+(?=\\))'),
-         value = str_extract(with_entry, '^-?\\d+\\.?\\d+$'))|>
-  select(-with_entry) |>
-  
-  pivot_longer(cols = c('lowerbound', 'upperbound', 'mean', 'standard error', 'value'),
-               names_to = 'of_type',
-               values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-mutate(from_source = 'Table 1')
-
-#Still working on table 1
-
-Table1Meta <- Table1Primary |>
-  select(column_name, of_variable) |>
-  unique() |>
-  #Grab everything between the parentheses as units and attribute the source as the column names.
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         from_source = 'Table 1 column names.') |>
-  #If there aren't units then drop the row
-  filter(!is.na(unit)) |>
-  #Don't keep the column name now that you have the units, cross link via the variable
-  select(-column_name) |>
-  
-  bind_rows(
-  tribble(~of_variable, ~method, ~from_source,
-          'soil_pH_calcium_chloride', paste0(data.lvl0.df$method[25:26], collapse = ' '), 'Methods ln25-26',
-          'soil_calcium_stock', paste0(data.lvl0.df$method[27], collapse = ' '), 'Methods ln27',
-          'soil_magensium_stock', paste0(data.lvl0.df$method[27], collapse = ' '), 'Methods ln27',
-          'soil_aluminum_stock', paste0(data.lvl0.df$method[27], collapse = ' '), 'Methods ln27',
-          'control_potassium_stock', paste0(data.lvl0.df$method[c(14:15,27)], collapse = ' '), 'Methods ln14-15;27',
-  'fertilized_potassium_stock', paste0(data.lvl0.df$method[c(16:17,27)], collapse = ' '), 'Methods ln16-17;27',
-  'plant_age', paste0(data.lvl0.df$method[11], collapse = ' '), 'Methods ln11',
-  'soil_depth', paste0(data.lvl0.df$method[c(19:20,23:24)], collapse = ' '), 'Methods ln 19-20;23-24',
-  'organic_carbon_density', paste0(data.lvl0.df$method[29:30], collapse = ' '), 'Methods ln 29-30',
-  'nitrogen_density', paste0(data.lvl0.df$method[29:30], collapse = ' '), 'Methods ln 29-30') ) |>
-bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~from_source,
-          'soil_class', 'Kaiwiki thixotropic: USDA classification for deep, well drained soils formed from weathered volcanic ash|isothermic Typic Hydrandept: USDA taxonomic class of deep, well drained soils formed in material weathered from basic volcanic ash', 'USDA')
-    ) |>
-
-pivot_longer(cols = c(unit, method, control_vocabulary),
-               names_to = 'is_type',
-               values_drop_na = TRUE,
-               values_to = 'with_entry')
-
-#### Create level 1
-
-data.lvl1.df <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    mutate(age_id = with_entry[of_variable == 'plant_age'],
-           is_type = 'value',
-           .by = row_id) |>
-    arrange(row_id, age_id, column_name,
-            of_variable, is_type, with_entry, from_source)
-  )
-View(data.lvl1.df)
-
-```
-
-
