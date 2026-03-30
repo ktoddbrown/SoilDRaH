@@ -73,14 +73,16 @@ library(stringr) # regular expressions
 # data directory, primary annotations & control vocabularies
 dataDownload.dir <- 'temp'
 controlVocabulary <- 'ISCN3_TemplateCVs.csv'
+rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+readME_templateSubmit <- 'README_TemplateSubmit.md'
 
 # The below csv tables are used to construct annotations for ISCN4
 AnnotationsDir <- '.'
-ISCN3_layerAnnotations <- 'ISCN3_layer.csv'
-ISCN3_profileAnnotations <- 'ISCN3_profile.csv'
-ISCN3_siteAnnotations <- 'ISCN3_site.csv'
-ISCN3_disturbanceAnnotations <- 'ISCN3_disturbance.csv'
-ISCN3_fractionAnnotations <- 'ISCN3_fraction.csv'
+ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
+ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
+ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
+ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
+ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
 
 annotationFilenames <- c(layerAnnotations = ISCN3_layerAnnotations,
                           profileAnnotations = ISCN3_profileAnnotations,
@@ -221,50 +223,77 @@ for(row_index in 1:nrow(download_table)){
       extra  = "--max-time 300")
   }
 }
+
+originalTables <- plyr::dlply(
+    .data = download_table |>
+      dplyr::filter(table %in% c('citation', 'dataset', 'profile', 'layer')), 
+    .variables = c('table'),
+    .fun = function(xx){
+      return(
+        readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
+                                           xx$file_name), 
+                          delim = ';', 
+                          col_types = readr::cols(.default = readr::col_character())))
+    }
+  )
+
 ```
 
 Using the [TemplateCVs.pdf](TemplateCVs.pdf) and [TemplateSubmit.pdf](TemplateSubmit.pdf), we manually transcribe the annotations into different tables; layer, profile, site, disturbance, and fraction for level0. These annotations will further be extended to a standard data model for our level01 data.
 
 ```{r}
-annotations <- lapply(annotationFilenames, function(xx) {
-  readr::read_delim(
-    file = file.path(AnnotationsDir, xx),
-    delim = ",",
-    col_types = readr::cols(.default = readr::col_character())
-  )
-})
+annotations <- list(
+  caption = readr::read_lines(file = readME_templateSubmit),
+  ISCN3_annotations = lapply(annotationFilenames, function(xx) {
+    readr::read_delim(
+      file = file.path(AnnotationsDir, xx),
+      delim = ",",
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  }))
 
 ### Read in control vocabulary###
-controlVocabulary.df <- readr::read_delim(
-  file = controlVocabulary,
-  delim = ',', 
-  col_types = readr::cols(.default = readr::col_character()))
+#Read in the results as tables or figure transcriptions. This includes
+#...the caption as well as the tables themselves
+controlVocabulary.ls <- list(
+  caption = readr::read_delim(file = controlVocabulary,
+                       col_types = cols(.default = col_character()),
+                       n_max = 5, col_names = FALSE)$X1[1:5],
+  primary_CV = readr::read_delim(file = controlVocabulary,
+    delim = ',', 
+    skip = 5, # we want to only keep the headers without the preamble text.
+    col_types = readr::cols(.default = readr::col_character())))
 
 ```
 
 # Level 0 data
 
 ```{r}
-#| label: readISCN
-#| file: readISCN3.R
-#| echo: true
-```
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
 
-```{r}
-#| label: pullDatalevel0
-#| code-summary: "pull level 0 data using readISCN3 function"
-
-iscn.ls <- readISCN3(dataDir = dataDownload.dir,
-                     annotationFilenames = annotationFilenames,
-                     controlVocabularyFile = controlVocabulary,
-                     format = 'level0')
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation.ls = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    contributed = read.bib(file = contributionsCitation.file),
+    #Read in the bib transcription for the contributed bib rescued object
+    rescuedCitations = read_delim(file = rescuedContributedCitations,
+                                skip = 1)
+  ),
+  primaryData.ls = originalTables,
+  primaryAnnotations.ls = annotations,
+  controlVocabulary.ls = controlVocabulary.ls)
 
 ```
 
 ## Primary data: layer table
 
 ```{r}
-knitr::kable(iscn.ls$level0_data$layer |> 
+knitr::kable(data.lvl0.ls$primaryData.ls$layer |> 
                head()) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
@@ -274,21 +303,19 @@ knitr::kable(iscn.ls$level0_data$layer |>
 ## Primary annotations: layer table
 
 ```{r}
-knitr::kable(iscn.ls$annotations$layerAnnotations |> 
+knitr::kable(data.lvl0.ls$primaryAnnotations.ls$ISCN3_annotations$layerAnnotations |> 
                head()) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 
 ```
 
-```{r eval=FALSE}
-Bibliography <- list(primary = NULL, contributed = NULL)
-  if(!is.null(primaryCitation.file) && file.exists(primaryCitation.file)){
-    Bibliography$primary <- bibtex::read.bib(primaryCitation.file)
-  }
+## Primary rescued citations
 
-  if(!is.null(contributionsCitation.file) && file.exists(contributionsCitation.file)){
-    Bibliography$contributed <- bibtex::read.bib(contributionsCitation.file)
-  }
+```{r}
+knitr::kable(data.lvl0.ls$citation.ls$rescuedCitations |> 
+               head()) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
 ```
-
