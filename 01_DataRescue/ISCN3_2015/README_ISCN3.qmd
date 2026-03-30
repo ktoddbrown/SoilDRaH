@@ -138,8 +138,8 @@ These files are in the ISCN3 data rescue.
     -   citation for project website and primary journal article transcribed
 -   [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
     -   citations for the contributed datasets to ISCN
-    [level0_ISCN3_dataAnnotations](level0_ISCN3_dataAnnotations)
-    -   this includes the annotations constructed using template.pdfs tables pulled from edi
+    [AnnotationsDir](AnnotationsDir)
+    -   this includes the annotations constructed using template.pdfs tables pulled from edi with individual tables (layer, profile, site, fraction, and disturbance)
 -   [temp/](temp/)
     -   the download location for ISCN3 files archived on EDI web portal
     -   this folder includes the following files:
