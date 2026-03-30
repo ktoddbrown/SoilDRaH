@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 **Information on the International Soil Carbon Network Templates**
 
 Download latest update of this document

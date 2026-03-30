@@ -1,9 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-
 **Controlled Vocabularies Used by International Soil Carbon Network Templates**
 
 Download latest submissions template document
