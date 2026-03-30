@@ -1,7 +1,6 @@
 #' Load ISCN3
 #'
-#' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database into 4 distinct data frames.
-#' It also loads in the annotation table for ISCN3 into a data frame.
+#' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database as well as the annotation table for ISCN3 into a data frame.
 #' 
 #' Generally QA/QC is not done in this read function.
 #' However there are data model relevant currents that need to be imposed in the long table
@@ -32,8 +31,11 @@
 #' 
 
 readISCN3 <- function(dataDir,
-                      annotationFilename,
-                      format = c('original', 'long', 'pivotBind',
+                      annotationFilenames,
+                      controlVocabularyFile,
+                      # primaryBibFile,
+                      # contributedBibfile,
+                      format = c('level0', 'long', 'pivotBind',
                                  'wide', 'joinPivot')[1],
                       verbose = TRUE){
   
@@ -49,29 +51,29 @@ readISCN3 <- function(dataDir,
   
   ### Download the data ####
   # link the table name to the download url and file path(s) for data package
+  pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
+  
   download_table <- tibble::tribble(
-    ~table, ~download_url, ~file_name, 
-    'layer', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=4af719a84f8981fcc63f1f92760cb253", file.path(dataDir, 'ISCN3_layer.csv'),
-    'profile', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=40527580cc045d33d9a5aaf728bf204e", file.path(dataDir, 'ISCN3_profile.csv'),
-    'citation', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=320e31ca911f187550ca2143c31fd408", file.path(dataDir, 'ISCN3_citation.csv'),
-    'dataset', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=cdd0c7a4cac3f28d6d788c91f506775f", file.path(dataDir, 'ISCN3_dataset.csv'),
-    'control_vocabulary', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=a8eef6e94b669b365e443c15d9402a03", file.path(dataDir, 'ISCNTranscribed_TemplateCVs.csv'),
-    'template', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=114c95dd318e088108158adc3ae4eb23", file.path(dataDir, 'ISCNtemplate.csv'),
-    'other_pdfs', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=eb320ae7b57296765f543cbb370b0f24", file.path(dataDir, 'TemplateCVs.pdf'),
-    'other_pdfs', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=b81a7f4214d176280a5ff4e0f0d52d8b", file.path(dataDir, 'TemplateSubmit.pdf'),
-    'other_pdfs', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=f914e6978c595c9a373dbc58365b6795", file.path(dataDir, 'Gen3-DB-documentation_REV.pdf'),
-    'other_pdfs', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=4dbc81eab612e09b84c688bb387d06c2", file.path(dataDir, 'ISCN-Database.pdf'),
-    'other_Rmds', "https://portal-s.edirepository.org/nis/dataviewer?packageid=edi.360.4&entityid=3903927ae52655ff6359bc7c454aa42e", file.path(dataDir, 'C&QA.Rmd'))
+    ~table, ~entity_id, ~file_name, 
+    'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
+    'profile', "40527580cc045d33d9a5aaf728bf204e", 'ISCN3_profile.csv',
+    'citation', "320e31ca911f187550ca2143c31fd408", 'ISCN3_citation.csv',
+    'dataset', "cdd0c7a4cac3f28d6d788c91f506775f", 'ISCN3_dataset.csv',
+    'control_vocabulary', "a8eef6e94b669b365e443c15d9402a03", 'ISCNTranscribed_TemplateCVs.xlsx',
+    'template', "cb5c1cd86e9ab17f699f7a05044325b7", 'ISCNtemplate.xlsx',
+    'other_pdfs', "eb320ae7b57296765f543cbb370b0f24", 'TemplateCVs.pdf',
+    'other_pdfs', "b81a7f4214d176280a5ff4e0f0d52d8b", 'TemplateSubmit.pdf')
   
   #One by one, download the data in each row from the download_table
   #... and store that in the appropriate file path location on your computer
   for(row_index in 1:nrow(download_table)){
-    if(!file.exists(download_table$file_name[row_index])){
-      if(verbose) print(paste('Download file:', 
-                              download_table$file_name[row_index]))
-      utils::download.file(download_table$download_url[row_index], 
-                           download_table$file_name[row_index], 
-                           quiet=!verbose)
+    if(!file.exists(file.path(dataDownload.dir,download_table$file_name[row_index]))){
+      print(paste('Download file:', 
+                  download_table$file_name[row_index]))
+      utils::download.file(
+        paste0(pasta_package, download_table$entity_id[row_index]), 
+        file.path(dataDownload.dir,download_table$file_name[row_index]), 
+        extra  = "--max-time 300")
     }
   }
   
@@ -88,7 +90,7 @@ readISCN3 <- function(dataDir,
     .variables = c('table'),
     .fun = function(xx){
       return(
-        readr::read_delim(file = xx$file_name, delim = ';', 
+        readr::read_delim(file = file.path(dataDir, xx$file_name), delim = ';', 
                           col_types = readr::cols(.default = readr::col_character())))
     }
   )
@@ -99,18 +101,45 @@ readISCN3 <- function(dataDir,
   # ...Note that this is a comma delineated file and we, again, restrict the
   # ...column types to characters.
   if(verbose) print('Read in the annotations file generated by SoilDRaH.')
-  annotations.df <- readr::read_delim(
-    file = annotationFilename,
+  # annotations.df <- readr::read_delim(
+  #   file = annotationFilename,
+  #   delim = ',', 
+  #   col_types = readr::cols(.default = readr::col_character()))
+  annotations <- lapply(annotationFilenames, function(xx) {
+    readr::read_delim(
+      file = file.path(AnnotationsDir, xx),
+      delim = ",",
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  })
+  
+  ### Read in control vocabulary###
+  if(verbose) print('Read in the control vocabulary file generated by SoilDRaH.')
+  controlVocabulary.df <- readr::read_delim(
+    file = controlVocabularyFile,
     delim = ',', 
     col_types = readr::cols(.default = readr::col_character()))
+  
+  ### Read in bibliography files###
+  # if(verbose) print('Read in the bibliiography files generated by SoilDRaH.')
+  # Bibliography <- list(primary = NULL, contributed = NULL)
+  # if(!is.null(primaryBibFile) && file.exists(primaryBibFile)){
+  #   Bibliography$primary <- bibtex::read.bib(primaryBibFile)
+  # }
+  # 
+  # if(!is.null(contributedBibfile) && file.exists(contributedBibfile)){
+  #   Bibliography$contributed <- bibtex::read.bib(contributedBibfile)
+  # }
   
   #### Return orginal ####
   # If the orginal format is asked for, then stop here and return the primary
   # ... data tables, download documentation, and the annotations.
-  if(format == 'original'){
-    return(list(original = c(orginalTables, 
+  if(format == 'level0'){
+    return(list(level0_data = c(orginalTables, 
                              list(files = download_table)),
-                annotation = annotations.df))
+                annotations = annotations,
+                otherMeta = list(control_vocabulary = controlVocabulary.df))) 
+    # bibliography = Bibliography
   }
   
   #### Correct non-unique layer identifies

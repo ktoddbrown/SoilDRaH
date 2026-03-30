@@ -1,0 +1,69 @@
+"Orginal EDI citation updated to link in bibiolography references. Some references were updated, see Readme documentation.";;;;;;;;;;;
+ISCN 1-1 (2015-12-10);dataset_name;dataset_type (dataset_type);curator_name;curator_organization;curator_email;reference;citation;citation_usage;acknowledgement;acknowledgement_usage;modification_date (YYYY-MM-DD)
+NA;AK DSC Project SOC stock computation;analysis;Kris Johnson;Alaska Deep Soil Carbon Project;kdjohnson7@alaska.edu;NA;@johnson2011soil;NA;NA;NA;41200
+NA;AK DSC Project SOC stock to 1m computation;analysis;Kris Johnson;Alaska Deep Soil Carbon Project;kdjohnson7@alaska.edu;NA;@johnson2011soil;NA;NA;NA;41200
+NA;Boby_Mack;new;Michelle Mack;University of Florida;mcmack@ufl.edu;NA;@boby2010quantifying;NA;NA;NA;40436.222222222219
+NA;Bockheim;new;James G. Bockheim;University of Wisconsin;bockheim@facstaff.wisc.edu;NA;@bockheim1998soils;NA;NA;NA;40267.605555555558
+NA;Bockheim;new;NA;NA;NA;NA;@bockheim2004carbon;NA;NA;NA;40267.605555555558
+NA;Bockheim;new;NA;NA;NA;NA;@bockheim2001soils;NA;NA;NA;40267.605555555558
+NA;Bockheim;new;NA;NA;NA;NA;@bockheim1999soil;NA;NA;NA;40267.605555555558
+NA;Bockheim;new;NA;NA;NA;NA;@bockheim2003predicting;NA;NA;NA;40267.605555555558
+NA;Bonanza LTER;new;Lola Oliver;University of Alaska - Fairbanks;fnlko@uaf.edu;NA;@yarie1998soil;NA;NA;NA;40150.918749999997
+NA;Bonanza LTER;new;NA;NA;NA;NA;@cleve1993control;NA;NA;NA;40150.918749999997
+NA;Heckman lithosequence;new;@heckman2009geologic;NA;NA;NA;NA;41983
+NA;Heckman/Swanston Biscuit Burn;new;Katherine Heckman;Oregon State University;kaheckman@fs.fed.us;@heckman2013influence;NA;NA;NA;NA;41983
+NA;ISCN No SOC stock computation;analysis;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2014. ISCN Database: Soil carbon stock computations from raw data. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;42071
+NA;ISCN SOC stock computation;analysis;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2014. ISCN Database: Soil carbon stock computations from raw data. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;42071
+NA;ISCN SOC stock to 1m computation;analysis;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2014. ISCN Database: Soil carbon stock computations from raw data. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;42071
+NA;Jorgensen_ARCN;new;Torre Jorgensen;University of Alaska - Fairbanks;ecoscience@alaska.net;NA;@jorgenson2009ecological;NA;NA;NA;40267.631249999999
+NA;Jorgensen_ARCN;new;NA;NA;NA;NA;Jorgenson, M.T., Swanson, D.K., Macander, M. 2001. Ecological subsections of Noatak National Preserve. 73.;NA;NA;NA;40267.631249999999
+NA;Jorgensen_NPS;new;Torre Jorgensen;University of Alaska - Fairbanks;ecoscience@alaska.net;NA;@jorgenson2008ecological;NA;NA;NA;40267.631944444445
+NA;Jorgensen_YKDE;new;Torre Jorgensen;University of Alaska - Fairbanks;ecoscience@alaska.net;NA;@jorgenson2000hierarchical;NA;NA;NA;40267.631249999999
+NA;Kane;new;Evan Kane;Michigan Technological University;citizenkane@gmail.com;NA;@kane2005soil;NA;NA;NA;40150.918749999997
+NA;Kane;new;NA;NA;NA;NA;@kane2004soila;NA;NA;NA;40150.918749999997
+NA;Kane;new;NA;NA;NA;NA;@kane2009patterns;NA;NA;NA;40150.918749999997
+NA;Kane;new;NA;NA;NA;NA;@kane2004soilb;NA;NA;NA;40150.918749999997
+NA;Lehmann NE US soils;new;Johannes Lehmann;Cornell University;cl273@cornell.edu;Black carbon concept: @schmidt2000black;NA;NA;Lehmann, L. Unpublished data from nationwide soil carbon/black carbon survey.;"Contact the data owner before interpreting these data; acknowledgment necessary for use";41983
+NA;Lehmann Soil C&BC #1;new;Verena Jauß;Cornell University;sj384@cornell.edu;Black carbon concept: @schmidt2000black;NA;NA;Jauß, V. and Lehmann, C. Unpublished thesis data.;If using these data, contact data contributors and include acknowledgement in any products prepared from it.;41984
+NA;Lu_LTER;new;Chien-Lu Ping;University of Alaska - Fairbanks;pfclp@uaa.alaska.edu;NA;@ping2005soil;NA;NA;NA;40151.015277777777
+NA;Lu_LTER;new;NA;NA;NA;NA;@ping2000soil;NA;NA;NA;40151.015277777777
+NA;Lu_LTER;new;NA;NA;NA;NA;@ping2016organic;NA;NA;NA;40151.015277777777
+NA;Lu_LTER;new;NA;NA;NA;NA;@michaelson1996carbon;NA;NA;NA;40151.015277777777
+NA;Lu_LTER;new;NA;NA;NA;NA;@ping2004cryosols;NA;NA;NA;40151.015277777777
+NA;Lu_PIMA;new;Chien-Lu Ping;University of Alaska - Fairbanks;pfclp@uaa.alaska.edu;NA;@ping2010carbon;NA;NA;NA;40151.015277777777
+NA;Myers-Smith;new;Isla Myers-Smith;University of Edinburgh;ftihm@uaf.edu;NA;@myers2005soil;NA;NA;NA;40436.222222222219
+NA;Myers-Smith;new;NA;NA;NA;NA;@myers2007influence;NA;NA;NA;40436.222222222219
+NA;NASIS Sept/2014;correction;USDA-NRCS, National Soil Survey Center;USDA-Natural Resources Conservation Service;soildbhelp@lin.usda.gov;NA;@SoilSurveyStaff2014;NA;This work benefited from extensive data contributions to the International Soil Carbon Network from the USDA Natural Resources Conservation Service, National Cooperative Soil Survey.;NA;41893
+NA;Northern Circumpolar Soil Carbon Database (NCSCD);new;Gustaf Hugelius;Stockholm University;gustaf.hugelius@natgeo.su.se;@hugelius2013northern;@hugelius2013new;NA;NA;41983
+NA;NRCS 2014:2011 name aliasing;correction;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2015. ISCN Database: NRCS 2014:2011 database name aliasing. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;41893
+NA;NRCS Sept/2014;migration;Soil Survey Lab;USDA Natural Resources Conservation Service;soildbhelp@lin.usda.gov;NA;@soil_survey_staff_2014;NA;This work benefited from extensive data contributions to the International Soil Carbon Network from the USDA Natural Resources Conservation Service, National Cooperative Soil Survey.;NA;41893
+NA;Oak Ridge National Lab_Loblolly_DWJ;new;Dale Johnson;University of Nevada - Reno;dwj@cabnr.unr.edu;NA;@johnson2003changes;NA;NA;NA;40779
+NA;Oak Ridge National Lab_TDE;new;Paul Hanson;Oak Ridge National Lab;hansonpj@ornl.gov;@froberg2008evaluation;@froberg2008evaluation;NA;NA;NA;40778
+NA;Permafrost RCN_Bockheim;analysis;James Bockheim;University of Wisconsin;bockheim@wisc.edu;@harden2012field;@bockheim1998soils_RCN;Cite Bockheim if using these data, in addition cite Harden if using these data as part of the broader Permafrost RCN dataset;NA;NA;41187
+NA;Permafrost RCN_Camill;analysis;Philip Camill;Bowdoin College;pcamill@bowdoin.edu;@harden2012field;@camill2009climate;Cite Camill if using these data, in addition cite Harden if using these data as part of the broader Permafrost RCN dataset;NA;NA;41187
+NA;Permafrost RCN_Harden;analysis;Jen Harden;US Geol Survey;jharden@usgs.gov;@harden2012field;NA;NA;Harden JA, Jorgenson M, Kanevskiy M. Unpublished soil carbon data from Alaska;"Acknowledge Harden, Jorgenson &Kanevskiy if using these data; in addition cite Harden et al 2012 if using these data as part of the broader Permafrost RCN dataset";41187
+NA;Permafrost RCN_Hugelius;analysis;Gustaf Hugelius;Stockholm University;gustaf.hugelius@natgeo.su.se;@harden2012field;@hugelius2010soil, @hugelius2011high;Cite Hugelius if using these data, in addition cite Harden if using these data as part of the broader Permafrost RCN dataset;NA;NA;41620
+NA;Permafrost RCN_Kanevskiy;analysis;Mikhail Kanevskiy;University of Alaska- Fairbanks;mkanevskiy@alaska.edu;@harden2012field;@kanevskiy2012study;"Cite Kanevskiy if using these data; also cite Harden if using these data as part of the broader Permafrost RCN dataset";NA;NA;41187
+NA;Permafrost RCN_Odonnell;analysis;Jonathan O'Donnell;current position: National Park Service;Jonathan_A_O'Donnell@nps.gov;@harden2012field;@o2011effect;"Cite O'Donnell if using these data; also cite Harden if using these data as part of the broader Permafrost RCN dataset";O'Donnell J.A., et al. Unpublished soil carbon data. OR @o2012soil;Some of the data in this contribution come from a manuscript currently in preparation.;41666
+NA;Permafrost RCN_Ping;analysis;Chien-Lu Ping;University of Alaska- Fairbanks;cping@alaska.edu;@harden2012field;@ping2011soil;"Cite Ping if using these data; also cite Harden if using these data as part of the broader Permafrost RCN dataset";Ping, C.L. and Michaelson, G.J. Unpublished database, University of Alaska-Fairbanks;In addition to citation, please use acknowledgment as well if accessing these data;41187
+NA;Permafrost RCN_Schuur;analysis;Ted Schuur;University of Florida;tschuur@ufl.edu;@harden2012field;NA;NA;Schuur, E.F. Unpublished soil carbon data from Alaska;"Acknowledge Schuur if using these data; if using these data as part of the larger Permafrost RCN dataset then cite Harden too";41187
+NA;Permafrost RCN_Tarnocai;analysis;Charles Tarnocai;Agriculture & Agri-Food Canada;charles.tarnocai@agr.gc.ca;@harden2012field;@tarnocai2010carbon, @tarnocai2009soil;Cite Tarnocai if using these data, in addition cite Harden if using these data as part of the broader Permafrost RCN dataset;NA;NA;41187
+NA;Permafrost RCN_Trumbore;analysis;Sue Trumbore;MPI-Jena;trumbore@bgc-jena.mpg.de;@harden2012field;@trumbore1999boreas;Cite Trumbore if using these data, in addition cite Harden if using these data as part of the broader Permafrost RCN dataset;NA;NA;41187
+NA;Permafrost_RCN;analysis;Jen Harden;US Geol Survey;jharden@usgs.gov;NA;@harden2012field;Cite Harden et al 2012 for general uses of this dataset. Contact curator or NSCN if specific subsets of the data are used (i.e., if only using data provided by 1 or 2 of the contributors);NA;NA;41990
+NA;Schuur;new;Edward Schuur;University of Florida;tschuur@ufl.edu;NA;@schuur2007plant;NA;NA;NA;40150.918749999997
+NA;Schuur;new;NA;NA;NA;NA;@schuur2009impact;NA;NA;NA;40150.918749999997
+NA;UMBS_FASET;new;Luke Nave;University of Michigan Biological Station;lukenave@umich.edu;NA;NA;NA;KJ Nadelhoffer and LE Nave. Unpublished soil C and N data from the Forest Accelerated Succession Experiment (FASET).;Data are unpublished. Please use acknowledgement in lieu of citation and consult curators before interpreting these data.;40799
+NA;USDA-FS NRS Landscape Carbon Inventory;new;Jason Cole;USDA Forest Service;jasoncole@fs.fed.us;NA;@cole2013database;NA;NA;NA;41669
+NA;USGS Harden;new;Jennifer Harden;USGS;jharden@usgs.gov;NA;@harden2008delta;NA;NA;NA;40436.222222222219
+NA;USGS Harden;new;NA;NA;NA;NA;@o2011effect_USGS_Harden;NA;NA;NA;40436.222222222219
+NA;USGS Harden;new;NA;NA;NA;NA;@manies2004soil;NA;NA;NA;40436.222222222219
+NA;USGS Harden;new;NA;NA;NA;NA;@harden2008bonanza;NA;NA;NA;40436.222222222219
+NA;USGS Harden;new;NA;NA;NA;NA;@harden2006effects;NA;NA;NA;40436.222222222219
+NA;USGS Harden;new;NA;NA;NA;NA;@neff2005fire;NA;NA;NA;40436.222222222219
+NA;USGS Harden Yazoo;new;Jennifer Harden;USGS;jharden@usgs.gov;@huntington1998soil;@harden1999mississippi;NA;NA;40668
+NA;USGS Muhs;new;Daniel R. Muhs;USGS;dmuhs@usgs.gov;NA;NA;NA;NA;NA;41176.955555555556
+NA;USGS_S3C;new;Gary Buell;USGS;grbuell@usgs.gov;http://pubs.usgs.gov/of/2004/1227/;@buell2004site;NA;NA;NA;40596
+NA;Vogel;new;Jason Vogel;Texas A&M University;jvogel@ufl.edu;NA;@vogel2008carbon;NA;NA;NA;40150.918749999997
+NA;Vogel;new;NA;NA;NA;NA;@kane2009patterns;NA;NA;NA;40150.918749999997
+NA;Vogel;new;NA;NA;NA;NA;@vogel2007black;NA;NA;NA;40150.918749999997
+NA;Worldwide soil carbon and nitrogen data;new;Al Stangenberger;UC Berkeley (ret.);forags@berkeley.edu;NA;@zinke1986worldwide;Zinke et al. should be cited if any of these data are used;NA;NA;41983
