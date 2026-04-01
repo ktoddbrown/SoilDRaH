@@ -67,7 +67,8 @@ table1.file <- 'Kavvadias2001_Table1.csv'
 table2.file <- 'Kavvadias2001_Table2.csv'
 table6.file <- 'Kavvadias2001_Table6.csv'
 table7.file <- 'Kavvadias2001_Table7.csv'
-figure2.file <- 'Kavvadias2001_Figure2.csv'
+figure2A.file <- 'Kavvadias2001_Figure2_A.csv'
+figure2B.file <- 'Kavvadias2001_Figure2_B.csv'
 
 # Bibliograph files
 primaryCitation.file <- 'Kavvadias2001.bib'
@@ -234,7 +235,7 @@ read_csv(file = table1.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
+#| label: compareTable1
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
@@ -352,30 +353,72 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.m
 ```
 
 
-## Figure 2
+## Figure 2 - A and B
 
-Figure 2 was modified ...
+Figure 2 was modified into two separate csv files as the figures needed different code to generate the image. Figure 2 A is the Litterfall figure and Figure 2 B is the Littermass figure.
 
 ```{r}
-#| label: figure2Check
+#| label: figure2ACheck
 #| code-fold: true
 #| message: false
 
 
-fig2Caption <- read_csv(file = figure2.file, 
+fig2ACaption <- read_csv(file = figure2A.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption
 
-fig2Data <- read_csv(file = figure2.file,
+fig2AData <- read_csv(file = figure2A.file,
+                   skip = 1)
+
+fig2AData$Species <- factor(fig2AData$`Species`,
+                 levels = c('Maritime pine', 'Black pine', 'Fir', 'Beech'))
+fig2AData$`Site Quality` <- factor(fig2AData$`Site Quality`,
+      levels = c("H", "L"))
+
+ggplot(fig2AData, aes(x = `Species`, y = `y value`, fill = `Site Quality`)) + geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + scale_y_continuous(limits = c(0, 4500),
+    breaks = seq(0, 4500, by = 500)) +  scale_fill_manual(
+    values = c("H" = "burlywood4",
+               "L" = "grey45")) +
+labs(title = "Fig. 2. A. Total mass of Litterfall at the two site qualities by species",
+     caption = fig2ACaption,
+     y = "Litterfall (kg/(ha*yr))")
+
+```
+
+```{r}
+#| label: figure2BCheck
+#| code-fold: true
+#| message: false
+
+library(tidyverse)
+
+fig2BCaption <- read_csv(file = figure2B.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig2BData <- read_csv(file = figure2B.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  mutate(across(c("y top value_AOO", "y bottom value_ AO"),
-                as.numeric),
-         stage = factor(stage, 
-                        levels = c("Maritime pine", 'Black pine', 'Fir', 'Beech')),
-                        `soil depth (cm)` = factor(`species`))
+ mutate(
+    species = factor(species,
+      levels = c("Maritime pine", "Black pine", "Fir", "Beech")),
+    `site quality` = factor(`site quality`,               
+      levels = c("H", "L")),
+    across(starts_with("y value"), as.numeric))
 
-#still working on it; using Tirado-Corbala Fig1 as temp
+ggplot(fig2BData, aes(x = species, y = `y value bottom_AO`, fill = "AO", group = interaction(species, `site quality`))) + 
+  geom_col(aes(y = `y value top_AOO`, fill = 'AOO', group = interaction(species, `site quality`)),
+  position = position_dodge(width = 0.9), width = 0.9) +
+  geom_col(position = position_dodge(width = 0.9)) +
+  scale_fill_manual(name = "",
+    values = c(
+      "AOO" = "burlywood4",
+      "AO"    = "ivory3")) +
+  scale_y_continuous(limits = c(0, 90),
+    breaks = seq(0, 90, by = 10)) +
+  labs(
+    title = "Fig. 2. B. Litter accumulation at the two site qualities by species",
+    y = 'Littermass (tn.ha^{-1})',
+    x = 'Species, H and L (left column and right column per group)')
 
 ```
 
