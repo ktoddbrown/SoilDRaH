@@ -370,6 +370,8 @@ The `of_variable` being used here are:
  + sample_id
  + grazing_distance
  + elevation
+ + transect_size
+ + transect_distance
 
  
 ```{r}
@@ -395,6 +397,10 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'land_use', 'value', 'Cattle grazing', paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
                    'land_use', 'interval', '1900',  paste('Method ln21:', paste(data.lvl0.df$method[21], collapse = ' ')),
                    'land_use', 'interval_format', 'YYYY', NA,
+                   'transect_size', 'value', '1000',   paste('Method ln57:', paste(data.lvl0.df$method[57], collapse = ' ')),
+                                      'transect_size', 'unit', 'm',   paste('Method ln57:', paste(data.lvl0.df$method[57], collapse = ' ')),
+                   'transect_distance', 'value', '25', paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')),
+                   'transect_distance', 'unit', 'm',paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')),
 'core_comment', 'value', 'soil cores were collected at 25 m intervals close to the grazing center, and spaced to 50 and 100 m further from the center',  paste('Method ln74:', paste(data.lvl0.df$method[74], collapse = ' ')) )
 
 #### Table 1 ####
