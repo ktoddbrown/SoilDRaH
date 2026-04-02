@@ -140,6 +140,10 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | savascott |
 | Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | savascott |
 | Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
+| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | sierrav-droid |
+| Bravo-Oveido 2017 | @BravoOveido2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
+| Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | anegondia |
+
 
 ## Imported to bib
 
