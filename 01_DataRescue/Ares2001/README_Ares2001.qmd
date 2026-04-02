@@ -9,85 +9,108 @@ bibliography:
   - Ares2001_Methods.bib
   - Ares2001.bib
 authors:
-  - name:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
-    note: https://github.com/ktoddbrown
     affiliation:
       - ref: uf-ees
     role: 
-      - Transcription
-      - Review
-      - Standardization
-      - Harmonization
-
-  - name:
+      - transcription: review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: colbyGreen1520
+    name:
       given: Colby
       family: Green
     affiliation:
       - ref: uf-ees
-    role: Transcription
-    note: https://github.com/colbyGreen1520
-
-  - name:
+    role:
+      - transcription: lead
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
     affiliation:
       - ref: uf-ees
     role: Transcription
-    note: https://github.com/SavaScott
       
 affiliations:
   - id: uf-ees
     name: University of Florida
     department: Environmental Engineering Sciences
     city: Gainesville
-    state: FL
+    state: Florida
     country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
     url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+
+timelog:
+  - activity: 
+      description: update to new template
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2025-01-22 T1530
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P25M
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
 
-library(tidyverse)
-library(kableExtra)
-library(bibtex)
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
 
-#semantic files
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
-
-# data files
+# data files for level 0
 methods.file <- 'Ares2001_Methods.md'
 table1.file <- 'Ares2001_Table1.csv'
 table3.file <- 'Ares2001_Table3.csv'
+
+# Bibliography files
 primaryCitation.file <- 'Ares2001.bib'
 methodsCitation.file <- 'Ares2001_Methods.bib'
 
 # read function
-source('../../../R/readAres2001.R')
+readsource.file <- '../../02_DataHarmonization/readAres2001.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/is_type.csv'
+
 ```
 
-This documents the data transcription for @Ares2001 .
-For the discussion of this data rescue see Github [issue 77](https://github.com/ktoddbrown/SoilDRaH/issues/77) .
-
-> A. Ares and J. H. Fownes. Productivity, resource use, and competitive interactions of fraxinus uhdei in hawaii uplands. Canadian Journal of Forest Research, 31(1):132-142, [https://doi.org/10.1139/x00-156](https://doi.org/10.1139/x00-156). 2001 
 
 # Data Summary
 
-@Ares2001 primarily measures tree growth parameters (including litterfall) but also characterized elemental fractions of soil. They use this data to look at factors affecting a specific invasive tree growth in Hawaii including nitrogen and moisture gradients.
 
-## Fit for purpose: HiCSC
+> A. Ares and J. H. Fownes. Productivity, resource use, and competitive interactions of fraxinus uhdei in hawaii uplands. Canadian Journal of Forest Research, 31(1):132-142, [https://doi.org/10.1139/x00-156](https://doi.org/10.1139/x00-156). 2001 
 
-This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
+For the discussion of this data rescue of @Ares2001 see Github [issue 77](https://github.com/ktoddbrown/SoilDRaH/issues/77).
+Discussion on the data harmonization and curation see Github [issue 183](https://github.com/ktoddbrown/SoilDRaH/issues/183).
+Note that this is a prototype data source, issues will be non-standard.
 
-- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
-- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
-- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
-- Land use: Land use and history are clearly identified in methods.
+@Ares2001 primarily measures tree growth parameters (including litterfall) but also characterized elemental fractions of soil. 
+They use this data to look at factors affecting a specific invasive tree growth in Hawaii including nitrogen and moisture gradients.
 
-# Tables and figures
+## Tables and figures
 
 - Table 
   1) characteristics of stands including oc percent < -- oc == organic carbon -->
@@ -103,51 +126,21 @@ This data is identified as a data source for the [Hawai'i Soil Organic Carbon Da
   2) elevation vs productivity metrics
   3) nitrogen correlations
   4) light intercept vs nitrogen and water use efficiency metrics
-  
-### Table 1: Stand characteristics
-
-Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
-
-```{r table1}
-#| code-fold: true
-#| message: false
-
-read_csv(file = table1.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = table1.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
-
-### Table 3: Climate
-
-```{r table3}
-#| code-fold: true
-#| message: false
-
-read_csv(file = table3.file,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = table3.file, 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
-```
 
 
-{{< include Ares2001_Methods.md >}}
+## Fit for purpose: HiCSC
 
-<!--  # Transcription comparison
-what purpose does this serve? this file does not exist in this file group -BW
-This is here mostly to remind transcribers to cross check using diff the two transcripts. Let's keep this here but comment it out. -KTB
-```{bash eval=FALSE}
-diff Ares2001_Methods_CAG.md Ares2001_Methods.md
-```
- -->
- 
+This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
+The purpose of this project is to disentangle the effects of land use transitions, soil type, and soil carbon stock in Hawai'i.
+
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
+- Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
+- Land use: Land use and history are clearly identified in methods.
+
 # Files
 
-These files are in the Ares2001 data rescue.
+These files are in the @Ares2001 data rescue.
 
 - [Readme](README_Ares2001.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -220,14 +213,54 @@ Some citations are missing, those are noted here and how best guess were generat
   + direct export
 --->
 
+### Table 1: Stand characteristics
+
+Table 1 was modified to remove the sub-tables and flatted sub-tables in certain columns.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Table 3: Climate
+
+```{r table3}
+#| code-fold: true
+#| message: false
+
+read_csv(file = table3.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+{{< include Ares2001_Methods.md >}}
+
+<!--  # Transcription comparison
+what purpose does this serve? this file does not exist in this file group -BW
+This is here mostly to remind transcribers to cross check using diff the two transcripts. Let's keep this here but comment it out. -KTB
+```{bash eval=FALSE}
+diff Ares2001_Methods_CAG.md Ares2001_Methods.md
+```
+ -->
+
 # Level 0 data read
 
 This level 0 data read parses the transcribed files with minimal cleaning or transformations.
 
-```{r readLevel0}
-#This chunk has two purposes. 
-#...1) Check the formatting by reading in everything 
-#...2) Create a list of everything to process later in level 1
+```{r}
+#| label: readLevel0
+#| code-fold: true
+#| code-summary: "This code reads in all lvl0 data."
 
 data.lvl0.ls <- list(
   #Read in a list of all the bib files
@@ -266,8 +299,14 @@ data.lvl0.ls <- list(
 
 ```
 
+
+The code is also in `readAres2001.R` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
 ```{r}
 #| label: checkReadFunction_lvl0
+#| code-fold: true
+#| code-summary: "This code checks that the read function matches exactly."
 
 datafunction.lvl0.ls <- readAres2001(dataDir = '.',
                                     dataLevel = 'level0')
@@ -284,7 +323,7 @@ if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
 
 This data is identified as a data source for the [Hawai'i Soil Organic Carbon Database](https://osf.io/hmtv6/) as part of the HiCSC.
 
-- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert.
+- Location: Location region is identified and lat/lon can likely be recovered from figure 1 by regional expert. Note this was not done in the current data recovery
 - Soil carbon stock: Soil carbon fraction is given but not bulk density nor coarse fraction.
 - Soil type: Soil order and history are identified in methods. High/low activity clay status may need inference by regional expert.
 - Land use: Land use and history are clearly identified in methods.
@@ -294,27 +333,38 @@ This information can be values, units, methods, or other useful notes and is man
 
 The final format of the data frame here will include the following 
 
-  + grouping ids
-  + `of_variable`
-  + `is_type`
-  + `with_entry`
-  + `source`
+  + study
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
+  + primary_meta
+    + `column_name` (id column)
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
+  + primary
+    + `row_id` (id column)
+    + `elevation_id` (id column)
+    + `column_name` (id column)
+    + `of_variable`
+    + `is_type`
+    + `with_entry`
+    + `from source`
 
 The `of_variable` being used here are:
 
  + citation
- + diameter_at_breast_height_A_koa
- + diameter_at_breast_height_F_uhdei
+ + diameter_at_breast_height
  + doi
  + elevation
- + height_A_koa
- + height_F_uhdei
- + inital_planting
- + land_use_type
+ + height
+ + land_use
  + mean_air_temperature
  + mean_max_vapor_pressure_deficit
  + mean_solar_radiation
- + observation_year
+ + observation_time
  + region
  + soil_class
  + soil_nitrogen
@@ -323,22 +373,27 @@ The `of_variable` being used here are:
  + soil_phosphorus
  + stand_age
  + stand_type
- + stem_density_A_koa
- + stem_density_F_uhdei
+ + stem_density
  + total_rainfall
 
 ```{r}
 #| lable: constructLevel1
 
-#Create table with data that is consistent across the study
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~source,
+#### Method section only data ####
+#Create a table for the data in the methods section that is not directly 
+#...associated with any table.
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')), #no actual lat-long, need to get this translated to geo-location
-                   'land_use_type', 'value', 'Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
-                   'inital_planting', 'value', '1959', paste('Method ln14:', data.lvl0.ls$method[14]),
-                   'observation_year', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'land_use', 'value', 'Plantation: Tree stands', paste('Method ln14-16:', paste(data.lvl0.ls$method[14:16], collapse = ' ')),
+                   'land_use', 'interval', '1959/', paste('Method ln14:', data.lvl0.ls$method[14]),
+                   'land_use', 'interval_format', 'YYYY/YYYY', NA,
+                   'observation_time', 'value', '1996', paste('Method ln 30;53;58:', paste0(data.lvl0.ls$method[c(30,53,58)], collapse = '... ')),
+                   'observation_time', 'time_format', 'YYYY', NA,
                    'citation', 'value', format(data.lvl0.ls$citation$primary), 'journal citation',
                    'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
 
+
+#### Table 1 ####
 # Process the primary data from Table 1 by maintaining data groups and standardizing the variable name so that we can link this to the study metadata and data in the other tables when needed.
 Table1Primary <- data.lvl0.ls$data$Table1$primary |>
   #Add a row id preserving row grouping -- not unique
@@ -357,14 +412,15 @@ Table1Primary <- data.lvl0.ls$data$Table1$primary |>
            column_name == 'Soil N (%)' ~ 'soil_nitrogen',
            column_name == 'Soil P (mg kg<sup>-1</sup>)' ~ 'soil_phosphorus',
            column_name == 'Stand age (years)' ~ 'stand_age',
-           column_name == '*F. uhdei* Stem density (trees / ha)' ~ 'stem_density_F_uhdei',
-           column_name == '*F. uhdei* Mean DBH (cm)' ~ 'diameter_at_breast_height_F_uhdei',
-           column_name == '*F. uhdei* Mean height(m)' ~ 'height_F_uhdei',
-           column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density_A_koa',
-           column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height_A_koa',
-           column_name == "*A. koa* Mean height(m)"~ 'height_A_koa')) |>
+           column_name == '*F. uhdei* Stem density (trees / ha)' ~ 'stem_density',
+           column_name == '*F. uhdei* Mean DBH (cm)' ~ 'diameter_at_breast_height',
+           column_name == '*F. uhdei* Mean height(m)' ~ 'height',
+           column_name == '*A. koa* Stem density (trees / ha)' ~ 'stem_density',
+           column_name == '*A. koa* Mean DBH (cm)' ~ 'diameter_at_breast_height',
+           column_name == "*A. koa* Mean height(m)"~ 'height')) |>
+  mutate(is_type = if_else(str_detect(column_name, 'Mean'), 'mean', 'value')) |>
   #Flag the source of this data as Table 1, this table is merged later with other data so this keeps track of where the data came from
-  mutate(source = 'Table 1')
+  mutate(from_source = 'Table 1')
 
 # Create the metadata for table one from the header information and cited methods
 Table1Meta <- Table1Primary |>
@@ -372,32 +428,38 @@ Table1Meta <- Table1Primary |>
   unique() |>
   #Grab everything between the parentheses as units and attribute the source as the column names.
   mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         source = 'Table 1 column names.') |>
-  #If there aren't units then drop the row
-  filter(!is.na(unit)) |>
-  #Don't keep the column name now that you have the units, cross link via the variable
-  select(-column_name) |>
+         species = case_when(str_detect(column_name, 'F. uhdei') ~ 'Fraxinus uhdei',
+                             str_detect(column_name, 'A. koa') ~ 'Acacia koa',
+                             .default = NA_character_),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units or a species flag then drop the row
+  filter(!is.na(unit) | !is.na(species)) |>
   #Stack into the table the methods for each variable that we can find
   bind_rows(
-  tribble(~of_variable, ~method, ~source,
+    tribble(~of_variable, ~method, ~from_source,
             'soil_ph', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73', #pasting in a method from specific rows
             'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_nitrogen', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
             'soil_phosphorus', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73',
-            'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12') ) |>
-  #Stack onto the tables the controlled vocabulary used
-  bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~source,
-            'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
-            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
-  ) |>
+            'soil_class', paste0(data.lvl0.ls$method[10:12], collapse = ' '), 'Methods ln10-12')  |>
+      #Stack onto the tables the controlled vocabulary used
+      bind_rows(
+        tribble(~of_variable, ~control_vocabulary, ~from_source,
+                'stand_type', '*F. uhdei*: pure stands of Fraxinus uhdei (Wenzig) Lingelsh|Mixed: mixed stands of *Fraxinus uhdei* (Wenzig) Lingelsh and *Acacia koa* Grey', 'Abstract ln1',
+                'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+      ) |>
+      #put the column names back in
+      left_join(Table1Primary |>
+                  select(column_name, of_variable) |>
+                  unique(),
+                by = join_by(of_variable)))|>
   # Push the dimensions of the variable into a single column. Making this a long table.
-  pivot_longer(cols = c(unit, method, control_vocabulary),
+  pivot_longer(cols = c(unit, species, method, control_vocabulary),
                names_to = 'is_type',
                values_drop_na = TRUE,
                values_to = 'with_entry')
 
-
+#### Table 3 #####
 #The following is doing the same process as above but fitted to the data and formatting of Table3
 Table3Primary <- data.lvl0.ls$data$Table3$primary |>
   pivot_longer(cols = -variable,
@@ -415,7 +477,7 @@ Table3Primary <- data.lvl0.ls$data$Table3$primary |>
     column_name == "Mean maximum vapor pressure deficit (kPa)" ~ 'mean_max_vapor_pressure_deficit',
     column_name == "Elevation (m)" ~ 'elevation',
     TRUE ~ NA_character_)) |>
-  mutate(source = 'Table 3')
+  mutate(from_source = 'Table 3')
 
 Table3Meta <- Table3Primary |>
   select(column_name, of_variable) |>
@@ -425,22 +487,22 @@ Table3Meta <- Table3Primary |>
   select(-column_name) |>
   pivot_longer(cols = -of_variable,
                names_to = 'is_type', values_to = 'with_entry') |>
-  mutate(source = case_when(is_type == 'unit' ~ 'Table 3 column names.',
+  mutate(from_source = case_when(is_type == 'unit' ~ 'Table 3 column names.',
                             is_type == 'method' ~ 'Methods ln72-73',
                             TRUE ~ NA_character_))
 
-
+#### Create level 1 #####
 # Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta, Table3Meta),
+  study = studyMeta,
+  primary_meta = dplyr::bind_rows(Table1Meta, Table3Meta),
   primary = bind_rows(Table1Primary, Table3Primary)|>
     mutate(elevation_id = with_entry[of_variable == 'elevation'],
            is_type = 'value',
            .by = row_id) |>
     arrange(row_id, elevation_id, column_name,
-            of_variable, is_type, with_entry, source)
+            of_variable, is_type, with_entry, from_source)
   )
-#View(data.lvl1.ls)
 
 ```
 
@@ -451,15 +513,23 @@ data.lvl1.ls <- list(
 ```{r}
 #| label: check_of_variable
 
+#Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
                                    show_col_types = FALSE)
 
-if(all(unique(c(data.lvl1.ls$meta$of_variable,
-            data.lvl1.ls$primary$of_variable)) %in% SoilDRaH_variable_list$of_variable)){
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
   print('All of_variables are in the SoilDRaH variable list. No additions required')
 }else{
-  print(paste0('Please start a issue for new variables [', setdiff(unique(c(data.lvl1.ls$meta$of_variable,
-            data.lvl1.ls$primary$of_variable)), SoilDRaH_variable_list$of_variable), ']'))
+  cat(paste('Please start a issue for new variables [',
+               unique(new_variables), ']', sep = '', collapse = '\n'))
 }
 ```
 
@@ -470,26 +540,39 @@ if(all(unique(c(data.lvl1.ls$meta$of_variable,
 ```{r}
 #| label: check_is_type
 
+#read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
                                    show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
   select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
   separate_longer_delim(cols = 'of_variable', delim = ',')
 
-undefined_data_type <- data.lvl1.ls$meta |> 
-  select(of_variable, is_type) |> 
-  unique() |>
-  bind_rows(data.lvl1.ls$primary |> 
-              select(of_variable, is_type) |> 
-              unique()) |>
+#Initialize variable for pulling all the of_variable-is_type pairs
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
   #subset for variables that are not 'incomplete'
   semi_join(SoilDRaH_variable_list |>
               filter(project_status != 'incomplete'),
             by = join_by(of_variable)) |>
   #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
   anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
+            by = join_by(of_variable, is_type)) |>
+  unique()
 
-
+#Tell the user what you found.
 if(nrow(undefined_data_type) == 0){
   print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
 }else{
@@ -497,69 +580,139 @@ if(nrow(undefined_data_type) == 0){
 }
 ```
 
+## Check function match
+
+Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
-
-datafunction.lvl1.ls <- readAres2001(dataDir = '.',
-                                    dataLevel = 'level1')
-
-if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
-  print('Read function matches code for level 1.')
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAres2001(dataDir = '.',
+                                       dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
 }else{
-  print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  print('No read function found. Moving on')
 }
-
 ```
 
 # Level 2 data: HiSOC Database
 
-The structure of level 2 data will change based on the target analysis however level 2 will always be generated from level 1.
+The variables of interest for the HiSOC database translate nicely into a set of four tables tables: source, site, layer, and land use. Rearranging the variables above we get:
+
+- source
+  + citation
+  + doi
+- site
+  + region
+  + elevation
+  + observation_time
+  + mean_air_temperature
+  + mean_max_vapor_pressure_deficit
+  + mean_solar_radiation
+  + total_rainfall
+  + soil_class
+- layer
+  + soil_organic_carbon
+  + soil_ph
+  + soil_phosphorus
+  + soil_nitrogen
+- site_history
+  + land_use
+
+This drops the following variables
+  - drop variables
+    + stand_type
+    + stem_density
+    + diameter_at_breast_height
+    + height
+    + 'mean_max_vapor_pressure_deficit'
+    + 'mean_solar_radiation'
+
+Note that the climate variables were provided for elevations that did not match the site elevation. 
+We used linear interpolation from the provided elevations to the needed elevations.
 
 ```{r}
+#| label: buildLvl2
 
-# Define the variables that we want specificly for HiSOC database, this chould be expanded to other data collections later so we filter here even though it has no effect
-HISOC_variables <- c(
-  "citation",
-  "doi",
-  "region", 
-  "land_use_type",
-  "observation_year",
-  'elevation',
-  'mean_air_temperature',
-  'total_rainfall',
-  "soil_organic_carbon",
-  "soil_nitrogen",
-  "soil_phosphorus",
-  "soil_ph",
-  "soil_class",
-  "stand_age",
-  'stand_type'
+# Define the variables that we want specifically for HiSOC database, this could be expanded to other data collections later so we filter here even though it has no effect
+HISOC_variables <- list(
+  source = c('citation', 'doi'),
+  site = c('region', 'observation_time', #temporal-geolocation
+            #climate
+            'mean_air_temperature', 'total_rainfall',
+            #geology/geography
+            'elevation', 'soil_class'),
+  layer = c('layer_top', 'layer_bottom', #in methods
+            'soil_organic_carbon', 'soil_ph', 'soil_phosphorus', 'soil_nitrogen'),
+  site_history = c('land_use')
 )
-
-# Pull the study table from the meta data
-study.df <- data.lvl1.ls$meta |>
-  #look for any of the HiSOC variables
-  filter(of_variable %in% HISOC_variables) |>
-  #Drop the source infomration. Here we don't care about the source although we can always go back and reconstruct it. 
-  select(-source) |> 
-  #elevation units are from two sources, remove duplicates
-  unique() |> 
-  #Spread this wider so that it's human friendly, ending up with one row table
-  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::', values_from = with_entry) |>
-  #add the study id in prep for merging it with other datasets
-  mutate(study_id = 'Ares2001')
   
-#The climate across various elevations needs to be gap-filled. Here we create a linear interpolation to gapfill the temperature and rainfall values based on elevation. Details on model fit are in the comments below and fitted from the data orginally provided.
-#
+source.df <- data.lvl1.ls$study |>
+  filter(of_variable %in% HISOC_variables$source) |>
+  mutate(source_id = 'Ares2001')  |>
+  select(source_id, of_variable, with_entry) |>
+  #all of the source information is from the same from_source value so this is easy
+  pivot_wider(names_from = of_variable, values_from = with_entry)
+
+site_history.df <- data.lvl1.ls$study |>
+  filter(of_variable %in% HISOC_variables$site_history) |>
+  mutate(from_source = from_source[is_type == 'value']) |>
+  mutate(is_type = case_match(is_type, 'value' ~ 'description',
+                              .default = is_type)) |>
+  mutate(column_name = paste0(of_variable, '::', is_type)) |>
+  select(column_name, with_entry) |>
+  pivot_wider(names_from = column_name, values_from=with_entry) |>
+  mutate(source_id = 'Ares2001',
+         land_use_id = 'LU1', #only land use in the study
+         land_use = 'Plantation' #from description
+         ) |>
+  select(source_id, land_use_id, land_use, 
+         'land_use::description', 'land_use::interval', 'land_use::interval_format')
+
+layer.df <- data.lvl1.ls$primary |>
+  #pull the layer variables out of the primary data
+  filter(of_variable %in% HISOC_variables$layer) |>
+  #rely on the row id and of variable to ID the elements
+  select(-c(column_name, from_source, elevation_id))|>
+  bind_rows(#bind the primary data with associated meta data
+    #... generally this is the unit or methods
+    data.lvl1.ls$primary_meta |>
+      filter(of_variable %in% HISOC_variables$layer) |>
+      select(of_variable, is_type, with_entry) |>
+      reframe(row_id = unique(data.lvl1.ls$primary$row_id),
+              .by = everything()) 
+  ) |>
+  # add back in the site/elevation ids now that we have the methods bound
+  left_join(data.lvl1.ls$primary |> select(row_id, elevation_id) |> unique(),
+            by = join_by(row_id)) |>
+  #only keep things if there is an associated value we want in the row
+  filter((any(is_type == 'value')), .by = row_id) |>
+  #create new column names with the variable and type in it
+  mutate(column_name = paste0(of_variable,'::',is_type)) |>
+  #covert things to more resonable named IDs and pull in the header-values
+  select(row_id, elevation_id, column_name, with_entry) |>
+  #make everything wide for the poor humans
+  pivot_wider(names_from = column_name, values_from = with_entry) |>
+  #layer information transcribed from methods for soil variables
+  mutate(`layer::top` = '0', `layer::bottom` = '15', 
+         `layer::unit` = 'cm', layer_id = 'L1')
+
+  
+#The climate across various elevations needs to be gap-filled. 
+#  Here we create a linear interpolation to gapfill the temperature and rainfall
+#  values based on elevation. Details on model fit are in the comments below and
+#  fitted from the data originally provided.
+
 climate_var <- c('mean_air_temperature', 'elevation', 'total_rainfall')
 
 #create an elevation identified climate table
 elevation.df <- data.lvl1.ls$primary|>
   filter(of_variable %in% climate_var) |>
-  # filter(of_variable %in% HISOC_variables,
-  #        !(str_detect(of_variable, 'soil') |
-  #          str_detect(of_variable, 'stand')))|>
   select(elevation_id, of_variable, with_entry, is_type) |>
   unique() |>
   #convert from character to do the math
@@ -575,42 +728,74 @@ elevation.df <- data.lvl1.ls$primary|>
     #N = 3, Adjusted R-squared:  0.9886; p-value: 0.0482
     `total_rainfall::value` = if_else(is.na(`total_rainfall::value`),
                                       19078.83 - 9.97 * `elevation::value`, `total_rainfall::value`)) |>
+  mutate(`mean_air_temperature::method` = 'linear interpolation from provided elevation values',
+         `total_rainfall::method` = 'linear interpolation from provided elevation values') |>
   #convert everything back to characters for merging in with the rest of the data
   mutate(across(everything(), as.character)) |>
-  #add on the study_id
-  mutate(study_id = 'Ares2001')
+  #add on the source_id
+  mutate(source_id = 'Ares2001')
 
 # Pull in the data from the primary table that we did not interpolate above
-layer.df <- data.lvl1.ls$primary |>
+site.df <- data.lvl1.ls$primary |>
   #take the entries in HiSOC_variables taht are not in climate_var
-  filter(of_variable %in% setdiff(HISOC_variables, climate_var)) |>
+  filter(of_variable %in% setdiff(HISOC_variables$site, climate_var))|>
   #similar to above, identify based on of_variable and ignore the source
-  select(-c(column_name, source)) |>
+  select(-c(column_name, from_source)) |>
   unique() |>
   #make things wide for cleaner joins
   pivot_wider(names_from = c(of_variable, is_type), 
               names_sep = '::', values_from = with_entry) |>
-  #row identifier is no longer needed
-  select(-row_id) |>
-  #add in the study id
-  mutate(study_id = 'Ares2001')
+  bind_cols( #pull in the variables in the study table like region and obs time
+    data.lvl1.ls$study |> 
+      filter(of_variable %in% HISOC_variables$site) |>
+      select(-from_source) |>
+      #make things wide for cleaner joins
+      pivot_wider(names_from = c(of_variable, is_type),
+                  values_from = c(with_entry),
+                  names_sep = '::')
+  ) |>
+  #add in the study id 
+  mutate(source_id = 'Ares2001') |>
+  #add in the interpolated elevation variables
+  left_join(elevation.df,
+            by = join_by(elevation_id, source_id))
 
-# join the temp dfs above together
-data.lvl2.df <- full_join(study.df,
-                          layer.df, 
-                          by = join_by(study_id)) |>
-  left_join(elevation.df, 
-            by = join_by(elevation_id, study_id)) |>
-  #Create a new row idea across the entire study
-  mutate(row_id = paste0('ID', 1:n())) |>
-  #Make this long again so we have the general data structure of
-  #...id - of_variable - is_type - with_entry
-  pivot_longer(cols = -c(study_id, elevation_id, row_id),
-               values_to = 'with_entry',
-               names_sep = '::',
-               names_to = c('of_variable', 'is_type'),
-               values_drop_na = TRUE) 
 
+# return a list of tables
+
+data.lvl2HiCSC.df <- list(
+  source = source.df,
+  #make sure the site_ids have a letter in front of them so it is not read in as a numerical when read/write to csv
+  site = site.df |>
+    mutate(site_id = paste0('S', elevation_id, row_id)) |>
+    select(-row_id),
+  site_history = site_history.df,
+  layer = layer.df |>
+    mutate(site_id = paste0('S', elevation_id, row_id)) |> 
+    select(-row_id)
+  )
+
+```
+
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl2
+if(file.exists(readsource.file)){
+  datafunction.lvl2.ls <- readAres2001(dataDir = '.',
+                                       dataLevel = 'level2-HiSOC')
+  
+  if(isTRUE(all.equal(datafunction.lvl2.ls, data.lvl2HiCSC.df))){
+    print('Read function output matches ReadMe code for level 2 - HiSOC.')
+  }else{
+    print('There is a mismatch in the level level 2 - HiSOC data objects between the code here and the read function.')
+  }
+}else{
+  print('No read function found. Moving on')
+}
 ```
 
 
@@ -620,8 +805,24 @@ Create some basic histograms to check the ranges and tables.
 
 ```{r fig.width=7, fig.height=6}
 
+bigLong <- data.lvl2HiCSC.df$source |>
+  full_join(data.lvl2HiCSC.df$site_history, 
+            by = join_by(source_id)) |>
+  full_join(data.lvl2HiCSC.df$site, 
+            by = join_by(source_id)) |>
+  full_join(data.lvl2HiCSC.df$layer,
+            by = join_by(elevation_id, site_id)) |>
+  pivot_longer(cols = -ends_with('_id'),
+               names_to = 'colume_name',
+               values_to = 'with_entry') |>
+  separate_wider_delim(cols = colume_name,
+                       names = c('of_variable', 'is_type'),
+                       delim = '::', too_few = 'align_start') |>
+  mutate(is_type = if_else(is.na(is_type), 'value', is_type)) #|>
+  # pivot_wider(names_from = is_type, values_from = with_entry)
+
 #
-plot.df <- data.lvl2.df |>
+plot.df <- bigLong |>
   #Use regular expressions to get more detailed about if it's a text or numerical value
   mutate(is_type = 
            case_when(

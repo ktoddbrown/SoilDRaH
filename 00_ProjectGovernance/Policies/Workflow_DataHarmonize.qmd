@@ -1,7 +1,7 @@
 ---
 title: "Data Harmonization Workflow"
 format:
-  html:
+  gfm:
     toc: true
 date: last-modified
 date-format: YYYY-MMMM
@@ -61,7 +61,7 @@ This process should result in the following documentation:
   + creation of a level 1 data product
 - Creation of a new `read` function that takes the level 0 data directory and returns either the level 0 or level 1 data product as specified.
 
-# Identify variables {#sec-IdentifyVariables}
+## Identify variables {#sec-IdentifyVariables}
 
 Data Harmonization - Input | Lead | Do | Measure
 -- | -- | -- | --

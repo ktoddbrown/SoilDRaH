@@ -1,3 +1,10 @@
+#' Read all CPEAT cores
+#'
+#' @param dataDir location for the data download
+#' @param dataLevel a flag for a level0 (complete original) or level 1 (standardized) data return
+#' @param verbose flag for more messages
+#'
+#' @returns a list with the data tables with citations and methods included for level 0
 readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
                           verbose = FALSE){
   
