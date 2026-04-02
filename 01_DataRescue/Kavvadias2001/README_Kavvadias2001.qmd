@@ -17,9 +17,31 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     affiliation:
       - ref: uf-ees
     role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
+      - transcription: review #secondary, review
+     # - standardization: lead #review
+     # - curation: lead #review
+
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: ChaseSaxour #use the github name as an id
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+   #   - standardization: lead #review
+    #  - curation: lead #review
 
 affiliations:
   - id: uf-ees
@@ -40,12 +62,6 @@ timelog:
       start: 2026-03-06
       end: 2026-03-06
       duration: P30M
-  - activity: 
-      description: Primary Transcription
-      who: ktoddbrown #github username
-     # end: YYYY-MM-DD
-      start: 2026-02-13 
-      duration: PT3H
 ---
 
 
@@ -156,10 +172,7 @@ Other Relevant Variables:
 
   
 ## Files
-
-<!--- Include a brief explaination to all the files in the folder--->
-
-These files are in the Kavvadias2001 data rescue.
+These files are in the @Kavvadias2001 data rescue.
 
 - [Readme](README_Kavvadias2001.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -242,7 +255,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table1.csv Kavvadias2001_Table1_CS.csv
 ```
 
 ## Table 2
@@ -277,7 +290,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table2.csv Kavvadias2001_Table2_CS.csv
 ```
 
 
@@ -313,7 +326,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table6.csv Kavvadias2001_Table6_CS.csv
 ```
 
 
@@ -350,7 +363,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table7.csv Kavvadias2001_Table7_CS.csv
 ```
 
 
@@ -432,7 +445,11 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_A.csv Kavvadias2001_Figure2_A_CS.csv
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_B.csv Kavvadias2001_Figure2_B_CS.csv
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2.csv Kavvadias2001_Figure2.csv
 ```
 
 
@@ -444,7 +461,7 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.m
 #| eval: false
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/Kavvadias2001_Methods_ABC.md Kavvadias2001_Methods_BCD.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Methods.md Kavvadias2001_Methods_CS.md
 ```
 
 {{< include Kavvadias2001_Methods.md >}}
@@ -460,6 +477,41 @@ Think of this as a lab notebook documenting how you found each citation.
 - [ ] short citation
   + copy from bib
   + manually entered or direct export
+  
+- [x] Apatsidis, L., 1990. Reallocation of ten-part volumetric systems, incremental indexes of fir, black pine and beech and their site quality systems. In: Forestry and Regional Development. Communication and Outcome. Conference of Greek Forest Society (in Greek).
+  + copy from bib
+
+- [x] Panagiotidis, N., 1981. A ten-part system of volumetric and incremental indexes for black pine stands in Greece. For. Res. II (2), 191–122 (in Greek with English abstract).
+  + copy from bib
+
+- [x] Klinka, K., Green, R.N., Trowbridge, R.L., Lowe, L.E., 1981. Taxonomic classification of humus forms in ecosystems of British Columbia. Land Management Report No. 8, BC Min. For., Vic., B.C., 54 pp.
+  + copy from bib
+
+- [x] Food and Agriculture Organization, 1988. FAO/UNESCO Soil Map of the World Revised Legend. FAO, Rome, 138 pp.
+  + copy from bib
+
+- [x] Papamichos, N., 1990. Forest Soils. Aristotle University of Thessaloniki, 414 pp (in Greek).
+  + copy from bib
+
+- [x] Bouyoucos, G. J. (1962). Hydrometer method improved for making particle size analyses of soils 1. Agronomy journal, 54(5), 464-465.
+  + copy from bib
+
+- [x] A. Walkley, I.A Black
+An examination of the Degtjiareff method for determining soil organic matter and a proposed modification of chromic acid titration method
+Soil Sci., 37 (1934), pp. 29-38
+  + copy from bib
+
+- [x] A. Walkley. A critical examination of a rapid method for determining organic carbon in soils. Effect of variations in digestion conditions and of organic soil constituents
+Soil Sci., 63 (1947), pp. 251-264
+  + copy from bib
+
+- [x] Allen, S.E., Grimshaw, H.M., Parkinson, J.A., Quarmby, C., 1974. Chemical Analysis of Ecological Material. Blackwell Scientific Publications, Oxford, 565 pp.
+  + copy from bib
+
+- [x] J.S Olson. Energy storage and balance of producers and decomposers in ecological systems
+Ecology, 44 (1963), pp. 322-331.
+  + copy from bib
+
 ---->
 
 # Level 0 Data rescue
@@ -487,18 +539,45 @@ data.lvl0.ls <- list(
   #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
+    ),
+    Table2 = list(
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    Table6 = list(
+      caption = read_csv(file = table6.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table6.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    Table7 = list(
+      caption = read_csv(file = table7.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table7.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
    ) #end 'data' element
 )
 
