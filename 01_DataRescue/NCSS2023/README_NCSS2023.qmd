@@ -43,6 +43,14 @@ affiliations:
     
 timelog:
   - activity: 
+      description: updating documentation
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-04-02 T1500
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P50M
+  - activity: 
       description: Restart the NCSS data processing
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
@@ -155,12 +163,13 @@ read_csv(file = 'Relationships.csv', show_col_types = FALSE) |>
   
 ```
 
-We also need `lab_pedon`, `lab_preparation`, `lab_method_code`, `lab_analyte` and `lab_analysis_procedure` based on the table above  and some light exploration.
+We also need `lab_preparation`, `lab_method_code`, `lab_analyte` and `lab_analysis_procedure` for methods.
+The location and samples are cross linked using `lab_pedon`.
 
   
 ## Files
 
-<!--- Include a brief explaination to all the files in the folder--->
+<!--- Include a brief explanation to all the files in the folder--->
 
 These files are in the AuthorYYYY data rescue.
 
@@ -182,25 +191,22 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Read Web of Soils documentation here http://ncsslabdatamart.sc.egov.usda.gov/
+  - [x] Download files http://ncsslabdatamart.sc.egov.usda.gov/ 
+  - [x] Create a branch (since it's @ktoddbrown working here) of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/5-nrcs-ncss-web-of-soils_take2
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [ ] Create a GitHub issue https://github.com/ktoddbrown/SoilDRaH/issues/5 
   - [ ] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [ ] identify relevant sql tables
+  - [ ] script the table reads and check cross keys
+  - [ ] Check that tables cross-reference
+  - [x] Create a bib file with the citations
+  - [ ] Create level0 read
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] push to repository and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
