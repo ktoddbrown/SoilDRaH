@@ -171,11 +171,11 @@ The location and samples are cross linked using `lab_pedon`.
 
 <!--- Include a brief explanation to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the NCSS2023 data rescue.
 
-- [Readme](README_AUTHORYYYY.qmd)
+- [README_NCSS2023](README_NCSS2023.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [NCSS_SCD.bib](NCSS_SCD.bib)
   + citation for article transcribed
 - [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
   + citations for the methods section of the article
@@ -184,7 +184,7 @@ These files are in the AuthorYYYY data rescue.
 - [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
   + table N from primary article with ...
 - [temp/](temp/)
-    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+    + 
 
 # Data Rescue working notes 
 
@@ -213,9 +213,12 @@ These files are in the AuthorYYYY data rescue.
 ## Read Database
 
 ```{r}
-#### Connect the SQL database ####
+#| label: readSQLiteDB
+#| 
   myconnect <- RSQLite::dbConnect(drv = RSQLite::SQLite(), 
                                   dbname = sqlDownload)
+
+actualTableNames <- dbListTables(myconnect)
 
 table_names <- c("lab_analysis_procedure", "lab_analyte",
   "lab_chemical_properties", "lab_physical_properties",
@@ -223,11 +226,19 @@ table_names <- c("lab_analysis_procedure", "lab_analyte",
   'lab_area', "lab_pedon", "lab_layer", "lab_site",
   "lab_preparation", "lab_method_code")
 
-# lvl0.primary <- apply(table_names, 1, 
-#                       lab_area = 
-#                        RSQLite::dbReadTable(myconnect, 'lab_area')
+if(length(setdiff(table_names, actualTableNames)) != 0){
+  stop('Looking for tables that are not there!')
+}
 
-tableNames <- dbListTables(myconnect)
+lvl0.primary <- plyr::llply(
+  setNames(as.list(table_names), table_names),
+  .fun = function(xx){
+    ans.ls <- list( RSQLite::dbReadTable(myconnect, xx))
+    names(ans.ls) <- xx
+    return(ans.ls)
+  })
+
+RSQLite::dbDisconnect(myconnect)
 ```
 
 ## Table N
