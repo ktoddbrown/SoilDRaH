@@ -67,6 +67,7 @@ table1.file <- 'Kavvadias2001_Table1.csv'
 table2.file <- 'Kavvadias2001_Table2.csv'
 table6.file <- 'Kavvadias2001_Table6.csv'
 table7.file <- 'Kavvadias2001_Table7.csv'
+figure2.file <- 'Kavvadias2001_Table7.csv' #need to split up the figure 2 for coding purposes, but it should be able to be read in for lev0 as a combined file
 figure2A.file <- 'Kavvadias2001_Figure2_A.csv'
 figure2B.file <- 'Kavvadias2001_Figure2_B.csv'
 
