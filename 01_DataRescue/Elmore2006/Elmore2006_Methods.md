@@ -25,7 +25,7 @@ Between 1968 and 1980, this location became the central hub of a ‘Savory metho
 Cattle were rotated between paddocks as grass conditions allowed.
 In the last century, and in particular from 1968 to 1980, cattle grazed most of the ranch, but the region around the central water and supplemental feeding station underwent the highest intensity of grazing.
 Stocking rates from 1968–1980 were ∼450 cattle in the 1106 ha area surrounding the central water and feed station, but decreased to 300–350 cattle after 1980 to adjust for the effects of drought.
-Annual stocking rates throughout this period were, thus, 0.32–0.41 head ha$^{−1}$ [@KatoUnpublished].
+Annual stocking rates throughout this period were, thus, 0.32–0.41 head ha$^{−1}$ (Micky Kato, ranch manager, personal communication).
 
 ## Remote Sensing
 
@@ -43,7 +43,7 @@ Chosen endmembers were PV (green leaf material), NPV (dry leaf and woody stem ma
 Bundles of reference spectra of these materials were assembled from a database of spectra collected in previous work [@Asner1998, @Asner2000, @Asner2002].
 Individual spectra from each endmember bundle were iteratively selected by the model and applied to the following equation:
 
-$$ \rho(\lambda)_{pixel} = f_{PV}\rho(\lambda)PV + f_{NPV}\rho(\lambda)_{NPV} + f_{substrate}(\lambda)_{soil} + \epsilon,  \space (1) $$
+$\rho(\lambda)_{pixel} = f_{PV}\rho(\lambda)PV + f_{NPV}\rho(\lambda)_{NPV} + f_{substrate}(\lambda)_{soil} + \epsilon$,
 
 where $\rho(\lambda)_{PV}$ , $\rho(\lambda)_{NPV}$, $\rho(\lambda)_{substrate}$ are the endmember spectra of PV, NPV, and substrate surfaces, respectively.
 The terms, $f_{PV}$, $f_{NPV}$, and $f_{substrate}$ are the fractional cover of endmember types and $\epsilon$ is residual error.
@@ -91,14 +91,14 @@ This technique resulted in calculating SOC stocks to a depth slightly less than 
 This technique, which is becoming standard practice [@Murty2002], is preferable to a similar technique that simply calculates the SOC stock as the product of the SOC concentration and the bulk density [@Veldkamp1994, @Neill1997].
 The SOC concentration (kg C kg$^{−1}$ soil) in each soil core was thus converted to total soil organic C stock, SOC (kg C m$^{−2}$), as follows:
 
-$$ {\text{SOC}} = \text{CL}\rho_b \times 10^3, \space (2) $$
+${\text{SOC}} = \text{CL}\rho_b \times 10^3$,
 
-where C is the SOC concentration, $\rho_b$ (g cm$^{-3}$) is the soil bulk density, and L(m) is the soil depth, adjusted for compaction as described above.
+where C is the SOC concentration, $\rho_b$ (g cm$^-3$) is the soil bulk density, and L(m) is the soil depth, adjusted for compaction as described above.
 
 The SOC of each core is the sum of residual SOC derived from forest sources (SOC$_f$) and SOC accumulated since forest conversion to pasture (SOC$_p$).
 C from these sources differs in its $\delta^{13}C$ ratio, and therefore, the contribution of the two sources to total SOC was calculated using a pool mixing model [@Vitorello1989]:
 
-$$ \text{SOC}\delta^{13}C_s=(\text{SOC}_f\delta^{13}C_f) + (\text{SOC}_p\delta^{13}C_p), \space (3) $$
+$\text{SOC}\delta^{13}C_s=(\text{SOC}_f\delta^{13}C_f) + (\text{SOC}_p\delta^{13}C_p)$,
 
 where $\delta^{13}C_s$ is the C isotope ratio measured at each site, $\delta^{13}C_f$ from forest soils and $\delta^{13}C_p$ from pasture sources.
 We collected four samples (two low and two high grazing intensities) of fresh vegetation from the pastures and measured the average $\delta^{13}C_p$ as −13.0 ‰.
