@@ -109,19 +109,53 @@ read_csv(file = filename,
 
 ### Figure 6
 
-Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SD stands for Standard Deviation, Standard deviation high and lows from bar graph included as separate columns. Letters indicating statistically significant differences were listed in a new column titled "letter".
+Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SE stands for Standard Error, Standard error high and lows from bar graph included as separate columns. Letters indicating statistically significant differences were listed in a new column titled "letter".
 
 ```{r figure6}
+#| label: figure6Check
 #| code-fold: true
 #| message: false
 
-filename <- figure6.file
-read_csv(file = filename,
-                   skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+fig6Caption <- read_csv(file = figure6.file, 
                                  n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption)
+                                 show_col_types = FALSE)$caption
+fig6Data <- read_csv(file = figure6.file,
+                   skip = 1,
+                                      col_types = cols(.default = col_character()))
+
+fig6Data$`Litter Type` <- factor(fig6Data$`Litter Type`,
+                                  levels = unique(fig6Data$`Litter Type`))
+fig6Data$`Mass remaining (%)` <- as.numeric(fig6Data$`Mass remaining (%)`)
+fig6Data$`SE High`<- as.numeric(fig6Data$`SE High`)
+fig6Data$`SE Low`<- as.numeric(fig6Data$`SE Low`)
+fig6Data$`Type Label` <- factor(fig6Data$`Type Label`, levels = c("Removal", "Grass"))
+
+ggplot(fig6Data, aes(x = `Litter Type`, y = `Mass remaining (%)`, fill = interaction(`Litter Type`, `Type Label`))) +
+  geom_bar(stat = "identity", color = "black", width = 0.5, position = position_dodge(width = 1)) +
+  scale_y_continuous(breaks = c(0, 15, 30, 45, 60, 75), limits = c(0, 75)) +
+  scale_fill_manual(values = c("white", "lightgray", "darkgray")) +
+  facet_grid(~ `Type Label`, scales = "free_x", space = "free_x") +
+  geom_errorbar(aes(ymin = `SE Low`, ymax = `SE High`, group = `Type Label`),
+                position = position_dodge(width = 1),
+                width = 0.25) +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    strip.background = element_blank(),
+    strip.text = element_text(size = 14, face = "bold"),
+    axis.line = element_line(color = "black"),
+    panel.spacing = unit(0, "lines")
+  ) +
+  scale_x_discrete(expand = expansion(mult = c(0.1, 0.1))) +
+  geom_text(aes(
+    label = `Letter`, y = `SE High` + 2),
+    position = position_dodge(width = 1),
+    vjust = 0,
+    size = 5
+  ) +
+    labs(y = "Mass Remaining (%)",
+         x = "Species")
+
 ```
 
 {{< include Litton2008_Methods.md >}}
@@ -167,3 +201,64 @@ These files are in the Litton2008 data rescue.
 - [x] cross check with second transcriber for tables and methods
 - [x] submit to independent review
 - [x] archive on SoilDRaH
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles in methods section
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table2 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table1' element
+    Figure6 = list(
+      caption = read_csv(file = figure6.file,
+                         col_types = cols(.default = col_character()), n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure6.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
