@@ -49,6 +49,6 @@ Expected values of mass remaining (E) for the litter mixtures were calculated ba
 $$E = \sum_{i=1}^{S} w_i \times M_i$$
 
 where $w_i$ is the initial weight of the species $i$ in mixture, $M_i$ is the residual litter mass in monoculture of the species $i$, and $S$ is the total number of species in litter mixture.
-Deviation between the expected and the observed mass remaining in litter mixtures is calculated using the following formula: $[(O - E)/E] \times 100\%$ [@Loreau1998].
+Deviation between the expected and the observed mass remaining in litter mixtures is calculated using the following formula: [(O - E)/E] \times 100\% [@Loreau1998].
 Negative values indicate that mass loss in mixtures is greater than predicted from monoculture values (synergistic effects), and the opposite holds true for positive values (antagonistic effects).
 Additive effects originate from non-different to zero values.
