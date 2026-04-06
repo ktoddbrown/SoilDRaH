@@ -1,8 +1,8 @@
-# Material and methods
+# 2. Material and methods
 
 ## 2.1. Study sites
 
-The study was conducted on four undisturbed natural forest sites of maritime pine (*Pinus pinaster* Aiton), black pine (*Pinus nigra* Arn.), Bulgarian fir (*Abies borisii* regis, Matf.), and beech (*Fagus silvatica* L.).
+The study was conducted on four undisturbed natural forest sites of maritime pine (*Pinus pinaster* Aiton), black pine (*Pinus nigra* Arn.), Bulgarian fir (*Abies borisii regis*, Matf.), and beech (*Fagus silvatica* L.).
 The maritime pine site was derived from natural reforestation and the black pine site includes even aged stands derived from natural reforestation on abandoned eroded soils.
 The fir and beech sites are comprised of uneven aged stands mature for harvesting.
 The stand characteristics of the study sites are given in Table 1.
@@ -48,7 +48,7 @@ Mineral soil was removed after successive sieving.
 All litter fall and forest floor samples were oven-dried to constant weight at 70°C and weighed.
 Litter subsamples were then ground in a Willey mill to pass a 40 mesh stainless steel sieve before being analyzed.
 
-## 3.3. Mineral Soil
+## 3.3. Mineral soil
 
 On each stand seven randomly selected samples were collected from the different horizons and physical and chemical analyses were performed on the composite samples.
 

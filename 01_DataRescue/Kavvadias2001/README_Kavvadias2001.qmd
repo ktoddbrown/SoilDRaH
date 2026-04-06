@@ -290,7 +290,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table2.csv Kavvadias2001_Table2_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table2.csv temp/Kavvadias2001_Table2_CS.csv
 ```
 
 
@@ -326,7 +326,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table6.csv Kavvadias2001_Table6_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table6.csv temp/Kavvadias2001_Table6_CS.csv
 ```
 
 
@@ -363,7 +363,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table7.csv Kavvadias2001_Table7_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table7.csv temp/Kavvadias2001_Table7_CS.csv
 ```
 
 
@@ -461,7 +461,7 @@ diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2.csv Ka
 #| eval: false
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Methods.md Kavvadias2001_Methods_CS.md
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Methods.md temp/Kavvadias2001_Methods_CS.md
 ```
 
 {{< include Kavvadias2001_Methods.md >}}
