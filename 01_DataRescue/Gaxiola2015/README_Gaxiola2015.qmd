@@ -3,7 +3,6 @@ title: "Data Rescue: Gaxiola 2015"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -87,8 +86,11 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Gaxiola2015_Methods.md"
-tableN.file <- 'Gaxiola2015_TableN.csv'
-figureM.file <- 'Gaxiola2015_FigureM.csv'
+table1.file <- 'Gaxiola2015_Table1.csv'
+tableS1.file <- 'Gaxiola2015_TableS1.csv'
+figure1.file <- 'Gaxiola2015_Figure1.csv'
+figure2.file <- 'Gaxiola2015_Figure2.csv'
+figure3.file <- 'Gaxiola2015_Figure3.csv'
 
 # Bibliograph files
 primaryCitation.file <- 'Gaxiola2015.bib'
@@ -122,6 +124,7 @@ This paper looks at the scrublands of Fray Jorge Forest National Park in Chile, 
 
 - Table 
   1) Table 1. Comparisons of leaf litter traits between *Proustia* and *Porlieria* following 5 months of photodecomposition in the field.
+  2) Table S1. Interspecific comparisons of leaf and litter traits between deciduous *Proustia* and evergreen *Porlieria*.
 
 - Figure 
   1) Figure 1. Effects of UV exposure on litter biomass after a 5-months experiment in semiarid Chile.
@@ -152,8 +155,16 @@ These files are in the @Gaxiola2015 data rescue.
   + citations for the methods section of the article
 - [Gaxiola2015_Methods.md](Gaxiola2015_Methods.md)
   + methods transcribed from primary article
-- [Gaxiola2015_TableN.csv](Gaxiola2015_TableN.csv)
-  + table N from primary article with ...
+- [Gaxiola2015_Table1.csv](Gaxiola2015_Table1.csv)
+  + table 1 from primary article with compared the leaf litter traits between the two species of the study
+- [Gaxiola2015_TableS1.csv](Gaxiola2015_TableS1.csv)
+  + table S1 from primary article with the interspecific comparisons of leaf and litter traits between deciduous *Proustia* and evergreen *Porlieria*.
+- [Gaxiola2015_Figure1.csv](Gaxiola2015_Figure1.csv)
+  + figure 1 from primary article with the effects of UV exposure on the biomass after 5-months
+- [Gaxiola2015_Figure2.csv](Gaxiola2015_Figure2.csv)
+  + figure 2 from primary article with the remaining litter biomass percentage charted against the water addition equivalent to annaul rainfall
+- [Gaxiola2015_Figure3.csv](Gaxiola2015_Figure3.csv)
+  + figure 3 from primary article with the carry-over effects of photodecomposition as a function of water availability
 
 # Data Rescue working notes 
 
@@ -167,8 +178,8 @@ These files are in the @Gaxiola2015 data rescue.
   - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [x] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
+  - [x] Create a spreadsheet with Table1 and S1 and export it to csv
+  - [x] Extract points from Figure1-3 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -182,22 +193,19 @@ These files are in the @Gaxiola2015 data rescue.
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
-## Table N
+## Table 1
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table N was modified ....
+Table 1 was modified to include markdown formatting notation and combining subheaders together.
 
 ```{r}
 #| label: table1Check
-#| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -205,6 +213,88 @@ read_csv(file = tableN.file, #read in the specific file
                            show_col_types = FALSE #do not return messages
                            )$caption #and take it out of the table
   )
+```
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Table1.csv temp/Gaxiola2015_Table1_LK.csv
+```
+
+
+## Table S1
+
+Table S1 was modified to include markdown formatting notation and combining subheaders together.
+
+```{r}
+#| label: tableS1Check
+
+
+read_csv(file = tableS1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableS1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+```{bash}
+#| label: compareTableS1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_TableS1.csv temp/Gaxiola2015_TableS1_LK.csv
+```
+
+
+## Figure 1
+
+```{r}
+#| label: figure1Check
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig1Caption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig1Data <- read_csv(file = figure1.file,
+                   skip = 1)
+
+fig1Data$`x value label` <- factor(fig1Data$`x value label`,
+                                  level = c("*Proustia*", "*Porlieria*"))
+fig1Data$`UV treatment` <- factor(fig1Data$`UV treatment`,
+                                  level = c("UV+", "UV-"))
+
+
+fig1Data$`y value upper SE` <- as.numeric(fig1Data$`y value upper SE`)
+fig1Data <- fig1Data %>%
+  mutate(error_var = `y value upper SE` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+
+ggplot(fig1Data, aes(x = `x value label`, y = `y value`, fill = `UV treatment`, group = `UV treatment`)) +
+  scale_y_continuous(breaks = c(0, 6, 12, 18, 24, 30)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+  geom_errorbar(aes(
+    ymin = ymin,
+    ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.5) +
+  labs(title = "Comparisons of leaf litter traits between Proustia and Porlieria",
+       x = NULL,
+       y = "Litter biomass loss (%)",
+       caption = fig1Caption)
+
 ```
 
 ## Methods
@@ -292,12 +382,12 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element
