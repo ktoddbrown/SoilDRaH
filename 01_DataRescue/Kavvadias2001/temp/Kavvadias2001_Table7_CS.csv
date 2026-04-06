@@ -1,11 +1,10 @@
-"Table 7. Turnover time$^a$ of forest floor mass and nutrients in maritime pine, black pine, fir, and beech sites. $^a$
-Turnover time was estimated according to Olson’s formula using the data presented in Fig. 1, Fig. 2, Fig. 3.",,,,,,,,,
-Forest Species,Site quality,Turnover time (years) - Dry Matter,Turnover time (years) - N,Turnover time (years) - P,Turnover time (years) - K,Turnover time (years) - Ca,Turnover time (years) - Mg,Turnover time (years) - Na,
-Maritime Pine,Hsq,24.3,38.9,8.8,13.5,35.4,26.0,4.8,
-Maritime Pine,Lsq,22.7,32.2,20.9,10.9,21.1,19.9,9.5,
-Black pine,Hsq,21.5,30.0,18.4,8.9,35.3,20.6,22.0,
-Black pine,Lsq,20.3,26.1,18.8,9.7,23.2,18.6,24.6,
-Fir,Hsq,30.3,24.5,12.8,10.9,11.3,86.0,30.4,
-Fir,Lsq,33.6,31.3,11.1,9.3,14.2,82.5,43.3,
-Beech,Hsq,18.9,18.9,28.4,17.0,8.8,7.3,24.3,16.5
-Beech,Lsq,14.7,14.7,25.1,15.8,8.8,6.9,27.0,14.5
+"Table 7. Turnover time$^a$ of forest floor mass and nutrients in maritime pine, black pine, fir, and beech sites. $^a$ Turnover time was estimated according to Olson’s formula using the data presented in Fig. 1, Fig. 2, Fig. 3.",,,,,,,,
+Forest species,Site quality,Turnover time (years) - Dry matter,Turnover time (years) - N,Turnover time (years) - P,Turnover time (years) - K,Turnover time (years) - Ca,Turnover time (years) - Mg,Turnover time (years) - Na
+Maritime pine,Hsq,24.3,38.9,8.8,13.5,35.4,26.0,4.8
+Maritime pine,Lsq,22.7,32.2,20.9,10.9,21.1,19.9,9.5
+Black pine,Hsq,21.5,30.0,18.4,8.9,35.3,20.6,22.0
+Black pine,Lsq,20.3,26.1,18.8,9.7,23.2,18.6,24.6
+Fir,Hsq,30.3,24.5,12.8,10.9,11.3,86.0,30.4
+Fir,Lsq,33.6,31.3,11.1,9.3,14.2,82.5,43.3
+Beech,Hsq,18.9,28.4,17.0,8.8,7.3,24.3,16.5
+Beech,Lsq,14.7,25.1,15.8,8.8,6.9,27.0,14.5
