@@ -255,7 +255,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table1.csv Kavvadias2001_Table1_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table1.csv temp/Kavvadias2001_Table1_CS.csv
 ```
 
 ## Table 2
