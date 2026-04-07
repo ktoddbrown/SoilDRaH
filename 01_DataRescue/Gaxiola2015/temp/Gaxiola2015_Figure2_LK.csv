@@ -1,14 +1,14 @@
-﻿"**FIGURE 2 | Remaining litter biomass (%) at the end of a 6-month decomposition experiment, preceded by photodegradation in the field.** Samples from the field experiment are shown by open (UV+) or filled symbols (UV-). The laboratory experiment included irrigation treatments representing years with contrasting annual rainfall. Irrigation treatments represented the equivalent rainfall of a dry year (~15 mm), an average year (140 mm) and wet (El Nino) year (240 mm) in semiarid Chile. The experiment was conducted under constant temperature (23C). **(A)** Remaining litter biomass *Proustia* and **(B)** *Porlieria*. Data are means +- 1 SE.",,,,,,,
-y value,SE High,SE Low,x value,y axis label,x axis label,graph label,UV treatment
-80.90,84.89,77.28,11.21,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
-97.06,99.91,94.77,11.21,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
-48.96,53.33,44.96,149.08,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
-37.17,41.35,33.75,149.74,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
-18.63,23.58,12.93,240.77,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
-13.64,24.53,4.38,240.77,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
-95.06,98.86,91.25,11.39,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
-95.06,98.86,91.25,11.39,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
-86.69,92.02,81.37,149.37,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
-82.89,82.89,82.89,149.37,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
-53.43,57.61,49.81,239.87,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
-55.14,55.14,55.14,239.87,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
+"FIGURE 2 | Remaining litter biomass (%) at the end of a 6-month decomposition experiment, preceded by photodegradation in the field. Samples from the field experiment are shown by open (UV+) or filled symbols (UV-). The laboratory experiment included irrigation treatments representing years with contrasting annual rainfall. Irrigation treatments represented the equivalent rainfall of a dry year (~15 mm), an average year (140 mm) and wet (El Niño) year (240 mm) in semiarid Chile. The experiment was conducted under constant temperature (23°C). (A) Remaining litter biomass *Proustia* and (B) *Porlieria*. Data are means +- 1 SE.",,,,,,
+y value,y value upper SE,x value,y value unit,x value unit,graph label,UV treatment
+80.9,84.89,11.3,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
+97.1,99.91,11.3,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
+49.0,53.33,145,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
+37.2,41.35,145,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
+18.6,23.58,241,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV-
+13.6,24.53,241,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),A Proustia,UV+
+95.1,98.86,11.39,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
+95.1,98.86,11.39,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
+86.7,92.02,150,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
+82.9,82.89,150,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
+53.4,57.61,240,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV-
+55.1,55.14,240,Remaining biomass (%),Water addition equivalent to annual rainfall (mm),B Porlieria,UV+
