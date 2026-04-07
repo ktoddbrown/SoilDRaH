@@ -1,6 +1,6 @@
-﻿**FIGURE 1 | Effects of UV exposure on litter biomass after a 5-months experiment in semiarid Chile.** Data shown for deciduous *Proustia* and evergreen *Porlieria*. UV- represents a reduction of 96-98% of natural UV levels; UV+ is the control treatment without UV filters. Data are means +- 1 SE (thin bars).,,,,,
-y value,SE High,SE Low,y axis label,x axis label,UV treatment
-4.84,5.23,4.84,Litter biomass loss (%),*Proustia*,UV+
-25.23,26.32,24.15,Litter biomass loss (%),*Proustia*,UV-
-3.99,4.81,3.99,Litter biomass loss (%),*Porlieria*,UV+
-4.38,6.63,1.98,Litter biomass loss (%),*Porlieria*,UV-
+FIGURE 1 | Effects of UV exposure on litter biomass after a 5-months experiment in semiarid Chile. Data shown for deciduous *Proustia* and evergreen *Porlieria*. UV- represents a reduction of 96–98% of natural UV levels; UV+ is the control treatment without UV filters. Data are means +- 1 SE (thin bars).,,,,
+y value,y value upper SE,y value unit,x value label,UV treatment
+4.9,5.3,Litter biomass loss (%),*Proustia*,UV+
+25.3,26.3,Litter biomass loss (%),*Proustia*,UV-
+4.1,4.85,Litter biomass loss (%),*Porlieria*,UV+
+4.4,6.7,Litter biomass loss (%),*Porlieria*,UV-

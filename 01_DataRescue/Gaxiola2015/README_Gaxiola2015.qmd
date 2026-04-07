@@ -297,6 +297,80 @@ ggplot(fig1Data, aes(x = `x value label`, y = `y value`, fill = `UV treatment`, 
 
 ```
 
+
+```{bash}
+#| label: compareFigure1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure1.csv temp/Gaxiola2015_Figure1_LK.csv
+```
+
+
+
+## Figure 2
+
+```{r}
+#| label: figure2Check
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1)
+
+fig2Data$`y value` <- as.numeric(fig2Data$`y value`)
+fig2Data$`x value` <- as.numeric(fig2Data$`x value`)
+
+fig2Data$`y value upper SE` <- as.numeric(fig2Data$`y value upper SE`)
+fig2Data <- fig2Data %>%
+  mutate(error_var = `y value upper SE` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+fig2Data$`graph label` <- factor(fig2Data$`graph label`, 
+                                 levels = c("A Proustia", "B Porlieria"))
+
+ggplot(fig2Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill = `UV treatment`)) + geom_point(
+  size = 1.5,
+  stroke = 1,
+  color = "black") +
+  facet_wrap(~`graph label`, nrow = 1) +
+  scale_shape_manual(
+  values = c(
+    "UV+" = 16,
+    "UV-" = 21)) +
+  scale_fill_manual(
+    values = c(
+      "UV-" = "white",
+      "UV+" = "black"
+    )
+  ) +
+  scale_x_continuous(breaks = c(0,50,100,150,200,250)) +
+  scale_y_continuous(breaks = c(20,30,40,50,60,70,80,90,100)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax,group = `UV treatment`), position = position_dodge(width = 0.9), width = 20) +
+labs(
+  x = "Water equivalent to annual rainfall (mm)",
+  y = "Remaining biomass (%)"
+)
+
+
+
+```
+
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure1.csv temp/Gaxiola2015_Figure1_LK.csv
+```
+
+
+
 ## Methods
 
 ```{bash}
