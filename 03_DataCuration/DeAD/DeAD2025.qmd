@@ -140,6 +140,10 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | savascott |
 | Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | savascott |
 | Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
+| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | sierrav-droid |
+| Bravo-Oveido 2017 | @BravoOveido2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
+| Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | anegondia |
+| Day 2007 | @Day2007 | [227](https://github.com/ktoddbrown/SoilDRaH/issues/227) | angelacanini-a11y |
 
 ## Imported to bib
 
@@ -152,15 +156,11 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Barba 2016 | @Barba2016 |
 | Martínez 2010 | @Martinez2010 |
 | Blanco 2011 | @Blanco2011 |
-| Rozema 1997 | @Rozema1997 |
 | LadoMonserrat 2016 | @LadoMonserrat2016 |
 | Lyons 2010 | @Lyons2010 |
 | Almagro 2012 | @Almagro2012 |
 | Duguay 2000 | @Duguay2000 |
 | Dirks 2010 | @Dirks2010 |
-| BravoOvideo 2017 | @BravoOvideo2017 |
-| Day 2007 | @Day2007 |
-| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 |
 | Kumada 2008 | @Kumada2008 |
 | Gliksman 2016 | @Gliksman2016 |
 | Qasemian 2014 | @Qasemian2014 |
