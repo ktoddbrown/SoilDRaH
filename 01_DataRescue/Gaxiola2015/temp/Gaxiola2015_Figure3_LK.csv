@@ -1,0 +1,14 @@
+﻿"**FIGURE 3 | Graphic representation of carry-over effects of photodecomposition on litter biomass losses (%) as a function of water availability for two shrub species with contrasting leaf traits. (A)** Carry-over effects of UV exposure during the dry summer months promoted further carbon losses from *Proustia* litter, particularly in the irrigation treatments equivalent to low and average rainfall years, **(B)** No significant effects of photodecomposition on further biomass losses are observed in the case of *Porlieria* litter. Lines represent significant relationships between experimental irrigation treatments and biomass loss; dashed lines = UV+ (*Proustia*: y = 0.32 +- 0.006x + 12.9 +- 1.07; R^2 = 0.95 and *Porlieria*: y = 0.123 +- 0.01x; R^2 = 0.91) and solid lines = UV= (*Proustia*: y = 0.29 +- 0.01x; R^2 = 0.95 and *Porlieria*: y = 0.122 +- 0.01x; R^2 = 0.90).",,,,,,,
+y value,SE High,SE Low,x value,y axis label,x axis label,treatment type,graph label
+16.19,NA,NA,15.07,Biomass loss (%),Water availability (mm),UV+,A Proustia
+56.40,62.92,49.35,139.81,Biomass loss (%),Water availability (mm),UV+,A Proustia
+85.12,95.57,74.93,240.12,Biomass loss (%),Water availability (mm),UV+,A Proustia
+3.92,NA,NA,15.07,Biomass loss (%),Water availability (mm),UV-,A Proustia
+38.12,44.39,32.11,139.81,Biomass loss (%),Water availability (mm),UV-,A Proustia
+81.21,93.99,68.15,94.00,Biomass loss (%),Water availability (mm),UV-,A Proustia
+4.68,12.80,0,15.07,Biomass loss (%),Water availability (mm),UV+,B Porlieria
+13.58,24.81,2.35,139.81,Biomass loss (%),Water availability (mm),UV+,B Porlieria
+37.86,NA,NA,240.12,Biomass loss (%),Water availability (mm),UV+,B Porlieria
+2.88,9.93,0,14.81,Biomass loss (%),Water availability (mm),UV-,B Porlieria
+10.45,18.54,2.36,139.55,Biomass loss (%),Water availability (mm),UV-,B Porlieria
+33.69,44.65,22.98,240.38,Biomass loss (%),Water availability (mm),UV-,B Porlieria
