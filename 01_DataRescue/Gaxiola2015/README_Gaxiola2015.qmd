@@ -199,7 +199,8 @@ Table 1 was modified to include markdown formatting notation and combining subhe
 
 ```{r}
 #| label: table1Check
-
+#| code-fold: true
+#| message: false
 
 read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -229,6 +230,8 @@ Table S1 was modified to include markdown formatting notation and combining subh
 
 ```{r}
 #| label: tableS1Check
+#| code-fold: true
+#| message: false
 
 
 read_csv(file = tableS1.file, #read in the specific file
@@ -257,6 +260,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_TableS1.csv temp
 
 ```{r}
 #| label: figure1Check
+#| code-fold: true
+#| message: false
+
 library(ggplot2)
 library(readr)
 library(dplyr) 
@@ -266,7 +272,8 @@ fig1Caption <- read_csv(file = figure1.file,
                                  show_col_types = FALSE)$caption
 
 fig1Data <- read_csv(file = figure1.file,
-                   skip = 1)
+                   skip = 1,
+                   show_col_types = FALSE)
 
 fig1Data$`x value label` <- factor(fig1Data$`x value label`,
                                   level = c("*Proustia*", "*Porlieria*"))
@@ -311,6 +318,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure1.csv temp
 
 ```{r}
 #| label: figure2Check
+#| code-fold: true
+#| message: false
+
 library(ggplot2)
 library(readr)
 library(dplyr)
@@ -320,7 +330,8 @@ fig2Caption <- read_csv(file = figure2.file,
                                  show_col_types = FALSE)$caption
 
 fig2Data <- read_csv(file = figure2.file,
-                   skip = 1)
+                   skip = 1,
+                   show_col_types = FALSE)
 
 fig2Data$`y value` <- as.numeric(fig2Data$`y value`)
 fig2Data$`x value` <- as.numeric(fig2Data$`x value`)
@@ -377,6 +388,9 @@ diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure2.csv temp
 
 ```{r}
 #| label: figure3Check
+#| code-fold: true
+#| message: false
+
 library(ggplot2)
 library(readr)
 library(dplyr)
@@ -386,7 +400,8 @@ fig3Caption <- read_csv(file = figure3.file,
                                  show_col_types = FALSE)$caption
 
 fig3Data <- read_csv(file = figure3.file,
-                   skip = 1)
+                   skip = 1,
+                   show_col_types = FALSE)
 
 fig3Data$`y value` <- as.numeric(fig3Data$`y value`)
 fig3Data$`x value` <- as.numeric(fig3Data$`x value`)
