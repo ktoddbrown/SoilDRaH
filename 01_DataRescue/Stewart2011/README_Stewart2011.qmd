@@ -1,0 +1,389 @@
+---
+title: "Data Rescue: Stewart 2011"
+format:
+  html:
+    toc: true
+date: 2026-02-06
+date-format: YYYY-MMMM
+bibliography:
+  - Stewart2011_Methods.bib #contains the citations in the methods section
+  - Stewart2011.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown 
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review
+      #- standardization: 
+      #- curation: 
+  - id: semantic-nomad 
+    name:
+      given: Brandon
+      family: Whitehead
+    orcid: 
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review
+      - standardization: 
+      - curation: 
+  - id: misheph
+    name:
+      given: Mirah
+      family: Blanchard
+    affiliation:
+      - ref: uf-mae
+    role: 
+      - transcription: lead 
+      #- standardization:
+      #- curation: 
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+      #- standardization: 
+      #- curation: 
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "P.O Box 116250"
+    postal-code: 32611
+    url: https://mae.ufl.edu/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: Misheph 
+      end: 2026-1-31
+      start: 2025-10-25
+      duration: P10H
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- 'Stewart2011_Methods.md'
+table1.file <- 'Stewart2011_Table1.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Stewart2011.bib'
+methodsCitation.file <- 'Stewart2011_Methods.bib'
+
+# read function
+# readsource.file <- '../../../R/readStewart2011.R'
+# source('readsource.file')
+
+#semantic files for level 1
+#of_variable.file <- #'../../semantics/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Stewart, C. E., Neff, J. C., Amatangelo, K. L., & Vitousek, P. M. (2011). Vegetation Effects on Soil Organic Matter Chemistry of Aggregate Fractions in a Hawaiian Forest. Ecosystems (New York), 14(3), 382–397. https://doi.org/10.1007/s10021-011-9417-y
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/114.
+
+This paper examines how vegetation type affects the chemistry of soil organic matter (SOM) in a Hawaiian forest.
+The researchers aimed to determine whether or not a significant difference in soil chemistry can be seen across different vegetation types, or if plant input was homogenized during decomposition.
+Samples were taken from soils beneath two different plant species (D. linearis and C. trigynum) at two different depths, then composition was analyzed using pyrolysis-gas chromatography/ mass spectrometry (py-GC/MS).
+Researchers found that SOM chemistry was surprisingly similar across soil fractions, with the most significant difference being between the soil layers.
+Although the plant matter had been processed, traces of original plant chemistry were still detectable, with root composition having a larger impact than that of above-ground plant matter.
+
+## Tables and figures
+
+- Table 
+  1) C & N concentrations of tissues and soil horizons
+  2) Soil fraction chemistry at horizons
+  3) PCA of soil fractions
+  4) PCA of lignin biomarkers (py-GC/MS)
+  5) PCA of polysaccharide biomarkers (py-GC/MS)
+  6) PCA of lipid biomarkers (TMAH-pyGC/MS)
+  7) PCA of lipid biomarkers (py-GC/MS)
+  8) PCA of aromatic biomarkers (py-GC/MS)
+
+- Figure 
+  1) PCA of soil aggregate fractions
+  2) Compound class intensities
+  3) PCA of lignin compounds
+  4) PCA of polysaccharide compounds
+  5) PCA of lipid compounds
+  6) PCA of aromatic compounds
+  
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: No latitude and longitude provided, location briefly described in methods section under “Field Sampling”. Depth of sampling described in methods section. Observation years not given.
+- Soil carbon stock: Bulk density values and SOC fraction not reported, but %C in table 1.
+- Soil type: Soil classification given in methods section under “Field Sampling” (Hydric Hydrudand).
+- Land use and history not extensively described, brief mention of litter contributions from surrounding species given in methods section (“Field Sampling”).
+  
+## Files
+
+These files are in the AuthorYYYY data rescue.
+
+- [Readme](README_Veldkamp1994.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Stewart2011.bib](Veldkamp1994.bib)
+  + citation for article transcribed
+- [Stewart2011_Methods.bib](Veldkamp1994_Methods.bib)
+  + citations for the methods section of the article
+- [Stewart2011_Methods.md](Veldkamp1994_Methods.md)
+  + methods transcribed from primary article
+- [Stewart2011_Table1.csv](Veldkamp1994_Table1.csv)
+  + table 1 from primary article with C & N concentrations and soil horizons
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+- Methods section cited unpublished sources, format @[Author]Unpublished was used.
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to Stewart2011
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 was modified to move the description into the header.
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+table <- read_csv(file = table1.file,
+                  skip = 1,
+                  col_types = cols(.default = col_character())) 
+
+# first box in table is blank
+colnames(table)[1] <- ""
+
+kable(table, caption = read_csv(file = table1.file, 
+                                n_max = 1, col_names = 'caption', 
+                                show_col_types = FALSE)$caption)
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Stewart2011_Table1.csv Stewart2011_Table1.csv
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Stewart2011_Methods_SRS.md Stewart2011_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] Vitousek PM. 2004. Nutrient cycling and limitation: Hawai’i as a model system. Princeton, NJ: Princeton University Press.
+  + copy from bib
+- [x] Kitayama K, Muellerdombois D, Vitousek PM. 1995. Primary succession of Hawaiian montane rain-forest on a chronosequence of 8 lava flows. J Veg Sci 6:211–22.
+  + copy from bib
+- [x] Allison SD, Vitousek PM. 2004a. Extracellular enzyme activities and carbon chemistry as drivers of tropical plant litter decomposition. Biotropica 36:285–96.
+  + copy from bib
+- [x] Amatangelo KL, Vitousek PM. 2008. Stoichiometry of ferns in Hawaii: implications for nutrient cycling. Oecologia 157:619–27.
+  + copy from bib
+- [x] Crews TE, Kitayama K, Fownes JH, Riley RH, Herbert DA, Muellerdombois D, Vitousek PM. 1995. Changes in soil phosphorus fractions and ecosystem dynamics across a long chronosequence in Hawaii. Ecology 76:1407–24.
+  + copy from bib
+- [x] Vitousek PM, Chadwick OA, Crews TE, Fownes JH, Hendricks DM, Herbert D. 1997. Soil and ecosystem development across the Hawaiian Islands. GSA Today 7:1–7.
+  + copy from bib
+- [x] Torn MS, Trumbore SE, Chadwick OA, Vitousek PM, Hendricks DM. 1997. Mineral control of soil organic carbon storage and turnover. Nature 389:170–3.
+  + copy from bib
+- [x] Torn MS, Vitousek PM, Trumbore SE. 2005. The influence of nutrient availability on soil organic matter turnover estimated by incubations and radiocarbon modeling. Ecosystems 8:352–72.
+  + copy from bib
+- [x] Mikutta R, Schaumann GE, Gildemeister D, Bonneville S,Kramer MG, Chorover J, Chadwick OA, Guggenberger G.2009. Biogeochemistry of mineral-organic associations across a long-term mineralogical soil gradient (0.3–4100 kyr), Hawaiian Islands. Geochim Cosmochim Acta 73:2034–60.
+  + copy from bib
+- [x] Hempfling R, Schulten HR. 1990. Chemical characterization of the organic-matter in forest soils by Curie-point pyrolysis-GC/ MS and pyrolysis field-ionization mass-spectrometry. Org Geochem 15:131–45
+  + copy from bib
+- [x] White DM, Garland DS, Ping CL, Michaelson G. 2004. Characterizing soil organic matter quality in arctic soil by cover type and depth. Cold Reg Sci Technol 38:63–73.
+  + copy from bib
+- [x] Gauthier A, Derenne S, Dupont L, Guillon E, Largeau C, Dumonceau J, Aplincourt M. 2002. Characterization and comparison of two ligno-cellulosic substrates by C-13 CP/MAS NMR, XPS, conventional pyrolysis and thermochemolysis. Anal Bioanal Chem 373:830–8.
+  + copy from bib
+- [x] Grandy AS, Neff JC, Weintraub MN. 2007. Carbon structure and enzyme activities in alpine and forest ecosystems. Soil Biol Biochem 39:2701–11.
+  + copy from bib
+- [x] Hatcher PG, Nanny MA, Minard RD, Dible SD, Carson DM. 1995. Comparison of two thermochemolytic methods for the analysis of lignin in decomposing gymnosperm wood: the CuO oxidation method and the method of thermochemolysis with tetramethylammonium hydroxide (TMAH). Org Geochem 23:881–8.
+  + copy from bib
+- [x] Saiz Jimenez C. 1994. Analytical pyrolysis of humic substances—pitfalls, limitations, and possible solutions. Environ
+Sci Technol 28:1773–80.
+  + copy from bib
+- [x] del Rio JC, McKinney DE, Knicker H, Nanny MA, Minard RD, Hatcher PG. 1998. Structural characterization of bio- and geomacromolecules by off-line thermochemolysis with tetramethylammonium hydroxide. J Chromatogr A 823:433–48.
+  + copy from bib
+- [x] Klingberg A, Odermatt J, Meier D. 2005. Influence of parameters on pyrolysis-GC/MS of lignin in the presence of tetramethylammonium hydroxide. J Anal Appl Pyrolysis 74:104–9.
+  + copy from bib
+- [x] Buurman P, Peterse F, Martin GA. 2007. Soil organic matter chemistry in allophanic soils: a pyrolysis-GC/MS study of a Costa Rican Andosol catena. Eur J Soil Sci 58:1330–47.
+  + copy from bib
+- [x] Vancampenhout K, Wouters K, De Vos B, Buurman P, Swennen R, Deckers J. 2009. Differences in chemical composition of soil organic matter in natural ecosystems from different climatic regions - a pyrolysis-GC/MS study. Soil Biol Biochem 41:568–79.
+  + copy from bib
+- [x] Chiavari G, Galletti GC. 1992. Pyrolysis-gas chromatography mass-spectrometry of amino-acids. J Anal Appl Pyrolysis 24:123–37.
+  + copy from bib
+- [x] Gutierrez A, Martinez MJ, Almendros G, Gonzalezvila FJ,
+Martinez AT. 1995. Hyphal-sheath polysaccharides in fungal
+deterioration. Sci Total Environ 167:315–28.
+  + copy from bib
+- [x] Galletti GC, Bocchini P, Guadalix ME, Almendros G, Camarero S, Martinez AT. 1997. Pyrolysis products as markers in the chemical characterization of paperboards from waste paper and wheat straw pulps. Bioresour Technol 60:51–8.
+  + copy from bib
+- [x] del Rio JC, Gutierrez A, Rodriguez IM, Ibarra D, Martinez AT. 2007. Composition of non-woody plant lignins and cinnamic acids by Py-GC/MS, Py/TMAH and FTIR. J Anal Appl Pyrolysis 79:39–46.
+  + copy from bib
+- [x] Moldoveanu SC. 1998. Analytical pyrolysis of natural organic polymers. Techniques and instrumentation in analytical chemistry, Vol. 20Amsterdam: Elsevier.
+  + copy from bib
+- [x] Gleixner G, Bol R, Balesdent J. 1999. Molecular insight into soil carbon turnover. Rapid Commun Mass Spectrom 13:1278–83.
+  + copy from bib
+- [x] Gleixner G, Poirier N, Bol R, Balesdent J. 2002. Molecular dynamics of organic matter in a cultivated soil. Org Geochem 33:357–66.
+  + copy from bib
+- [x] Chefetz B, Tarchitzky J, Deshmukh AP, Hatcher PG, Chen Y. 2002. Structural characterization of soil organic matter and humic acids in particle-size fractions of an agricultural soil. Soil Sci Soc Am J 66:129–41.
+  + copy from bib
+- [x] Filley TR, Cody GD, Goodell B, Jellison J, Noser C, Ostrofsky A. 2002. Lignin demethylation and polysaccharide decomposition Vegetation Effects on Hawaiian SOM 395 in spruce sapwood degraded by brown rot fungi. Org Geochem 33:111–24.
+  + copy from bib
+- [x] Kaal J, Baldock JA, Buurman P, Nierop KGJ, PontevedraPombal X, Martinez-Cortizas A. 2007. Evaluating pyrolysisGC/MS and C-13 CPMAS NMR in conjunction with a molecular mixing model of the Penido Vello peat deposit, NW Spain. Org Geochem 38:1097–111.
+  + copy from bib
+- [x] Baldock JA, Masiello CA, Gelinas Y, Hedges JI. 2004. Cycling and composition of organic matter in terrestrial and marine ecosystems. Mar Chem 92:39–64.
+  + copy from bib
+- [x] Steinbeiss S, Schmidt CM, Heide K, Gleixner G. 2006. delta C-13 values of pyrolysis products from cellulose and lignin represent the isotope content of their precursors. J Anal Appl Pyrolysis 75:19–26.
+  + copy from bib
+- [x] Nierop KGJ, Tonneijck FH, Jansen B, Verstraten JM. 2007. Organic matter in volcanic ash soils under forest and paramo along an Ecuadorian altitudinal transect. Soil Sci Soc Am J 71:1119–27.
+  + copy from bib
+- [x] Raab TK, Amatangelo KL, Vitousek PM. Biochemical diversity among Hawaiian ferns, tree ferns and angiosperms: implications for life-forms and nutrient retention. J Ecol (unpublished-a).
+  + copy from bib
+- [x] Raab TK, Stewart CE, Kramer MG, Neff JC, Amatangelo KL, Vitousek PM. The Litter continuum—comparison of three analytical methods in a Hawaiian forest. Geoderma (unpublished-b).
+  + copy from bib
+- [x] Stewart C. Evaluation of plant biomarker contributions to soil organic matter using two methods of pyrolysis-gas chromatography-mass spectrometry. Plant Soil (unpublished).
+  + copy from bib
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.df <- list(citation = 
+                    list(primary = 
+                           read.bib(file = primaryCitation.file), 
+                         methods = 
+                           read.bib(file = methodsCitation.file)
+                    ),
+#Read in the text transcription of the article's methods section
+                  method = read_lines(file = methods.file),
+                  #Read in the results as tables or figure transcriptions. This includes
+                  #...the caption as well as the tables themselves
+                  data = list(Table1 = 
+                                list(caption = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                n_max = 1, col_names = FALSE)$X1[1],
+                                     primary = 
+                                       read_csv(file = table1.file,
+                                                col_types = cols(.default = col_character()),
+                                                skip = 1)
+                                )
+                              ))
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: false
+
+datafunction.lvl0.ls <- readStewart2011(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
