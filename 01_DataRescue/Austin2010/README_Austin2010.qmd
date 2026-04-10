@@ -61,6 +61,12 @@ timelog:
     start: 2026-01-30 T17:51
     end: 2026-01-30 T18:45
     duration: P54M
+  - activity: Cross check.
+    description: Fixing some old errors, starting the cross-check.
+    who: ashbonner310 
+    start: 2026-04-10 T15:45
+    end: 2026-04-10 T17:00
+    duration: P1H15M
 version: 'vs202512' 
 ---
 
@@ -86,12 +92,12 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-readsource.file <- '../../../R/readAustin2010.R'
-source('readsource.file')
+# readsource.file <- '../../../R/readAuthorYYYY.R'
+# source('readsource.file')
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+# of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+# is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -108,7 +114,7 @@ They also used wavelength-specific light attenuation filters to determine what w
 ## Tables and figures
 
 - Table
-<!-- This paper contains no tables --->
+This paper contains no tables.
 
 - Figure 
   1) Mass loss over experimental attenuation of specific regions of the solar spectrum; panel A covers mass loss of litter and panel B covers mass loss of a synthetic cellulose-lignin substrate.
@@ -194,7 +200,7 @@ Initial digitization for Figure 1 was performed with the [Plot Digitization app]
 Values were rounded to one additional decimal place than the y-axis on the original graph.
 For this figure, the original bar graph had a y-axis labeled to the hundredths place, so the outputs from the digitizer were rounded to the thousandths place.
 
-The Figure csv has seven columns: index, substrate, transmitted wavelengths in nm, Mass Loss in $\%$ per day, height of the error bar, error (difference between mass loss and height of error bar, calculated after rounding to significant figures), and letters indicating significant differences for Tukey HSD post-hoc comparisons.
+The Figure .csv has five columns: substrate, transmitted wavelengths in nm, Mass Loss in $\%$ per day, height of the error bar, and letters indicating significant differences for Tukey HSD post-hoc comparisons.
 
 ```{r table1}
 
@@ -209,7 +215,7 @@ read_csv(file = figure1.file,
 ## Methods comparison
 
 ```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_ABC.md Austin2010_Methods_BCD.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
 ```
 
 ## Methods Section Transcription
@@ -218,7 +224,11 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_ABC.
 
 ## Citation notes from Methods
 
-The methods sections for this paper contained no citations.
+Below are the citation notes from the methods section.
+
+- [x] (Van Soest 1963) @VanSoest1963
+  + Van Soest PJ (1963) Use of detergents in analysis of fibrous feeds II: A rapid method for the determination of fiber and lignin. J Assoc Of c Agr Chem 46:829–835.
+  + direct export
 
 # Level 0 Data rescue
 
@@ -245,12 +255,12 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = table1.file,
+      caption = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = table1.file,
+      primary = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element
@@ -262,6 +272,7 @@ data.lvl0.ls <- list(
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 datafunction.lvl0.ls <- readAustin2010(dataDir = '.',
                                     dataLevel = 'level0')
