@@ -1,0 +1,14 @@
+"Figure 1. Mass loss (% dw) of leaf material of Calamagrostis epigeios, grown under ambient and enhanced UV-B (‘-UV-B’ and ‘+UV-B’ litter quality), decomposing in the dune grassland under ambient (amb) and aenhanced (enh) UV-B radiation for 60 days, autumn 1994. (a) for 50 days, autumn 1995 (b) or for 60 days on the experimental field, autumn 1994 (c). Average values of 10 replications and standard error of the mean. Effect of litter quality (p=0.047 (a), p=0.001 (b), p=0.006 (c)) and UV-B radiation (photodegradation) (p=0.017 (a), p=0.049 (b) and p=0.005 (c)) statistically significant. Interaction not significant (two-way anova).",,,,,,
+Site,Year,Duration (days),Litter Quality,Radiation,Mass Loss (% dw),Error Bar Height
+Dune Grassland,1994,60,-UV-B,amb,47.3,48.7
+Dune Grassland,1994,60,-UV-B,enh,48.9,50.5
+Dune Grassland,1994,60,+UV-B,amb,43.9,45.2
+Dune Grassland,1994,60,+UV-B,enh,49.7,51.1
+Dune Grassland,1995,50,-UV-B,amb,43.7,44.4
+Dune Grassland,1995,50,-UV-B,enh,45.6,46.3
+Dune Grassland,1995,50,+UV-B,amb,42,42.9
+Dune Grassland,1995,50,+UV-B,enh,42.7,43.7
+Experimental Field,1994,60,-UV-B,amb,40.8,42
+Experimental Field,1994,60,-UV-B,enh,43,45.1
+Experimental Field,1994,60,+UV-B,amb,31.8,33.3
+Experimental Field,1994,60,+UV-B,enh,41,43.2
