@@ -1,0 +1,340 @@
+---
+title: "Data Rescue: Li 2010"
+format:
+  html:
+    toc: true
+    eval: true
+date: 2026-03-01
+date-format: YYYY-MM-DD
+bibliography:
+  - Li2010_Methods.bib #contains the citations in the methods section
+  - Li2010.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown 
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: review
+      #- standardization: #lead #review
+      #- curation: #lead #review
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - uf-ees
+    role:
+      - transcription: secondary
+      #- standardization:
+      #- curation:
+  - id: Misheph
+    name:
+      given: Mirah
+      family: Blanchard
+    affiliation:
+      - uf-mae
+    role: 
+      - transcription: lead
+      #- standardization: 
+      #- curation: 
+
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "P.O Box 116250"
+    postal-code: 32611
+    url: https://mae.ufl.edu/
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: Misheph #github username
+      start: 2025-11-01
+      end: 2026-3-01
+      duration: 15H
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Li2010_Methods.md"
+figure2.file <- 'Li2010_Figure2.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Li2010.bib'
+methodsCitation.file <- 'Li2010_Methods.bib'
+
+# read function
+#readsource.file <- '../../../R/readAuthorYYYY.R'
+#source('readsource.file')
+
+#semantic files for level 1
+#of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Li, Y., Mathews, B.W. Effect of conversion of sugarcane plantation to forest and pasture on soil carbon in Hawaii. Plant Soil 335, 245–253 (2010). https://doi.org/10.1007/s11104-010-0412-4
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/134.
+
+This data examines how changes in land use affects soil C storage. The researchers looked at how former sugarcane plantations that were now either forests or pastures compared in soil C, soil chemistry, and stable C isotope ratios. Soil samples were collected at different soil depths then analyzed for physical properties and chemical properties using methods such as colorimetric analysis and ICP. Researchers found that forests stored more total soil carbon than pastures, and that reforestation led to greater accumulation and stabilization of SOC than conversion to pasture.
+
+## Tables and figures
+
+- Table 
+  1) Average δ¹³C, %SOC₄, and %SOC₃
+  2) Soil pH, exchangeable cations, ECEC, Al saturation, P, and N
+
+- Figure 
+  1) Monthly precipitation and temperature at study site
+  2) Total soil carbon (TC) and SOC₃ (secondary forests) and SOC₄ (cane and grass) proportions
+  3) Oxalate-extractable Al in pasture vs forest
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+  - Location: location described and coordinates provided in methods section under study sites
+  - Soil carbon stock: SOC fractions provided in table 1 and figure 2, total soil C (Mg ha^-1) provided in figure 2
+  - Soil type: Soil classification (Acrudoxic Hydrudands of the Akaka and Kaiwiki series) given in methods section under study sites
+  - Land use: Land use and history detailed in methods section under study sites
+  
+## Files
+
+These files are in the Li2010 data rescue.
+
+- [Readme](README_AUTHORLi2010.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Li2010.bib](Li2010.bib)
+  + citation for article transcribed
+- [Li2010_Methods.bib](Li2010_Methods.bib)
+  + citations for the methods section of the article
+- [Li2010_Methods.md](Li2010_Methods.md)
+  + methods transcribed from primary article
+- [Li2010_Figure2.csv](Li2010_Figure2.csv)
+  + figure 2 from primary article with total soil carbon (TC), SOC₃ (secondary forests), SOC₄ (cane and grass) proportions
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Extract points from Figure2 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Figure 2
+
+```{r figure2, fig.height=8, fig.width=6}
+
+fig2 <- read_csv(
+  figure2.file,
+  skip = 1, # skip first line
+  col_names = TRUE,
+  show_col_types = FALSE
+)
+
+fig2 <- fig2 %>% # modify fig2 and pass back in
+  mutate(
+    y = as.numeric(y),
+    `error bar` = as.numeric(`error bar`),
+    `graph label` = factor(
+      `graph label`,
+      levels = c("A", "B"), # A first and then B, top to bottom
+      labels = c("0–10 cm", "10–25 cm")
+    ),
+    `x label` = factor(
+      `x label`,
+      levels = c("TC", "SOC4", "SOC3") # control order of bars
+    ),
+    ecosystem = factor(
+      ecosystem,
+      levels = c("S. Forest", "Pastures") # control fill colors and legend order
+    )
+  )
+
+# plot figure
+ggplot(fig2, aes(x = `x label`, y = y, fill = ecosystem)) + # initialize bar chart with height and fill according to ecosystem
+  geom_col(
+    position = position_dodge(width = 0.8),
+    width = 0.7
+  ) +
+  geom_errorbar(
+    aes(ymin = y, ymax = `error bar`), # start error bar at y value, extend to error bar value
+    position = position_dodge(width = 0.8),
+    width = 0.2
+  ) +
+  geom_text(
+    aes(label = footnote, y = `error bar` + 2), # annotate above each error bar
+    position = position_dodge(width = 0.8),
+    vjust = 0
+  ) +
+  facet_wrap(~ `graph label`, ncol = 1) +
+  scale_y_continuous(
+    breaks = c(0, 20, 40, 60, 80, 100), # set y axis values
+    limits = c(0, 100)
+  ) +
+  scale_fill_manual(
+    values = c("S. Forest" = "red", "Pastures" = "blue"), # set color of ecosystem
+    name = ""
+  ) +
+  labs(
+    x = "", # no x label
+    y = expression(Soil~C~pools~(Mg~ha^{-1})) # exponent formatting
+  ) +
+  theme_classic() +
+  theme(
+    legend.position = "top",
+    strip.text = element_blank()
+  )
+```
+
+## Methods comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/Li2010_Methods_SRS.md Li2010_Methods.md
+```
+
+## Methods Section Transcription
+
+{{< include Li2010_Methods.md >}}
+
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+Some citations are missing, those are noted here and how best guess were generated.
+
+- [x] (Parfitt et al. 1988) @Parfitt1988 
+  + Parfitt RL, Childs CW, Eden DN (1988) Ferrihydrite and allophone in four andepts from Hawaii and implications for their classification.    Geoderma 41:223–241
+  + direct export
+- [x] (Patrick Niemeyer, USDA-NRCS) @PatrickPersComm
+  + Personal Communication with member of USDA-NRCS
+  + manual entry
+- [x] (Bashkin and Binkley 1998) @Bashkin1988
+  + Bashkin MA, Binkley D (1998) Changes in soil carbon following afforestation in Hawaii. Ecology 79:828–833
+  + direct export
+- [x] (Hue et al. 2000) @Hue2000
+  + Hue NV, Uchida R, Ho MC (2000) Sampling and analysis of soils and plant tissues: how to take representative samples, how the samples are tested. In: Silva JA, Uchida RS (eds) Plant nutrient management in Hawaii's soils: approaches for tropical and subtropical agriculture. CTAHR, Univ. of Hawaii, Manoa, pp 23–30
+  + direct export
+- [x] (Shuman and Duncan 1990) @Shuman1990 
+  + Shuman LM, Duncan RR (1990) Soil exchangeable cations and aluminum measured by ammonium chloride, potassium chloride, and ammonium acetate. Commun Soil Sci Plant Anal 21:1217–1228
+  + direct export
+- [x] (Parfitt 1989) @Parfitt1989 
+  + Parfitt RL (1989) Optimum conditions for extraction of Al, Fe, and Si from soils with acid oxalate. Commun Soil Sci Plant Anal 20:801–816
+  + direct export
+- [x] (Resh et al. 2002) @Resh2002
+  + Resh SC, Binkley D, Parrotta JA (2002) Greater soil carbon sequestration under nitrogen-fixing trees compared with eucalyptus species. Ecosystems 5:217–231
+  + direct export
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Figure2 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Figure2' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: false
+
+datafunction.lvl0.ls <- readLi2010(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
