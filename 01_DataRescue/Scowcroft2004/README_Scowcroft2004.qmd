@@ -77,14 +77,13 @@ affiliations:
     
 timelog:
   - activity: 
-      description: revised execute with only provided files
+      description: minor post-PR edits
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
+      start: 2026-02-26 T1400
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
-
+      duration: P15M
   - activity: 
       description: Lead Transcription and ReadMe Update
       who: SavaScott #github username
@@ -92,7 +91,6 @@ timelog:
       end: 2026-01-22
       start: 2025-09-09
       duration: PT7H
-
   - activity: 
       description: Secondary Transcription
       who: waldera #github username
@@ -257,7 +255,26 @@ diff --strip-trailing-cr --suppress-common-lines -y Scowcroft2004_Table1.csv Sco
 
 ```
 
-{{< include Scowcroft2004_Methods.md >}}
+Any different to the cross check for the methods section will be output after this line.
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
 
 <!----
 ## Citation notes from Methods
