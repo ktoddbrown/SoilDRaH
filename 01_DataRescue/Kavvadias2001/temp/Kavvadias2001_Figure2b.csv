@@ -1,0 +1,10 @@
+"Fig. 2. Total mass of litterfall and litter accumulation at the two site qualities, high (H) and low (L), in four Greek coniferous (Pinus pinaster, Pinus nigra, Abies borisii regis ) and deciduous (Fagus sylvatica) forest sites.",,,,,
+y bottom value,y top value,y value unit,species,site quality,graph label
+25.2,35.1,tons*ha$^{-1}$,Maritime Pine,H,Littermass
+23.6,31.3,tons*ha$^{-1}$,Maritime Pine,L,Littermass
+40.9,56.2,tons*ha$^{-1}$,Black Pine,H,Littermass
+31.5,50.1,tons*ha$^{-1}$,Black Pine,L,Littermass
+47.8,76.5,tons*ha$^{-1}$,Fir,H,Littermass
+55.9,81.6,tons*ha$^{-1}$,Fir,L,Littermass
+60.3,75.5,tons*ha$^{-1}$,Beech,H,Littermass
+42.2,58.5,tons*ha$^{-1}$,Beech,L,Littermass
