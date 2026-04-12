@@ -56,12 +56,17 @@ affiliations:
     
 timelog:
   - activity: 
-      description: reviewed data issue
-      who: ktoddbrown 
-      #when you started and ended, can be just a year or down to the minute
-      start: 2026-03-06
-      end: 2026-03-06
-      duration: P30M
+      description: Primary Transcription and PR prep
+      who: SavaScott 
+      start: 2026-02-13
+      end: 2026-04-13
+      duration: PT7H30M
+  - activity: 
+      description: Secondary Transcription
+      who: ChaseSaxour 
+      start: 2026-02-13
+      end: 2026-04-13
+      duration: PT4H5M
 ---
 
 
@@ -214,13 +219,13 @@ These files are in the @Kavvadias2001 data rescue.
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
   - [x] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions suggested in your pull request review
-  - [ ] celebrate!
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions suggested in your pull request review
+  - [x] celebrate!
 
 ## Table 1
 
@@ -445,11 +450,11 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_A.csv Kavvadias2001_Figure2_A_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_A.csv temp/Kavvadias2001_Figure2a_CS.csv
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_B.csv Kavvadias2001_Figure2_B_CS.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_B.csv temp/Kavvadias2001_Figure2b_CS.csv
 
-diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2.csv Kavvadias2001_Figure2.csv
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2.csv temp/Kavvadias2001_Figure2_CS.csv
 ```
 
 
@@ -520,7 +525,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
-#| eval: false
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
