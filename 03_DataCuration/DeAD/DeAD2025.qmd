@@ -135,8 +135,15 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
 |------------|----------|-----------|----------|
-| Ares2001 | \@Ares2001 | [77](https://github.com/ktoddbrown/SoilDRaH/issues/77) | ktoddbrown |
-<!---- remove and replace the example above ---->
+| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | ashbonner310 |
+| Lin2015 | @Lin2015 | [185](https://github.com/ktoddbrown/SoilDRaH/issues/185) | savascott |
+| Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | savascott |
+| Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | savascott |
+| Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
+| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | sierrav-droid |
+| Bravo-Oveido 2017 | @BravoOveido2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
+| Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | anegondia |
+| Day 2007 | @Day2007 | [227](https://github.com/ktoddbrown/SoilDRaH/issues/227) | angelacanini-a11y |
 
 ## Imported to bib
 
@@ -144,27 +151,18 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | 
 |------------|------------|
-| Austin2010 | @Austin2010 |
 | Wang2017 | @Wang2017 |
 | Santos1984 | @Santos1984 |
 | Barba 2016 | @Barba2016 |
 | Martínez 2010 | @Martinez2010 |
 | Blanco 2011 | @Blanco2011 |
-| Rozema 1997 | @Rozema1997 |
 | LadoMonserrat 2016 | @LadoMonserrat2016 |
-| Kemp 2003 | @Kemp2003 |
-|Lyons 2010 | @Lyons2010 |
+| Lyons 2010 | @Lyons2010 |
 | Almagro 2012 | @Almagro2012 |
 | Duguay 2000 | @Duguay2000 |
 | Dirks 2010 | @Dirks2010 |
-| BravoOvideo 2017 | @BravoOvideo2017 |
-| Day 2007 | @Day2007 |
-| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 |
-| Gaxiola 2015 | @Gaxiola2015 |
-| Kavvadias 2001 | @Kavvadias2001 |
 | Kumada 2008 | @Kumada2008 |
 | Gliksman 2016 | @Gliksman2016 |
-| Lin 2015 | @Lin2015 |
 | Qasemian 2014 | @Qasemian2014 |
 | Sagi 2019 | @Sagi2019 |
 | Bates 2007 | @Bates2007 |
