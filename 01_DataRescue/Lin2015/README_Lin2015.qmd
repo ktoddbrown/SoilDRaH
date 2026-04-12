@@ -1,0 +1,613 @@
+---
+title: "Data Rescue: Lin 2015"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Lin2015_Methods.bib
+  - Lin2015.bib
+authors:
+  - id: ktoddbrown
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: review
+     # - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: AshBonner310
+    name:
+      given: Ashley
+      family: Bonner
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: review
+     # - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead
+  #    - standardization: lead #review
+   #   - curation: lead #review
+
+  - id:  ChaseSaxour
+    name:
+      given: Chase 
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+    #  - standardization: lead #review
+    #  - curation: lead #review
+      
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Primary Transcription and PR Finalization
+      who: SavaScott
+      start: 2025-01-30
+      end: 2025-03-01
+      duration: PT11H45M
+      
+  - activity: 
+      description: Secondary Transcription
+      who: ChaseSaxour
+      end: 2026-02-26
+      start: 2026-01-30
+      duration: PT3H
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Lin2015_Methods.md"
+table1.file <- 'Lin2015_Table1.csv'
+table2.file <- 'Lin2015_Table2.csv'
+figure1.file <- 'Lin2015_Figure1.csv'
+figure2.file <- 'Lin2015_Figure2.csv'
+figure3.file <- 'Lin2015_Figure3.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Lin2015.bib'
+methodsCitation.file <- 'Lin2015_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../../R/readLin2015.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+Lin, Y., Scarlett, R.D. & King, J.Y. Effects of UV photodegradation on subsequent microbial decomposition of Bromus diandrus litter. Plant Soil 395, 263–271 (2015). https://doi.org/10.1007/s11104-015-2551-0
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/185.
+
+@Lin2015 examined *Bromus diandrus* in a California annual grassland in Santa Ynez across three different periods of UV radiation exposure.
+They used this data to determine that during the summer months, exposure to UV treatments decreased litter biodegradability.
+They also determined that there was a positive relationship between litter biodegradability and N concentration, due to UV treatments in the summer.
+Finally, the paper emphasized the importance of the seasonal patterns (solar radiation and moisture) on photodegradation pathways.
+
+## Tables and figures
+
+- Tables 
+  1) Table 1. *Bromus diandrus* litter samples and their field UV exposure characteristics
+  2) Table 2. Effects of UV treatment on chemical characteristics of the litter
+
+- Figures 
+  1) Effects of UV manipulation and exposure periods on microbial respiration in the litter.
+  2) Figure 2. Subsequent microbial respiration from the litter as a function of time for litter exposed during summer.
+  3) Figure 3. Relationship between litter N concentration and cumulative microbial respiration during the periods.
+  4) Figure 4. Conceptual model of solar radiation effect on little mass loss
+
+
+## Fit for purpose: DeAD
+
+This data is identified as a data source for DeAD.
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
+This paper has been identified as a source for the information above.
+
+### Main Variables of Interest
+
+  - Location: This study was conducted in the Sedgwick Reserve in Santa Ynez, California, USA. The longitude and latitude coordinates were given in the materials and methods section (43°42′N, 120°2′W; 25 km north of Santa Barbara). More description of the site could be found in a previous paper by Lin (Lin and King 2014).
+  - Duration: The study was conducted in the field for 3 separate periods: summer, summer-winter, and one year. The yearly periods and duration in months are provided in Table 1.
+  - Mass Loss: The change in chemical characteristics of the litter due to the UV treatment is provided in Table 2.
+  - Solar exposure: Litter exposure was controlled by using a block or pass method, with more in-depth information being provided in the materials and method section, subsection "Litter collection and UV treatment". Whether the litter was in a UV block or passed is provided in Table 1 or Table 2.
+
+### Other Relevant Variables
+  - Litter Species: The litter that this study is looking at is the California grass, *Bromus diandrus*, from UC Sedgwick Reserve in Santa Ynez, California, USA.
+  - Microsite data: More of the microsite data is found within a previous paper by @Lin2014.
+  - Litter chemical composition, including lignin content and C: N ratio: The litters' chemical characteristics, such as carbon %, nitrogen %, and lignin %, can be found in Table 2. This table varies these percentages by the UV treatment period and the type of UV treatment the litter was subjected to.
+  - Microclimate relative humidity: The microclimate's relative humidity is recorded in another paper, @Lin2014.
+  - Litter bag materials and method, including litter bag area and mesh size: The *B. diandrus* litter was sealed within 20 by 20 cm aluminium bags with a 1.5 mm mesh size.
+  - Treatments, including rain-out shelters, canopy shading, or filters: The aluminum bags were suspended at 5 cm under louvers (10 pairs of each test variable) with UV pass or UV block screens. They were supported below by a stainless steel screen. UV screens were identical in design throughout the study. Screens allowed rainfall and were controlled for heating, with no difference in effects between UV block and pass screens.
+  
+## Files
+
+These files are in the @Lin2015 data rescue.
+
+- [ReadMe](README_Lin2015.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Lin2015.bib](Lin2015.bib)
+  + citation for article transcribed
+- [Lin2015_Methods.bib](Lin2015_Methods.bib)
+  + citations for the methods section of the article
+- [Lin2015_Methods.md](Lin2015_Methods.md)
+  + methods transcribed from primary article
+- [Lin2015_Table1.csv](Lin2015_Table1.csv)
+  + table 1 from primary article with *Bromus diandrus* litter samples and UV treatments
+- [Lin2015_Table2.csv](Lin2015_Table2.csv)
+  + table 2 from primary article with the effects of the UV on the chemical characteristics of the litter
+- [Lin2015_Figure1.csv](Lin2015_Figure1.csv)
+  + figure 1 from primary article with the effects of UV treatment and the exposure periods on the microbial respiration
+- [Lin2015_Figure2.csv](Lin2015_Figure2.csv)
+  + figure 2 from primary article with the subsequent microbial respiration for the litter as a function of time
+- [Lin2015_Figure3.csv](Lin2015_Figure3.csv)
+  + figure 3 from primary article with the relationship between litter N concentration and microbial respiration
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Lin2015'
+  - [x] Create a copy of this template folder and rename it to Lin2015
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and 2 and export it to csv
+  - [x] Extract points from Figure1-3 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 was modified to include latex superscripts. 
+
+```{r}
+#| label: table1Check
+#| code-fold: true
+#| message: false
+
+
+read_csv(file = table1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table1.csv temp/Lin2015_Table1_CS.csv
+```
+
+
+## Table 2
+
+Table 1 was modified to include latex format to bold and italics sections of text. It was also modified to combine a header with its sub headers in the table. Footnotes were added into the caption.
+
+```{r}
+#| label: table2Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table2.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+```{bash}
+#| label: compareTable2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Table2.csv temp/Lin2015_Table2_CS.csv
+```
+
+
+
+## Figure 1
+
+Figure 1 was modified to add an x-axis label of exposure period. It was also adjusted in the csv to only mark one of UV treatment of having 'P < 0.05' to better fit the coding process. 
+
+```{r}
+#| label: figure1Check
+#| code-fold: true
+#| message: false
+
+fig1Caption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig1Data <- read_csv(file = figure1.file,
+                   skip = 1,
+                                      col_types = cols(.default = col_character()))
+
+fig1Data$`x axis label` <- factor(fig1Data$`x axis label`,
+      levels = c("Summer", "Summer-winter", "One year"))
+
+fig1Data$y <- as.numeric(fig1Data$y)
+fig1Data$`y value positive SE` <- as.numeric(fig1Data$`y value positive SE`)
+
+fig1Data$signif_label <- ifelse(grepl("<\\s*0\\.05", fig1Data$`P value`),
+"**",
+""
+) 
+
+ggplot(fig1Data, aes(x = `x axis label`, y = y, fill = `UV treatment`)) + 
+  geom_bar(stat = "identity", position = position_dodge(width = 1)) + 
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80)) +
+  scale_fill_manual(
+    values = c("UV block" = "black",
+               "UV pass" = "darkgray")) +
+  geom_errorbar(aes(ymin = y, ymax = `y value positive SE`,group = `UV treatment`),
+                position = position_dodge(width = 1), 
+                width = 0.25) +
+  geom_text(aes(
+    label = signif_label,
+    y = `y value positive SE` + 10,
+    group = 'UV treatment'),
+    position = position_dodge(width = 1),
+    vjust = 0,
+    size = 5
+  ) +
+  labs(title = "Fig. 1 Effect of UV manipulation and exposure periods",
+     y = unique(fig1Data$`y axis label`),
+     x = "Exposure period")
+
+```
+
+```{bash}
+#| label: compareFigure1
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure1.csv temp/Lin2015_Figure1_CS.csv
+```
+
+## Figure 2
+
+Figure 2 was modified to drop the units from the y-axis due to size constraints. 
+
+```{r}
+#| label: figure2Check
+#| code-fold: true
+#| message: false
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig2Data$`x value` <- as.numeric(fig2Data$`x value`)
+fig2Data$`y value` <- as.numeric(fig2Data$`y value`)
+
+fig2Footnotes <- fig2Data |>
+distinct(`P value`) |>
+  mutate(
+    label = ifelse(`P value` == "-", NA, `P value`)
+    )
+
+ggplot(fig2Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill = `UV treatment`)) +
+  geom_point(
+    size = 2,
+    color = "black",
+    stroke = 0.5) +
+      geom_errorbar(
+      aes(
+    ymin = `y value` - as.numeric(ifelse(`y value SE difference` == "-", NA, `y value SE difference`)),
+    ymax = `y value` + as.numeric(ifelse(`y value SE difference` == "-", NA, `y value SE difference`))
+  ), width = 0.7) +
+  geom_text(aes(
+       y = `y value` + 37,
+       label = ifelse(`P value` == "-", NA, `P value`)),
+       position = position_dodge(width = 0.9),
+       hjust = 0,
+       size = 4,
+       na.rm = TRUE) +
+  labs(
+    x = 'Days since the start of incubation',
+    y = 'Microbial respiration'
+  )
+ 
+```
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure2.csv temp/Lin2015_Figure2_CS.csv
+```
+
+
+## Figure 3
+
+Figure 3 was modified to create a subtitle from the different graph labels. Due to the large label for the y-axis, the units were dropped in the image, but can still be found in the csv. The trendline was also dropped from the image, as we are only recording data points.
+
+```{r}
+#| label: figure3Check
+#| code-fold: true
+#| message: false
+
+library(dplyr)
+
+fig3Caption <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig3Data <- read_csv(file = figure3.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig3Data$`x value` <- as.numeric(fig3Data$`x value`)
+fig3Data$`y value` <- as.numeric(fig3Data$`y value`)
+
+fig3Data$`graph label` <- factor(fig3Data$`graph label`,
+      levels = c("a) Summer", "b) Summer-winter", "c) One year"))
+
+fig3Footnotes <- fig3Data |>
+distinct(`graph label`, `r and P values`) |>
+  mutate(
+    label = ifelse(`r and P values` == "-", NA, `r and P values`)
+    )
+  
+
+ggplot(fig3Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill = `UV treatment`)) +
+  geom_point(
+    size = 3,
+    color = "black",
+    stroke = 1) + 
+  facet_wrap(~`graph label`, nrow = 1) +
+scale_shape_manual(
+  values = c(
+    "UV block" = 16,
+    "UV pass" = 21
+  )) +
+  scale_fill_manual(
+    values = c(
+      "UV block" = "black",
+      "UV pass" = "white"
+    )) + 
+  facet_wrap(~`graph label`, nrow = 1) +
+  geom_text(
+    data = fig3Footnotes,
+    aes(label = label),
+    x = Inf,
+    y = Inf,
+    hjust= 1.1,
+    vjust = 1.3,
+    size = 2.5,
+    inherit.aes = FALSE
+  ) +
+  scale_x_continuous(breaks = c(0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)) +
+  scale_y_continuous(breaks = c(30, 40, 50, 60, 70, 80, 90)) +
+  labs(
+    x = "Litter N%",
+    y = "Cumulative microbial respiration") +
+   theme_classic()
+
+```
+
+```{bash}
+#| label: compareFigure3
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Figure3.csv temp/Lin2015_Figure3_CS.csv
+```
+
+## Methods
+
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y Lin2015_Methods.md temp/Lin2015_Methods_CS.md
+```
+
+{{< include Lin2015_Methods.md >}}
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+  
+- [x] Lin Y, King J (2014) Effects of UV exposure and litter position on decomposition in a California grassland. Ecosystems 17:158–168
+  + copy from bib
+
+- [x] Van Soest PJ (1963) Use of detergents in the analyses of fibrous feeds. A rapid method for the determination of fiber and lignin. J Assoc Off Anal Chem 46:829–835
+  + copy from bib
+  
+- [x] Austin AT, Vivanco L (2006) Plant litter decomposition in a semi-arid ecosystem controlled by photodegradation. Nature 442:555–558
+  + copy from bib
+  
+- [x] Brandt LA, King JY, Hobbie SE, Milchunas DG, Sinsabaugh RL (2010) The role of photodegradation in surface litter decomposition across a grassland ecosystem precipitation gradient. Ecosystems 13:765–781
+  + copy from bib
+  
+- [x] Rozema J, Tosserams M, Nelissen HJM, van Heerwaarden L, Broekman RA, Flierman N (1997) Stratospheric ozone reduction and ecosystem processes: enhanced UV-B radiation affects chemical quality and decomposition of leaves of the dune grassland species Calamagrostis. Plant Ecol 128:285–294
+  + copy from bib
+
+- [x] von Lützow M, Kögel-Knabner I, Ekschmitt K, Flessa H, Guggenberger G, Matzner E, Marschner B (2007) SOM fractionation methods: relevance to functional pools and to stabilization mechanisms. Soil Biol Biochem 39:2183–2207
+  + copy from bib
+
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#| eval: true
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  method = read_lines(file = methods.file),
+  data = list(
+    Table1 = list(
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+    Table1 = list(
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+      Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1))
+      
+   )
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readLin2015(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
