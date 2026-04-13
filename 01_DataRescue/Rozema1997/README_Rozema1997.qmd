@@ -10,18 +10,38 @@ bibliography:
   - AuthorYYYY_Methods.bib #contains the citations in the methods section
   - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
-  - id: ktoddbrown #use the github name as an id
+  - id: ashbonner310 #use the github name as an id
     name:
-      given: Katherine
-      family: Todd-Brown
-    orcid: 0000-0002-3109-8130
+      given: Ashley
+      family: Bonner
+    orcid: 0000-0001-7882-6353
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
+    role: 
+      - transcription: lead (methods bib, Figure 1)
+      - transcription: secondary (Table 1, Table 2)
 
+  - id: anegondia #use the github name as an id
+    name:
+      given: Arunima
+      family: Anegondi
+    orcid: #####
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead (Table 1, methods)
+      
+  - id: Misheph #use the github name as an id
+    name:
+      given: Mirah
+      family: Blanchard
+    orcid: ####
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead (Table 1)
+      - transcription: secondary (Figure 1, methods)
+      
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -42,30 +62,11 @@ affiliations:
     
 timelog:
   - activity: 
-      description: add general UF affilation
-      who: ktoddbrown #github username
+      description: updated methods citation notes and author contributions
+      who: ashbonner310 #github username
       #when you started and ended, can be just a year or down to the minute
-      start: 2026-01-29 T1530
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P05M
-  - activity: 
-      description: revised execute with only provided files
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
-  - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
+      start: 2026-04-13 T1515
       duration: P30M
-version: 'vs202512' #template version, remove before use
 ---
 
 
@@ -262,9 +263,39 @@ This generally doesn't read well in the final report so commenting it out here b
 Some citations are missing, those are noted here and how best guess were generated.
 Think of this as a lab notebook documenting how you found each citation.
 
-- [ ] short citation
+- [X] Tosserams et al. 1995
   + copy from bib
-  + manually entered or direct export
+  + direct export
+  + Source mentions "Tosserams et al. 1997" but that citation doesn't exist in references
+  + Investigation into this citation matches methods reference, so that change is made in the methods markdown file
+  
+- [X] Tosserams et al. 1996
+  + direct export
+  
+- [X] Allen 1989
+  + book, manually entered 
+  
+- [X] Green et al. 1980
+  +  manually entered 
+
+- [X] Kuiters 1990
+  +  direct export
+
+- [X] Rozema et al. 1995
+  +  manually entered 
+  +  chapter/article within a book within a series. 
+  +  added details about series book appears in
+
+- [X] Sokal & Rohlf 1981
+  + book, manually entered 
+  
+- [ ] Tolsma 1989
+  + doctorate thesis
+  + manually entered
+
+- [ ] Van Beckhoven 1995
+  + doctorate thesis
+  + manually entered
 ---->
 
 # Level 0 Data rescue
