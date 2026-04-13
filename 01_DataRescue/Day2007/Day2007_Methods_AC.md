@@ -1,11 +1,8 @@
 ---
-title: "Day2007_Methods_AC"
-author: "Angela C"
-date: "2026-04-11"
-bibliography: Day2007_Methods_JK.bib
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
-
 # Materials and methods
 
 ## Study sites
@@ -17,7 +14,8 @@ For example, Phoenix receives on average 85% of the annual total possible sunshi
 
 The first study site was an open, unshaded, second-story balcony ($3.6  \text{m} \times 2.0  \text{m}$) on the southeast corner of a house in Scottsdale, AZ, a suburb of Phoenix, referred to as the ‘balcony’ site. 
 In order to better mimic the natural conditions under which *L. tridentata* litter decomposes, we repeated the experiment at a second site in native *L. tridentata* desert at the Desert Botanical Gardens, Phoenix, AZ, 21 km from the first site.
-We refer to this as the ‘desert’ site. This site is in a native desert conservation area and consists of scattered *L. tridentata* shrubs (0.05 individuals/$m^2$, 18% foliar cover)  with bare ground betweens hrubs (@day2002temporal).
+We refer to this as the ‘desert’ site.
+This site is in a native desert conservation area and consists of scattered *L. tridentata* shrubs (0.05 individuals/$m^2$, 18% foliar cover) with bare ground between shrubs (@day2002temporal).
 Our rationale for conducting the first experiment at the balcony site was:
 (1) This site was easily accessed on a daily basis which allowed us to work out treatment protocols in preliminary trials.
 An optimal design for litterbags was developed during initial trials here.
@@ -38,13 +36,13 @@ Just prior to placement in litterbags, litter was air dried again for 2 weeks, o
 
 ## Litterbags
 
-Litter was placed in $10 \times 10 \text{cm}$ bags or envelopes constructed of either 125 $\mu$m-thick UVB-transparent film (Aclar Type 22A film, Proplastics, Linden, NJ; transmission >90% through the UVB and UV-A (315–400 nm) wavebands) or 125 $\mu$m-thick UV-B-opaque film (Mylar-type Cadco clear polyester film, Cadillac Plastic and Chemical, Phoenix, AZ; sharp transmission cutoff below 325 nm).
+Litter was placed in $10 \times 10 \text{cm}$ bags or envelopes constructed of either 125 $\mu$m-thick UVB-transparent film (Aclar Type 22A film, Proplastics, Linden, NJ; transmission >90% through the UV-B and UV-A (315–400 nm) wavebands) or 125 $\mu$m-thick UV-B-opaque film (Mylar-type Cadco clear polyester film, Cadillac Plastic and Chemical, Phoenix, AZ; sharp transmission cut-off below 325 nm).
 The Aclar envelopes represented a ‘near-ambient UV-B’ treatment while the Mylar-type envelopes represented a ‘reduced UV-B’ treatment.
 To our knowledge, neither of these film materials have the unintended and potentially toxic effect that cellulose acetate film has on some organisms (@krizek2004evidence).
 Each envelope was comprised of a top and bottom piece of the appropriate film, with the edges of the envelopes sealed with UV-B transparent tape (Scotch Multitask tape, transmission >90% through the UVB and UVA wavebands, 3M, St. Paul, MN).
 To allow water and microbes to reach the litter, we drilled 2-mm diameter holes, spaced 1 cm apart, throughout the top and bottom pieces of the film.
 We measured UV-B irradiance directly under the top film of envelopes under clear skies at midday in January with a UV-scanning spectroradiometer (OL 754, Optronic Laboratories, Orlando, FL).
-Biologically effective solar UV-B dose (based on the generalized plant damage action spectrum normalized to 300 nm, Caldwell 1971**MISSINGCITATION**), was 85% of ambient in Aclar envelopes (near-ambient treatment) and 15% of ambient in Mylar-type envelopes (reduced treatment).
+Biologically effective solar UV-B dose (based on the generalized plant damage action spectrum normalized to 300 nm, @caldwell1971solar), was 85% of ambient in Aclar envelopes (near-ambient treatment) and 15% of ambient in Mylar-type envelopes (reduced treatment).
 To prevent smaller pieces of litter from falling through the holes on the bottom side of the envelope, a $10 \text{cm} \times 10 \text{cm}$ piece of white nylon fabric (athletic jersey mesh) was taped on the inside bottom.
 We placed 1.80 (±0.05) g of oven dried litter of a particular type in each envelope on top of the nylon fabric.
 
@@ -54,7 +52,7 @@ At the balcony site, envelopes were placed in square, black plastic greenhouse t
 The trays were anchored on top of wooden frames (8.9 cm high), which secured the trays to the balcony floor but allowed water drainage.
 Clear monofilament fishing line spaced 5 cm apart was threaded across the trays to secure litter envelopes in the bottom of the plastic trays.
 A total of 60 envelopes were randomly assigned to seven trays on the balcony.
-This represented a $3 \times 2$ factorial design consisting of three litter types (full mixture, twigs, or leaves) and two UVB levels (reduced or near-ambient) for each litter type.
+This represented a $3 \times 2$ factorial design consisting of three litter types (full mixture, twigs, or leaves) and two UV-B levels (reduced or near-ambient) for each litter type.
 There were 10 replicate envelopes of each treatment/litter type combination.
 Envelopes were placed at this site on 16 September, 2003 and retrieved on 22 February, 2004 after 21 weeks.
 Average air temperature and total precipitation over this period were 18.9°C and 5.11 cm, respectively, based on National Weather Service measurements at nearby Sky Harbor International Airport.
@@ -105,6 +103,3 @@ Total organic C and N were measured with a dynamic flash combustion analyzer (Fl
 
 We examined the effect of UV-B treatment on mass loss and chemical composition of litter using ANOVA, followed by comparison of initial, and reduced and near-ambient treatment means using the least significant difference test.
 All data were transformed using an arc-sine transformation to meet the assumption of homogeneity of variances.
-
-# References
-
