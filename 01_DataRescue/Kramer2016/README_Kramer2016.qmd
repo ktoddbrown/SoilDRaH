@@ -203,7 +203,7 @@ These files are in the Kramer2016 data rescue.
 
 Table 1 was modified to combine subheadings and headings under Soil Fraction (%). The notes below the table in the source article were combined into the caption.
 
-```{r table1}
+```{r}
 #| label: table1Check
 
 
@@ -253,21 +253,25 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Table2_SRS.c
 
 Figure 3 was modified to split Figure 3A and Figure 3B into separate csv files. All points were converted to a table format using Plot Digitizer with a column for Pit #, Depth (cm), Organic carbon content (%), and Site elevation (m). Figure 3's caption was similarly split into their respective files. Blank plots in Figure 3A were denoted with NA.
 
-```{r figure3A}
+```{r}
+#| label: figure3ACheck
+#| code-fold: true
+#| message: false
 
-read_csv(file = figure3A.file,
+fig3ACaption <- read_csv(file = figure3A.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig3AData <- read_csv(file = figure3A.file,
                    skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = figure3A.file, 
-                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()), 
-                                 show_col_types = FALSE)$caption)
+                                      col_types = cols(.default = col_character()))
+
 ```
 
 And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure3A
-#| eval: true
+#| eval: false
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Figure3_A_SRS.csv Kramer2016_Figure3A.csv
 
@@ -277,21 +281,45 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Figure3_A_SR
 
 Figure 3 was modified to split Figure 3A and Figure 3B into separate csv files. All values in original bar graph were converted to points in a table, including SE values.
 
-```{r figure 3B}
+```{r}
+#| label: figure3BCheck
+#| code-fold: true
+#| message: false
 
-read_csv(file = figure3B.file,
+fig3BCaption <- read_csv(file = figure3B.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig3BData <- read_csv(file = figure3B.file,
                    skip = 1,
-                   col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = figure3B.file, 
-                                 n_max = 1, col_names = 'caption', col_types = cols(.default = col_character()), 
-                                 show_col_types = FALSE)$caption)
+                                      col_types = cols(.default = col_character()))
+
+fig3BData$`Site elevation (m)` <- factor(fig3BData$`Site elevation (m)`, levels = c(3560, 3440, 3260, 3030))
+fig3BData$ `C stock mean (Mg/ha)` <- as.numeric(fig3BData$`C stock mean (Mg/ha)`)
+fig3BData$`C stock SE (Mg/ha)`<- as.numeric(fig3BData$`C stock SE (Mg/ha)`)
+
+ggplot(fig3BData, aes(x = `Site elevation (m)`, y = `C stock mean (Mg/ha)`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 1), width = 0.5) +
+  scale_y_continuous(breaks = c(0, 50, 100, 150, 200), limits = c(0, 200)) +
+  geom_errorbar(aes(ymin = `C stock mean (Mg/ha)`, ymax = `C stock SE (Mg/ha)`, group = `Site elevation (m)`),
+                position = position_dodge(width = 1),
+                width = 0.25) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2))) +
+    theme_classic() +
+  theme(
+    legend.position = "none",
+    strip.background = element_blank(),
+    strip.text = element_text(size = 14, face = "bold"),
+    axis.line = element_line(color = "black")
+  ) +
+    labs(title = "B", y = "C stock (Mg/ha)",
+         x = "Site elevation (m)")
 ```
 
 And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure3B
-#| eval: true
+#| eval: false
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Kramer2016_Figure3_B_SRS.csv Kramer2016_Figure3B.csv
 
@@ -415,6 +443,8 @@ data.lvl0.ls <- list(
 )
 
 ```
+
+
 
 ```{r}
 #| label: checkReadFunction_lvl0
