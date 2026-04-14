@@ -61,14 +61,14 @@ timelog:
       who: SavaScott
       start: 2025-01-31
       #end: YYYY-MM-DD
-      duration: P45M
+      duration: PT7H30M
 
   - activity: 
       description: Secondary Transcription
       who: laylakalandjian
       end: 2025-11-26
       #start: YYYY-MM-DD THH:MM
-      duration: P30M
+      duration: PT3H30M
 ---
 
 
@@ -187,11 +187,11 @@ These files are in the @Gaxiola2015 data rescue.
   - [x] Create a bib file with the citations from the methods section
   - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions suggested in your pull request review
-  - [ ] celebrate!
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions suggested in your pull request review
+  - [x] celebrate!
 
 ## Table 1
 
@@ -538,19 +538,46 @@ data.lvl0.ls <- list(
   #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
       caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
       primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
-   ) #end 'data' element
+    ),
+     TableS1 = list(
+      caption = read_csv(file = tableS1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = tableS1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+    Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+     Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+     Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     )
+    ) #end 'data' element
 )
 
 ```
