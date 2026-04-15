@@ -3,12 +3,11 @@ title: "Data Rescue: Dimitrakopoulos 2010"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Dimitrakopoulos2010_Methods.bib #contains the citations in the methods section
+  - Dimitrakopoulos2010.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -18,9 +17,42 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     affiliation:
       - ref: uf-ees
     role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
+      - transcription: review #secondary, review
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: secondary
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: ChaseSaxour #use the github name as an id
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: secondary
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: sierrav-droid #use the github name as an id
+    name:
+      given: Sierra
+      family: Velazquez
+    affiliation:
+      - ref: uf
+    role: #TODO define these roles and add reference
+      - transcription: lead
+   #   - standardization: lead #review
+    #  - curation: lead #review
 
 affiliations:
   - id: uf-ees
@@ -42,30 +74,27 @@ affiliations:
     
 timelog:
   - activity: 
-      description: add general UF affilation
-      who: ktoddbrown #github username
+      description: Lead and ReadMe Updated
+      who: sierra-droid #github username
       #when you started and ended, can be just a year or down to the minute
-      start: 2026-01-29 T1530
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P05M
+      start: 2026-03-25
+      end: 2026-04-15
+      duration: PT4H30M
   - activity: 
-      description: revised execute with only provided files
-      who: ktoddbrown #github username
+      description: Secondary and ReadMe Updated
+      who: ChaseSaxour #github username
       #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
+      start: 2026-03-25
+      end: 2026-04-15
+      duration: PT3H30M
   - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
+      description: Secondary and ReadMe Updated
+      who: SavaScott #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P30M
-version: 'vs202512' #template version, remove before use
+      start: 2026-03-25
+      end: 2026-04-15
+      duration: PT4H15M
+
 ---
 
 
@@ -83,80 +112,103 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
-methods.file <- "AuthorYYYY_Methods.md"
-tableN.file <- 'AuthorYYYY_TableN.csv'
-figureM.file <- 'AuthorYYYY_FigureM.csv'
+methods.file <- "Dimitrakopoulos2010_Methods.md"
+Table1.file <- 'Dimitrakopoulos2010_Table1.csv'
+figure1.file <- 'Dimitrakopoulos2010_Figure1.csv'
 
 # Bibliography files
-primaryCitation.file <- 'AuthorYYYY.bib'
-methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+primaryCitation.file <- 'Dimitrakopoulos2010.bib'
+methodsCitation.file <- 'Dimitrakopoulos2010_Methods.bib'
 
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
+readsource.file <- '../../02_DataHarmonization/readDimitrakopoulos2010.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '/semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '/semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
 
 # Data Summary
 
-<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
+> Panayiotis G. Dimitrakopoulos, Influence of evenness on the litter-species richness–decomposition relationship in Mediterranean grasslands, Journal of Plant Ecology, Volume 3, Issue 2, June 2010, Pages 71–78, https://doi.org/10.1093/jpe/rtq009
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
-
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/219.
 
 <!--- After you read through the paper write a brief summary of what the study
 measured and what the data was used for in. This should be <250 words.--->
 
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+This paper examines how litter-species richness and evenness affect the rate of leaf litter decomposition in a Mediterranean grassland (Lesbos, Greece).
+Over 90 days, the researchers measured the percentage dry weight loss across 10 species in various combinations. 
+The main goal of the data was to show the positive correlation between species richness and the rate of decay while focusing on how species diversity leads to faster nutrient cycling. 
+The data compared the observed mass loss in mixtures against what was expected from single species. 
+While the study finds that evenness has some effect on the results, it mainly finds that decomposition rates are driven by the combined effects of both components of litter-species diversity (richness and evenness). 
+
 
 ## Tables and figures
 
 <!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
 
 - Table 
-  1) Describe the data in the first table.
+  1) Table 1. Species compositions of the different litter mixtures and single-species treatments
+  2) Table 2. The number of litterbags within each treatment
+  3) Table 3. ANOVA for decomposition rate in the mixture litterbags
 
 - Figure 
-  1)  Describe the data in the first figure
+  1)  Figure 1. Decomposition rate plotted against species richness in the litterbags with varying levels of evenness
+  2) Figure 2. Percent deviation from expected litter mass remaining in the mixtures [100 × (observed − expected)/expected] as a function of litter-species richness for the maximum-evenness (a), intermediate-evenness (b) and low-evenness (c) treatment.
 
-## Fit for purpose: ProjectName
+## Fit for purpose: DeAD
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+### Main Variables of Interest
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+  - Location: Lesbos, Greece (39° N, 27° E, 30 m above sea level)
+  - Soil carbon stock: Leaf carbon concentration (LCC) data is found in a previous paper, Dimitrakopoulos 2001 unpublished data
+  - Duration: Samples were pulled summer of 2005, and dried and stored. Litter was pulled out again Autumn of 2005 and dried and weighed again after 90 days.
+  - Mass Loss: Decomposition rate can be found in Figure 1
+  - Solar Exposure: Could not find solar exposure in this paper
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+### Other Relevant Variables
+
+ - Litter Species: 10 species used were found in Table 1
+ - Microsite Data: Section Materials and Methods, subsection Experimental design paragraph 1
+ - Litter Chemical Composition: Carbon and nitrogen characteristics are found in another paper. Other chemical compositions could not be found.
+ - Litter Bag Materials and Methods: The litter bags were a size 10 cmx10 cm, and made using a nylon mesh with holes of 1.0 mm. The litter bags included a mass of ∼2 g dried plant litter material. The litter bags were 16 m^2 in area.
+ - Age: of Ecosystem: >15 years old
+ - Land Management: Abandoned arable field
   
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the Dimitrakopoulos2010 data rescue.
 
-- [Readme](README_AUTHORYYYY.qmd)
+- [Readme](README_Dimitrakopoulos2010.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [Dimitrakopoulos2010.bib](Dimitrakopoulos2010.bib)
   + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+- [Dimitrakopoulos2010_Methods.bib](Dimitrakopoulos2010_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
+- [Dimitrakopoulos2010_Methods.md](Dimitrakopoulos2010_Methods.md)
   + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
+- [Dimitrakopoulos2010_Table1.csv](Dimitrakopoulos2010_Table1.csv)
+  + table 1 from primary article with Species compositions of the different litter mixtures and single-species treatments
+- [Dimitrakopoulos2010_Table2.csv](Dimitrakopoulos2010_Table2.csv)
+  + table 2 from primary article with The number of litterbags within each treatment
+- [Dimitrakopoulos2010_Table3.csv](Dimitrakopoulos2010_Table3.csv)
+  + table 3 from primary article with ANOVA for decomposition rate in the mixture litterbags
+- [Dimitrakopoulos2010_Figure1.csv](Dimitrakopoulos2010_Figure1.csv)
+  + figure 1 from primary article with Decomposition rate plotted against species richness in the litterbags with varying levels of evenness
+- [Dimitrakopoulos2010_Figure2.csv](Dimitrakopoulos2010_Figure2.csv)
+  + figure 2 from primary article with Percent deviation from expected litter mass remaining in the mixtures as a function of litter-species richness for the eveness treatment.
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -165,44 +217,41 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Dimitrakopoulos2010'
+  - [x] Create a copy of this template folder and rename it to Dimitrakopoulos2010
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the Dimitrakopoulos2010 section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Extract points from FigureM and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions in your pull request review
-  - [ ] celebrate!
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions in your pull request review
+  - [x] celebrate!
 
-## Table N
+## Table 1
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table N was modified ....
+Table 1 was modified to included markdown notation and put the footnotes in the captions.
 
 ```{r}
 #| label: table1Check
-#| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = Table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = Table1.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -215,14 +264,70 @@ read_csv(file = tableN.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
-#| eval: false
+#| label: compareTable1
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Dimitrakopolous2010_Table1_CS.csv Dimitrakopoulos2010_Table1.csv
 ```
+
+## FIgure 1
+
+Figure 1 was modified to included markdown notation and put the footnotes in the captions.
+
+```{r}
+#| label: figure1Check
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+fig1Caption <- read_csv(file = figure1.file,
+                        n_max = 1, col_names = 'caption',
+                        show_col_types = FALSE)$caption
+
+fig1Data <- read_csv(file = figure1.file,
+                     skip = 1,
+                     show_col_types = FALSE)
+
+fig1Data$`x value` <- factor(fig1Data$`x value`,
+                             levels = c("1", "3", "6"))
+
+fig1Data$`evenness` <- factor(fig1Data$`evenness`,
+                             levels = c("Maximum", "Intermediate", "Low"))
+
+fig1Data$`y value SE` <- as.numeric(fig1Data$`y value SE`)
+fig1Data <- fig1Data %>%
+  mutate(error_var = `y value SE` - `y value`,
+  ymax = `y value` + `error_var`)
+
+ggplot(fig1Data, aes(x = `x value`, y = `y value`, fill = `evenness`)) + scale_y_continuous(breaks = c(30, 40, 50, 60, 70, 80)) + geom_bar(stat = "identity", position = position_dodge(width = 0.95)) + geom_errorbar(aes(
+  ymin = `y value`,
+  ymax = ymax),
+  position = position_dodge(width = 0.95),
+width = 0.9, color = "black") + labs(
+  title = "Figure 1",
+  x = "Species richness",
+  y = "Litter mixture mass loss (%)",
+  caption = fig1Caption)
+
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure1
+#| eval: true
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Dimitrakopoulos2010_Figure1_SRS.csv Dimitrakopoulos2010_Figure1.csv
+```
+
 
 ## Methods
 
@@ -230,10 +335,10 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Dimitrakopoulos2010_SRS.md Dimitrakopoulos2010_Methods.md
 ```
 
 ### Methods  - Text
@@ -265,6 +370,29 @@ Think of this as a lab notebook documenting how you found each citation.
 - [ ] short citation
   + copy from bib
   + manually entered or direct export
+  
+- [x] Dimitrakopoulos PG, Galanidis A, Siamantziouras A-SD, et al., Short-term invasibility patterns in burnt and unburnt experimental Mediterranean grassland communities of varying diversities, Oecologia, 2005, vol. 143 (pg. 428-37)
+  + copy from bib
+
+- [x] Dimitrakopoulos PG, Siamantziouras A-SD, Galanidis A, et al., The interactive effects of fire and diversity on short-term responses of ecosystem processes in experimental Mediterranean grasslands, Environ Manage, 2006, vol. 37 (pg. 826-39)
+
+- [x] Schmid B, Hector A, Huston MA, et al.Loreau M, Naeem S, Inchausti P., The design and analysis of biodiversity experiments, Biodiversity and Ecosystem Functioning: Synthesis and Perspectives, 2002OxfordOxford University Press(pg. 61-78)
+  + copy from bib
+
+- [x] Dimitrakopoulos PG., Interactive effects of fire and diversity on ecosystem functioning in experimental Mediterranean grassland communities: testing the insurance hypothesis, Ph.D. Thesis, 2001Mytilene, GreeceUniversity of the Aegean (in Greek)
+  + copy from bib
+
+- [x] Garnier E, Cortez J, Billès G, et al., Plant functional markers capture ecosystem properties during secondary succession, Ecology, 2004, vol. 85 (pg. 2630-7)
+  + copy from bib
+
+- [x] Lecerf A, Risnoveanu G, Popescu C, et al., Decomposition of diverse litter mixtures in streams, Ecology, 2007, vol. 88 (pg. 219-27)
+  + copy from bib
+
+- [x] Moore TN, Fairweather PG., Decay of multiple species of seagrass detritus is dominated by species identity, with an important influence of mixing litters, Oikos, 2006, vol. 114 (pg. 329-37)
+  + copy from bib
+  
+- [x] Loreau M., Separating sampling and other effects in biodiversity experiments, Oikos, 1998, vol. 82 (pg. 600-2)
+  + copy from bib
 ---->
 
 # Level 0 Data rescue
@@ -273,6 +401,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -285,24 +414,24 @@ data.lvl0.ls <- list(
     #Citations for all referenced articles
     methods = read.bib(file = methodsCitation.file)
   ),
-  #Read in the text transcription of the article's methods section
   method = read_lines(file = methods.file),
-  #Read in the results as tables or figure transcriptions. This includes
-  #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = Table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = Table1.file,
                          col_types = cols(.default = col_character()),
-                         skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
+                        skip = 1)
+    ),
+     Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                        skip = 1)
+     )
    ) #end 'data' element
 )
 
@@ -313,9 +442,10 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 if(file.exists(readsource.file)){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl0.ls <- readDimitrakopoulos2010(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -358,7 +488,7 @@ The `of_variable` being used here are:
 
 ```{r}
 #| label: createLvl1
-#| eval: false
+#| eval: true
 
 #### Method-section only data ####
 #Create a table for the data in the method-section that is not directly 
@@ -387,6 +517,7 @@ Table1Primary <- data.lvl0.ls$data$Table1$primary |>
            column_name == 'SOC' ~ 'soil_organic_carbon')) |>
   #Flag the source of this data as Table 1, this table is merged later with
   #...other data so this keeps track of where the data came from
+  mutate(is_type = 'value') |>
   mutate(from_source = 'Table 1')
 
 ## Create the metadata for table one from the header information and cited methods
@@ -432,6 +563,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -459,6 +591,7 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -505,9 +638,10 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readDimitrakopoulos2010(dataDir = '.',
                                          dataLevel = 'level1')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){

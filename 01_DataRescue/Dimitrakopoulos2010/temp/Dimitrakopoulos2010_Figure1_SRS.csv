@@ -1,9 +1,9 @@
-﻿"Figure 1: decomposition rate plotted against species richness in the litterbags with varying levels of evenness. All results are means of original data ± SE. SE, standard error.",,,,,
+"Figure 1: decomposition rate plotted against species richness in the litterbags with varying levels of evenness. All results are means of original data ± SE. SE, standard error.",,,,,
 x value,evenness,y value,y value SE,y value unit,x value unit
 1,Maximum,56.7,58.4,Litter mixture mass loss (%),Species richness
 3,Maximum,62.3,64.0,Litter mixture mass loss (%),Species richness
 3,Intermediate,61.7,63.2,Litter mixture mass loss (%),Species richness
 3,Low,60.5,62.0,Litter mixture mass loss (%),Species richness
-6,Maximum,70.24,72.47,Litter mixture mass loss (%),Species richness
-6,Intermediate,70.40,71.1,Litter mixture mass loss (%),Species richness
-6,Low,63.19,64.0,Litter mixture mass loss (%),Species richness
+6,Maximum,70.1,72.1,Litter mixture mass loss (%),Species richness
+6,Intermediate,70.3,71.1,Litter mixture mass loss (%),Species richness
+6,Low,63.1,64.0,Litter mixture mass loss (%),Species richness
