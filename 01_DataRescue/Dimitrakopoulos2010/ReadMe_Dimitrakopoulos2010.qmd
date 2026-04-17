@@ -182,7 +182,7 @@ The Decomposition Across Drylands (DeAD) data collection is a new data effort ta
  - Microsite Data: Section Materials and Methods, subsection Experimental design paragraph 1
  - Litter Chemical Composition: Carbon and nitrogen characteristics are found in another paper. Other chemical compositions could not be found.
  - Litter Bag Materials and Methods: The litter bags were a size 10 cmx10 cm, and made using a nylon mesh with holes of 1.0 mm. The litter bags included a mass of ∼2 g dried plant litter material. The litter bags were 16 m^2 in area.
- - Age: of Ecosystem: >15 years old
+ - Age of Ecosystem: >15 years old
  - Land Management: Abandoned arable field
   
 ## Files
@@ -245,7 +245,8 @@ Table 1 was modified to included markdown notation and put the footnotes in the 
 
 ```{r}
 #| label: table1Check
-
+#| code-fold: true
+#| message: false
 
 read_csv(file = Table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -279,6 +280,8 @@ Figure 1 was modified to included markdown notation and put the footnotes in the
 
 ```{r}
 #| label: figure1Check
+#| code-fold: true
+#| message: false
 
 library(ggplot2)
 library(readr)
