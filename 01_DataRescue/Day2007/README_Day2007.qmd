@@ -77,13 +77,15 @@ version: 'vs202512' #template version, remove before use
 #| echo: false
 #| eval: true
 
-
+# install.packages("tidyverse") # this is how you install a package
 library(tidyverse) # data processing
 library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Day2007_Methods.md"
+table1.file <- 'Day2007_Table1.csv'
+table2.file <- 'Day2007_Table2.csv'
 table3.file <- 'Day2007_Table3.csv'
 #figureM.file <- 'AuthorYYYY_FigureM.csv' # No figures for this paper
 
@@ -109,54 +111,63 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 <!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+Day, T. A., Zhang, E. T., & Ruhland, C. T. (2007). Exposure to solar UV-B radiation accelerates mass and lignin loss of Larrea tridentata litter in the Sonoran Desert. Plant Ecology, 193(2), 185-194. https://doi.org/10.1007/s11258-006-9257-6
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
-
-<!--- After you read through the paper write a brief summary of what the study
-measured and what the data was used for in. This should be <250 words.--->
-
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#227.
 
 ## Tables and figures
 
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
+This paper assessed whether exposure to solar ultraviolet-B radiation (UV-B) affects the mass loss of Larrea tridentata (creosotebush) litter in the Sonoran Desert of central Arizona. Litter (leaves, twigs, or a mixed sample) was placed in bags constructed of UV-B-transmitting or UV-B-absorbing filter material that allowed either 85% (near-ambient UV-B treatment) or 15% (reduced UV-B treatment) of the biologically effective solar UV-B to reach litter inside the bags and left outdoors for 4–5 months on a balcony and on the soil surface. Leaf litter lost 14–22% more mass under near‑ambient UV‑B than under reduced UV‑B, with similar but weaker effects on twigs and the mixed sample. The excess loss was mainly due to photodegradation of lignin, supplemented by losses of fats and lipids.
 
-- Table 
-  1) Describe the data in the first table.
+- Tables: 
+  1) Table 1: Percent mass loss of Larrea tridentata litter (leaves, twigs, mixed) under reduced vs. near-ambient UV-B at balcony and desert sites.
+  2) Table 2: Chemical composition of Larrea tridentata leaf litter prior to treatments (initial), and after exposure to reduced or near-ambient solar UV-B at the balcony site at the end of the treatment period
+  3) Table 3: Chemical content of Larrea tridentata leaf litter prior to treatment (initial), or after exposure to reduced or near-ambient solar UV-B at the balcony site
 
-- Figure 
-  1)  Describe the data in the first figure
+## Fit for purpose: DeAD
 
-## Fit for purpose: ProjectName
+Main Variables of Interest: DeAD
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+Location: Phoenix metropolitan area of central Arizona, USA (33.5 ° N, 111.8 ° W). The balcony site was an open, unshaded, second-story balcony (3.6 m x 2.0 m) on the southeast corner of a house in Scottsdale, AZ. The desert site was conducted in the L. tridentata desert at the Desert Botanical Gardens, Phoenix, AZ, 21 km from the balcony site.
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+Duration: Stated in Materials and methods section under Experiments: balcony site was September 16, 2003 – February 22, 2004 (21 weeks) and desert site was December 22, 2003 – April 16, 2004 (16 weeks).
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+Mass loss: Mass loss reported in table 1 as percent loss of initial mass.
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
-  
+Solar exposure: Biologically effective solar UV-B dose was 85% of ambient in “near-ambient” treatment and 15% of ambient in “reduced” treatment.
+
+Other Variables of Interest:
+
+Litter species: L. tridentata litter sorted into three litter types stated in Materials and methods section under Litter source and preparation: (1) unaltered mixture of the leaves, twigs, and seeds, (2) twigs (<2mm diameter) only, and (3) leaves only.
+
+Microsite data: Reported in Materials and methods under Study sites section.
+
+Litter chemical composition: Reported in table 2 on a percent dry-mass basis.
+
+Litter bag materials: Reported in Materials and methods under the Litterbags section: 10 x 10 cm bags or envelopes constructed of either 125 uM-thick UVB-transparent film (transmission >90% through the UV-B and UV-A (315 - 400 nm) wavebands) or 125 uM-thick UV-B opaque film (sharp transmission cut-off below 325 nm). Holes of 2-mm diameter were drilled 1 cm apart throughout the top and bottom pieces of the film.
+
+Land management: Reported in Materials and methods under Experiments: at the balcony site, envelopes were placed in square, black plastic greenhouse trays (42 cm x 43.5 cm x 5.5 cm high sidewalls) with lattice bottom that allowed water to freely drain. Trays were anchored on top of wooden frames which were secured to the balcony floor. At the desert site, envelopes were placed directly on the ground 8 cm apart and secured to the ground by 13 cm long nails attached to 2-cm long flaps of Aclar.
+
+This data is identified as a data source for DeAD Project
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
+
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the Day2007 data rescue.
 
-- [Readme](README_AUTHORYYYY.qmd)
+- [Readme](README_Day2007.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [Day2007.bib](Day2007.bib)
   + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+- [Day2007_Methods.bib](Day2007_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
+- [Day2007_Methods.md](Day2007_Methods.md)
   + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
+- [Day2007_Table1.csv](Day2007_Table1.csv)
+- [Day2007_Table2.csv](Day2007_Table2.csv)
+- [Day2007_Table3.csv](Day2007_Table3.csv)
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -165,23 +176,23 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [ ] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
+  - [x] Create a spreadsheet with TableN and export it to csv
+  - [x] Extract points from FigureM and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
   - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
@@ -191,18 +202,18 @@ These files are in the AuthorYYYY data rescue.
 
 <!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
 
-Table N was modified ....
+Table 1 was modified ....
 
 ```{r}
 #| label: table1Check
 #| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -235,6 +246,11 @@ Any different to the cross check for the methods section will be output after th
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
 ```
+
+```{bash eval=FALSE, echo=FALSE}
+diff --strip-trailing-cr -suppress-common-lines -y Day2007_Methods_VM.md Day2007_Methods_AC.md
+```
+
 
 ### Methods  - Text
 
