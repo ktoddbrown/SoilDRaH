@@ -244,6 +244,27 @@ read_csv(file = table2.file, #read in the specific file
   )
 ```
 
+Table 3 was modified ....
+
+```{r}
+#| label: table3Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = table3.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
 And is crosschecked with the secondary transcription
 
 ```{bash}
