@@ -264,6 +264,24 @@ fig3ACaption <- read_csv(file = figure3A.file,
 fig3AData <- read_csv(file = figure3A.file,
                    skip = 1,
                                       col_types = cols(.default = col_character()))
+fig3AData$`Pit` <- factor(fig3AData$`Pit`, levels = c("Pit 1", "Pit 2", "Pit 3"))
+fig3AData$`Site elevation (m)` <- factor(fig3AData$`Site elevation (m)`, levels = c(3560, 3440, 3260, 3030))
+fig3AData$`Organic carbon content (%)` <- as.numeric(fig3AData$`Organic carbon content (%)`)
+fig3AData$`Depth (cm)` <- as.numeric(fig3AData$`Depth (cm)`)
+
+ggplot(fig3AData, aes(x = `Organic carbon content (%)`, y = `Depth (cm)`)) +
+  geom_point(na.rm = TRUE) +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid(
+    rows = vars(`Pit`),
+    cols = vars(`Site elevation (m)`),
+    switch = "both"
+  ) +
+  scale_x_continuous(position = "top") +
+    theme_classic() +
+  theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5), strip.background = element_blank(), strip.placement = "outside") +
+  labs(title = 'A')
 
 ```
 
