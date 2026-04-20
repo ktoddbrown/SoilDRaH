@@ -965,5 +965,5 @@ state_province used by,Wyoming,
 state_province used by,Yap,Federated States of Micronesia
 state_province used by,Yucatan,Mexico
 state_province used by,Yukon,Canada
-yes_blank used by : add_taxon_flag,,indicator not present
-yes_blank used by : add_taxon_flag,yes,indicator present
+"yes_blank used by : add_taxon_flag",,indicator not present
+"yes_blank used by : add_taxon_flag",yes,indicator present
