@@ -125,7 +125,6 @@ ISCN3 contains four primary data tables:
   * `citation` containing the citation and additional references information for the contributed datasets,
   * `dataset` with study information that extends the basic citation
 
-
 ## Files
 
 <!--- Include a brief explanation to all the files in the folder--->
@@ -140,6 +139,12 @@ These files are in the ISCN3 data rescue.
     -   citations for the contributed datasets to ISCN
 -   [AnnotationsDir](AnnotationsDir)
     -   this includes the annotations constructed using template.pdfs tables pulled from edi with individual tables (layer, profile, site, fraction, and disturbance)
+        + [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv)
+        + [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv)
+        + [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv)
+        + [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv)
+        + [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv)
+        + [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv)
 -   [temp/](temp/)
     -   the download location for ISCN3 files archived on EDI web portal
     -   this folder includes the following files:

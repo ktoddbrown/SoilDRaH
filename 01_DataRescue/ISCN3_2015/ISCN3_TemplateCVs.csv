@@ -1,8 +1,8 @@
-"Controlled Vocabularies Used by International Soil Carbon Network Templates",,,
-"Download latest submissions template document",,,
-"Generated:12/7/2015 9:30:30 PM",,,
-"Last change to template: 02/01/2015",,,
-"This is a beta release of the ISCN Database products. Several features of the database, data submissions guidelines and quality checks are still under development. Please send any feedback to nscn-support@george.lbl.gov.",,,
+"Controlled Vocabularies Used by International Soil Carbon Network Templates",,
+"Download latest submissions template document",,
+"Generated:12/7/2015 9:30:30 PM",,
+"Last change to template: 02/01/2015",,
+"This is a beta release of the ISCN Database products. Several features of the database, data submissions guidelines and quality checks are still under development. Please send any feedback to nscn-support@george.lbl.gov.",,
 Vocabulary,Parsing Token,Description
 2d_position used by,backslope,
 2d_position used by,base slope,
@@ -51,8 +51,7 @@ country used by,Canary Islands,
 country used by,Chile,
 country used by,China,
 country used by,Colombia,
-country used by,Congo (Democratic Republic of,
-country used by,the),
+country used by,Congo (Democratic Republic of the),
 country used by,Costa Rica,
 country used by,Cuba,
 country used by,Dahomey,
@@ -68,7 +67,8 @@ country used by,Gambia,
 country used by,Georgia,
 country used by,Germany,
 country used by,Ghana,
-country used by,GreeceGreenland,
+country used by,Greece,
+country used by,Greenland,
 country used by,Guatemala,
 country used by,Guinea,
 country used by,Guyana,
@@ -86,8 +86,7 @@ country used by,Ivory Coast,
 country used by,Japan,
 country used by,Jordan,
 country used by,Kenya,
-country used by,"Korea, Democratic People's",
-country used by,Republic of,
+country used by :,"Korea, Democratic People's Republic of",
 country used by,"Korea, Republic of",
 country used by,Laos,
 country used by,Latvia,
@@ -107,7 +106,8 @@ country used by,New Zealand,
 country used by,Nicaragua,
 country used by,Niger,
 country used by,Nigeria,
-country used by,NorwayOman,
+country used by,Norway,
+country used by,Oman,
 country used by,Pakistan,
 country used by,Palau,
 country used by,Panama,
@@ -145,7 +145,8 @@ country used by,United States,
 country used by,Uruguay,
 country used by,Vanuatu,
 country used by,Venezuela,
-country used by,VietnamYemen,
+country used by,Vietnam,
+country used by,Yemen,
 country used by,Yugoslavia,
 country used by,Zambia,
 country used by,Zimbabwe,
@@ -177,7 +178,8 @@ dm_ext_weather used by,Other,
 dm_ext_weather used by,Storm,
 dm_ext_weather used by,Tornado,
 dm_fert_m used by,K,
-dm_fert_m used by,LimeN,
+dm_fert_m used by,Lime,
+dm_fert_m used by,N,
 dm_fert_m used by,Other,
 dm_fert_m used by,P,
 dm_fert_o used by,Compost,
@@ -232,7 +234,7 @@ dm_water used by,Drainage,
 dm_water used by,Human induced flooding,
 dm_water used by,Irrigation,
 dm_water used by,Other,
-drainage used by,excessively,millequivalents per 100g oven-dry soil
+drainage used by,excessively,
 drainage used by,moderately well,
 drainage used by,other,
 drainage used by,poorly,
@@ -727,89 +729,26 @@ landform used by,window,
 landform used by,wind-tidal flat,
 landform used by,yardang,
 landform used by,yardang trough,
-landsat used by,Barren Land (Rock/Sand/Clay),"areas of bedrock, desert pavement, scarps, talus, slides,
-volcanic material, glacial debris, sand dunes, strip
-mines, gravel pits and other accumulations of earthen
-material. Generally, vegetation accounts for less than
-15% of total cover."
-landsat used by,Cultivated Crops,"areas used for the production of annual crops, such as
-corn, soybeans, vegetables, tobacco, and cotton, and
-also perennial woody crops such as orchards and
-vineyards. Crop vegetation accounts for greater than
-20% of total vegetation. This class also includes all land
-being actively tilled."
-landsat used by,Deciduous Forest ,"areas dominated by trees generally greater than 5 meters
-tall, and greater than 20% of total vegetation cover.
-More than 75% of the tree species shed foliage
-simultaneously in response to seasonal change."
-landsat used by,Developed High Intensity ,"highly developed areas where people reside or work in
-high numbers. Examples include apartment complexes,
-row houses and commercial/industrial. Impervious
-surfaces account for 80% to 100% of the total cover."
-landsat used by,"Developed, Low Intensity ","areas with a mixture of constructed materials and
-vegetation. Impervious surfaces account for 20% to 49%
-percent of total cover. These areas most commonly
-include single-family housing units."
-landsat used by,"Developed, Medium Intensity","areas with a mixture of constructed materials and
-vegetation. Impervious surfaces account for 50% to 79%
-of the total cover. These areas most commonly include
-single-family housing units."
-landsat used by,"Developed, Open Space","areas with a mixture of some constructed materials, but
-mostly vegetation in the form of lawn grasses.
-Impervious surfaces account for less than 20% of total
-cover. These areas most commonly include large-lot
-single-family housing units, parks, golf courses, and
-vegetation planted in developed settings for recreation,
-erosion control, or aesthetic purposes."
-landsat used by,Dwarf Scrub,"Alaska only areas dominated by shrubs less than 20
-centimeters tall with shrub canopy typically greater than
-20% of total vegetation. This type is often co-associated
-with grasses, sedges, herbs, and non-vascular
-vegetation."
-landsat used by,Emergent Herbaceous Wetlands ,"areas where perennial herbaceous vegetation accounts
-for greater than 80% of vegetative cover and the soil or
-substrate is periodically saturated with or covered with
-water."
-landsat used by,Evergreen Forest,"areas dominated by trees generally greater than 5 meters
-tall, and greater than 20% of total vegetation cover.
-More than 75% of the tree species maintain their leaves
-all year. Canopy is never without green foliage."
-landsat used by,Grassland/Herbaceous,"areas dominated by gramanoid or herbaceous
-vegetation, generally greater than 80% of total
-vegetation. These areas are not subject to intensive
-management such as tilling, but can be utilized for
-grazing."
-landsat used by,Lichens,"Alaska only areas dominated by fruticose or foliose
-lichens generally greater than 80% of total vegetation."
-landsat used by,Mixed Forest,"areas dominated by trees generally greater than 5 meters
-tall, and greater than 20% of total vegetation cover.
-Neither deciduous nor evergreen species are greater than
-75% of total tree cover."
-landsat used by,Moss ,"Alaska only areas dominated by mosses, generally
-greater than 80% of total vegetation."
-landsat used by,Open Water ,"areas of open water, generally with less than 25% cover
-of vegetation or soil."
-landsat used by,Pasture/Hay ,"areas of grasses, legumes, or grass-legume mixtures
-planted for livestock grazing or the production of seed
-or hay crops, typically on a perennial cycle. Pasture/hay
-vegetation accounts for greater than 20% of total
-vegetation."
-landsat used by,Perennial Ice/Snow ,"areas characterized by a perennial cover of ice and/or
-snow, generally greater than 25% of total cover."
-landsat used by,Sedge/Herbaceous ,"Alaska only areas dominated by sedges and forbs,
-generally greater than 80% of total vegetation. This type
-can occur with significant other grasses or other grass
-like plants, and includes sedge tundra, and sedge tussock
-tundra."
-landsat used by,Shrub/Scrub ,"areas dominated by shrubs; less than 5 meters tall with
-shrub canopy typically greater than 20% of total
-vegetation. This class includes true shrubs, young trees
-in an early successional stage or trees stunted from
-environmental conditions."
-landsat used by,Woody Wetlands,"areas where forest or shrubland vegetation accounts for
-greater than 20% of vegetative cover and the soil or
-substrate is periodically saturated with or covered with
-water."
+landsat used by,Barren Land (Rock/Sand/Clay),"areas of bedrock, desert pavement, scarps, talus, slides, volcanic material, glacial debris, sand dunes, strip mines, gravel pits and other accumulations of earthen material. Generally, vegetation accounts for less than 15% of total cover."
+landsat used by,Cultivated Crops,"areas used for the production of annual crops, such as corn, soybeans, vegetables, tobacco, and cotton, and also perennial woody crops such as orchards and vineyards. Crop vegetation accounts for greater than 20% of total vegetation. This class also includes all land being actively tilled."
+landsat used by,Deciduous Forest ,"areas dominated by trees generally greater than 5 meters tall, and greater than 20% of total vegetation cover. More than 75% of the tree species shed foliage simultaneously in response to seasonal change."
+landsat used by,Developed High Intensity ,"highly developed areas where people reside or work in high numbers. Examples include apartment complexes, row houses and commercial/industrial. Impervious surfaces account for 80% to 100% of the total cover."
+landsat used by,"Developed, Low Intensity ","areas with a mixture of constructed materials and vegetation. Impervious surfaces account for 20% to 49% percent of total cover. These areas most commonly include single-family housing units."
+landsat used by,"Developed, Medium Intensity","areas with a mixture of constructed materials and vegetation. Impervious surfaces account for 50% to 79% of the total cover. These areas most commonly include single-family housing units."
+landsat used by,"Developed, Open Space","areas with a mixture of some constructed materials, but mostly vegetation in the form of lawn grasses. Impervious surfaces account for less than 20% of total cover. These areas most commonly include large-lot single-family housing units, parks, golf courses, and vegetation planted in developed settings for recreation, erosion control, or aesthetic purposes."
+landsat used by,Dwarf Scrub,"Alaska only areas dominated by shrubs less than 20 centimeters tall with shrub canopy typically greater than 20% of total vegetation. This type is often co-associated with grasses, sedges, herbs, and non-vascular vegetation."
+landsat used by,Emergent Herbaceous Wetlands ,"areas where perennial herbaceous vegetation accounts for greater than 80% of vegetative cover and the soil or substrate is periodically saturated with or covered with water."
+landsat used by,Evergreen Forest,"areas dominated by trees generally greater than 5 meters tall, and greater than 20% of total vegetation cover. More than 75% of the tree species maintain their leaves all year. Canopy is never without green foliage."
+landsat used by,Grassland/Herbaceous,"areas dominated by gramanoid or herbaceous vegetation, generally greater than 80% of total vegetation. These areas are not subject to intensive management such as tilling, but can be utilized for grazing."
+landsat used by,Lichens,"Alaska only areas dominated by fruticose or foliose lichens generally greater than 80% of total vegetation."
+landsat used by,Mixed Forest,"areas dominated by trees generally greater than 5 meters tall, and greater than 20% of total vegetation cover. Neither deciduous nor evergreen species are greater than 75% of total tree cover."
+landsat used by,Moss ,"Alaska only areas dominated by mosses, generally greater than 80% of total vegetation."
+landsat used by,Open Water ,"areas of open water, generally with less than 25% cover of vegetation or soil."
+landsat used by,Pasture/Hay ,"areas of grasses, legumes, or grass-legume mixtures planted for livestock grazing or the production of seed or hay crops, typically on a perennial cycle. Pasture/hay vegetation accounts for greater than 20% of total vegetation."
+landsat used by,Perennial Ice/Snow ,"areas characterized by a perennial cover of ice and/or snow, generally greater than 25% of total cover."
+landsat used by,Sedge/Herbaceous ,"Alaska only areas dominated by sedges and forbs, generally greater than 80% of total vegetation. This type can occur with significant other grasses or other grass like plants, and includes sedge tundra, and sedge tussock tundra."
+landsat used by,Shrub/Scrub ,"areas dominated by shrubs; less than 5 meters tall with shrub canopy typically greater than 20% of total vegetation. This class includes true shrubs, young trees in an early successional stage or trees stunted from environmental conditions."
+landsat used by,Woody Wetlands,"areas where forest or shrubland vegetation accounts for greater than 20% of vegetative cover and the soil or substrate is periodically saturated with or covered with water."
 landscape used by ,alluvial plain,
 landscape used by ,alluvial plain remnant,
 landscape used by ,badlands,
