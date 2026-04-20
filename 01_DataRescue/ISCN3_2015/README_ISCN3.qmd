@@ -145,6 +145,8 @@ These files are in the ISCN3 data rescue.
         + [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv)
         + [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv)
         + [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv)
+        + [README_TemplateCV.md](README_TemplateCV.md)
+        + [README_TemplateSubmit.md](README_TemplateSubmit.md)
 -   [temp/](temp/)
     -   the download location for ISCN3 files archived on EDI web portal
     -   this folder includes the following files:

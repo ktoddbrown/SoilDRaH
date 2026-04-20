@@ -1,13 +1,8 @@
 **Information on the International Soil Carbon Network Templates**
-
 Download latest update of this document
-
 Download latest general guidelines
-
 Download latest controlled vocabulary document
-
 Generated:12/7/2015 9:27:38 PM
-
 Last change to template: 02/01/2015
 
 This document gives detailed information and examples for the variables contained in the data submission template.
