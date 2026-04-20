@@ -190,11 +190,11 @@ These files are in the Day2007 data rescue.
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
   - [x] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [x] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
@@ -351,15 +351,40 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)),
+     #End 'Table1' element,
+    Table2 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table2.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
+    ),
+    
+    Table3 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
     #Repeat for all tables and figures...
    ) #end 'data' element
 )
