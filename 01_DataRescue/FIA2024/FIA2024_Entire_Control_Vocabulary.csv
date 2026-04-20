@@ -1,0 +1,734 @@
+﻿"wo-v9-4_Aug2025_UG_FIADB_database_description_NFI.pdf						",,,
+Name,Code,Description,Table_ID
+PLOT_STATUS_CD,1,Sampled - at least one accessible forest land condition present on plot.,ENTIRE_PLOT
+PLOT_STATUS_CD,2,Sampled - no accessible forest land condition present on plot.,ENTIRE_PLOT
+PLOT_STATUS_CD,3,Nonsampled.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,1,Outside U.S. boundary - Entire plot is outside of the U.S. border.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,2,"Denied access area - Access to the entire plot is denied by the legal owner, or by the owner of the only reasonable route to the plot.",ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,3,"Hazardous - Entire plot cannot be accessed because of a hazard or danger, for example cliffs, quarries, strip mines, illegal substance plantations, high water, etc.",ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,5,Lost data - Plot data file was discovered to be corrupt after a panel was completed and submitted for processing.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,6,Lost plot - Entire plot cannot be found.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,7,"Wrong location - Previous plot can be found, but its placement is beyond the tolerance limits for plot location.",ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,8,Skipped visit - Entire plot skipped. Used for plots that are not completed prior to the time a panel is finished and submitted for processing. This code is for office use only.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,9,Dropped intensified plot - Intensified plot dropped due to a change in grid density. This code used only by units engaged in intensification. This code is for office use only.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,10,Other - Entire plot not sampled due to a reason other than one of the specific reasons already listed.,ENTIRE_PLOT
+PLOT_NONSAMPLE_REASN_CD,11,Ocean - Plot falls in ocean water below mean high tide line.,ENTIRE_PLOT
+MEASMON,1,January.,ENTIRE_PLOT
+MEASMON,2,February.,ENTIRE_PLOT
+MEASMON,3,March.,ENTIRE_PLOT
+MEASMON,4,April.,ENTIRE_PLOT
+MEASMON,5,May.,ENTIRE_PLOT
+MEASMON,6,June.,ENTIRE_PLOT
+MEASMON,7,July.,ENTIRE_PLOT
+MEASMON,8,August.,ENTIRE_PLOT
+MEASMON,9,September.,ENTIRE_PLOT
+MEASMON,10,October.,ENTIRE_PLOT
+MEASMON,11,November.,ENTIRE_PLOT
+MEASMON,12,December.,ENTIRE_PLOT
+KINDCD,0,Periodic inventory plot.,ENTIRE_PLOT
+KINDCD,1,Initial installation of a national design plot or resampling of a national design plot that was coded as nonsampled (PLOT_STATUS_CD = 3) at the previous visit.,ENTIRE_PLOT
+KINDCD,2,Remeasurement of previously installed national design plot.,ENTIRE_PLOT
+KINDCD,3,Replacement of previously installed national design plot.,ENTIRE_PLOT
+KINDCD,4,Modeled periodic inventory plot (Northeastern and North Central only).,ENTIRE_PLOT
+RDDISTCD,1,100 ft or less.,ENTIRE_PLOT
+RDDISTCD,2,101 ft to 300 ft.,ENTIRE_PLOT
+RDDISTCD,3,301 ft to 500 ft.,ENTIRE_PLOT
+RDDISTCD,4,501 ft to 1000 ft.,ENTIRE_PLOT
+RDDISTCD,5,1001 ft to 1/2 mile.,ENTIRE_PLOT
+RDDISTCD,6,1/2 to 1 mile.,ENTIRE_PLOT
+RDDISTCD,7,1 to 3 miles.,ENTIRE_PLOT
+RDDISTCD,8,3 to 5 miles.,ENTIRE_PLOT
+RDDISTCD,9,Greater than 5 miles.,ENTIRE_PLOT
+WATERCD,0,None - no water sources within the sampled condition class(es).,ENTIRE_PLOT
+WATERCD,1,Permanent streams or ponds too small to qualify as noncensus water.,ENTIRE_PLOT
+WATERCD,2,"Permanent water in the form of deep swamps, bogs, marshes without standing trees present and less than 1.0 acre in size, or with standing trees.",ENTIRE_PLOT
+WATERCD,3,"Ditch/canal - human-made channels used as a means of moving water, e.g., for irrigation or drainage, which are too small to qualify as noncensus water.",ENTIRE_PLOT
+WATERCD,4,Temporary streams.,ENTIRE_PLOT
+WATERCD,5,Flood zones - evidence of flooding when bodies of water exceed their natural banks.,ENTIRE_PLOT
+WATERCD,9,Other temporary water.,ENTIRE_PLOT
+GROW_TYP_CD,1,Current annual.,ENTIRE_PLOT
+GROW_TYP_CD,2,Periodic annual.,ENTIRE_PLOT
+MORT_TYP_CD,1,Current annual.,ENTIRE_PLOT
+MORT_TYP_CD,2,Periodic annual.,ENTIRE_PLOT
+KINDCD_NC,0,New/lost.,ENTIRE_PLOT
+KINDCD_NC,6,Remeasured.,ENTIRE_PLOT
+KINDCD_NC,8,Old location but not remeasured.,ENTIRE_PLOT
+KINDCD_NC,20,Skipped.,ENTIRE_PLOT
+KINDCD_NC,33,Replacement of lost plot.,ENTIRE_PLOT
+QA_STATUS,1,Standard production plot.,ENTIRE_PLOT
+QA_STATUS,2,Cold check.,ENTIRE_PLOT
+QA_STATUS,3,Reference plot (off grid).,ENTIRE_PLOT
+QA_STATUS,4,Training/practice plot (off grid).,ENTIRE_PLOT
+QA_STATUS,5,Botched plot file (disregard during data processing).,ENTIRE_PLOT
+MICROPLOT_LOC,OFFSET,The microplot center is offset from the subplot center.,ENTIRE_PLOT
+MICROPLOT_LOC,CENTER,The microplot center is at the subplot center.,ENTIRE_PLOT
+SAMP_METHOD_CD,1,"Field visited, meaning a field crew physically examined the plot and recorded information at least about subplot 1 center condition (see SUBP_EXAMINE_CD below).",ENTIRE_PLOT
+SAMP_METHOD_CD,2,"Remotely sensed, meaning a determination was made using some type of imagery that a field visit was not necessary. When the plot is sampled remotely, the number of subplots examined (SUBP_EXAMINE_CD) usually equals 1.",ENTIRE_PLOT
+SUBP_EXAMINE_CD,1,Only subplot 1 center condition examined and all other subplots assumed (inferred) to be the same.,ENTIRE_PLOT
+SUBP_EXAMINE_CD,4,All four subplots fully described (no assumptions/inferences).,ENTIRE_PLOT
+TOPO_POSITION_PNW,1,Topographic coverage: Ridge top or mountain peak over 130 feet. Common shape of slope: Flat.,ENTIRE_PLOT
+TOPO_POSITION_PNW,2,Topographic coverage: Narrow ridge top or mountain peak over 130 feet wide. Common shape of slope: Convex.,ENTIRE_PLOT
+TOPO_POSITION_PNW,3,Topographic coverage: Side hill - upper 1/3. Common shape of slope: Convex.,ENTIRE_PLOT
+TOPO_POSITION_PNW,4,Topographic coverage: Side hill - middle 1/3. Common shape of slope: No rounding.,ENTIRE_PLOT
+TOPO_POSITION_PNW,5,Topographic coverage: Side hill - lower 1/3. Common shape of slope: Concave.,ENTIRE_PLOT
+TOPO_POSITION_PNW,6,Topographic coverage: Canyon bottom less than 660 feet wide. Common shape of slope: Concave.,ENTIRE_PLOT
+TOPO_POSITION_PNW,7,"Topographic coverage: Bench, terrace or dry flat. Common shape of slope: Flat.",ENTIRE_PLOT
+TOPO_POSITION_PNW,8,Topographic coverage: Broad alluvial flat over 660 feet wide. Common shape of slope: Flat.,ENTIRE_PLOT
+TOPO_POSITION_PNW,9,Topographic coverage: Swamp or wet flat. Common shape of slope: Flat.,ENTIRE_PLOT
+NF_SAMPLING_STATUS_CD,0,Nonforest plots / conditions are not inventoried.,ENTIRE_PLOT
+NF_SAMPLING_STATUS_CD,1,Nonforest plots / conditions are inventoried.,ENTIRE_PLOT
+NF_PLOT_STATUS_CD,1,Sampled - at least one accessible nonforest land condition present on the plot.,ENTIRE_PLOT
+NF_PLOT_STATUS_CD,2,"Sampled - no nonforest land condition present on plot (i.e., plot is either census and/or noncensus water).",ENTIRE_PLOT
+NF_PLOT_STATUS_CD,3,Nonsampled nonforest.,ENTIRE_PLOT
+NF_PLOT_NONSAMPLE_REASN_CD,2,"Denied access - Access to the entire plot is denied by the legal owner, or by the owner of the only reasonable route to the plot. Because a denied-access plot can become accessible in the future, it remains in the sample and is re-examined at the next occasion to determine if access is available.",ENTIRE_PLOT
+NF_PLOT_NONSAMPLE_REASN_CD,3,"Hazardous - Entire plot cannot be accessed because of a hazard or danger, for example cliffs, quarries, strip mines, illegal substance plantations, high water, etc. Although most hazards will not change over time, a hazardous plot remains in the sample and is re-examined at the next occasion to determine if the hazard is still present.",ENTIRE_PLOT
+NF_PLOT_NONSAMPLE_REASN_CD,8,Skipped visit - Entire plot skipped. Used for plots that are not completed prior to the time a panel is finished and submitted for processing. This code is for office use only.,ENTIRE_PLOT
+NF_PLOT_NONSAMPLE_REASN_CD,9,Dropped intensified plot - Intensified plot dropped due to a change in grid density. This code used only by units engaged in intensification. This code is for office use only.,ENTIRE_PLOT
+NF_PLOT_NONSAMPLE_REASN_CD,10,Other - Entire plot not sampled due to a reason other than one of the specific reasons already listed.,ENTIRE_PLOT
+P2VEG_SAMPLING_STATUS_CD,0,Plot is not part of the P2 vegetation sample.,ENTIRE_PLOT
+P2VEG_SAMPLING_STATUS_CD,1,P2 vegetation data are sampled only on accessible forest land conditions.,ENTIRE_PLOT
+P2VEG_SAMPLING_STATUS_CD,2,P2 vegetation data are sampled on all accessible land conditions.,ENTIRE_PLOT
+P2VEG_SAMPLING_LEVEL_DETAIL_,1,"Data collected for vegetation structure only; total aerial canopy cover and canopy cover by layer for tally tree species (all sizes), non-tally tree species (all sizes), shrubs/subshrubs/woody vines, forbs, and graminoids.",ENTIRE_PLOT
+P2VEG_SAMPLING_LEVEL_DETAIL_,2,"Vegetation structure data (LOD = 1) plus understory species composition data collected including up to four most abundant species per GROWTH_HABIT_CD per subplot of: seedlings and saplings of any tree species (tally or non-tally) <5 inches d.b.h. (d.r.c. for woodland species), shrubs/subshrubs/woody vines, forbs, and graminoids.",ENTIRE_PLOT
+P2VEG_SAMPLING_LEVEL_DETAIL_,3,"Vegetation structure data, understory species composition data (LOD = 2), plus up to four most abundant tree species (tally or non-tally) ω5 inches d.b.h. (d.r.c for woodland species) per GROWTH_HABIT_CD per subplot.",ENTIRE_PLOT
+INVASIVE_SAMPLING_STATUS_CD,0,Plot is not part of invasive plant sample.,ENTIRE_PLOT
+INVASIVE_SAMPLING_STATUS_CD,1,Invasive plant data are sampled only on accessible forest land conditions.,ENTIRE_PLOT
+INVASIVE_SAMPLING_STATUS_CD,2,Invasive plant data are sampled on all accessible land conditions.,ENTIRE_PLOT
+INVASIVE_SPECIMEN_RULE_CD,0,FIA work unit does not require specimen collection for invasive plants.,ENTIRE_PLOT
+INVASIVE_SPECIMEN_RULE_CD,1,FIA work unit requires specimen collection for invasive plants.,ENTIRE_PLOT
+SUBPANEL,0,Subpaneling not used.,ENTIRE_PLOT
+SUBPANEL,1,Subpanel1.,ENTIRE_PLOT
+SUBPANEL,2,Subpanel2.,ENTIRE_PLOT
+CONDCHNGCD_RMRS,0,There have been no condition class changes from the previous inventory. Copy condition class defining (mapping) variables from computer-generated printouts included in the plot packet.,ENTIRE_PLOT
+CONDCHNGCD_RMRS,1,"True change has taken place since the last inventory. At least one condition class defining (mapping) variable has changed on any condition. Include changes in the condition status (COND_STATUS_CD) such as: previous COND_STATUS_CD was accessible forest land, now some portion or all of the condition is not accessible forest land (condition is now nonforest land, noncensus water, census water, denied access, area too hazardous to visit, area that is not in the sample, or not sampled/out of time), or vice versa.",ENTIRE_PLOT
+CONDCHNGCD_RMRS,2,There are no true condition changes. The previous crew mapped or failed to map a condition(s) in obvious error.,ENTIRE_PLOT
+CONDCHNGCD_RMRS,3,There are no true condition changes. Change is due to procedural or definition changes.,ENTIRE_PLOT
+FUTFORCD_RMRS,0,"No, there is no chance this plot will meet the forest definition at the next cycle. It meets one or more of the following criteria:
+• Located more than ½ mile from the nearest forest land, and there are no trees
+present on or near the location. No disturbance evident (e.g., large fires, clearcut, etc.).
+• Located in a large reservoir.
+• Located in a developed urban area (on a house, building, parking lot), but the plot does not fall in a park, undeveloped yard, etc. that may revert to natural forest.
+• Located on barren rock, sand dunes, etc.",ENTIRE_PLOT
+FUTFORCD_RMRS,1,"Yes, there is some chance that this plot could become forested in the next cycle; there
+are trees present, or forest land is present within ½ mile.",ENTIRE_PLOT
+FUTFORCD_RMRS,2,"There are no forest tree species (tree species codes) on the site, but other woody species not currently defined as forest species occupy the site (such as salt cedar, palo verde, ironwood, big sage).",ENTIRE_PLOT
+PLOT_SEASON_NERS,1,Winter.,ENTIRE_PLOT
+PLOT_SEASON_NERS,2,Summer.,ENTIRE_PLOT
+PLOT_SEASON_NERS,3,Anytime.,ENTIRE_PLOT
+PREV_MICROPLOT_LOC_RMRS,CENTER,Microplot center located at subplot center.,ENTIRE_PLOT
+PREV_MICROPLOT_LOC_RMRS,OFFSET,"Microplot center offset from subplot center. For example, microplot center located 12
+feet horizontal at 90 degrees from subplot center.",ENTIRE_PLOT
+PREV_PLOT_STATUS_CD_RMRS,1,Sampled - at least one accessible forest land condition present on plot.,ENTIRE_PLOT
+PREV_PLOT_STATUS_CD_RMRS,2,Sampled - no accessible forest land condition present on plot.,ENTIRE_PLOT
+PREV_PLOT_STATUS_CD_RMRS,3,Nonsampled.,ENTIRE_PLOT
+REUSECD1,0,No evidence of recreation use.,ENTIRE_PLOT
+REUSECD1,1,"Motor vehicle (four wheel drive, ATV, motorcycle).",ENTIRE_PLOT
+REUSECD1,2,Horse riding.,ENTIRE_PLOT
+REUSECD1,3,Camping.,ENTIRE_PLOT
+REUSECD1,4,Hiking.,ENTIRE_PLOT
+REUSECD1,5,Hunting/shooting.,ENTIRE_PLOT
+REUSECD1,6,Fishing.,ENTIRE_PLOT
+REUSECD1,7,Boating - physical evidence such as launch sites or docks.,ENTIRE_PLOT
+REUSECD1,9,"Other - recreation use where evidence is present, such as human
+litter, but purpose is not clear or does not fit into above categories.",ENTIRE_PLOT
+GRND_LYR_SAMPLING_STATUS_C,0,Plot is not part of the ground layer sample.,ENTIRE_PLOT
+GRND_LYR_SAMPLING_STATUS_C,1,Ground layer data are sampled only on accessible forest land conditions.,ENTIRE_PLOT
+GRND_LYR_SAMPLING_STATUS_C,2,Ground layer data are sampled on all accessible land conditions.,ENTIRE_PLOT
+GRND_LYR_SAMPLING_METHOD_C,1,Ground layer microquadrats sampled at 4 locations per transect.,ENTIRE_PLOT
+GRND_LYR_SAMPLING_METHOD_C,2,Ground layer microquadrats sampled at 2 locations per transect.,ENTIRE_PLOT
+P3_OZONE_IND,Y,"Yes, the survey is for a P3 ozone inventory.",SURVEY_TABLE
+P3_OZONE_IND,N,"No, the survey is not for a P3 ozone inventory.",SURVEY_TABLE
+RSCD,22,Rocky Mountain Research Station (RMRS).,SURVEY_TABLE
+RSCD,23,North Central Research Station (NCRS).,SURVEY_TABLE
+RSCD,24,Northeastern Research Station (NERS).,SURVEY_TABLE
+RSCD,26,Pacific Northwest Research Station (PNWRS).,SURVEY_TABLE
+RSCD,27,Pacific Northwest Research Station (PNWRS-AK).,SURVEY_TABLE
+RSCD,33,Southern Research Station (SRS).,SURVEY_TABLE
+ANN_INVENTORY,Y,"Yes, the inventory is annual.",SURVEY_TABLE
+ANN_INVENTORY,N,"No, the inventory is not annual.",SURVEY_TABLE
+SUBP_STATUS_CD,1,Sampled - at least one accessible forest land condition present on subplot.,SUBPLOT_TABLE
+SUBP_STATUS_CD,2,Sampled - no accessible forest land condition present on subplot.,SUBPLOT_TABLE
+SUBP_STATUS_CD,3,Nonsampled - possibility of forest land.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,1,Outside U.S. boundary - Entire subplot (or macroplot) is outside of the U.S. border.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,2,"Denied access area - Access to the entire subplot (or macroplot) is denied by the legal owner, or by the owner of the only reasonable route to the subplot (or macroplot).",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,3,"Hazardous situation - Entire subplot (or macroplot) cannot be accessed because of a
+hazard or danger, for example cliffs, quarries, strip mines, illegal substance
+plantations, high water, etc.",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,4,"Time limitation - Entire subplot (or macroplot) cannot be sampled due to a time restriction. This code is reserved for areas with limited access, and in situations where it is imperative for the crew to leave before the plot can be completed (e.g., scheduled helicopter rendezvous).",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,5,Lost data - The plot data file was discovered to be corrupt after a panel was completed and submitted for processing. This code is assigned to entire plots or full subplots that could not be processed.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,6,Lost plot - Entire plot cannot be found. Used for the four subplots that are required for this plot.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,7,"Wrong location - Previous plot can be found, but its placement is beyond the tolerance limits for plot location. Used for the four subplots that are required for this plot.",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,8,Skipped visit - Entire plot skipped. Used for plots that are not completed prior to the time a panel is finished and submitted for processing. Used for the four subplots that are required for this plot. This code is for office use only.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,9,Dropped intensified plot - Intensified plot dropped due to a change in grid density. Used for the four subplots that are required for this plot. This code used only by units engaged in intensification. This code is for office use only.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,10,Other - Entire subplot (or macroplot) not sampled due to a reason other than one of the specific reasons already listed.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,11,Ocean - Subplot/macroplot falls in ocean water below mean high tide line.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,0,No evidence of root disease visible within 50 feet of the 58.9 foot macroplot.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,1,"Root disease present within 50 feet of the macroplot, but no evidence of disease on the macroplot.",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,2,"Minor evidence of root disease on the macroplot, such as suppressed tree killed by root disease, or a minor part of the overstory showing symptoms of infection. Little or no detectable reduction in canopy closure or volume.",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,3,"Canopy reduction evident, up to 20 percent; usually as a result of death of 1 codominant tree on an otherwise fully stocked site. In absence of mortality, numerous trees showing symptoms of root disease infection.",SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,4,Canopy reduction at least 20 percent; up to 30 percent as a result of root disease mortality. Snags and downed trees removed from canopy by disease as well as live trees with advance symptoms of disease contribute to impact.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,5,Canopy reduction 30-50 percent as a result of root disease. At least half of the ground area of macroplot considered infested with evidence of root disease-killed trees. Macroplots representing mature stands with half of their volume in root disease-tolerant species usually do not go much above severity 5 because of the ameliorating effect of the disease-tolerant trees.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,6,50-75 percent reduction in canopy with most of the ground area considered infested as evidenced by symptomatic trees. Much of the canopy variation in this category is generally a result of root disease-tolerant species occupying infested ground.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,7,At least 75 percent canopy reduction. Macroplots that reach this severity level usually are occupied by only the most susceptible species. There are very few of the original overstory trees remaining although infested ground is often densely stocked with regeneration of susceptible species.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,8,The entire macroplot falls within a definite root disease pocket with only one or very few susceptible overstory trees present.,SUBPLOT_TABLE
+POINT_NONSAMPLE_REASN_CD,9,The entire macroplot falls within a definite root disease pocket with no overstory trees of the susceptible species present.,SUBPLOT_TABLE
+NF_SUBP_STATUS_CD,1,"Sampled - at least one accessible nonforest land condition present on the
+subplot/macroplot.",SUBPLOT_TABLE
+NF_SUBP_STATUS_CD,2,"Sampled - no nonforest land condition present on subplot/macroplot (i.e., subplot/macroplot is either census and/or noncensus water).",SUBPLOT_TABLE
+NF_SUBP_STATUS_CD,3,Nonsampled nonforest.,SUBPLOT_TABLE
+NF_SUBP_NONSAMPLE_REASN_CD,2,"Denied access - A subplot/macroplot to which access is denied by the legal owner, or
+to which an owner of the only reasonable route to the plot denies access. Because a
+denied-access subplot/macroplot can become accessible in the future, it remains in
+the sample and is re-examined at the next occasion to determine if access is
+available.",SUBPLOT_TABLE
+NF_SUBP_NONSAMPLE_REASN_CD,3,"Hazardous situation - A subplot/macroplot that cannot be accessed because of a hazard or danger, for example cliffs, quarries, strip mines, illegal substance plantations, temporary high water, etc. Although the hazard is not likely to change over time, a hazardous condition remains in the sample and is re-examined at the next occasion to determine if the hazard is still present.",SUBPLOT_TABLE
+NF_SUBP_NONSAMPLE_REASN_CD,4,"Time limitation - This code applies to a full subplot/macroplot that cannot be sampled due to a time restriction. This code is reserved for areas with limited access, and in situations where it is imperative for the crew to leave before the plot can be completed (e.g., scheduled helicopter rendezvous).",SUBPLOT_TABLE
+NF_SUBP_NONSAMPLE_REASN_CD,10,Other - This code is used whenever a subplot/macroplot is not sampled due to a reason other than one of the specific reasons already listed.,SUBPLOT_TABLE
+P2VEG_SUBP_STATUS_CD,1,Subplot sampled for P2 vegetation.,SUBPLOT_TABLE
+P2VEG_SUBP_STATUS_CD,2,Subplot not sampled for P2 vegetation.,SUBPLOT_TABLE
+P2VEG_SUBP_NONSAMPLE_REASN_CD,4,Time limitation.,SUBPLOT_TABLE
+P2VEG_SUBP_NONSAMPLE_REASN_CD,5,Lost Data (for office use only).,SUBPLOT_TABLE
+P2VEG_SUBP_NONSAMPLE_REASN_CD,10,"Other (for example, snow or water covering vegetation that is supposed to be sampled).",SUBPLOT_TABLE
+INVASIVE_SUBP_STATUS_CD,1,"Subplot sampled, invasive plants present.",SUBPLOT_TABLE
+INVASIVE_SUBP_STATUS_CD,2,"Subplot sampled, no invasive plants present.",SUBPLOT_TABLE
+INVASIVE_SUBP_STATUS_CD,3,Subplot not sampled for invasive plants.,SUBPLOT_TABLE
+INVASIVE_NONSAMPLE_REASN_CD,4,Time limitation.,SUBPLOT_TABLE
+INVASIVE_NONSAMPLE_REASN_CD,5,Lost Data (for office use only).,SUBPLOT_TABLE
+INVASIVE_NONSAMPLE_REASN_CD,10,"Other (for example, snow or water covering vegetation that is supposed to be sampled).",SUBPLOT_TABLE
+CROWN_CLOSURE_ME_NERS,0,0-25%,SUBPLOT_TABLE
+CROWN_CLOSURE_ME_NERS,1,26-50%,SUBPLOT_TABLE
+CROWN_CLOSURE_ME_NERS,2,51-75%,SUBPLOT_TABLE
+CROWN_CLOSURE_ME_NERS,3,>75%,SUBPLOT_TABLE
+PREV_STATUSCD_RMRS,1,Sampled - at least one accessible forest land condition present on subplot.,SUBPLOT_TABLE
+PREV_STATUSCD_RMRS,2,Sampled - no accessible forest land condition present on subplot.,SUBPLOT_TABLE
+PREV_STATUSCD_RMRS,3,Nonsampled - possibility of forest land.,SUBPLOT_TABLE
+ROOTSEVCD_RMRS,0,No evidence of root disease visible within 50 feet of the subplot perimeter.,SUBPLOT_TABLE
+ROOTSEVCD_RMRS,1,"Root disease present within 50 feet of the subplot perimeter, but no evidence of root disease on subplot.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,2,"Minor evidence of root disease evident on the subplot - suppressed tree killed by root disease, or minor part of overstory showing symptoms of infection. Little or no reduction in canopy closure or volume.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,3,"Up to 20 percent canopy reduction evident - as a result of the death of one codominant tree on an otherwise fully stocked site. In the absence of mortality, numerous trees showing symptoms of root disease infection.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,4,"20 to 30 percent canopy reduction - as a result of root disease-caused mortality. The presence of snags and downed dead trees as a result of disease, leaving gaps in the tree canopy, as well as live trees with advanced symptoms of disease.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,5,"30 to 50 percent canopy reduction - as a result of root disease. Almost half of
+ground area of subplot considered infested with evidence of root disease-killed
+trees. Note: Subplots representing mature stands with half of their volume in root
+disease-tolerant species usually don't go much above severity 5 because of the
+ameliorating effect of the disease tolerant trees.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,6,50 to 75 percent canopy reduction -- most of the ground area considered infested as evidenced by symptomatic trees. Much of the canopy variation in this category results from disease-tolerant species occupying infested ground.,SUBPLOT_TABLE
+ROOTSEVCD_RMRS,7,"75 percent or more canopy reduction - subplots with this severity level usually were occupied by only the most susceptible species. Very few of the original overstory trees remain, although the infested ground area is often densely stocked with regeneration of the susceptible species.",SUBPLOT_TABLE
+ROOTSEVCD_RMRS,8,Entire subplot falls within a definite root disease patch with only one or very few susceptible overstory trees present (standing/live) within the canopy.,SUBPLOT_TABLE
+ROOTSEVCD_RMRS,9,Entire subplot falls within a definite root disease patch with no overstory trees of the susceptible species present within the canopy.,SUBPLOT_TABLE
+SUBP,2,North subplot.,SUBP_SOIL_SAMPLE_LOC
+SUBP,3,Southeast subplot.,SUBP_SOIL_SAMPLE_LOC
+SUBP,4,Southwest subplot.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_METHOD_CD,1,P3 soils sample method.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_METHOD_CD,2,Interior Alaska pilot soils sample method.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_METHOD_CD,3,Interior Alaska soils sample method.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_METHOD_CD,4,Hawaii soils sample method.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),1,Sampled: forest that has been identified as a condition on the plot.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),2,Not sampled: non-forest.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),3,Not sampled forest condition: too rocky to sample.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),4,Not sampled forest condition: water or boggy.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),5,Not sampled forest condition: access denied.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),6,Not sampled forest condition: too dangerous to sample.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),7,Not sampled forest condition: obstruction in sampling area.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),8,Not sampled forest condition: broken or lost equipment.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),9,Not sampled forest condition: other.,SUBP_SOIL_SAMPLE_LOC
+SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 1),11,Sampled: forest that has NOT been identified as a condition on the plot.,SUBP_SOIL_SAMPLE_LOC
+"SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 2, 3, 4)",1,Sampled.,SUBP_SOIL_SAMPLE_LOC
+"SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 2, 3, 4)",2,Not sampled: standing water.,SUBP_SOIL_SAMPLE_LOC
+"SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 2, 3, 4)",3,Not sampled: access denied.,SUBP_SOIL_SAMPLE_LOC
+"SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 2, 3, 4)",4,Not sampled: hazardous.,SUBP_SOIL_SAMPLE_LOC
+"SOILS_SAMPLE_STATUS_CD (When SOILS_SAMPLE_METHOD_CD = 2, 3, 4)",5,Not sampled: other.,SUBP_SOIL_SAMPLE_LOC
+CORE_BOTTOM_CD,1,Identifiable plant parts.,SUBP_SOIL_SAMPLE_LOC
+CORE_BOTTOM_CD,2,Unidentifiable plant parts.,SUBP_SOIL_SAMPLE_LOC
+CORE_BOTTOM_CD,5,Mineral soil.,SUBP_SOIL_SAMPLE_LOC
+CORE_BOTTOM_CD,6,Unknown material.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_1,1,Frozen soil.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_2,2,Gravel.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_3,3,Substrate not reached >40 inches.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_4,4,Substrate unknown.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_5,5,Bedrock.,SUBP_SOIL_SAMPLE_LOC
+RESTRICTION_DEPTH_CD_6,6,Sand.,SUBP_SOIL_SAMPLE_LOC
+USED_IN_ESTIMATION_CD ,0,The soil core is not included in population estimates.,SUBP_SOIL_SAMPLE_LOC
+USED_IN_ESTIMATION_CD ,1,The soil core is included in population estimates.,SUBP_SOIL_SAMPLE_LOC
+SAMPLER_TYPE,BD,Bulk density.,SUBP_SOIL_SAMPLE_LAYER
+SAMPLER_TYPE,SF,Sample frame.,SUBP_SOIL_SAMPLE_LAYER
+SAMPLER_TYPE,O,Other.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 1) (P3 Soils),LITTER,Litter layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 1) (P3 Soils),FOREST FLOOR,Forest floor.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 1) (P3 Soils),MINERAL_SOIL_0-4_IN,Mineral soil layer collected at 0-4 inches in depth.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 1) (P3 Soils),MINERAL_SOIL_4-8_IN,Mineral soil layer collected at 4-8 inches in depth.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 2) (Interior Alaska pilot),IDENT_PARTS,Identifiable parts.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 2) (Interior Alaska pilot),UNIDENT_PARTS,Unidentifiable parts.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 2) (Interior Alaska pilot),MINERAL_SOIL,Mineral soil.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 2) (Interior Alaska pilot),UNK_SOIL,Unknown soil.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),LITTER,Litter layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),GREEN_MOSS_LICHEN,Green moss / lichen layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),IDENT_PARTS,Identifiable parts.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),UNIDENT_PARTS,Unidentifiable parts.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),MINERAL_SOIL,Mineral soil.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 3) (Interior Alaska),UNK_SOIL,Unknown soil.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 4) (Hawaii),MINERAL_SOIL_0-20_CM,0-20 cm mineral soil layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 4) (Hawaii),MINERAL_SOIL_20-40_CM,20-40 cm mineral soil layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 4) (Hawaii),MINERAL_SOIL_40-60_CM,40-60 cm mineral soil layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 4) (Hawaii),MINERAL_SOIL_60-80_CM,60-80 cm mineral soil layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_TYPE (when SOILS_SAMPLE_METHOD_CD = 4) (Hawaii),MINERAL_SOIL_80-100_CM,80-100 cm mineral soil layer.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_COLLECTED_CD,1,Sample collected for analysis.,SUBP_SOIL_SAMPLE_LAYER
+LAYER_COLLECTED_CD,2,Sample not collected for analysis; other reason.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),0,Organic.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),1,Loamy.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),2,Clayey.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),3,Sandy.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),4,Coarse sand.,SUBP_SOIL_SAMPLE_LAYER
+TEXTURE_CD for P3 (SOILS_SAMPLE_METHOD _CD = 1),9,Not measured.,SUBP_SOIL_SAMPLE_LAYER
+"TEXTURE_CD for Interior Alaska (SOILS_SAMPLE_METHOD_CD = 2, 3)",1,Loamy.,SUBP_SOIL_SAMPLE_LAYER
+"TEXTURE_CD for Interior Alaska (SOILS_SAMPLE_METHOD_CD = 2, 3)",2,Clayey.,SUBP_SOIL_SAMPLE_LAYER
+"TEXTURE_CD for Interior Alaska (SOILS_SAMPLE_METHOD_CD = 2, 3)",3,Sandy.,SUBP_SOIL_SAMPLE_LAYER
+"TEXTURE_CD for Interior Alaska (SOILS_SAMPLE_METHOD_CD = 2, 3)",4,Coarse sand.,SUBP_SOIL_SAMPLE_LAYER
+"TEXTURE_CD for Interior Alaska (SOILS_SAMPLE_METHOD_CD = 2, 3)",9,Not measured.,SUBP_SOIL_SAMPLE_LAYER
+STATUSCD,0,"No status - Tree is not presently in the sample (remeasurement plots only). Tree was incorrectly tallied at the previous inventory, currently not tallied due to definition or procedural change, or is not tallied because it is located on a nonsampled condition (e.g., hazardous or denied). RECONCILECD = 5-9 required for remeasured annual inventory data but not for periodic inventory data.",TREE_TABLE
+STATUSCD,1,Live tree.,TREE_TABLE
+STATUSCD,2,Dead tree.,TREE_TABLE
+STATUSCD,3,"Retired code - Starting with PLOT.MANUAL = 9.3, this code is only valid for some periodic-to-periodic, periodic-to-annual, and modeled GRM estimates. Only populated by certain FIA work units (SURVEY.RSCD = 23, 24). Removed - Cut and removed by direct human activity related to harvesting, silviculture, or land clearing. This tree is assumed to be utilized.",TREE_TABLE
+DIAHTCD,1,Breast height (d.b.h.).,TREE_TABLE
+DIAHTCD,2,Root collar (d.r.c.).,TREE_TABLE
+HTCD,1,Field measured (total and actual length).,TREE_TABLE
+HTCD,2,"Total length visually estimated in the field, actual length measured.",TREE_TABLE
+HTCD,3,Total and actual lengths are visually estimated.,TREE_TABLE
+HTCD,4,Estimated with a model.,TREE_TABLE
+TREECLCD,2,"Growing stock - All live trees of commercial species that meet minimum merchantability standards. In general, these trees have at least one solid 8-foot section, are reasonably free of form defect on the merchantable bole, and at least 34 percent or more of the volume is merchantable. For the California, Oregon, Washington, and Alaska inventories, a 26 percent or more merchantable volume standard is applied, rather than 34 percent or more. Excludes rough or rotten cull trees.",TREE_TABLE
+TREECLCD,3,"Rough cull - All live trees that do not now, or prospectively, have at least one solid 8-foot section, reasonably free of form defect on the merchantable bole, or have 67 percent or more of the merchantable volume cull; and more than half of this cull is due to sound dead wood cubic-foot loss or severe form defect volume loss. For the California, Oregon, Washington, and Alaska inventories, 75 percent or more cull, rather than 67 percent or more cull, applies. This class also contains all trees of noncommercial species, or those species where SPGRPCD equals 23 (woodland softwoods), 43 (eastern noncommercial hardwoods), or 48 (woodland hardwoods). Refer to appendix F to find the species that have these SPGRPCD codes. For dead trees, this code indicates that the tree is salvable (sound).",TREE_TABLE
+TREECLCD,4,"Rotten cull - All live trees with 67 percent or more of the merchantable volume cull, and more than half of this cull is due to rotten or missing cubic-foot volume loss. California, Oregon, Washington, and Alaska inventories use a 75 percent cutoff. For dead trees, this code indicates that the tree is nonsalvable (not sound).",TREE_TABLE
+CCLCD,1,"Open grown - Trees with crowns that have received full light from above and from all
+sides throughout all or most of their life, particularly during early development.",TREE_TABLE
+CCLCD,2,"Dominant - Trees with crowns extending above the general level of the canopy and
+receiving full light from above and partly from the sides; larger than the average
+trees in the stand, and with crowns well developed, but possibly somewhat crowded
+on the sides.",TREE_TABLE
+CCLCD,3,"Codominant - Trees with crowns forming part of the general level of the canopy
+cover and receiving full light from above, but comparatively little from the side.
+Usually with medium crowns more or less crowded on the sides.",TREE_TABLE
+CCLCD,4,"Intermediate - Trees shorter than those in the preceding two classes, with crowns
+either below or extending into the canopy formed by the dominant and codominant
+trees, receiving little direct light from above, and none from the sides; usually with
+small crowns very crowded on the sides.",TREE_TABLE
+CCLCD,5,"Overtopped - Trees with crowns entirely below the general canopy level and
+receiving no direct light either from above or the sides.",TREE_TABLE
+AGENTCD,0,No agent recorded (only allowed on live trees in data prior to 1999).,TREE_TABLE
+AGENTCD,10,Insect.,TREE_TABLE
+AGENTCD,20,Disease.,TREE_TABLE
+AGENTCD,30,Fire.,TREE_TABLE
+AGENTCD,40,Animal.,TREE_TABLE
+AGENTCD,50,Weather.,TREE_TABLE
+AGENTCD,60,"Vegetation (e.g., suppression, competition, vines/kudzu).",TREE_TABLE
+AGENTCD,70,"Unknown / not sure / other - includes death from human activity not related to silvicultural or landclearing activity (accidental, random, etc.).",TREE_TABLE
+AGENTCD,80,"Silvicultural or landclearing activity (death caused by harvesting or other silvicultural activity, including girdling, chaining, etc., or other landclearing activity).",TREE_TABLE
+DAMLOC1,0,No damage.,TREE_TABLE
+DAMLOC2,1,Roots (exposed) and stump (up to 12 inches from ground level).,TREE_TABLE
+DAMLOC3,2,"Roots, stump, and lower bole.",TREE_TABLE
+DAMLOC4,3,Lower bole (lower half of bole between stump and base of live crown).,TREE_TABLE
+DAMLOC5,4,Lower and upper bole.,TREE_TABLE
+DAMLOC6,5,Upper bole (upper half of bole between stump and base of live crown).,TREE_TABLE
+DAMLOC7,6,Crownstem (main stem within the live crown).,TREE_TABLE
+DAMLOC8,7,Branches (>1 inch diameter at junction with main stem and within the live crown).,TREE_TABLE
+DAMLOC9,8,Buds and shoots of current year.,TREE_TABLE
+DAMLOC10,9,Foliage.,TREE_TABLE
+DAMTYP1,1,"Canker, gall.",TREE_TABLE
+DAMTYP2,2,"Conk, fruiting body, or sign of advanced decay.",TREE_TABLE
+DAMTYP3,3,Open wound.,TREE_TABLE
+DAMTYP4,4,Resinosis or gumosis.,TREE_TABLE
+DAMTYP5,5,Crack or seam.,TREE_TABLE
+DAMTYP6,11,Broken bole or broken root within 3 feet of bole.,TREE_TABLE
+DAMTYP7,12,Broom on root or bole.,TREE_TABLE
+DAMTYP8,13,Broken or dead root further than 3 feet from bole.,TREE_TABLE
+DAMTYP9,20,Vines in the crown.,TREE_TABLE
+DAMTYP10,21,"Loss of apical dominance, dead terminal.",TREE_TABLE
+DAMTYP11,22,Broken or dead branches.,TREE_TABLE
+DAMTYP12,23,Excessive branching or brooms within the live crown.,TREE_TABLE
+DAMTYP13,24,"Damaged shoots, buds, or foliage.",TREE_TABLE
+DAMTYP14,25,Discoloration of foliage.,TREE_TABLE
+DAMTYP15,31,Other.,TREE_TABLE
+DAMSEV1,0,01 to 09% of location affected.,TREE_TABLE
+DAMSEV2,1,10 to 19% of location affected.,TREE_TABLE
+DAMSEV3,2,20 to 29% of location affected.,TREE_TABLE
+DAMSEV4,3,30 to 39% of location affected.,TREE_TABLE
+DAMSEV5,4,40 to 49% of location affected.,TREE_TABLE
+DAMSEV6,5,50 to 59% of location affected.,TREE_TABLE
+DAMSEV7,6,60 to 69% of location affected.,TREE_TABLE
+DAMSEV8,7,70 to 79% of location affected.,TREE_TABLE
+DAMSEV9,8,80 to 89% of location affected.,TREE_TABLE
+DAMSEV10,9,90 to 99% of location affected.,TREE_TABLE
+DECAYCD,1,"All limbs and branches are present; the top of the crown is still present; all bark remains; sapwood is intact, with minimal decay; heartwood is sound and hard.",TREE_TABLE
+DECAYCD,2,There are few limbs and no fine branches; the top may be broken; a variable amount of bark remains; sapwood is sloughing with advanced decay; heartwood is sound at base but beginning to decay in the outer part of the upper bole.,TREE_TABLE
+DECAYCD,3,Only limb stubs exist; the top is broken; a variable amount of bark remains; sapwood is sloughing; heartwood has advanced decay in upper bole and is beginning at the base.,TREE_TABLE
+DECAYCD,4,Few or no limb stubs remain; the top is broken; a variable amount of bark remains; sapwood is sloughing; heartwood has advanced decay at the base and is sloughing in the upper bole.,TREE_TABLE
+DECAYCD,5,No evidence of branches remains; the top is broken; <20 percent of the bark remains; sapwood is gone; heartwood is sloughing throughout.,TREE_TABLE
+DIACHECK,0,Diameter accurately measured.,TREE_TABLE
+DIACHECK,1,Diameter estimated.,TREE_TABLE
+DIACHECK,2,Diameter measured at different location than previous measurement (remeasurement trees only).,TREE_TABLE
+DIACHECK,5,Diameter modeled in the office (used with periodic inventories).,TREE_TABLE
+SALVCD,0,Dead not salvable.,TREE_TABLE
+SALVCD,1,Dead salvable.,TREE_TABLE
+CPOSCD,1,Superstory.,TREE_TABLE
+CPOSCD,2,Overstory.,TREE_TABLE
+CPOSCD,3,Understory.,TREE_TABLE
+CPOSCD,4,Open canopy.,TREE_TABLE
+CLIGHTCD,0,The tree receives no direct sunlight because it is shaded by adjacent trees or other vegetation.,TREE_TABLE
+CLIGHTCD,1,Receives full light from the top or 1 side.,TREE_TABLE
+CLIGHTCD,2,Receives full light from the top and 1 side (or 2 sides without the top).,TREE_TABLE
+CLIGHTCD,3,Receives full light from the top and 2 sides (or 3 sides without the top).,TREE_TABLE
+CLIGHTCD,4,Receives full light from the top and 3 sides.,TREE_TABLE
+CLIGHTCD,5,Receives full light from the top and 4 sides.,TREE_TABLE
+CVIGORCD,1,"Saplings must have an uncompacted live crown ratio of 35 or higher, have <5 percent dieback (deer/rabbit browse is not considered as dieback but is considered missing foliage) and 80 percent or more of the foliage present is normal or at least 50 percent of each leaf is not damaged or missing. Twigs and branches that are dead because of normal shading are not included.",TREE_TABLE
+CVIGORCD,2,"Saplings do not meet class 1 or 3 criteria. They may have any uncompacted live crown ratio, may or may not have dieback and may have between 21 and 100 percent of the foliage classified as normal.",TREE_TABLE
+CVIGORCD,3,Saplings may have any uncompacted live crown ratio and have 1 to 20 percent normal foliage or the percent of foliage missing combined with the percent of leaves that are over 50 percent damaged or missing should equal 80 percent or more of the live crown. Twigs and branches that are dead because of normal shading are not included. Code is also used for saplings that have no crown by definition.,TREE_TABLE
+CDENCD,0,0%,TREE_TABLE
+CDENCD,5,1-5%,TREE_TABLE
+CDENCD,10,6-10%,TREE_TABLE
+CDENCD,15,11-15%,TREE_TABLE
+CDENCD,20,16-20%,TREE_TABLE
+CDENCD,25,21-25%,TREE_TABLE
+CDENCD,30,26-30%,TREE_TABLE
+CDENCD,35,31-35%,TREE_TABLE
+CDENCD,40,36-40%,TREE_TABLE
+CDENCD,45,41-45%,TREE_TABLE
+CDENCD,50,46-50%,TREE_TABLE
+CDENCD,55,51-55%,TREE_TABLE
+CDENCD,60,56-60%,TREE_TABLE
+CDENCD,65,61-65%,TREE_TABLE
+CDENCD,70,66-70%,TREE_TABLE
+CDENCD,75,71-75%,TREE_TABLE
+CDENCD,80,76-80%,TREE_TABLE
+CDENCD,85,81-85%,TREE_TABLE
+CDENCD,90,86-90%,TREE_TABLE
+CDENCD,95,91-95%,TREE_TABLE
+CDENCD,99,96-100%,TREE_TABLE
+FORMCL,1,First 8 feet above stump is straight.,TREE_TABLE
+FORMCL,2,First 8 feet above stump is NOT straight or forked; but there is at least one straight 8-foot log elsewhere in the tree.,TREE_TABLE
+FORMCL,3,No 8-foot logs anywhere in the tree now or in the future due to form.,TREE_TABLE
+MORTCD,0,Tree does not qualify as mortality.,TREE_TABLE
+MORTCD,1,Tree does qualify as mortality.,TREE_TABLE
+MIST_CL_CD,0,"Hawksworth tree DMR rating of 0, no infection.",TREE_TABLE
+MIST_CL_CD,1,"Hawksworth tree DMR rating of 1, light infection.",TREE_TABLE
+MIST_CL_CD,2,"Hawksworth tree DMR rating of 2, light infection.",TREE_TABLE
+MIST_CL_CD,3,"Hawksworth tree DMR rating of 3, medium infection.",TREE_TABLE
+MIST_CL_CD,4,"Hawksworth tree DMR rating of 4, medium infection.",TREE_TABLE
+MIST_CL_CD,5,"Hawksworth tree DMR rating of 5, heavy infection.",TREE_TABLE
+MIST_CL_CD,6,"Hawksworth tree DMR rating of 6, heavy infection.",TREE_TABLE
+RECONCILECD,1,"Ingrowth - Either (a) a new tally tree not qualifying as through growth, or (b) a new tree on land that was formerly nonforest and now qualifies as forest land unrelated to cruiser error or procedural/definition change.",TREE_TABLE
+RECONCILECD,2,"Through growth - New tally tree 5 inches d.b.h./d.r.c. and larger, within the microplot, which was not missed at the previous inventory (i.e., grew from seedling to at least 5.0 inches d.b.h. between plot inventory cycles - such trees were never tallied on a microplot).",TREE_TABLE
+RECONCILECD,3,"Retired code - Starting with PLOT.MANUAL = 9.0, this code is no longer used; it is still valid for PLOT.MANUAL <9.0. Missed live - a live tree missed at previous inventory and that is live or dead now. Includes currently tallied trees on previously nonsampled conditions.",TREE_TABLE
+RECONCILECD,4,"Retired code - Starting with PLOT.MANUAL = 9.0, this code is no longer used; it is still valid for PLOT.MANUAL <9.0. Missed dead - a dead tree missed at previous inventory and that is dead now. Includes currently tallied trees on previously nonsampled conditions.",TREE_TABLE
+RECONCILECD,5,Shrank - Live tree that shrunk below threshold diameter on microplot/subplot/macroplot. Must currently be alive. Only valid for remeasured trees that no longer qualify as tally (STATUSCD = 0).,TREE_TABLE
+RECONCILECD,6,"Physical movement - Either (a) tree was correctly tallied in previous inventory, but has now moved beyond the radius of the plot due to natural causes (e.g., small earth movement, hurricane), or (b) tree was outside the radius of the plot previously, but has now moved within the plot due to natural causes. Tree must be either live before and still alive now or dead before and dead now. If tree was live before and now dead, this is a mortality tree and should have STATUSCD = 2 (not 0).",TREE_TABLE
+RECONCILECD,7,"Cruiser error - Either (a) tree was erroneously tallied (added tree), or (b) tree was
+erroneously not tallied (missed tree) at the previous inventory.",TREE_TABLE
+RECONCILECD,8,"Procedural change - Either (a) tree was tallied at the previous inventory, but is no longer tallied due to a definition or procedural change, or (b) tree was not tallied at the previous inventory, but is now tallied due to a definition or procedural change, regardless of d.b.h/d.r.c. at the time of the previous inventory.",TREE_TABLE
+RECONCILECD,9,"Nonsampled area - Either (a) tree was located in a sampled condition at the previous
+inventory, but now is in a nonsampled condition, or (b) the area where the tree is located was previously not sampled, but now is sampled. All trees located in a nonsampled area (either now or previously) have RECONCILECD = 9.",TREE_TABLE
+TREECLCD_NERS,1,"Preferred - Live tree that would be favored in cultural operations. Mature tree, that is
+older than the rest of the stand; has less than 20 percent total board-foot cull; is expected to live for 5 more years; and is a low risk tree. In general, the tree has the following qualifications:
+• must be free from ""general"" damage (i.e., damages that would now or prospectively cause a reduction of tree class, significantly deter growth, or prevent it from producing marketable products in the next 5 years).
+• should have no more than 10 percent board-foot cull due to form defect.
+• should have good vigor, usually indicated by a crown ratio of 30 percent or more and dominant or co-dominant.
+• usually has a grade 1 butt log.",TREE_TABLE
+TREECLCD_NERS,2,"Acceptable - This class includes:
+• live sawtimber tree that does not qualify as a preferred tree, but is not a cull tree (see Rough and Rotten Cull).
+• live poletimber tree that prospectively will not qualify as a preferred tree, but is not now or prospectively a cull tree (see Rough and Rotten Cull).",TREE_TABLE
+TREECLCD_NERS,3,"Rough Cull - This class includes:
+• live sawtimber tree that currently has 67 percent or more predominantly sound board-foot cull; or does not contain one merchantable 12-foot sawlog or two non-contiguous merchantable 8-foot sawlogs.
+• live poletimber tree that currently has 67 percent or more predominantly sound cubic-foot cull; or prospectively will have 67 percent or more predominantly sound board-foot cull; or will not contain one merchantable 12-foot sawlog or two noncontiguous merchantable 8-foot sawlogs.",TREE_TABLE
+TREECLCD_NERS,4,"Rotten Cull - This class includes:
+• live sawtimber tree that currently has 67 percent or more predominantly unsound board-foot cull.
+• live poletimber tree that currently has 67 percent or more predominantly unsound cubic-foot cull; or prospectively will have 67 percent or more predominantly unsound board-foot cull.",TREE_TABLE
+TREECLCD_NERS,5,Dead - Tree that has recently died (within the last several years); but still retains many branches (including some small branches and possibly some fine twigs); and has bark that is generally tight and hard to remove from the tree.,TREE_TABLE
+TREECLCD_NERS,6,"Snag - Dead tree, or what remains of a dead tree, that is at least 4.5 feet tall and is missing most of its bark. This category includes a tree covered with bark that is very loose. This bark can usually be removed, often times in big strips, with very little effort. A snag is not a recently dead tree. Most often, it has been dead for several years - sometimes, for more than a decade.",TREE_TABLE
+TREECLCD_SRS,2,Growing-stock - All trees that have at least one 12-foot log or two 8-foot logs that meet grade and size requirements and at least 1/3 of the total board foot volume is merchantable. Poletimber-sized trees are evaluated based on their potential.,TREE_TABLE
+TREECLCD_SRS,3,"Rough cull - Trees that do not contain at least one 12-foot log or two 8-foot logs, or more than 1/3 of the total board foot volume is not merchantable, primarily due to roughness or poor form.",TREE_TABLE
+TREECLCD_SRS,4,"Rotten cull: Trees that do not contain at least one 12-foot log or two 8-foot logs, or more than 1/3 of the total board foot volume is not merchantable, primarily due to rotten, unsound wood.",TREE_TABLE
+TREECLCD_NCRS,20,Growing stock - Any live tree of commercial species that is sawtimber size and has at least one merchantable 12-foot sawlog or two merchantable 8-foot sawlogs meeting minimum log-grade requirements. At least one-third of the gross board-foot volume of the sawlog portion must be merchantable material. A merchantable sawlog must be at least 50 percent sound at any point. Any pole timber size tree that has the potential to meet the above specifications.,TREE_TABLE
+TREECLCD_NCRS,30,"Rough Cull, Salvable, and Salvable-down - Includes any tree of noncommercial species, or any tree that is sawtimber size and has no merchantable sawlog. Over one-half of the volume in the sawlog portion does not meet minimum log-grade specifications due to roughness, excessive sweep or crook, splits, cracks, limbs, or forks. Rough cull pole-size trees do not have the potential to meet the specifications for growing-stock because of forks, limb stoppers, or excessive sweep or crook. A down-dead tree ω5.0-inch d.b.h. that meets these standards is given a tree/decay code of 30.",TREE_TABLE
+TREECLCD_NCRS,31,"Short-log Cull - Any live sawtimber-size tree of commercial species that has at least one 8-foot sawlog, but < a 12-foot sawlog, meeting minimum log-grade specifications. Any live sawtimber-size tree of commercial species that has less than one-third of the volume of the sawlog portion in merchantable logs, but has at least one 8-foot or longer sawlog meeting minimum log-grade specifications. A short sawlog must be 50 percent sound at any point. Pole-size trees never receive a tree class code 31.",TREE_TABLE
+TREECLCD_NCRS,40,"Rotten Cull - Any live tree of commercial species that is sawtimber size and has no merchantable sawlog. Over one-half of the volume in the sawlog portion does not meet minimum log-grade specifications primarily because of rot, missing sections, or deadwood. Classify any pole-size tree that does not have the potential to meet the specifications for growing-stock because of rot as rotten cull. Assume that all live trees will eventually attain sawlog size at d.b.h. Predicted death, tree vigor, and plot site index are not considered in determining tree class. A standing-dead tree without an 8-foot or longer section that is at least 50 percent sound has a tree class of 40. On remeasurement of a sapling, if it has died and is still standing it is given a tree class of 40.",TREE_TABLE
+TREECLCD_RMRS,1,"Sound-live timber species - All live timber trees (species with diameter measured at breast height) that meet minimum merchantability standards. In general, these trees have at least one solid 8-foot section, are reasonably free of form defect on the merchantable bole, and at least 34 percent or more of the volume is merchantable. Excludes rough or rotten cull timber trees.",TREE_TABLE
+TREECLCD_RMRS,2,All live woodland species - All live woodland trees (woodland species can be identified by REF_SPECIES.WOODLAND = 'Y'). All trees assigned to species groups 23 and 48 belong in this category (see appendix E).,TREE_TABLE
+TREECLCD_RMRS,3,"Rough-live timber species - All live trees that do not now, or prospectively, have at least one solid 8-foot section, reasonably free of form defect on the merchantable bole, or have 67 percent or more of the merchantable volume cull; and more than half of this cull is due to sound dead wood cubic-foot loss or severe form defect volume loss.",TREE_TABLE
+TREECLCD_RMRS,4,"Rotten-live timber species - All live trees with 67 percent or more of the merchantable volume cull, and more than half of this cull is due to rotten or missing cubic-foot volume loss.",TREE_TABLE
+TREECLCD_RMRS,5,Hard (salvable) dead - dead trees that have less than 67 percent of the volume cull due to rotten or missing cubic-foot volume loss.,TREE_TABLE
+TREECLCD_RMRS,6,Soft (nonsalvable) dead - dead trees that have 67 percent or more of the volume cull due to rotten or missing cubic-foot volume loss.,TREE_TABLE
+STANDING_DEAD_CD,0,No - tree does not qualify as standing dead.,TREE_TABLE
+STANDING_DEAD_CD,1,Yes - tree does qualify as standing dead.,TREE_TABLE
+PREV_STATUS_CD,1,Live tree - live tree at the previous inventory.,TREE_TABLE
+PREV_STATUS_CD,2,Dead tree - standing dead at the previous inventory.,TREE_TABLE
+BORED_CD_PNWRS,1,Trees bored or 'whorl counted' at the current inventory.,TREE_TABLE
+BORED_CD_PNWRS,2,Tree age derived from a previous inventory.,TREE_TABLE
+BORED_CD_PNWRS,3,Tree age was extrapolated.,TREE_TABLE
+DAMLOC1_PNWRS,0,Location: — Definition: No damage found.,TREE_TABLE
+DAMLOC1_PNWRS,1,Location: Roots. Definition: Above ground up to 12 inches on bole.,TREE_TABLE
+DAMLOC1_PNWRS,2,"Location: Bole. Definition: Main stem(s) starting at 12 inches above the ground, including forks up to a 4 inch top. (A fork is at least equal to 1/3 diameter of the bole, and occurs at an angle <45 degrees in relation to the bole.) This is not a valid location code for woodland species; use only locations 1, 3, and 4. For saplings, bole includes the main stem starting at ground level and extends to the top of the leader.",TREE_TABLE
+DAMLOC1_PNWRS,3,"Location: Branch. Definition: All other woody material. Primary branch(es) occur at an angle ω45 degrees in relation to the bole. For saplings, a branch is all branches (not
+any part of the bole).",TREE_TABLE
+DAMLOC1_PNWRS,4,"Location: Foliage. Definition: All leaves, buds, and shoots.",TREE_TABLE
+DIACHECK_PNWRS,5,Diameter estimated because of moss.,TREE_TABLE
+DIACHECK_PNWRS,6,Diameter estimated because of vines.,TREE_TABLE
+DIACHECK_PNWRS,7,Diameter estimated (double nail diameter).,TREE_TABLE
+MIST_CL_CD_PNWRS,0,None.,TREE_TABLE
+MIST_CL_CD_PNWRS,7,<50 percent of crown infected.,TREE_TABLE
+MIST_CL_CD_PNWRS,8,ω50 percent of crown infected or any occurrence on the bole.,TREE_TABLE
+SEVERITY1B_CD_PNWRS,1,Branch infections located more than 2.0 feet from tree bole.,TREE_TABLE
+SEVERITY1B_CD_PNWRS,2,Branch infections located 0.5 to 2.0 feet from tree bole.,TREE_TABLE
+SEVERITY1B_CD_PNWRS,3,Branch infection located within 0.5 feet of tree bole OR tree bole infection present.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,1,Canker/gall.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,2,Open wound.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,3,Resinosis.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,4,Broken.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,5,Damaged or discolored foliage.,TREE_TABLE
+UNKNOWN_DAMTYP1_PNWRS,6,Other.,TREE_TABLE
+DISEASE_SRS,0,None.,TREE_TABLE
+DISEASE_SRS,1,"Fusiform/Comandra rust on species codes 110, 111, 121, 126, 128, and 131, based on any incidence of cankers within 12 inches of the stem.",TREE_TABLE
+DISEASE_SRS,2,Hardwood dieback of 10% or more of the crown area. Not recorded on overtopped trees.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,1,10-19% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,2,20-29% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,3,30-39% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,4,40-49% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,5,50-59% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,6,60-69% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,7,70-79% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,8,80-89% of crown affected.,TREE_TABLE
+DIEBACK_SEVERITY_SRS,9,90-99% of crown affected.,TREE_TABLE
+DAMAGE_AGENT_CD1,0,General Agent: —. Damage Threshold*: No damage. Descriptions: —,TREE_TABLE
+DAMAGE_AGENT_CD1,10000,General Agent: General insects. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with >20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Insect damage that cannot be placed in any of the following insect categories.,TREE_TABLE
+DAMAGE_AGENT_CD1,11000,"General Agent: Bark beetles. Damage Threshold*: Any evidence of a successful
+attack (successful attacks generally exhibit boring dust, many pitch tubes and/or fading
+crowns). Descriptions: Bark beetles (Dendroctonus, Ips , and other genera) are
+phloem-feeding insects that bore through the bark and create extensive galleries between the bark and the wood. Symptoms of beetle damage include fading or discolored tree crown (yellow or red), pitch tubes or pitch streaks on the bark,
+extensive egg galleries in the phloem, boring dust in the bark crevices or at the base of the tree. Bark chipping by woodpeckers may be conspicuous. They inflict damage or destroy all parts of trees at all stages of growth by boring in the bark, inner bark, and phloem. Visible signs of attack include pitch tubes or large pitch masses on the tree, dust and frass on the bark and ground, and resin streaming. Internal tunneling has various patterns. Most have tunnels of uniform width with smaller galleries of variable width radiating from them. Galleries may or may not be packed with fine boring dust.",TREE_TABLE
+DAMAGE_AGENT_CD1,12000,"General Agent: Defoliators. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: These are foliage-feeding insects that may reduce growth and weaken the tree causing it to be more susceptible to other damaging agents. General symptoms of defoliation damage include large amounts of missing foliage, browning foliage, extensive branch mortality, or dead tree tops.",TREE_TABLE
+DAMAGE_AGENT_CD1,13000,"General Agent: Chewing insects. Note: This is only collected by RMRS and SRS. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Insects, like grasshoppers and cicadas that chew on trees (those insects not covered by defoliators in code 12000).",TREE_TABLE
+DAMAGE_AGENT_CD1,14000,"General Agent: Sucking insects. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Adelgids, scales and aphids feed on all parts of the tree. Often they cause galling on branches and trunks. Some appear benign but enable fungi to invade where they otherwise could not (e.g., beech bark disease). The most important ones become conspicuous because of the mass of white, cottony wax that conceals eggs and young
+nymphs.",TREE_TABLE
+DAMAGE_AGENT_CD1,15000,"General Agent: Boring insects. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots, stems, or branches. Descriptions: Most wood boring insects attack only severely declining and dead trees. Certain wood boring insects cause significant damage to trees, especially the exotic Asian longhorn beetle, emerald ash borer, and Sirex wood wasp. Bark beetles have both larval and adult galleries in the phloem and adjacent surface of the wood. Wood borers have galleries
+caused only by larval feeding. Some, such as the genus Agrilus (including the emerald ash borer) have galleries only in the phloem and surface of the wood. Other wood
+borers, such as Asian longhorn beetle bore directly into the phloem and wood. Sirex adults oviposit their eggs through the bark, and developing larvae bore directly into
+the wood of pines.",TREE_TABLE
+DAMAGE_AGENT_CD1,19000,General Agent: General diseases. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with >20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Diseases that cannot be placed in any of the following disease categories.,TREE_TABLE
+DAMAGE_AGENT_CD1,21000,"General Agent: Root/butt diseases. Damage Threshold*: Any occurrence. Descriptions: Root disease kills all or a portion of a tree's roots. Quite often, the pathogenic fungus girdles the tree at the root collar. Tree damage includes mortality (often occurring in groups or ""centers""), reduced tree growth, and increased susceptibility to other agents (especially bark beetles). General symptoms include resin at the root collar, thin, chlorotic (faded) foliage, and decay of roots. A rot is a wood decay caused by fungi. Rots are characterized by a progression of symptoms in the affected wood. First, the wood stains and discolors, then it begins to lose its structural strength, and finally the wood starts to break down, forming cavities in the stem. Even early stages of wood decay can cause cull due to losses in wood strength and staining of the wood. Rot can lead to mortality, cull, an increased susceptibility to other agents (such as insects), wind throw, and stem breakage.",TREE_TABLE
+DAMAGE_AGENT_CD1,22000,"General Agent: Cankers (non-rust). Damage Threshold*: Any occurrence. Descriptions: A canker -- a sunken lesion on the stem caused by the death of cambium -- may cause tree breakage or kill the portion of the tree above the canker. Cankers may be caused by various agents but are most often caused by fungi. A necrotic lesion begins in the bark of branches, trunk or roots, and progresses inward killing the cambium and underlying cells. The causal agent may or may not penetrate the wood. This results in areas of dead tissue that become deeper and wider.
+There are two types of cankers, annual and perennial. Annual cankers enlarge only once and do so within an interval briefer than the growth cycle of the tree, usually less than one year. Little or no callus is associated with annual cankers, and they may be difficult to distinguish from mechanical injuries. Perennial cankers are usually the more serious of the two, and grow from year to year with callus forming each year on the canker margin, often resulting in a target shape. The most serious non-rust cankers occur on hardwoods, although branch mortality often occurs on conifers.",TREE_TABLE
+DAMAGE_AGENT_CD1,22500,General Agent: Stem decays. Damage Threshold*: Any visual evidence (conks; fruiting bodies; rotten wood). Descriptions: Rot occurring in the bole/stems of trees above the roots and stump.,TREE_TABLE
+DAMAGE_AGENT_CD1,23000,"General Agent: Parasitic / Epiphytic plants. Damage Threshold*: Dwarf mistletoes with Hawksworth rating of ω3; true mistletoes and vines covering ω50% of crown. Descriptions: Parasitic and epiphytic plants can cause damage to trees in a variety of ways. The most serious ones are dwarf mistletoes, which reduce growth and can cause severe deformities. Vines may damage trees by strangulation, shading, or physical damage. Benign epiphytes, such as lichens or mosses, are not considered damaging agents.",TREE_TABLE
+DAMAGE_AGENT_CD1,24000,"General Agent: Decline Complexes/Dieback/Wilts. Damage Threshold*: Damage ω20% dieback of crown area. Descriptions: Tree disease which results not from a single causal agent but from an interacting set of factors. Terms that denote the symptom syndrome, such as dieback and wilt, are commonly used to identify these diseases.",TREE_TABLE
+DAMAGE_AGENT_CD1,25000,"General Agent: Foliage diseases. Damage Threshold*: Damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Foliage diseases are caused by fungi and result in needle shed, growth loss, and, potentially, tree mortality. This category includes needle casts, blights, and needle rusts.",TREE_TABLE
+DAMAGE_AGENT_CD1,26000,"General Agent: Stem rusts. Damage Threshold*: Any occurrence on the bole or stems (on multi-stemmed woodland species), or on branches η1 foot from boles or stems; damage to ω20% of branches. Descriptions: A stem rust is a disease caused by fungi that kill or deform all or a portion of the stem or branches of a tree. Stem rusts are obligate parasites and host specialization is very common. They infect and develop on fast-growing tissues and cause accelerated growth of infected tissues resulting in galls or cankers. Heavy resinosis is usually associated with infections. Sometimes yellow or
+reddish-orange spores are present giving a ""rusty"" appearance. Damage occurs when the disease attacks the cambium of the host, girdling and eventually killing the stem above the attack. Symptoms of rusts include galls (an abnormal and pronounced swelling or deformation of plant tissue that forms on branches or stems) and cankers (a sunken lesion on the stem caused by death of the cambium which often results in the death of tree tops and branches).",TREE_TABLE
+DAMAGE_AGENT_CD1,27000,"General Agent: Broom rusts. Damage Threshold*: ω50% of crown area affected. Descriptions: Broom rust is a disease caused by fungi that kill or deform all or a
+portion of the branches of a tree. Broom rusts are obligate parasites and host specialization is very common. They infect and develop on fast-growing tissues and cause accelerated growth of infected tissues resulting in galls. Symptoms of rusts include galls, an abnormal and pronounced swelling or deformation of plant tissue that forms on branches or stems.",TREE_TABLE
+DAMAGE_AGENT_CD1,30000,"General Agent: Fire. Damage Threshold*: Damage ω20% of bole circumference; >20% of stems on multi-stemmed woodland species affected; ω20% of crown affected. Descriptions: Fire damage may be temporary, such as scorched foliage, or may be permanent, such as in cases where cambium is killed around some
+portion of the bole. The location and amount of fire damage will determine how the damage may affect the growth and survival of the tree. Fire often causes physiological
+stress, which may predispose the tree to attack by insects of other damaging agents.",TREE_TABLE
+DAMAGE_AGENT_CD1,41000,"General Agent: Wild animals. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with>20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Wild animals from birds to large mammals cause open wounds. Some common types of damage include: sapsucker bird peck, deer rub, bear clawing, porcupine feeding, and beaver gnawing.",TREE_TABLE
+DAMAGE_AGENT_CD1,42000,General Agent: Domestic animals. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with>20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Open wounds caused by cattle and horses occur on the roots and lower trunk. Soil compaction from the long term presence of these animals in a woodlot can also cause indirect damage.,TREE_TABLE
+DAMAGE_AGENT_CD1,50000,"General Agent: Abiotic. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with>20% of the circumference affected; damage
+>20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the
+circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: Abiotic damages are those that are not caused by other organisms. In some cases, the type and severity of damage may be similar for different types of agents (e.g., broken branches from wind, snow, or ice).",TREE_TABLE
+DAMAGE_AGENT_CD1,60000,"General Agent: Competition. Damage Threshold*: Overtopped shade-intolerant trees that are not expected to survive for 5 years or saplings not expected to reach tree size (5.0 inches d.b.h./d.r.c.). Descriptions: Suppression of overtopped shade-intolerant species. Trees that are not expected to survive for 5 years or saplings not expected to
+reach tree size (5.0 inches d.b.h./d.r.c.).",TREE_TABLE
+DAMAGE_AGENT_CD1,70000,"General Agent: Human activities. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with >20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: People can injure trees in a variety of ways, from poor pruning, to vandalism, to logging injury. Signs include open wounds or foreign embedded objects.",TREE_TABLE
+DAMAGE_AGENT_CD1,71000,General Agent: Harvest. Damage Threshold*: Removal of ω10% of cubic volume. Descriptions: Only recorded for woodland species trees that have partial cutting.,TREE_TABLE
+DAMAGE_AGENT_CD1,90000,General Agent: Other damage. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with >20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected. Descriptions: —,TREE_TABLE
+DAMAGE_AGENT_CD1,99000,General Agent: Unknown damage. Damage Threshold*: Any damage to the terminal leader; damage ω20% of the roots or boles with >20% of the circumference affected; damage >20% of the multiple-stems (on multi-stemmed woodland species) with >20% of the circumference affected; >20% of the branches affected; damage ω20% of the foliage with ω50% of the leaf/needle affected.. Descriptions: Use this code only when observed damage cannot be attributed to a general or specific agent.,TREE_TABLE
+ACTUALHT_CALC_CD,1,Meaning: NERS method. Description: Value calculated for NERS States using regional methods.,TREE_TABLE
+CULL_BF_ROTTEN_CD,1,Rotten board-foot cull (CULL_BF_ROTTEN) of the sawlog is not null.,TREE_TABLE
+CULL_BF_ROUGH_CD,1,Rough board-foot cull (CULL_BF_ROUGH) of the sawlog is not null.,TREE_TABLE
+TREECLCD_31_NCRS,2,"Growing Stock - A live sawtimber-size tree with one-third or more of the gross
+board-foot volume in the entire sawlog length meeting grade, soundness, and size
+requirements; or the potential to do so for poletimber-size trees. It must contain one
+merchantable 12-foot log or two non-contiguous merchantable 8-foot logs, now
+(sawtimber) or prospectively (poletimber).",TREE_TABLE
+TREECLCD_31_NCRS,3,"Rough Cull - A live tree that does not contain at least one 12-foot sawlog or two noncontiguous 8-foot logs now (sawtimber) or prospectively (poletimber), primarily because of roughness or poor form within the sawlog length. Or sawtimber and prospectively poletimber with two-thirds or more of its gross board-foot volume that does not meet size, soundness, and grade requirements; and 50% or more of the assigned total board-foot cull within the sawlog length is rough cull.",TREE_TABLE
+TREECLCD_31_NCRS,4,"Rotten Cull - A live tree that does not contain at least one 12-foot sawlog or two noncontiguous 8-foot logs now (sawtimber) or prospectively (poletimber) and/or do not meet grade specifications for percent sound primarily because of rot within the sawlog length. Or sawtimber and prospectively poletimber with two-thirds or more of its gross board-foot volume that does not meet size, soundness, and grade requirements; and 50% or more of the assigned total board-foot cull within the sawlog length is rotten cull.",TREE_TABLE
+TREECLCD_31_NCRS,5,Salvable Dead - A standing dead tree with at least one-third merchantable sound volume. ROTTEN/MISSING CUBIC-FOOT CULL does not exceed 67%. Note: ROUGH CUBIC-FOOT CULL is not a criterion for determining salvable dead.,TREE_TABLE
+TREECLCD_31_NCRS,6,Nonsalvable Dead - A standing dead tree that does not qualify as salvable.,TREE_TABLE
+TREE_GRADE_NCRS (1st digit),Grade: 1,Valid species: Hardwoods and softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (1st digit),Grade: 2,Valid species: Hardwoods and softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (1st digit),Grade: 3,Valid species: Hardwoods and softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (1st digit),Grade: 4,Valid species: Hardwoods only and white pine.,TREE_TABLE
+TREE_GRADE_NCRS (1st digit),Grade: 5,Valid species: Hardwoods only.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),00,"Limiting factor: Not applicable, already a grade 1, all softwoods.",TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),10,Limiting factor: Diameter.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),20,Limiting factor: Length.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),30,Limiting factor: Clear cuttings.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),40,Limiting factor: Sweep and crook.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),50,Limiting factor: Cull.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),60,Limiting factor: Position in tree.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),70,Limiting factor: Multiple factors.,TREE_TABLE
+TREE_GRADE_NCRS (2nd and 3rd digits),80,Limiting factor: Diameter and clear cutting.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),000,Tree type: Hardwoods/softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),100,Tree type: Hardwoods/softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),200,Tree type: Softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),210,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),230,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),240,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),250,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),270,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),280,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),300,Tree type: Softwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),310,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),330,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),340,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),350,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),370,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),380,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),400,Tree type: Softwoods - white pine only.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),430,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),520,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),560,Tree type: Hardwoods.,TREE_TABLE
+TREE_GRADE_NCRS (Possible code combinations),570,Tree type: Hardwoods.,TREE_TABLE
+BOUGHS_AVAILABLE_NCRS,0,No boughs available.,TREE_TABLE
+BOUGHS_AVAILABLE_NCRS,1,Boughs available.,TREE_TABLE
+BOUGHS_HRVST_NCRS,0,Boughs have not been harvested.,TREE_TABLE
+BOUGHS_HRVST_NCRS,1,Boughs have been harvested.,TREE_TABLE
+TREECLCD_31_NERS,2,"Growing Stock - A live sawtimber-size tree with one-third or more of the gross
+board-foot volume in the entire sawlog length meeting grade, soundness, and size
+requirements; or the potential to do so for poletimber-size trees. It must contain one
+merchantable 12-foot log or two non-contiguous merchantable 8-foot logs, now
+(sawtimber) or prospectively (poletimber).",TREE_TABLE
+TREECLCD_31_NERS,3,"Rough Cull - A live tree that does not contain at least one 12-foot sawlog or two noncontiguous 8-foot logs now (sawtimber) or prospectively (poletimber), primarily because of roughness or poor form within the sawlog length. Or sawtimber and prospectively poletimber with two-thirds or more of its gross board-foot volume that does not meet size, soundness, and grade requirements; and 50% or more of the assigned total board-foot cull within the sawlog length is rough cull.",TREE_TABLE
+TREECLCD_31_NERS,4,"Rotten Cull - A live tree that does not contain at least one 12-foot sawlog or two noncontiguous 8-foot logs now (sawtimber) or prospectively (poletimber) and/or do not meet grade specifications for percent sound primarily because of rot within the sawlog length. Or sawtimber and prospectively poletimber with two-thirds or more of its gross board-foot volume that does not meet size, soundness, and grade requirements; and 50% or more of the assigned total board-foot cull within the sawlog length is rotten cull.",TREE_TABLE
+TREECLCD_31_NERS,5,Salvable Dead - A standing dead tree with at least one-third merchantable sound volume. Rotten/missing cubic-foot cull does not exceed 67%. Note: Rough cubic-foot cull is not a criterion for determining salvable dead.,TREE_TABLE
+TREECLCD_31_NERS,6,Nonsalvable Dead - A standing dead tree that does not qualify as salvable.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",0,None.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",1,Insect.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",2,Disease.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",3,Fire.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",4,Animal.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",5,Weather.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",6,Suppression.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",7,Unknown and other.,TREE_TABLE
+"AGENTCD_NERS (periodic inventories in CT, DE, MD, MA, NH, NJ, RI, VT, WV)",8,Harvest-related.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",00,None.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",10,Insect.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",20,Disease.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",30,Fire.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",40,Animal.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",41,Animal browse: 1-10%.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",42,Animal browse: 11-40%.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",43,Animal browse: 41-100%.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",50,Weather.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",60,Suppression.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",70,Harvest-related.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",80,Other human.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",90,Unknown or not listed.,TREE_TABLE
+"AGENTCD_NERS (periodic inventory in NY, 1993)",99,Dead sapling.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),10,Insect damage.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),20,Disease damage.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),30,Fire damage.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),40,Animal damage.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),50,Weather damage.,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),60,"Vegetation (suppression, competition, vines/kudzu).",TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),70,Unknown / not sure / other (include notes).,TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),80,"Human-caused damage (cultural, logging, accidental damage, etc.).",TREE_TABLE
+AGENTCD_NERS (annual data: 2000-2003),90,Physical (hit by a falling tree).,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),10,Insect.,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),20,Disease.,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),30,Fire.,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),40,Animal.,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),50,Weather.,TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),60,"Vegetation (suppression, competition, vines/kudzu).",TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),70,"Unknown / not sure / other - includes death from human activity not related to silvicultural or land clearing activity (accidental, random, etc.).",TREE_TABLE
+AGENTCD_NERS (annual data: 2004-2006),80,"Silvicultural or land clearing activity (death caused by harvesting or other silvicultural activity, including girdling, chaining, etc., or to land clearing activity).",TREE_TABLE
+BFSNDCD_NERS,0,00-09%,TREE_TABLE
+BFSNDCD_NERS,1,10-19%,TREE_TABLE
+BFSNDCD_NERS,2,20-29%,TREE_TABLE
+BFSNDCD_NERS,3,30-39%,TREE_TABLE
+BFSNDCD_NERS,4,40-49%,TREE_TABLE
+BFSNDCD_NERS,5,50-59%,TREE_TABLE
+BFSNDCD_NERS,6,60-69%,TREE_TABLE
+BFSNDCD_NERS,7,70-79%,TREE_TABLE
+BFSNDCD_NERS,8,80-89%,TREE_TABLE
+BFSNDCD_NERS,9,90-100%,TREE_TABLE
+AGECHKCD_RMRS,0,"• Age/radial growth measured directly from core.
+• Age/radial growth calculated from remeasurement data (same tree).",TREE_TABLE
+AGECHKCD_RMRS,1,"• Age/radial growth was estimated due to rot.
+• Age/radial growth was estimated because rings were difficult to count (old suppressed trees).
+• Age was estimated because the increment bore could not reach
+to tree center.",TREE_TABLE
+AGECHKCD_RMRS,2,"• Age/radial growth was calculated from a similar remeasure tree (same species and diameter class).
+• Age/radial growth was based on a similar tree off the subplot.",TREE_TABLE
+AGECHKCD_RMRS,3,• Age measured from a collected tree core (for cores collected and sent into the office for aging).,TREE_TABLE
+PREV_AGECHKCD_RMRS,0,"• Age/radial growth measured directly from core.
+• Age/radial growth calculated from remeasurement data (same
+tree).",TREE_TABLE
+PREV_AGECHKCD_RMRS,1,"• Age/radial growth was estimated due to rot.
+• Age/radial growth was estimated because rings were difficult to count (old suppressed trees).
+• Age was estimated because the increment bore could not reach to tree center.",TREE_TABLE
+PREV_AGECHKCD_RMRS,2,"• Age/radial growth was calculated from a similar remeasure tree (same species and diameter class).
+• Age/radial growth was based on a similar tree off the subplot.",TREE_TABLE
+PREV_AGECHKCD_RMRS,3,• Age measured from a collected tree core (for cores collected and sent into the office for aging).,TREE_TABLE
+RADAGECD_RMRS,0,"No. Do NOT collect radial growth or age information. This is not a site tree nor an age
+and/or growth tree.",TREE_TABLE
+RADAGECD_RMRS,1,Yes. Collect only radial growth; this is a timber species growth tree only.,TREE_TABLE
+RADAGECD_RMRS,2,"Yes. Collect both radial growth and age information; this tree is either a site tree or an
+age/growth tree. Also use this code for 2-inch class saplings that get age only.",TREE_TABLE
+RADAGECD_RMRS,3,"Yes. Collect radial growth, age will be determined from the core. Use this code where it is required to collect tree cores (cannot be used for site trees).",TREE_TABLE
+RADAGECD_RMRS,4,Yes. Use Past/Current Diameters for growth (replaces just radial).,TREE_TABLE
+RADAGECD_RMRS,5,Yes. Collect age information. Use Past/Current Diameters for growth (replace radial).,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1 ,Size-class range (d.b.h.): Softwoods: 0-0.9 inches (count whorls/scars): age only.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1,Size-class range (d.b.h.): Hardwoods: 0-0.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1 ,Size-class range (d.b.h.): Softwoods: 1.0-2.9 inches (age at base): age only.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1,Size-class range (d.b.h.): Hardwoods: 1.0-2.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1 ,Size-class range (d.b.h.): Softwoods: 3.0-4.9 inches (age at BH): age and radial. ,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 1,Size-class range (d.b.h.): Hardwoods: 3.0-4.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 2,Size-class range (d.b.h.): Softwoods: 5.0-8.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 2,Size-class range (d.b.h.): Hardwoods: 5.0-8.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 2,Size-class range (d.b.h.): Softwoods: —,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 2,Size-class range (d.b.h.): Hardwoods: 9.0-10.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Softwoods: 9.0-12.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Hardwoods: 11.0-12.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Softwoods: 13.0-16.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Hardwoods: 13.0-16.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Softwoods: 17.0-20.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Hardwoods: 17.0-20.9 inches.,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Softwoods: etc,TREE_TABLE
+RADAGECD_RMRS (Diameter size-class ranges for timber species are as follows:),Stand-Size Class: 3,Size-class range (d.b.h.): Hardwoods: etc,TREE_TABLE
+SAPLING_FUSIFORM_SRS,0,None.,TREE_TABLE
+SAPLING_FUSIFORM_SRS,1,Fusiform present.,TREE_TABLE
+EPIPHYTE_PNWRS,0,"Hawksworth tree rating of 0, none.",TREE_TABLE
+EPIPHYTE_PNWRS,1,"Hawksworth tree rating of 1, light epiphyte loading.",TREE_TABLE
+EPIPHYTE_PNWRS,2,"Hawksworth tree rating of 2, light epiphyte loading.",TREE_TABLE
+EPIPHYTE_PNWRS,3,"Hawksworth tree rating of 3, medium epiphyte loading.",TREE_TABLE
+EPIPHYTE_PNWRS,4,"Hawksworth tree rating of 4, medium epiphyte loading.",TREE_TABLE
+EPIPHYTE_PNWRS,5,"Hawksworth tree rating of 5, heavy epiphyte loading.",TREE_TABLE
+EPIPHYTE_PNWRS,6,"Hawksworth tree rating of 6, heavy epiphyte loading.",TREE_TABLE
+CAVITY_USE_PNWRS,0,No cavity or den present.,TREE_TABLE
+CAVITY_USE_PNWRS,1,Cavity or den present <6.0 inches wide.,TREE_TABLE
+CAVITY_USE_PNWRS,2,Cavity or den present ω6.0 inches wide.,TREE_TABLE
+CULTURALLY_KILLED_PNWRS,0,Any tree that does not meet the criteria listed in code 1.,TREE_TABLE
+CULTURALLY_KILLED_PNWRS,1,"Any tree that was killed by direct human cause (girdled, cut, knocked over, sprayed with herbicide, etc.), which has not been removed from plot (a treatment must be recorded).",TREE_TABLE
+GST_PNWRS,N,Tree is not a growth sample tree.,TREE_TABLE
+GST_PNWRS,Y,Tree is a growth sample tree.,TREE_TABLE
+SNAG_DIS_CD_PNWRS,2,"Fell over ""naturally"" (wind, decay, etc.) or no longer self-supported; still present.",TREE_TABLE
+SNAG_DIS_CD_PNWRS,3,"Fell over ""naturally""; removed from the site, or not discernible by crew.",TREE_TABLE
+SNAG_DIS_CD_PNWRS,4,Cut down or pushed over; still present.,TREE_TABLE
+SNAG_DIS_CD_PNWRS,5,"Cut down or pushed over; removed from the site, or not discernible by crew.",TREE_TABLE
+SNAG_DIS_CD_PNWRS,6,"Diameter (d.b.h./d.r.c.) and/or height no longer meet minimum for tally (snag ""shrank"" to <5.0 inches d.b.h./d.r.c. or <4.5 feet tall).",TREE_TABLE
+CONEPRESCD1,0,No cones present on tree.,TREE_TABLE
+CONEPRESCD1,1,"Non-viable cone - Small, η6 inch d.r.c), closed brown conelets with no yellow/green coloration.",TREE_TABLE
+CONEPRESCD1,2,"Last year’s old cones - Open, empty (dark brown or gray) cone(s) (ω2 inches d.r.c.) with no sap or seeds present (previous years’ cones).",TREE_TABLE
+CONEPRESCD1,3,"Current year viable cones - Small, η6 inch d.r.c) and/or large (ω2 inches d.r.c.) green cone(s) with sap and/or seeds present (this year’s cones).",TREE_TABLE
+MASTCD,0,"Mast rating of 0, none.",TREE_TABLE
+MASTCD,1,"Mast rating of 1, low level of branches producing cones.",TREE_TABLE
+MASTCD,2,"Mast rating of 2, low level of branches producing cones.",TREE_TABLE
+MASTCD,3,"Mast rating of 3, medium level of branches producing cones.",TREE_TABLE
+MASTCD,4,"Mast rating of 4, medium level of branches producing cones.",TREE_TABLE
+MASTCD,5,"Mast rating of 5, high level of branches producing cones.",TREE_TABLE
+MASTCD,6,"Mast rating of 6, high level of branches producing cones.",TREE_TABLE
+UTILCLCD,0,"Not utilized - tree bole is presumed to not have been utilized for any purpose (e.g., piled and burned trees, piles of trees that have been cut or knocked over).",TREE_TABLE
+UTILCLCD,1,"Commercial utilization - some portion of the tree removed for commercial purposes. Commercial uses include sawlogs, pulpwood, veneer logs, poles, and other products such as firewood cut by commercial firewood operations.",TREE_TABLE
+UTILCLCD,2,"Noncommercial utilization - some portion of the tree removed for noncommercial purposes. Noncommercial uses may include private landowner domestic firewood use, barn poles, fence posts, domestic landscaping, rough slabs, etc.",TREE_TABLE
+UTILCLCD,4,"Undifferentiated utilization (unknown) - some portion of the tree was removed and utilized, but it is not known if this was for commercial or non-commercial purposes.
+Note: This code is for office use only (e.g., code assigned when back-populating data).",TREE_TABLE
+SPCD_ID_CD,1,Sample collected - Sample sent to lab for genetic species identification.,TREE_TABLE
+SPCD_ID_CD,2,"No sample collected - Species identified in the field based on distinctive characteristics during the visit (e.g., identification based on presence of cones, fruit, or flowers).",TREE_TABLE
+SPCD_ID_CD,3,"No sample collected - Species identified in the field without distinctive characteristics (e.g., identification based on elevation, location, or other characteristic not on tree).",TREE_TABLE
+ABNORMAL_TERMINATION,0,No - Bole length is not abnormally terminated.,TREE_TABLE
+ABNORMAL_TERMINATION,1,Yes - Bole length is abnormally terminated.,TREE_TABLE

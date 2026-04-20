@@ -1,243 +1,328 @@
 ---
-title: "ISCN3 report"
-date: "Summer 2024"
-output: 
-  html_document: 
+title: "Data Rescue: ISCN3 Feb 2026"
+format:
+  html:
     toc: true
-    number_sections: true
-    code_folding: show
+    code-fold: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - ISCN3_Contributors.bib  #contains the citations for contributed datasets by authors
+  - ISCN3_2015.bib #contains citation for the data source, generally a single citation of the primary paper
+nocite: |
+  @* #add all citations
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    orcid: 0000-0002-3854-1764
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead #secondary, review
+      - standardization: lead
+      - curation: lead #review
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: Vaasuki Marupaka
+      end: 2026-03-25
+      start: 2026-02-06
+      duration: PT30H
+      timelog:
 ---
 
-The purpose of this document is to summarize the International Soil Carbon Network Database and demonstrate how to use the `readISCN3` function.
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
 
-> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/.
 
+# libraries
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+library(stringr) # regular expressions
 
-*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
+# data directory, primary annotations & control vocabularies
+dataDownload.dir <- 'temp'
+controlVocabulary <- 'ISCN3_TemplateCVs.csv'
+rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+readME_templateSubmit <- 'README_TemplateSubmit.md'
 
-Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+# The below csv tables are used to construct annotations for ISCN4
+AnnotationsDir <- '.'
+ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
+ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
+ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
+ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
+ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
 
-# Set up
+annotationFilenames <- c(layerAnnotations = ISCN3_layerAnnotations,
+                          profileAnnotations = ISCN3_profileAnnotations,
+                          siteAnnotations = ISCN3_siteAnnotations,
+                          disturbanceAnnotations = ISCN3_disturbanceAnnotations,
+                          fractionAnnotations = ISCN3_fractionAnnotations)
 
-```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+# Bibliograph files
+primaryCitation.file <- 'ISCN3_2015.bib'
+contributionsCitation.file <- 'ISCN3_Contributors.bib'
 
-library(readr) # read in the csv tables
-library(tibble) # use tibbles instead of a data frame
-library(plyr) # transform a list into a data frame for the bind
-library(dplyr) # work with data tables filters/joins/reframes
-library(tidyr) # work with data table pivots
-library(ggplot2) # make plots
-library(stringr) # extract text from descriptions
-library(knitr) # make prettier tables
-library(kableExtra) #make tables scrollable
-library(tidyverse)
-library(maps)
+# read function
+readsource.file <- 'readISCN3.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
 
-source("../../R/readISCN3.R", local = knitr::knit_global())
+#semantic files for level 1
+of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
-#locate the data locally
-dataDir <- '../temp/ISCN3'
-dataAnnotations <- '../../data/ISCN3Annotations.csv'
 ```
 
+# Data Summary
 
-```{r, echo=FALSE}
-#Change this file to run locally for you
-dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/ISCN3'
+> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers.
 
-```
+*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2026-03-01).
+
+## Fit for purpose: ISCN4
+
+This data is identified as a data source for ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
+
+ISCN3 contains four primary data tables:
+
+  * `profile` containing the profile information including geolocation and site information, 
+  * `layer` containing layer level soil characterizations, 
+  * `citation` containing the citation and additional references information for the contributed datasets,
+  * `dataset` with study information that extends the basic citation
+
+## Files
+
+<!--- Include a brief explanation to all the files in the folder--->
+
+These files are in the ISCN3 data rescue.
+
+-   [Readme](README_ISCN3.qmd)
+    -   This is the primary file that documents the transcriptions and decision made during data rescue.
+-   [ISCN3_2015.bib](ISCN3_2015.bib)
+    -   citation for project website and primary journal article transcribed
+-   [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
+    -   citations for the contributed datasets to ISCN
+-   [AnnotationsDir](AnnotationsDir)
+    -   this includes the annotations constructed using template.pdfs tables pulled from edi with individual tables (layer, profile, site, fraction, and disturbance)
+        + [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv)
+        + [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv)
+        + [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv)
+        + [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv)
+        + [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv)
+        + [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv)
+        + [README_TemplateCV.md](README_TemplateCV.md)
+        + [README_TemplateSubmit.md](README_TemplateSubmit.md)
+-   [temp/](temp/)
+    -   the download location for ISCN3 files archived on EDI web portal
+    -   this folder includes the following files:
+        + [ISCN3_citation.csv](ISCN3_citation.csv)
+        + [ISCN3_dataset.csv](ISCN3_dataset.csv)
+        + [ISCN3_layer.csv](ISCN3_layer.csv)
+        + [ISCN3_profile.csv](ISCN3_profile.csv)
+        + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
+        + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
+        + [TemplateCVs.pdf](TemplateCVs.pdf)
+        + [TemplateSubmit.pdf](TemplateSubmit.pdf)
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Code up data download from EDI
+  - [x] Transcribe the EDI tables in `TemplateSubmit.pdf` into `ISCN3_TemplateSubmit_TableX.csv` 
+  - [ ] Transcribe `TemplateSubmit.pdf` markdown for preamble text
+  - [X] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
+  - [ ] Transcribe `TemplateCV.pdf` markdown for preamble text
+  - [X] Create a bib file with the recommended citations
+  - [ ] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
+  - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
+  - [ ] Read in primary tables and template information 
+  - [ ] read function match `02_DataHarmonization/readAres2001.R` function inputs and output formats
+  - [x] push annotations into an `old` folder as a place holder
+  - [x] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
+  - [ ] push everything to the lead fork
++ Measure
+  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Citation notes
+
+  - `AK DSC Project SOC stock computation` had a bad url for the doi that linked to a spam site. Updating doi with the EDI pasta link.
+
+## Download ISCN3
+
+The ISCN3 is downloaded from EDI (@ISCN3). Below we loop through the files that are expected and download them.
 
 ```{r}
-iscn.ls <- readISCN3(dataDir = dataDir,
-                     annotationFilename = dataAnnotations,
-                     format = 'long')
+#| label: dataDownloadEDI
+#| code-summary: "Download and identify each file in the EDI package."
+
+### Download the data ####
+# link the table name to the download url and file path(s) for data package
+pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
+
+download_table <- tibble::tribble(
+  ~table, ~entity_id, ~file_name, 
+  'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
+  'profile', "40527580cc045d33d9a5aaf728bf204e", 'ISCN3_profile.csv',
+  'citation', "320e31ca911f187550ca2143c31fd408", 'ISCN3_citation.csv',
+  'dataset', "cdd0c7a4cac3f28d6d788c91f506775f", 'ISCN3_dataset.csv',
+  'control_vocabulary', "a8eef6e94b669b365e443c15d9402a03", 'ISCNTranscribed_TemplateCVs.xlsx',
+  'template', "cb5c1cd86e9ab17f699f7a05044325b7", 'ISCNtemplate.xlsx',
+  'other_pdfs', "eb320ae7b57296765f543cbb370b0f24", 'TemplateCVs.pdf',
+  'other_pdfs', "b81a7f4214d176280a5ff4e0f0d52d8b", 'TemplateSubmit.pdf')
+
+#One by one, download the data in each row from the download_table
+#... and store that in the appropriate file path location on your computer
+for(row_index in 1:nrow(download_table)){
+  if(!file.exists(file.path(dataDownload.dir,download_table$file_name[row_index]))){
+    print(paste('Download file:', 
+                download_table$file_name[row_index]))
+    utils::download.file(
+      paste0(pasta_package, download_table$entity_id[row_index]), 
+      file.path(dataDownload.dir,download_table$file_name[row_index]), 
+      extra  = "--max-time 300")
+  }
+}
+
+originalTables <- plyr::dlply(
+    .data = download_table |>
+      dplyr::filter(table %in% c('citation', 'dataset', 'profile', 'layer')), 
+    .variables = c('table'),
+    .fun = function(xx){
+      return(
+        readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
+                                           xx$file_name), 
+                          delim = ';', 
+                          col_types = readr::cols(.default = readr::col_character())))
+    }
+  )
+
 ```
 
-# Data tables
-
-ISCN3 contains four primary data tables: `citation`, `dataset`, `profile`, and `layer`.
-Below are the column descriptions from the annotations.
-
-## Table: `citation`
+Using the [TemplateCVs.pdf](TemplateCVs.pdf) and [TemplateSubmit.pdf](TemplateSubmit.pdf), we manually transcribe the annotations into different tables; layer, profile, site, disturbance, and fraction for level0. These annotations will further be extended to a standard data model for our level01 data.
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'citation') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+annotations <- list(
+  caption = readr::read_lines(file = readME_templateSubmit),
+  ISCN3_annotations = lapply(annotationFilenames, function(xx) {
+    readr::read_delim(
+      file = file.path(AnnotationsDir, xx),
+      delim = ",",
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  }))
+
+### Read in control vocabulary###
+#Read in the results as tables or figure transcriptions. This includes
+#...the caption as well as the tables themselves
+controlVocabulary.ls <- list(
+  caption = readr::read_delim(file = controlVocabulary,
+                       col_types = cols(.default = col_character()),
+                       n_max = 5, col_names = FALSE)$X1[1:5],
+  primary_CV = readr::read_delim(file = controlVocabulary,
+    delim = ',', 
+    skip = 5, # we want to only keep the headers without the preamble text.
+    col_types = readr::cols(.default = readr::col_character())))
+
+```
+
+# Level 0 data
+
+```{r}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation.ls = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    contributed = read.bib(file = contributionsCitation.file),
+    #Read in the bib transcription for the contributed bib rescued object
+    rescuedCitations = read_delim(file = rescuedContributedCitations,
+                                skip = 1)
+  ),
+  primaryData.ls = originalTables,
+  primaryAnnotations.ls = annotations,
+  controlVocabulary.ls = controlVocabulary.ls)
+
+```
+
+## Primary data: layer table
+
+```{r}
+knitr::kable(data.lvl0.ls$primaryData.ls$layer |> 
+               head()) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
+
 ```
 
-## Table: `dataset`
+## Primary annotations: layer table
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'dataset') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+knitr::kable(data.lvl0.ls$primaryAnnotations.ls$ISCN3_annotations$layerAnnotations |> 
+               head()) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
+
 ```
 
-## Table: `profile`
+## Primary rescued citations
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'profile') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
+knitr::kable(data.lvl0.ls$citation.ls$rescuedCitations |> 
+               head()) |>
+  kable_paper() |>
   scroll_box(width = "100%", height = "300px")
+
 ```
-
-## Table: `layer`
-
-```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'layer') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
-
-
-# Processing the ISCN3 database: `readISCN3`
-
-Calling the `readISCN3` function is shown below. 
-
-```{r eval=FALSE}
-iscn.ls <- readISCN3(dataDir = dataDir,
-                     annotationFilename = dataAnnotations,
-                     format = 'long')
-```
-
-The function itself is echoed here.
-
-```{r, file= '../../R/readISCN3.R'}
-```
-
-# Data processing
-
-Using the read function let's look at the soil organic carbon related functions for datsets that are not in the NRCS.
-
-## Soil organic carbon
-
-Looking only at geolocation, depth, and soil orgnaic carbon stocks.
-
-```{r}
-
-#Use the annotations to set up the column selection
-column_selection <- iscn.ls$annotation %>%
-  filter((of_variable %in% c('latitude', 'longitude',
-                            'state', 'country') & table_id == 'layer') |
-         (table_id == 'layer' & 
-         (of_variable %in% c('layer_observation_time',
-                            'upper_depth_bound', 'lower_depth_bound',
-                            'organic_carbon', 'coarse_fragment') |
-  str_detect(of_variable, 'bulk_density')))) %>%
-  filter(with_entry == '--') %>%
-  select(ends_with('_id'), of_variable, is_type)
-
-# Subset the ISCN database
-soc.ls <- iscn.ls$long %>% #nrow 17 967 513
-  # remove nrcs data
-  filter(!str_detect(dataset_name_sub, 'NRCS'),
-         !str_detect(dataset_name_soc, 'ISCN SOC stock'),
-         !str_detect(dataset_name_soc, 'AK DSC Project SOC')) %>% #nrow 1 043 250
-  # use the column selection to subset the database
-  right_join(column_selection, 
-             relationship = "many-to-many",
-  by = join_by(column_id))  #nrow 454 994
-
-#spread out the columns
-wide_soc <- soc.ls %>%
-  select(dataset_name_sub, profile_name, layer_name, of_variable, is_type, with_entry) %>%
-  #drop duplicates entries imposed by different soc calculation methods
-  unique() %>%
-  pivot_wider(names_from = c(of_variable, is_type), 
-              values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
-  #remove observations that don't have associated bulk density
-  filter(!is.na(bulk_density_sample_value) |
-           !is.na(bulk_density_other_value) |
-           !is.na(bulk_density_total_value) |
-           !is.na(bulk_density_whole_value) ) %>% #nrow 20 570
-  filter(!is.na(organic_carbon_value)) %>% #nrow 8 704
-  #Convert everything to numeric values
-  mutate(across(c(longitude_value, latitude_value,
-                  layer_observation_time_value,
-                  upper_depth_bound_value, lower_depth_bound_value,
-                  organic_carbon_value, coarse_fragment_value,
-                  bulk_density_sample_value,
-                  bulk_density_other_value,
-                  bulk_density_total_value,
-                  bulk_density_whole_value), as.numeric)) %>%
-  #convert the date from Excel format to a lubridate object
-  mutate(layer_observation_time_date = 
-           if_else(layer_observation_time_value < 2000,
-                   ymd(paste0(as.character(layer_observation_time_value), '-01-01')), 
-                   as_date(layer_observation_time_value, origin = ymd('1900-01-01'))))
-  
-```
-
-
-```{r}
-knitr::kable(wide_soc %>%
-               slice_head(n=100) ) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Numeric histograms
-
-```{r fig.width=9}
-
-plot.df <- wide_soc %>%
-  pivot_longer(cols = where(is.numeric), 
-               names_to = 'variable', values_to = 'value',
-               values_drop_na = TRUE)
-
-ggplot(plot.df) +
-  geom_histogram(aes(x=value)) +
-  facet_wrap(~variable, scales = 'free')
-
-ggplot(plot.df %>%
-         select(dataset_name_sub, profile_name, layer_observation_time_date) %>%
-         unique()) +
-  geom_histogram(aes(x=layer_observation_time_date))
-```
-
-## Bulk density vs organic carbon
-
-```{r}
-plot.df <- wide_soc %>%
-  pivot_longer(cols = matches('bulk_density.*_value'), 
-               names_to = 'bulk_density_type', values_to = 'bulk_density',
-               values_drop_na = TRUE)
-
-ggplot(plot.df) +
-  geom_point(aes(x=bulk_density, y = organic_carbon_value)) +
-  facet_wrap(~bulk_density_type, scales = 'free')
-```
-
-## Geolocation
-
-```{r}
-
-world_map <- map_data("world")
-
-plot.df <- wide_soc %>%
-  select(dataset_name_sub, profile_name, 
-         latitude_value, longitude_value) %>%
-  unique()
-
-ggplot(data=world_map) + 
-   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
-  geom_point(data = plot.df, 
-             aes(x=longitude_value, y = latitude_value),
-             color = 'blue', alpha = .1) +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank())
-```
-

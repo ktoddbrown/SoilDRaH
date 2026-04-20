@@ -1,0 +1,389 @@
+---
+title: "Data Rescue: FIADB March 2026"
+format:
+  html:
+    toc: true
+    code-fold: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - FIA2024.bib  #contains the citations for contributed datasets by authors paper
+nocite: |
+  @* #add all citations
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    orcid: 0000-0002-3854-1764
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead #secondary, review
+      - standardization: lead
+      - curation: lead #review
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: Vaasuki Marupaka
+      end: 
+      start: 
+      duration:
+      timelog:
+---
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
+
+# libraries
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+library(stringr) # regular expressions
+
+# data directory, primary annotations & control vocabularies
+dataDownload.dir <- 'temp'
+controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
+
+# The below csv tables are used to construct annotations for FIADB
+AnnotationsDir <- '.'
+ENTIRE_PLOT_Annotations <- 'FIA2024_TableEntirePLOT.csv'
+ENTIRE_SURVEY_Annotations <- 'FIA2024_TableSurvey.csv'
+ENTIRE_SOILS_SUBPLOT_Annotations <- 'FIA2024_TableSubPlot.csv'
+ENTIRE_SOILS_SAMPLE_LOC_Annotations <- 'FIA2024_TableSubPlot_Soil_Sample_Location.csv'
+ENTIRE_SOILS_SUBPLOT_Layer_Annotations <- 'FIA2024_TableSubplot_Soil_Sample_Layer.csv'
+ENTIRE_TREE_Annotations <- 'FIA2024_TableTREE.csv'
+
+annotationFilenames <- c(FIA_Plot_Annotations = ENTIRE_PLOT_Annotations,
+                         #  soilsVisit_Annotations = ENTIRE_SOILS_VISIT_Annotations,
+                         FIA_Survey_Annotations = ENTIRE_SURVEY_Annotations,
+                         FIA_Subplot_Annotations = ENTIRE_SOILS_SUBPLOT_Annotations,
+                         FIA_subPLot_SampleLoc_Annotations = ENTIRE_SOILS_SAMPLE_LOC_Annotations,
+                         #ENTIRE_SOILS_EROSION_Annotations,
+                         FIA_SubPLot_Lab_Annotations = ENTIRE_SOILS_SUBPLOT_Layer_Annotations,
+                         FIA_Tree_Annotations = ENTIRE_TREE_Annotations)
+
+# Bibliograph files
+primaryCitation.file <- 'FIA2024.bib'
+
+# read function
+readsource.file <- 'readFIA.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+# What is the FIADB
+
+The version of the US Forest Service's Forest Inventory Analysis Database described here is the public facing version of the Forest Inventory and Analysis program.
+
+> **Forest Inventory and Analysis**
+For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
+
+Taken from [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
+
+Documentation for this database is concentrated in two documents below:
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen,
+Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling,
+Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume:
+database description (version 9.4), nationwide forest inventory (NFI). U.S. Department of
+Agriculture, Forest Service. 1016 p. [Online]. Available at web address:
+https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide
+-nfi
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+
+The annotations table draws heavily on these above documents with augmentation from private communication with Forest Service scientist.
+
+## Files
+
+This data is identified as a data source for ISCN4 data harmonization and curation project.
+There are six tables currently annotated in the FIADB data collection.
+This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
+
+Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
+
+These files are in the FIADB 2024 data rescue.
+
+-   [Readme](README_FIA2024.qmd)
+    -   This is the primary file that documents the transcriptions and decision made during data rescue.
+-   [FIA2024.bib](FIA2024.bib)
+    -   citation for database transcribed
+-   [AnnotationsDir](AnnotationsDir)
+    -   this includes the annotations constructed using template.pdfs tables pulled from fia data mart portal with individual tables (plot, subplot, subplot layer, subplot location, survey, tree tables)
+        + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
+        + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
+        + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
+        + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
+        + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
+        + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
+- [temp/](temp/)
+        + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Code up data download from FIADB Data Mart
+  - [x] Transcribe the Data tables in FIADB manual v.9.4 for the selected tables
+  - [x] Create a bib file with the recommended citations
+  - [x] Read in primary tables and variable description information from the manual
+  - [ ] read function match `02_DataHarmonization/readFIA.R` function inputs and output formats
+  - [ ] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
+  - [ ] push everything to the lead fork
++ Measure
+  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Annotations notes:
+-   The soils visit, soil erosion tables do not exist as explicit annotation tables in the pdf manual, hence, we do not have separate annotations for these tables
+
+## Download FIA 2024
+
+```{r, echo=FALSE}
+#Change this file to run locally for you
+dataDir  <- '~/Documents/Research/ISCN4/FIADB_2026_pull/CSV_FIADB_ENTIRE/'
+
+```
+
+# Data processing
+
+```{r}
+# This data pull may have a high memory demand
+# Ensure verbose is defined
+if (!exists("verbose")) verbose <- T
+if(verbose) warning('This function may have a high memory demand.')
+
+# Download entire FIA database
+downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+# What name is the downloaded file
+filename <- "CSV_FIADB_ENTIRE.zip"
+if(!file.exists(file.path(dataDir, filename))){
+  if(verbose) message('Database not found, downloading...')
+  if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
+  utils::download.file(url = downloadUrl, 
+                       destfile = file.path(dataDir, 
+                                            filename))
+}
+  
+  # Unzip zip file
+if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
+  if(verbose) message('Unzipping file...')
+  if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
+  utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
+  if(verbose) message('Unzipping done.')
+}
+
+```
+
+Reading in FIA ENTIRE PLOT csv table
+
+```{r}
+#| label: table1Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_PLOT.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 1,988,296 × 63 tibble
+
+```
+
+Reading in FIA ENTIRE SURVEY csv table
+
+```{r}
+#| label: table2Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SURVEY.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 1,775 × 14 tibble
+
+```
+
+Reading in FIA ENTIRE SUBPLOT csv table
+
+```{r}
+#| label: table3Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SUBPLOT.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 7,640,714 × 48 tibble
+
+```
+
+Reading in FIA ENTIRE SUBPLOT SOIL SAMPLE LOCATION csv table
+
+```{r}
+#| label: table4Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 3,716 × 32 tibble
+
+```
+
+Reading in FIA ENTIRE SUBPLOT SOIL SAMPLE LAYER csv table
+
+```{r}
+#| label: table5Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 14,243 × 57 tibble
+
+```
+
+Reading in FIA ENTIRE TREE csv table
+
+```{r}
+#| label: table6Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_TREE.csv'), #read in the specific file
+         n_max = 1000, # just 1000 rows 
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) 
+# this table is high in memory (13.32 GB data) with 198 columns
+
+```
+
+Reading in FIA SOILS EROSION csv table
+
+```{r}
+#| label: table7Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SOILS_EROSION.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 44,874 × 16 tibble
+
+```
+
+Reading in FIA SOILS VISIT csv table
+
+```{r}
+#| label: table8Check
+#| eval: false #remove when you have the file transcribed
+
+read_csv(file = file.path(dataDir, 'ENTIRE_SOILS_VISIT.csv'), #read in the specific file
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) # 12,683 × 12 tibble
+```
+
+Using the FIABD pdf manual v.9.4(2024), we manually transcribe the annotations into different tables; plot, subplot, subplot layer, subplot location, survey, tree tables for level0. These annotations will further be extended to a standard data model for our level01 data.
+
+```{r}
+annotations <- list(
+  FIA2024_annotations = lapply(annotationFilenames, function(xx) {
+    readr::read_delim(
+      file = file.path(AnnotationsDir, xx),
+      delim = ",",
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  }))
+
+### Read in control vocabulary###
+#Read in the results as tables or figure transcriptions. This includes
+#...the caption as well as the tables themselves
+controlVocabulary.ls <- list(
+  primary_CV = readr::read_delim(file = controlVocabulary,
+    delim = ',', 
+    skip = 5, # we want to only keep the headers without the preamble text.
+    col_types = readr::cols(.default = readr::col_character())))
+
+```
+
+# Level 0 data
+
+```{r}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+original_tables <- function(dataDir,
+                            data_files = c('ENTIRE_PLOT.csv',
+                                           'ENTIRE_SURVEY.csv',
+                                           'ENTIRE_SUBPLOT.csv',
+                                           'ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv',
+                                           'ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv',
+                                          # 'ENTIRE_TREE.csv',
+                                           'ENTIRE_SOILS_EROSION.csv',
+                                           'ENTIRE_SOILS_VISIT.csv')) {
+  
+  # create an empty list to hold the data
+  tables <- vector("list", length(data_files))
+  
+  # read files
+  for (i in seq_along(data_files)) {
+    tables[[i]] <- readr::read_csv(
+      file = file.path(dataDir, data_files[i]),
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  }
+
+  table_names <- tools::file_path_sans_ext(basename(data_files)) # strip .csv
+  names(tables) <- table_names 
+  
+  return(tables)
+}
+
+primary_data <- original_tables(dataDir)
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation.ls = read.bib(file = primaryCitation.file),
+  primaryData.ls = primary_data,
+  primaryAnnotations.ls = annotations,
+  controlVocabulary.ls = controlVocabulary.ls)
+
+```
