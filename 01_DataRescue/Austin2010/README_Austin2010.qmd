@@ -83,6 +83,7 @@ version: 'vs202512'
 #| warning: false
 #| message: false
 #| echo: false
+#| eval: true
 
 
 library(tidyverse) # data processing
@@ -193,7 +194,7 @@ These files are in the Austin2010 data rescue.
   - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [X] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
