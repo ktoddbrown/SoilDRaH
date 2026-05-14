@@ -67,6 +67,12 @@ timelog:
       #when you started and ended, can be just a year or down to the minute
       start: 2026-04-13 T1515
       duration: P30M
+  - activity: 
+      description: 
+      who: ashbonner310 #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-05-14 T18:45
+      duration: 
 ---
 
 
@@ -84,12 +90,13 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
-methods.file <- "AuthorYYYY_Methods.md"
-tableN.file <- 'AuthorYYYY_TableN.csv'
-figureM.file <- 'AuthorYYYY_FigureM.csv'
+methods.file <- "Rozema1997_Methods.md"
+table1.file <- 'Rozema1997_Table1.csv'
+table2.file <- 'Rozema1997_Table2.csv'
+figure1.file <- 'Rozema1997_Figure1.csv'
 
 # Bibliography files
-primaryCitation.file <- 'AuthorYYYY.bib'
+primaryCitation.file <- 'Rozema1997.bib'
 methodsCitation.file <- 'AuthorYYYY_Methods.bib'
 
 # read function; you will need to create this function after you have your data
