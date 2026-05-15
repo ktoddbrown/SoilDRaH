@@ -7,8 +7,8 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Rozema1997_Methods.bib #contains the citations in the methods section
+  - Rozema1997.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ashbonner310 #use the github name as an id
     name:
@@ -115,7 +115,7 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 > Rozema, J., Tosserams, M., Nelissen, H.J.M. et al. *Stratospheric ozone reduction and ecosystem processes: enhanced UV-B radiation affects chemical quality and decomposition of leaves of the dune grassland species Calamagrostis epigeios*. Plant Ecology 128, 285–294 (1997). https://doi.org/10.1023/A:1009723210062
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#221.
 
 In this study conducted in the Netherlands, the researchers wanted to know whether enhanced UV-B radiation would affect the chemical composition of dune grassland plants, as well as the decomposition rate of plant material. 
 They studied this by growing *Calamagrostis epigeios* grass under either ambient or enhanced UV-B in a controlled, experimental field and analyzing its chemical composition. 
@@ -184,7 +184,7 @@ These files are in the Rozema1997 data rescue.
 + Lead
   - [X] Read the article or data resource and the discription of the target project
   - [X] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main
-  - [X] Create a copy of this template folder and rename it to AuthorYYYY
+  - [X] Create a copy of this template folder and rename it to Rozema1997
   - [X] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
   - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [X] Add the reviewer to the author list in the yml
@@ -306,7 +306,8 @@ Figure1.df <- read_csv(file = figure1.file,
 
 ggplot(data = Figure1.df) + 
   geom_col(aes(x = `Treatments`,
-               y = `Mass loss (% DW)`)) + 
+               y = `Mass loss (% DW)`),
+           width = 0.5) + 
   geom_errorbar(aes(x = `Treatments`,
                     ymin = `Mass loss (% DW)`,
                     ymax = `Error Bar Height`),
@@ -337,9 +338,8 @@ Any different to the cross check for the methods section will be output after th
 ```{bash}
 #| label: compareMethods
 #| eval: false
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
+#| 
+diff --strip-trailing-cr --suppress-common-lines -y temp/Rozema1997_Methods_MB.md Rozema1997_Methods.md
 ```
 
 ### Methods  - Text
@@ -429,16 +429,39 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
+    ), #End 'Table1' element
+  Table2 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table2' element  
+  Figure1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Figure1' element  
    ) #end 'data' element
 )
 

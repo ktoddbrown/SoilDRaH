@@ -1,35 +1,92 @@
-# MATERIAL AND METHODS
+# Material and methods
 
-## Cultivation of *Calamagrostis epigeios* under ambient and enhanced UV-B on the experimental field 
+## Cultivation of *Calamagrostis epigeios* under ambient and enhanced UV-B on the experimental field
 
-*C. epigeios* was grown from seeds on commercial potting soil (Jongkind, Aalsmeer). Plants were grown for three weeks in a greenhouse and then transferred to an experimental field, at the University Campus. The soil of the experimental field consisted of a mixture of dune sand with some potting soil. *Calamagrostis epigeios* was cultivated in monoculture stands on the outdoor experimental field under ambient (about 5 kJ m<sup>-2</sup> day<sup>-1</sup> UV-B<sub>BE</sub>) and enhanced UV-B (7.5 kJ m<sup>-2</sup> day<sup>-1</sup> UV-B<sub>BE</sub>). The ground area of the monocultures was 1 20 1 20 m. Enhanced UV-B radiation was obtained with Philips 40 W/12 lamps 2 m above the soil surface. UV-B radiation was filtered through a 0.10 mm thick cellulose acetate foil (Tamboer & Co Chemie, Haarlem, The Netherlands), absorbing UV radiation below 290 nm. To avoid different levels of UV-A between the UV-B treatments, Philips 40 W/12 UV-lamps burned as well in the ambient UV-B treatment, but were wrapped in Mylar foil, type S, 0.13 mm thick, transmitting radiation with a wavelength > 313 nm. Mylar foil excludes about 90% of the UV-B (280–320 nm) (Tosserams et al. 1996). More details of the UV-B supplementation system at the experimental field are given in Rozema et al. (1995) and in Tosserams et al. (1997). According to the empirical model of Green et al. (1980), it was calculated that the UV-B<sub>BE</sub> exposure of the enhanced UV-B radiation treatment simulates a 15% reduction of stratospheric ozone.
+*C. epigeios* was grown from seeds on commercial potting soil (Jongkind, Aalsmeer).
+Plants were grown for three weeks in a greenhouse and then transferred to an experimental field, at the University Campus.
+The soil of the experimental field consisted of a mixture of dune sand with some potting soil.
+*Calamagrostis epigeios* was cultivated in monoculture stands on the outdoor experimental field under ambient (about 5 kJ m$^{-2}$ day$^{-1}$ UV-B$_{BE}$) and enhanced UV-B (7.5 kJ m$^{-2}$ day$^{-1}$ UV-B$_{BE}$).
+The ground area of the monocultures was 1.20 × 1.20 m.
+Enhanced UV-B radiation was obtained with Philips 40 W/12 lamps 2 m above the soil surface.
+UV-B radiation was filtered through a 0.10 mm thick cellulose acetate foil (Tamboer & Co Chemie, Haarlem, The Netherlands), absorbing UV radiation below 290 nm.
+To avoid different levels of UV-A between the UV-B treatments, Philips 40 W/12 UV-lamps burned as well in the ambient UV-B treatment, but were wrapped in Mylar foil, type S, 0.13 mm thick, transmitting radiation with a wavelength > 313 nm.
+Mylar foil excludes about 90% of the UV-B (280–320 nm) [@Tosserams1996].
+More details of the UV-B supplementation system at the experimental field are given in @Rozema1995 and in @Tosserams1997.
+According to the empirical model of @Green1980, it was calculated that the UV-B$_{BE}$ exposure of the enhanced UV-B radiation treatment simulates a 15% reduction of stratospheric ozone.
 
-At the end of the growing season, when shoots of *C. epigeios* had formed a dense sward, all aerial parts of *C. epigeios* were harvested from the monoculture stands and dried in a oven for 48 hours at 40 C. Dried material was stored in envelopes at room temperature in the dark before it was used for decomposition studies. Dried leaf material from plants grown under ambient solar UV-B is indicated as ‘-UV-B litter’ and leaf material from plants grown under enhanced UV-B as ‘+UV-B litter’. This dried leaf material has been analysed for the content of organic compounds and C and N (‘Before decomposition’ in Tables 1 and 2). 
+At the end of the growing season, when shoots of *C. epigeios* had formed a dense sward, all aerial parts of *C. epigeios* were harvested from the monoculture stands and dried in a oven for 48 hours at 40$^{\circ}$C.
+Dried material was stored in envelopes at room temperature in the dark before it was used for decomposition studies.
+Dried leaf material from plants grown under ambient solar UV-B is indicated as ‘-UV-B litter’ and leaf material from plants grown under enhanced UV-B as ‘+UV-B litter’.
+This dried leaf material has been analysed for the content of organic compounds and C and N (‘Before decomposition’ in Tables 1 and 2).
 
-## Decomposition experiments 
-Decomposition experiments were performed in the dune grassland and on an experimental field. Aerial parts of the dried dune grassland grass C. epigeios were cut into pieces of about 5 cm. Litter bags used were made of 8.5 cm 8.5 cm gauze closures. Mesh size was 1 mm on the lower side (preventing loss of plant material) and 3 mm on the upperside, allowing the entrance of micro-organisms and mesofauna. The litter bags were filled with 2 g of the dried plant material. Coded and closed litter bags were loosely fixed with wooden pins about 3 cm above the sandy soil within the canopy of the dune grassland vegetation in Heemskerk (cf. Van Beckhoven 1995). From above the canopy the litterbags were visible and remained visible during the decomposition experiments, indicating that the leaf litter in the bags intercepted at least part of the UV-B radiation. 
+## Decomposition experiments
 
-Alternatively, litter bags were placed on the bare soil surface on the experimental field where the litter was more directly exposed to ambient (5 kJ m<sup>-2</sup> day<sup>-1</sup>) or enhanced (7.5 kJ m<sup>-2</sup> day<sup>-1</sup>) UV-B, during a period of 60 days (autumn 1994).We assume that in this case a photodegradative effect of UV-B will be more pronounced than in the dune grassland decomposition experiments. 
+Decomposition experiments were performed in the dune grassland and on an experimental field.
+Aerial parts of the dried dune grassland grass *C. epigeios* were cut into pieces of about 5 cm.
+Litter bags used were made of 8.5 cm × 8.5 cm gauze closures.
+Mesh size was 1 mm on the lower side (preventing loss of plant material) and 3 mm on the upperside, allowing the entrance of micro-organisms and mesofauna.
+The litter bags were filled with 2 g of the dried plant material.
+Coded and closed litter bags were loosely fixed with wooden pins about 3 cm above the sandy soil within the canopy of the dune grassland vegetation in Heemskerk [@Beckhoven1995].
+From above the canopy the litterbags were visible and remained visible during the decomposition experiments, indicating that the leaf litter in the bags intercepted at least part of the UV-B radiation.
 
-In the first experiment, litter bags were placed in the dune grassland vegetation on August 18, 1994 and collected October 17, 1994 (60 days). In a second experiment litter bags were placed in the dune grassland vegetation on September 9, 1995 and removed October 25, 1995 (50 days). Leaf material in the litter bags was exposed to ambient solar UV-B radiation (5 kJ m<sup>-2</sup> day<sup>-1</sup>) or to enhanced UV-B radiation (7.5 kJ m<sup>-2</sup> day<sup>-1</sup>), in the dune grassland in Heemskerk (52°30' N, 4°40 E). Litter bags with leaf material were placed in the center of plots of 450 150 cm. UV-B radiation was supplied by Philips 40 W/12 TL UV lamps, 150 cm above the soil surface. For ambient UV-B, lamps were wrapped in Mylar foil and for enhanced UV-B in cellulose acetate foil. Foil was renewed weekly. Distance between the lamps above the plots was 40 cm. At the end of a decomposition period, collected litter bags were ovendried at 40 °C 287 (48 h) and weighed. The percentage of mass loss was determined based on the dry weight of remaining plant material at the end and the dry weight of the plant material at the start. 
+Alternatively, litter bags were placed on the bare soil surface on the experimental field where the litter was more directly exposed to ambient (5 kJ m$^{-2}$ day$^{-1}$) or enhanced (7.5 kJ m$^{-2}$ day$^{-1}$) UV-B, during a period of 60 days (autumn 1994).
+We assume that in this case a photodegradative effect of UV-B will be more pronounced than in the dune grassland decomposition experiments.
 
-## Chemical analysis 
-Ovendried plant material was homogenised in a mill (Retsch PM 4). Carbohydrates, cellulose, hemicellulose, tannins and lignin in plant material were determined basically according to Allen (1989). 
+In the first experiment, litter bags were placed in the dune grassland vegetation on August 18, 1994 and collected October 17, 1994 (60 days).
+In a second experiment litter bags were placed in the dune grassland vegetation on September 9, 1995 and removed October 25, 1995 (50 days).
+Leaf material in the litter bags was exposed to ambient solar UV-B radiation (5 kJ m$^{-2}$ day$^{-1}$) or to enhanced UV-B radiation (7.5 kJ m$^{-2}$ day$^{-1}$), in the dune grassland in Heemskerk (52$^{\circ}$30′ N, 4$^{\circ}$40′ E).
+Litter bags with leaf material were placed in the center of plots of 450 × 150 cm. UV-B radiation was supplied by Philips 40 W/12 TL UV lamps, 150 cm above the soil surface.
+For ambient UV-B, lamps were wrapped in Mylar foil and for enhanced UV-B in cellulose acetate foil.
+Foil was renewed weekly.
+Distance between the lamps above the plots was 40 cm.
+At the end of a decomposition period, collected litter bags were ovendried at 40$^{\circ}$C (48 h) and weighed.
+The percentage of mass loss was determined based on the dry weight of remaining plant material at the end and the dry weight of the plant material at the start.
 
-## Total carbon and nitrogen 
-The content of carbon and nitrogen of plant material was determined in 3 mg samples using gas chromatography (Perkin Elmer 2400 CHNSO Analyser series II). 
+## Chemical analysis
 
-## Total soluble carbohydrates and starch 
-40 mg of dried and homogenised plant material was extracted with 80% ethanol and centrifuged at 1900 g. The carbohydrate content of the extract was determined using the Anthrone reagent (Allen 1989). For the determination of starch, the pellet was hydrolyzed with 5 ml H<sub>2</sub>O and 2.5 ml 8 *M* HCl for 1 h at 100 C. After centrifugation at 1900 *g*, 2 ml of the extract was mixed with 0.66 ml 8 *M* NaOH and made up to 10 ml. The starch content was determined in this solution using the Anthrone reagent, glucose was used as a standard.
+Ovendried plant material was homogenised in a mill (Retsch PM 4).
+Carbohydrates, cellulose, hemicellulose, tannins and lignin in plant material were determined basically according to @Allen1989.
 
-## α-cellulose and hemicellulose 
-For determination of cellulose 100 mg of dried and grounded plant material was delignified using sodium chlorite (NaClO<sub>3</sub>) and 10% acetic acid. The suspension was filtered through a teflon (durapor) filter (0.22 μm). The ovendried (105 °C, 30 min) residue was weighed, representing a total polysaccharide fraction indicated as holocellulose. This holocelluose fraction was further treated with a 24% KOH solution, resulting in a relatively pure form ofα-cellulose. The suspension was filtered through a 0.22 μm teflon (durapor) filter. The residue was washed with water until all alkali was removed with 0.5 ml 5% acetic acid and with acetone. The residue (α-cellulose) was dried for 30 min at 105 °C and weighed. The filtrate was collected and after neutralisation and addition of excess alcohol (industrial spirit 95% v/v) the precipitated hemicellulose was filtered, dried and weighed (30 min at 105 °C). 
+## Total carbon and nitrogen
 
-## Tannins (water soluble) 
-10 mg of plant material was boiled in 5 ml H<sub>2</sub>O (1 h), and filtered. The content of tannins in the filtrate was determined using the Folin-Ciocalteus reagent. After colour development (20 min, 25 °C) absorption was measured at 760 nm. Tannic acid was used as a standard (Allen 1989; Kuiters 1990; Tolsma 1989). 
+The content of carbon and nitrogen of plant material was determined in 3 mg samples using gas chromatography (Perkin Elmer 2400 CHNSO Analyser series II).
 
-## Lignin 
-For quantitative determination of the lignin fraction, 100 mg of dried and homogenised plant material was treated with ether using a soxhlett apparatus to remove lipids, with demineralized water to remove soluble carbohydrates and dried (105 °C, 30 min). This dried material was hydrolysed with 72% sulphuric acid, breaking down the cellulose complex. Thereafter, the concentration of sulphuric acid was reduced to 3%, the remaining lignin was filtered through a teflon filter (durapor, 22 μm mesh size), dried (105 °C, 30 min) and weighed. The content of cellulose and lignin of the plant material was corrected for the protein content 289 (nitrogen content of the subsamples 6.25) and ash content of the plant samples. 
+## Total soluble carbohydrates and starch
 
-## Statistical analysis 
-Homogeneity of variances was tested with Bartlett’s test. Effects of litter quality and UV-B radiation on mass loss of plant material were analysed with a twoway analysis of variance according to Sokal & Rohlf (1981). Differences in the content of organic compounds, and the total carbon and nitrogen content of the plant material were tested with one-way or twoway analysis of variance and the Tukey HSD multiple comparisons test, using Systat 5.2.1. If necessary, percentages were transformed before analysis to obtain homogeneity of variance.
+40 mg of dried and homogenised plant material was extracted with 80% ethanol and centrifuged at 1900 *g*.
+The carbohydrate content of the extract was determined using the Anthrone reagent [@Allen1989].
+For the determination of starch, the pellet was hydrolyzed with 5 ml H$_2$O and 2.5 ml 8 *M* HCl for 1 h at 100 $^{\circ}$C.
+After centrifugation at 1900 *g*, 2 ml of the extract was mixed with 0.66 ml 8 *M* NaOH and made up to 10 ml.
+The starch content was determined in this solution using the Anthrone reagent, glucose was used as a standard.
+
+## $\alpha$-cellulose and hemicellulose
+
+For determination of cellulose 100 mg of dried and grounded plant material was delignified using sodium chlorite (NaClO$_3$) and 10% acetic acid.
+The suspension was filtered through a teflon (durapor) filter (0.22 $\mu$m).
+The ovendried (105 $^{\circ}$C, 30 min) residue was weighed, representing a total polysaccharide fraction indicated as holocellulose.
+This holocelluose fraction was further treated with a 24% KOH solution, resulting in a relatively pure form of $\alpha$-cellulose.
+The suspension was filtered through a 0.22 $\mu$m teflon (durapor) filter.
+The residue was washed with water until all alkali was removed with 0.5 ml 5% acetic acid and with acetone.
+The residue ($\alpha$-cellulose) was dried for 30 min at 105 $^{\circ}$C and weighed.
+The filtrate was collected and after neutralisation and addition of excess alcohol (industrial spirit 95% v/v) the precipitated hemicellulose was filtered, dried and weighed (30 min at 105 $^{\circ}$C).
+
+## Tannins (water soluble)
+
+10 mg of plant material was boiled in 5 ml H$_2$O (1 h), and filtered.
+The content of tannins in the filtrate was determined using the Folin-Ciocalteus reagent.
+After colour development (20 min, 25 °C) absorption was measured at 760 nm.
+Tannic acid was used as a standard [@Allen1989; @Kuiters1990; @Tolsma1989].
+
+## Lignin
+
+For quantitative determination of the lignin fraction, 100 mg of dried and homogenised plant material was treated with ether using a soxhlett apparatus to remove lipids, with demineralized water to remove soluble carbohydrates and dried (105 $^{\circ}$C, 30 min).
+This dried material was hydrolysed with 72% sulphuric acid, breaking down the cellulose complex.
+Thereafter, the concentration of sulphuric acid was reduced to 3%, the remaining lignin was filtered through a teflon filter (durapor, 22 $\mu$m mesh size), dried (105 $^{\circ}$C, 30 min) and weighed.
+The content of cellulose and lignin of the plant material was corrected for the protein content (nitrogen content of the subsamples × 6.25) and ash content of the plant samples.
+
+## Statistical analysis
+
+Homogeneity of variances was tested with Bartlett’s test.
+Effects of litter quality and UV-B radiation on mass loss of plant material were analysed with a twoway analysis of variance according to @Sokal1981.
+Differences in the content of organic compounds, and the total carbon and nitrogen content of the plant material were tested with one-way or two-way analysis of variance and the Tukey HSD multiple comparisons test, using Systat 5.2.1.
+If necessary, percentages were transformed before analysis to obtain homogeneity of variance.
