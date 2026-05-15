@@ -1,14 +1,14 @@
-"Table 1. Organic compounds (% DW) in leaf litter material grown under ambient and enhanced UV-B (‘-UV-B’ and ‘+UV-B’ litter quality), before and after decomposition (decomposition), under ambient and enhanced UV-B radiation, on a dune grassland (autumn 1995) . Average values and standard error of the mean of 6 replications. Statistical significance of effects of litter quality, decomposition and photodegradation. *=p<0.05; **=p<0.01; ***=p<0.001; n.s.=not significant. First, the significance of litter quality was tested with a one-way anova comparing ‘-UV-B’ and ‘+UV-B’ data for litter ‘before decomposition’. The significance of a photodegradative effect was then tested with a two-way anova, analysing data from ‘Ambient UV-B’/‘Enhanced UV-B’ and ‘-UV-B’/‘+UV-B’. The effect of decomposition on the content of organic compounds was tested with a two-way anova comparing the data ‘before decomposition’/‘after decomposition’ (‘Ambient UV-B’) and ‘-UV-B’/‘+UV-B’. In both two-way analyses, neither the litter quality effect (-UV- B/+UV-B), nor the interaction term was significant for any of the compounds",,,,,,,
-,Litter quality,Before Decomposition,After Decomposition: Ambient UB-B,After Decomposition: Enhanced UV-B,Statistical Significance: Litter quality,Statistical Significance: Decomposition,Statistical Significance: Photodegradation
-Soluble carbohydraytes,-UV-B,1.65 +/- 0.25,1.12 +/- 0.13,0.86 +/- 0.13,n.s.,***,n.s.
-Soluble carbohydraytes,+UV-B,1.48 +/- 0.35,1.8 +/- 0.16,1.24 +/- 0.23,n.s.,***,n.s.
+"*Table 1.* Organic compounds (% DW) in leaf litter material grown under ambient and enhanced UV-B (‘-UV-B’ and ‘+UV-B’ litter quality), before and after decomposition (decomposition), under ambient and enhanced UV-B radiation, on a dune grassland (autumn 1995) . Average values and standard error of the mean of 6 replications. Statistical significance of effects of litter quality, decomposition and photodegradation. * = p < 0.05; ** = p < 0.01; *** = p < 0.001; n.s. = not significant. First, the significance of litter quality was tested with a one-way anova comparing ‘-UV-B’ and ‘+UV-B’ data for litter ‘before decomposition’. The significance of a photodegradative effect was then tested with a two-way anova, analysing data from ‘Ambient UV-B’/‘Enhanced UV-B’ and ‘-UV-B’/‘+UV-B’. The effect of decomposition on the content of organic compounds was tested with a two-way anova comparing the data ‘before decomposition’/‘after decomposition’ (‘Ambient UV-B’) and ‘-UV-B’/‘+UV-B’. In both two-way analyses, neither the litter quality effect (-UV-B/+UV-B), nor the interaction term was significant for any of the compounds",,,,,,,
+,Litter quality,Before decomposition,After decomposition (Ambient UV-B),After decomposition (Enhanced UV-B),Statistical Significance: Litter quality,Statistical Significance: Decomposition,Statistical Significance: Photodegradation
+Soluble carbohydrates,-UV-B,1.65 +/- 0.25,1.12 +/- 0.13,0.86 +/- 0.13,n.s.,***,n.s.
+Soluble carbohydrates,+UV-B,1.48 +/- 0.35,1.08 +/- 0.16,1.24 +/- 0.23,n.s.,***,n.s.
 Starch,-UV-B,3.62 +/- 0.37,3.29 +/- 0.32,3.02 +/- 0.22,n.s.,*,n.s.
 Starch,+UV-B,4.04 +/- 0.52,3.13 +/- 0.22,3.86 +/- 0.45,n.s.,*,n.s.
-⍺-Cellulose,-UV-B,36.7 +/- 1.2,24.6 +/- 2.1,20.5 +/- 2.7,*,***,n.s.
-⍺-Cellulose,+UV-B,41.3 +/- 3.3,25.4 +/- 1.5,32.2 +/- 1.6,*,***,n.s.
+α-Cellulose,-UV-B,36.7 +/- 1.2,24.6 +/- 2.1,20.5 +/- 2.7,*,***,n.s.
+α-Cellulose,+UV-B,41.3 +/- 3.3,25.4 +/- 1.5,23.2 +/- 1.6,*,***,n.s.
 Hemicellulose,-UV-B,28.9 +/- 3.3,26.1 +/- 3.8,14.4 +/- 3.6,n.s.,*,*
-Hemicellulose,+UV-B,23.0  +/- 1.6,18.9 +/- 2.3,13.1 +/- 4.0,n.s.,*,*
+Hemicellulose,+UV-B,23.0 +/- 1.6,18.9 +/- 2.3,13.1 +/- 4.0,n.s.,*,*
 Tannins,-UV-B,5.36 +/- 0.18,3.41 +/- 0.19,3.28 +/- 0.20,n.s.,**,n.s.
-Tannins,+UV-B,4.76 +/- .47,2.93 +/- 0.11,3.57 +/- 0.27,n.s.,**,n.s.
+Tannins,+UV-B,4.76 +/- 0.47,2.93 +/- 0.11,3.57 +/- 0.27,n.s.,**,n.s.
 Lignin,-UV-B,5.7 +/- 0.5,11.7 +/- 1.5,9.6 +/- 0.6,*,*,*
 Lignin,+UV-B,8.9 +/- 0.1,10.9 +/- 1.5,10.0 +/- 0.9,*,*,*
