@@ -11,7 +11,7 @@ Enhanced UV-B radiation was obtained with Philips 40 W/12 lamps 2 m above the so
 UV-B radiation was filtered through a 0.10 mm thick cellulose acetate foil (Tamboer & Co Chemie, Haarlem, The Netherlands), absorbing UV radiation below 290 nm.
 To avoid different levels of UV-A between the UV-B treatments, Philips 40 W/12 UV-lamps burned as well in the ambient UV-B treatment, but were wrapped in Mylar foil, type S, 0.13 mm thick, transmitting radiation with a wavelength > 313 nm.
 Mylar foil excludes about 90% of the UV-B (280–320 nm) [@Tosserams1996].
-More details of the UV-B supplementation system at the experimental field are given in @Rozema1995 and in @Tosserams1997.
+More details of the UV-B supplementation system at the experimental field are given in @Rozema1995 and in @Tosserams1995.
 According to the empirical model of @Green1980, it was calculated that the UV-B$_{BE}$ exposure of the enhanced UV-B radiation treatment simulates a 15% reduction of stratospheric ozone.
 
 At the end of the growing season, when shoots of *C. epigeios* had formed a dense sward, all aerial parts of *C. epigeios* were harvested from the monoculture stands and dried in a oven for 48 hours at 40$^{\circ}$C.
@@ -26,7 +26,7 @@ Aerial parts of the dried dune grassland grass *C. epigeios* were cut into piece
 Litter bags used were made of 8.5 cm × 8.5 cm gauze closures.
 Mesh size was 1 mm on the lower side (preventing loss of plant material) and 3 mm on the upperside, allowing the entrance of micro-organisms and mesofauna.
 The litter bags were filled with 2 g of the dried plant material.
-Coded and closed litter bags were loosely fixed with wooden pins about 3 cm above the sandy soil within the canopy of the dune grassland vegetation in Heemskerk [@Beckhoven1995].
+Coded and closed litter bags were loosely fixed with wooden pins about 3 cm above the sandy soil within the canopy of the dune grassland vegetation in Heemskerk [@vanBeckhoven1995].
 From above the canopy the litterbags were visible and remained visible during the decomposition experiments, indicating that the leaf litter in the bags intercepted at least part of the UV-B radiation.
 
 Alternatively, litter bags were placed on the bare soil surface on the experimental field where the litter was more directly exposed to ambient (5 kJ m$^{-2}$ day$^{-1}$) or enhanced (7.5 kJ m$^{-2}$ day$^{-1}$) UV-B, during a period of 60 days (autumn 1994).
@@ -39,7 +39,7 @@ Litter bags with leaf material were placed in the center of plots of 450 × 150 
 For ambient UV-B, lamps were wrapped in Mylar foil and for enhanced UV-B in cellulose acetate foil.
 Foil was renewed weekly.
 Distance between the lamps above the plots was 40 cm.
-At the end of a decomposition period, collected litter bags were ovendried at 40$^{\circ}$C (48 h) and weighed.
+At the end of a decomposition period, collected litter bags were ovendried at 40 $^{\circ}$C (48 h) and weighed.
 The percentage of mass loss was determined based on the dry weight of remaining plant material at the end and the dry weight of the plant material at the start.
 
 ## Chemical analysis

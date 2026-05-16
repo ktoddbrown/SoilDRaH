@@ -71,6 +71,11 @@ timelog:
       who: ashbonner310
       start: 2026-05-14 T18:45
       duration: P2H45M
+  - activity: 
+      description: finish methods cross check and final edits 
+      who: ashbonner310
+      start: 2026-05-15 T17:00
+      duration: P2H30min
 ---
 
 
@@ -197,8 +202,8 @@ These files are in the Rozema1997 data rescue.
   - [X] Create a bib file with the citations from the methods section
   - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] cross check with second transcriber for tables and methods, and resolve any differences
+  - [X] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
@@ -211,6 +216,7 @@ These are saved in three extra columns on the CSV, corresponding to the organic 
 
 ```{r}
 #| label: table1Check
+#| eval: true
 
 read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -230,7 +236,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTable1
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -245,6 +251,7 @@ The caption includes details for interpreting the rows on statistical significan
 
 ```{r}
 #| label: table2Check
+#| eval: true
 
 
 read_csv(file = table2.file, #read in the specific file
@@ -265,7 +272,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTable2
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -279,6 +286,7 @@ Figure 1 was captured with plot digitizer and formatted into a single csv.
 
 ```{r}
 #| label: Figure1Check
+#| eval: true
 
 read_csv(file = figure1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -294,7 +302,8 @@ read_csv(file = figure1.file, #read in the specific file
   )
 
 Figure1.df <- read_csv(file = figure1.file,
-                   skip = 1) %>%
+                   skip = 1,
+                   show_col_types = FALSE) %>%
   mutate(Duration = str_c(`Duration (days)`, " days")) %>%
   unite(col = "Subgraphs",
         c("Site", "Year", "Duration"),
@@ -321,8 +330,8 @@ ggplot(data = Figure1.df) +
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
-#| eval: false
+#| label: compareFigure1
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -337,7 +346,7 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 #| 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Rozema1997_Methods_MB.md Rozema1997_Methods.md
 ```
@@ -409,6 +418,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
