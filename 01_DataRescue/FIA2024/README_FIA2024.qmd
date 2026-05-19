@@ -75,7 +75,7 @@ CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
 
 #Download data directory
 #Change this file to run locally for you
-dataDir  <- '~/Documents/Research/ISCN4/FIADB_2026_pull/CSV_FIADB_ENTIRE/'
+dataDir  <- 'temp'
 #dataDownload.dir <- 'temp'
 
 # The below csv tables are used to construct annotations for FIADB
@@ -245,19 +245,19 @@ if(verbose) warning('This function may have a high memory demand.')
 # downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
 # # What name is the downloaded file
 # filename <- "CSV_FIADB_ENTIRE.zip"
-if(!file.exists(file.path(dataDir, filename))){
+if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
   if(verbose) message('Database not found, downloading...')
   if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
   utils::download.file(url = downloadUrl, 
                        destfile = file.path(dataDir, 
-                                            filename))
+                                            CSV_FIADB_ENTIRE_filename))
 }
   
   # Unzip zip file
 if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
   if(verbose) message('Unzipping file...')
   if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
-  utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
+  utils::unzip(file.path(dataDir, CSV_FIADB_ENTIRE_filename), exdir = dataDir, overwrite = FALSE)
   if(verbose) message('Unzipping done.')
 }
 
