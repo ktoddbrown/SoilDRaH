@@ -76,7 +76,6 @@ CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
 #Download data directory
 #Change this file to run locally for you
 dataDir  <- 'temp'
-#dataDownload.dir <- 'temp'
 
 # The below csv tables are used to construct annotations for FIADB
 annotationFilenames <- c(FIA_Plot_Annotations = 'FIA2024_TableEntirePLOT.csv',
@@ -154,28 +153,43 @@ This data is identified as a data source for ISCN4 data harmonization and curati
 There are six tables currently annotated in the FIADB data collection.
 This represents the data directly relevant for layer-level: 
 
-  + soil carbon measurements: only provided in table *FIA2024_table_subplot_soil_sample_layer* 
-    - bulk density [BULK_DENSITY]
-    - bulk density fine fraction [BULK_DENSITY_FINES]
-    - organic carbon fraction [C_ORG_PCT]
-    - total carbon [C_TOTAL_PCT]
-    - inorganic carbon [C_INORG_PCT]
-    - coarse fraction [COARSE_FRACTION_PCT]
+  + soil carbon measurements: 
+    - bulk density `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY`
+    - bulk density fine fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY_FINES`
+    - organic carbon fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_ORG_PCT`
+    - total carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_TOTAL_PCT`
+    - inorganic carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_INORG_PCT`
+    - coarse fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$COARSE_FRACTION_PCT`
   + depth of sample and layer information:
-    - layer thickness [LAYER_THICKNESS] *FIA2024_table_subplot_soil_sample_layer*
-    - layer type [LAYER_TYPE] *FIA2024_table_subplot_soil_sample_layer*
-    - core size [CORE_SIZE] *FIA2024_TableSubPlot_Soil_Sample_Location.csv*
-    - core length [CORE_LENGTH] *FIA2024_TableSubPlot_Soil_Sample_Location.csv*
-    - depth of refuse [RESTRICTION_DEPTH_X] *FIA2024_TableSubPlot_Soil_Sample_Location.csv*
+    - layer thickness `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_THICKNESS`
+    - layer type `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_TYPE`
+    - core size `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_SIZE`
+    - core length `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_LENGTH`
+    - depth of refuse for four locations `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_1`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_2`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_3`, and `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_4`
   + sampling time: 
-    - key variables are: inventory year [INVYR] (this information is present in all the tables extracted)
-    - measurement day [MEASDAY]
-    - measurement month [MEASMON]
-    - measurement year [MEASYEAR]
+    - inventory year
+      * `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`
   + sample location: 
-    - Latitude and Longitude coordinates [*FIA2024_TableEntirePLOT.csv*] (only table providing for the sites)
-    - state code [STATECD] (provided in all tables)
-    - county code [COUNTYCD] (provided in all tables except Survey table)
+    - latitude `ENTIRE_PLOT$LAT`
+    - longitude `ENTIRE_PLOT$LON`
+    - state name `ENTIRE_SURVEY$STATENM`
+
+
+This focuses us on four main tables.
+Each table has a column called CN that identifies unique records for that table.
+This is then cross references with other tables according to the following:
+  
+  1) ENTIRE_SURVEY: `SRV_CN`
+  2) ENTIRE_PLOT: `PLT_CN`
+  3) ENTIRE_SUBP_SOIL_SAMPLE_LOC: `SSSL_CN`
+  4) ENTIRE_SUBP_SOIL_SAMPLE_LAB
+
+The above annotation tables are associated with the following CSV data tables:
+
+  * `ENTIRE_PLOT.CSV`: *FIA2024_TableEntirePLOT.csv*
+  * `ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv`:  *FIA2024_TableSubPlot_Soil_Sample_Location.csv* 
+  * `ENTIRE_SUBP_SOIL_SAMPLE_LAB.csv` : *FIA2024_table_subplot_soil_sample_layer*
+  * Missing data description: 
 
 This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
 
@@ -368,7 +382,8 @@ annotations <- list(
     readr::read_delim(
       file = xx,
       delim = ",",
-      col_types = readr::cols(.default = readr::col_character())
+      col_types = readr::cols(.default = readr::col_character()),
+      comment = '#'
     )
   }))
 
