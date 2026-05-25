@@ -1,9 +1,5 @@
----
-title: "Santos1984_Methods_AC"
-output: html_document
----
-
 # METHODS
+
 We studied decomposition of creosotebush, *Larrea tridentata*, leaf litter confined in fiberglass mesh bags.
 The leaf litter was collected from creosotebushes on the New Mexico State University Ranch, air dried, and subsamples oven dried at 60° for 72 h to obtain oven dry mass.
 Each litter bag ($20 \times 20\text{ cm}$ fiberglass, screen mesh size 1 mm) contained 20 g of dried leaf litter.
