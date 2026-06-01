@@ -14,11 +14,11 @@ There were 5 litter bags in each set of surface bags and 10 untreated and 10 ins
 On each collection date the surface bags, 5 insecticide-treated and 5 untreated buried bags were placed on modified Tullgren funnel extractors (@Santos1978) and the mites extracted onto water.
 The extractors provide both a temperature (60°-25°) and humidity gradient.
 Mites and insects were identified and counted immediately after extraction using keys in Krantz (@Krantz1975) and Borror et al. (@Borror1976).
-Nematodes were extracted from the remaining bags in each treatment using the Oostenbrink cotton wool filter and sieving (**Nicholas 1975**).
+Nematodes were extracted from the remaining bags in each treatment using the Oostenbrink cotton wool filter and sieving (Nicholas1975).
 After mites had been extracted from the litter, the litter was oven dried, weighed, combusted in a muffle furnace and the ash mass was determined.
-Organic matter loss was calculated using the equation developed by Santos and Whitford (**1981**) to correct for infiltration of soil into buried litter bags.
+Organic matter loss was calculated using the equation developed by Santos and Whitford (@SantosandWhitford1981) to correct for infiltration of soil into buried litter bags.
 
 Data were analyzed for each collection date by ANOVA and Tukey's Q.
 Because some marking tags were lost, we did not recover all litter bags placed in the field.
 Where there were insufficient bags for the minimal sample sizes described above, the reduced sample sizes are noted on the summary tables.
-Climate data were obtained from National Oceanic and Atmospheric Administration (**1979**).
+Climate data were obtained from National Oceanic and Atmospheric Administration (**1979_MISSING BIB**).
