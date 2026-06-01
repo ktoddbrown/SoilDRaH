@@ -1,0 +1,36 @@
+" FIG. 1. Percent mass loss from creosotebush (*Larrea tridentata*) leaf litter in fiberglass mesh bags on the soil surface in
+ four North American hot desert sites as a function of actual precipitation and long-term average precipitation. M = Mojave;
+ Co = Coloradan; S = Sonoran; Ch = Chihuahuan.",,,,,,
+x-value,y-value,x-axis label,y-axis label,site,date,graph label,,,
+7.609,1.650,Precipitation (mm),Mass loss (%),Co,Mar-June,Long-Term Average Precipitation
+13.06,0.948,Precipitation (mm),Mass loss (%),M,Jun-Oct,Long-Term Average Precipitation
+16.67,2.200,Precipitation (mm),Mass loss (%),Co,Jun-Oct,Long-Term Average Precipitation
+16.00,0.005,Precipitation (mm),Mass loss (%),Ch,Mar-June,Long-Term Average Precipitation
+19.83,3.218,Precipitation (mm),Mass loss (%),Co,Aug-Oct,Long-Term Average Precipitation
+22.40,1.918,Precipitation (mm),Mass loss (%),M,Mar-June,Long-Term Average Precipitation
+28.72,16.63,Precipitation (mm),Mass loss (%),S,Mar-June,Long-Term Average Precipitation
+29.59,5.835,Precipitation (mm),Mass loss (%),Co,Mar-Oct,Long-Term Average Precipitation
+39.97,3.165,Precipitation (mm),Mass loss (%),M,Aug-Oct,Long-Term Average Precipitation
+58.56,11.66,Precipitation (mm),Mass loss (%),S,Jun-Oct,Long-Term Average Precipitation
+66.85,7.108,Precipitation (mm),Mass loss (%),M,Mar-Oct,Long-Term Average Precipitation
+74.51,17.02,Precipitation (mm),Mass loss (%),Ch,Jun-Oct,Long-Term Average Precipitation
+86.90,14.15,Precipitation (mm),Mass loss (%),S,Aug-Oct,Long-Term Average Precipitation
+116.31,17.34,Precipitation (mm),Mass loss (%),S,Mar-Oct,Long-Term Average Precipitation
+131.74,16.65,Precipitation (mm),Mass loss (%),Ch,Aug-Oct,Long-Term Average Precipitation
+149.0,25.34,Precipitation (mm),Mass loss (%),Ch,Mar-Oct,Long-Term Average Precipitation
+18.65,1.814,Precipitation (mm),Mass loss (%),Co,Mar-June,Actual Precipitation
+21.45,0.0322,Precipitation (mm),Mass loss (%),Ch,Mar-June,Actual Precipitation
+38.36,2.214,Precipitation (mm),Mass loss (%),Co,Jun-Oct,Actual Precipitation
+44.94,1.861,Precipitation (mm),Mass loss (%),M,Mar-Oct,Actual Precipitation
+60.07,2.954,Precipitation (mm),Mass loss (%),Co,Aug-Oct,Actual Precipitation
+65.47,12.45,Precipitation (mm),Mass loss (%),S,Mar-June,Actual Precipitation
+69.41,1.120,Precipitation (mm),Mass loss (%),M,Jun-Oct,Actual Precipitation
+74.98,18.19,Precipitation (mm),Mass loss (%),Ch,Jun-Oct,Actual Precipitation
+79.22,3.062,Precipitation (mm),Mass loss (%),M,Aug-Oct,Actual Precipitation
+80.17,5.957,Precipitation (mm),Mass loss (%),Co,Mar-Oct,Actual Precipitation
+81.86,11.67,Precipitation (mm),Mass loss (%),S,Jun-Oct,Actual Precipitation
+86.96,16.71,Precipitation (mm),Mass loss (%),Ch,Aug-Oct,Actual Precipitation
+102.28,13.91,Precipitation (mm),Mass loss (%),S,Aug-Oct,Actual Precipitation
+108.65,25.26,Precipitation (mm),Mass loss (%),Ch,Mar-Oct,Actual Precipitation
+129.44,7.545,Precipitation (mm),Mass loss (%),M,Mar-Oct,Actual Precipitation
+169.12,17.23,Precipitation (mm),Mass loss (%),S,Mar-Oct,Actual Precipitation
