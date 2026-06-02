@@ -1,7 +1,7 @@
-" FIG. 1. Percent mass loss from creosotebush (*Larrea tridentata*) leaf litter in fiberglass mesh bags on the soil surface in
+"FIG. 1. Percent mass loss from creosotebush (*Larrea tridentata*) leaf litter in fiberglass mesh bags on the soil surface in
  four North American hot desert sites as a function of actual precipitation and long-term average precipitation. M = Mojave;
  Co = Coloradan; S = Sonoran; Ch = Chihuahuan.",,,,,,
-x-value,y-value,x-axis label,y-axis label,site,date,graph label,,,
+x value,y value,x axis label,y axis label,site,date,graph label
 7.609,1.650,Precipitation (mm),Mass loss (%),Co,Mar-June,Long-Term Average Precipitation
 13.06,0.948,Precipitation (mm),Mass loss (%),M,Jun-Oct,Long-Term Average Precipitation
 16.67,2.200,Precipitation (mm),Mass loss (%),Co,Jun-Oct,Long-Term Average Precipitation

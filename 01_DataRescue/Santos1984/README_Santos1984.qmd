@@ -108,43 +108,45 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 <!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+> Santos, P. F., Elkins, N. Z., Steinberger, Y., & Whitford, W. G. (1984). A Comparison of Surface and Buried Larrea Tridentata Leaf Litter Decomposition in North American Hot Deserts. Ecology, 65(1), 278–284. https://doi.org/10.2307/1939480
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/241.
 
 <!--- After you read through the paper write a brief summary of what the study
 measured and what the data was used for in. This should be <250 words.--->
 
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+This paper is studying mass loss from surface and buried litter bags in deserts and its relationship with evapotranspiration, specifically for Larrea Tridentata leaf litter.
 
 ## Tables and figures
 
 <!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
 
 - Table 
-  1) Describe the data in the first table.
+  1) Percent mass losses from litter bags at each site for different time periods, along with cumulative rainfall (mm)
+  2) Mean numbers of microarthropods per bag at each site for different time periods
+  3) Numbers of nematodes extracted from three buries untreated and three buried insecticide-treated litter bags at each site for different time periods
 
 - Figure 
-  1)  Describe the data in the first figure
+  1) Percent mass loss from leaf litter in mesh bags in four desert sites as a function of actual precipitation and long-term average precipitation
 
-## Fit for purpose: ProjectName
+## Fit for purpose: DeAD
 
 <!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+### Main Variables of Interest
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+  - Location: Location identified in study sites section, with approximate location given, not lat/lon coordinates, slope, annual temperature, and annual precipitation provided.
+  - Duration: Duration of experiment identified in methods section, with dates provided.
+  - Mass loss: Mass loss information provided in mass loss subsection of the results section.
   
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the Santos1984 data rescue.
 
 - [Readme](README_AUTHORYYYY.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
@@ -155,9 +157,9 @@ These files are in the AuthorYYYY data rescue.
 - [Santos1984_Methods.md](Santos1984_Methods.md)
   + methods transcribed from primary article
 - [Santos1984_Table1.csv](Santos1984_Table1.csv)
-  + table N from primary article with ...
+  + table 1 from primary article with percent mass losses from litter bags at each site along with cumulative rainfall
 - [Santos1984_Figure1.csv](Santos1984_Figure1.csv)
-  + figure N from primary article...
+  + figure 1 from primary article with percent mass loss from leaf litter in four desert sites as a function of actual precipitation and long-term average precipitation
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
