@@ -7,8 +7,8 @@ format:
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Barba2016_Methods.bib #contains the citations in the methods section
+  - Barba2016.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -83,17 +83,17 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
-methods.file <- "AuthorYYYY_Methods.md"
-tableN.file <- 'AuthorYYYY_TableN.csv'
-figureM.file <- 'AuthorYYYY_FigureM.csv'
+methods.file <- "Barba2016_Methods.md"
+Table2.file <- 'Barba2016_Table2.csv'
+figure4.file <- 'Barba2016_Figure4.csv'
 
 # Bibliography files
-primaryCitation.file <- 'AuthorYYYY.bib'
-methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+primaryCitation.file <- 'Barba2016.bib'
+methodsCitation.file <- 'Barba2016_Methods.bib'
 
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
+readsource.file <- '../../02_DataHarmonization/readBarba2016.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -107,56 +107,60 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 # Data Summary
 
-<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
-
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+> Barba, J., Lloret, F. & Yuste, J.C. Effects of drought-induced forest die-off on litter decomposition. Plant Soil 402, 91–101 (2016). https://doi.org/10.1007/s11104-015-2762-4
 
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
 
-<!--- After you read through the paper write a brief summary of what the study
-measured and what the data was used for in. This should be <250 words.--->
-
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+This paper examines how drought-induced forest die-off and subsequent tree species replacement of Pinus sylvestris L. (Scots pine) by Quercus ilex L. ssp. ilex (Holm oak) affect above- and belowground litter decomposition in a mixed Mediterranean forest in the Prades Mountains, Spain.
 
 ## Tables and figures
 
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
-
 - Table 
-  1) Describe the data in the first table.
+  1) Table 1: Results of the general linear model (GLM) testing for the effects of litter and microsite, and their interaction, on the decomposition constant ($\text{Yr}^{-1}$)
+  2) Table 2: Initial litter quality on the study site
 
 - Figure 
-  1)  Describe the data in the first figure
+  1) Figure 1: Decomposition constants (k) of *Pinus sylvestris* and *Quercus ilex* litter (leaves and fine roots) across three habitats obtained by the GLM.
+  2.) Figure 2:  Effects of litter type (a) and habitat (b) on the decomposition constant (k) (mean ± SE) obtained by the GLM.
+  3.) Figure 3: Relationship between the initial C:N ratio of litter (leaves and fine roots from Pinus sylvestris and Quercus ilex)and decomposition constant (k) (mean ± SE), calculated as the mean of k considering the three habitat types
+  4.) Figure 4: Mass remaining (mean ± SE) for each litter type (a) and habitat type (b) at 6 collection times (0.16, 0.5, 1, 1.5, 2 and 3 years, *n*=5). The lower case indicates significant differences in remaining mass between litter types (panel a) within collection times. 
 
-## Fit for purpose: ProjectName
+## Fit for purpose: DeAD
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+### Main Variables of Interest
+Location: Titllar Valley, Prades Mountains, Northeast Iberian Peninsula, Spain (41°13′ N, 0°55′ E; 1015 m above sea level)
+Duration: Litter bags were placed in July 2011 and pulled at intervals of 0.16, 0.5, 1, 1.5, 2, and 3 years.
+Mass Loss: Percent of remaining mass can be found in Figure 4
+Solar Exposure: Could not find solar exposure in this paper
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
-
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
+### Other Relevant Variables:
+Litter Species: 2 primary tree species were evaluated, Pinus sylvestris L. (Scots pine) and Quercus ilex L. ssp. ilex (Holm oak)
+Microsite Data: Section Materials and Methods
+Litter Chemical Composition: Initial carbon (%C) concentrations, nitrogen (%N) concentrations, and C:N ratios are in Table 2.
+Litter Bag Materials and Methods: The litter bags were a size 7.5×8.5 cm, and made using a nylon mesh with holes of 0.5 mm. The litter bags included a mass of 0.5-1 g dried plant litter material.
+Land Management: Mixed forest not managed for the last 30 years.
   
 ## Files
 
 <!--- Include a brief explaination to all the files in the folder--->
 
-These files are in the AuthorYYYY data rescue.
+These files are in the Barba2016 data rescue.
 
-- [Readme](README_AUTHORYYYY.qmd)
+- [Readme](README_Barba2016.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [Barba2016.bib](Barba2016.bib)
   + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+- [Barba2016_Methods.bib](Barba2016_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
+- [Barba2016_Methods.md](Barba2016_Methods.md)
   + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
+- [Barba2016_Table2.csv](Barba2016_Table2.csv)
+  + table 2 from primary article with initial litter quality on the study site.
+- [Barba2016_Figure4.csv](Barba2016_Figure4.csv)
+  + Figure 4 from primary article with mass remaining (mean ± SE) for each litter type (a) and habitat type (b) at 6 collection times (0.16, 0.5, 1, 1.5, 2 and 3 years, n=5).
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -166,14 +170,14 @@ These files are in the AuthorYYYY data rescue.
 
 + Lead
   - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
+  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Barba2016'
+  - [ ] Create a copy of this template folder and rename it to Barba2016
   - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
   - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [ ] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
+  - [ ] Create a spreadsheet with Table2 and export it to csv
+  - [ ] Extract points from Figure4 and export it to csv
   - [ ] Transcribe or copy the method section
   - [ ] Insert references to bib entries
   - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -198,11 +202,11 @@ Table N was modified ....
 #| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = Table2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = Table2.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -215,13 +219,13 @@ read_csv(file = tableN.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
+#| label: compareTable2
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Barba2016_Table2_ABC.md Barba2016_Table2.md
 ```
 
 ## Methods
@@ -233,7 +237,7 @@ Any different to the cross check for the methods section will be output after th
 #| eval: false
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Barba2016_Methods_ABC.md Barba2016_Methods.md
 ```
 
 ### Methods  - Text
@@ -293,12 +297,12 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = Table2.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = Table2.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element
@@ -315,7 +319,7 @@ Below verifies that the data from the function matches what is coded above.
 #| label: checkReadFunction_lvl0
 
 if(file.exists(readsource.file)){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl0.ls <- readBarba2016(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -507,7 +511,7 @@ Check for an exact match with the read function.
 #| label: checkReadFunction_lvl1
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readBarba2016(dataDir = '.',
                                          dataLevel = 'level1')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
