@@ -74,14 +74,16 @@ library(bibtex) # reading in BibTex files to R
 
 library(RSQLite) #read in the sqlite file that holds the sample data
 
-# data files for level 0
-# methods.file <- "AuthorYYYY_Methods.md"
-# tableN.file <- 'AuthorYYYY_TableN.csv'
-# figureM.file <- 'AuthorYYYY_FigureM.csv'
+##### data files for level 0 ####
+
+# these files were manually pulled 26 Feb 2026 and committed to the repo
+#...and need to be updated periodically
 tableDesc.file <- 'NCSS Table Description.csv'
 columnDesc.file <- 'NCSS Columns Description.csv'
 relationships.file <- 'Relationships.csv'
 uniqueID.file <- 'Unique Constraints.csv'
+
+# this file was downloaded but not repo committed
 sqlDownload <- 'temp/ncss_labdata.sqlite'
 
 # Bibliography files
