@@ -4,6 +4,7 @@ format:
   html:
     toc: true
     code-fold: true
+    eval: false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -52,7 +53,11 @@ timelog:
       end: 2026-03-25
       start: 2026-02-06
       duration: PT30H
-      timelog:
+  - activity: 
+      description: Revise readme
+      who: ktoddbrown
+      end: 2026-06-02T16:28
+      start: 2026-06-02
 ---
 
 ```{r}
@@ -70,30 +75,42 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 library(stringr) # regular expressions
 
-# data directory, primary annotations & control vocabularies
+# Data download directory from EDI
 dataDownload.dir <- 'temp'
+
+### Level 0 rescued files ####
+# These files have some level of manual rescue/transcription to them
+
+# Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
 controlVocabulary <- 'ISCN3_TemplateCVs.csv'
-rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+
+## Files from the `TemplateSubmit.pdf` document include a formatted header
+##... and the table discriptions
+
+# Transcription of the header from the EDI file `TemplateSubmit.pdf`
 readME_templateSubmit <- 'README_TemplateSubmit.md'
 
-# The below csv tables are used to construct annotations for ISCN4
-AnnotationsDir <- '.'
+# Rescued transcriptions of individual table meta data from the 
+#... EDI file `TemplateSubmit.pdf` for the layer, profile, site
+#... disturbance, and fraction tables. These do not match exactly the 
+#... EDI archived tables but do provide the metadata for those tables
 ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
 ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
 ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
 ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
 ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
 
-annotationFilenames <- c(layerAnnotations = ISCN3_layerAnnotations,
-                          profileAnnotations = ISCN3_profileAnnotations,
-                          siteAnnotations = ISCN3_siteAnnotations,
-                          disturbanceAnnotations = ISCN3_disturbanceAnnotations,
-                          fractionAnnotations = ISCN3_fractionAnnotations)
+#### Files that have to do with the fixed citations
 
-# Bibliograph files
+# Transcribed citations from the EDI file `ISCN3_citation.csv`
+#...table and then extended manually when files were mis-cited
+rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+
+# Bibliography files
 primaryCitation.file <- 'ISCN3_2015.bib'
 contributionsCitation.file <- 'ISCN3_Contributors.bib'
 
+### Reference to the read function
 # read function
 readsource.file <- 'readISCN3.R'
 if(file.exists(readsource.file)){
@@ -125,39 +142,38 @@ ISCN3 contains four primary data tables:
   * `citation` containing the citation and additional references information for the contributed datasets,
   * `dataset` with study information that extends the basic citation
 
+The EDI data archive also includes metadata in submission templates.
+This information is in pdfs files and required a manual transcription.
+
 ## Files
 
 <!--- Include a brief explanation to all the files in the folder--->
 
 These files are in the ISCN3 data rescue.
 
--   [Readme](README_ISCN3.qmd)
-    -   This is the primary file that documents the transcriptions and decision made during data rescue.
--   [ISCN3_2015.bib](ISCN3_2015.bib)
-    -   citation for project website and primary journal article transcribed
--   [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
-    -   citations for the contributed datasets to ISCN
--   [AnnotationsDir](AnnotationsDir)
-    -   this includes the annotations constructed using template.pdfs tables pulled from edi with individual tables (layer, profile, site, fraction, and disturbance)
-        + [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv)
-        + [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv)
-        + [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv)
-        + [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv)
-        + [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv)
-        + [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv)
-        + [README_TemplateCV.md](README_TemplateCV.md)
-        + [README_TemplateSubmit.md](README_TemplateSubmit.md)
--   [temp/](temp/)
-    -   the download location for ISCN3 files archived on EDI web portal
-    -   this folder includes the following files:
-        + [ISCN3_citation.csv](ISCN3_citation.csv)
-        + [ISCN3_dataset.csv](ISCN3_dataset.csv)
-        + [ISCN3_layer.csv](ISCN3_layer.csv)
-        + [ISCN3_profile.csv](ISCN3_profile.csv)
-        + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
-        + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
-        + [TemplateCVs.pdf](TemplateCVs.pdf)
-        + [TemplateSubmit.pdf](TemplateSubmit.pdf)
+- [Readme_ISCN3.qmd](README_ISCN3.qmd) This is the primary file that documents the transcriptions and decision made during data rescue.
+- [ISCN3_2015.bib](ISCN3_2015.bib) citation for project website and primary journal article transcribed
+- [ISCN3_Contributors.bib](ISCN3_Contributors.bib) citations for the contributed datasets to ISCN
+- [README_TemplateCV.md](README_TemplateCV.md) control vocabulary text information
+- [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv) control vocabulary tables
+- [README_TemplateSubmit.md](README_TemplateSubmit.md)  submission guidance header
+- [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv) submission guidence that has meta data for the site table
+- [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv) submission guidance that has meta data for the profile table
+- [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv) submission guidance that has meta data for the layer table
+- [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv) submission guidance that has meta data for the disturbance table (not in ISCN3 tables)
+- [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv) submission guidance that has meta data for the fraction table (not in ISCN3 tables)
+- [temp/README.md](temp/README.md) a placeholder file for the download folder that contains the EDI citation.
+
+The ISCN3 files are archived on EDI web portal and will be downloaded to the `temp` folder in the chunk below:
+
+  + [ISCN3_citation.csv](ISCN3_citation.csv)
+  + [ISCN3_dataset.csv](ISCN3_dataset.csv)
+  + [ISCN3_layer.csv](ISCN3_layer.csv)
+  + [ISCN3_profile.csv](ISCN3_profile.csv)
+  + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
+  + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
+  + [TemplateCVs.pdf](TemplateCVs.pdf) transcribed source pdf
+  + [TemplateSubmit.pdf](TemplateSubmit.pdf) transcribed source pdf
 
 # Data Rescue working notes 
 
@@ -253,7 +269,7 @@ annotations <- list(
   caption = readr::read_lines(file = readME_templateSubmit),
   ISCN3_annotations = lapply(annotationFilenames, function(xx) {
     readr::read_delim(
-      file = file.path(AnnotationsDir, xx),
+      file = file.path(xx),
       delim = ",",
       col_types = readr::cols(.default = readr::col_character())
     )
