@@ -3,7 +3,7 @@
  Co = Coloradan; S = Sonoran; Ch = Chihuahuan.",,,,,,
 x value,y value,x axis label,y axis label,site,date,graph label
 7.627,1.711,Precipitation (mm),Mass loss (%),Co,Mar-June,Long-Term Average Precipitation
-13.05,1,007,Precipitation (mm),Mass loss (%),M,Jun-Oct,Long-Term Average Precipitation
+13.05,1.007,Precipitation (mm),Mass loss (%),M,Jun-Oct,Long-Term Average Precipitation
 16.66,2.215,Precipitation (mm),Mass loss (%),Co,Jun-Oct,Long-Term Average Precipitation
 16.06,0,Precipitation (mm),Mass loss (%),Ch,Mar-June,Long-Term Average Precipitation
 19.87,3.221,Precipitation (mm),Mass loss (%),Co,Aug-Oct,Long-Term Average Precipitation
