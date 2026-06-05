@@ -1,0 +1,42 @@
+"Figure 4: Mass remaining (mean ±
+SE) for each litter type (a)and
+habitat type (b) at 6 collection
+times (0.16, 0.5, 1, 1.5, 2 and
+3 years, n=5). The lower case
+indicates significant differences in
+remaining mass between litter
+types (panel a) within collection
+times. The capital letters indicate
+significant differences in
+remaining mass significant over
+time within litter types (panel a)
+and within habitat types (panel b).
+No significant differences were
+found in remaining mass between
+microsites within collection times
+(b). Comparisons were madewith
+GLMs, with microsite as a
+random factor (p<0.05).
+Statistical analyses were
+performed with remaining mass
+log-odd transformed to achieve
+normality",,,,,,
+Habitat Type,Tissue Type,x,y,x label,y label,y SE
+HPs,NA,0.16,94.18349,Remaining mass (%),Year,0
+HPs,NA,0.5,82.45872,Remaining mass (%),Year,0
+HPs,NA,1,80.47707,Remaining mass (%),Year,1.211008
+HPs,NA,1.5,72.27523,Remaining mass (%),Year,1.376146
+HPs,NA,2,70.0734,Remaining mass (%),Year,1.706421
+HPs,NA,3,52.14955,Remaining mass (%),Year,8.508588
+DPs,NA,0.16,93.90826,Remaining mass (%),Year,0
+DPs,NA,0.5,82.89908,Remaining mass (%),Year,0
+DPs,NA,1,80.0367,Remaining mass (%),Year,0.605505
+DPs,NA,1.5,72.49541,Remaining mass (%),Year,1.155963
+DPs,NA,2,67.76147,Remaining mass (%),Year,1.266058
+DPs,NA,3,61.9266,Remaining mass (%),Year,1.266053
+Qi,NA,0.16,94.73395,Remaining mass (%),Year,0
+Qi,NA,0.5,81.74312,Remaining mass (%),Year,0.440365
+Qi,NA,1,78.55046,Remaining mass (%),Year,1.100918
+Qi,NA,1.5,70.84404,Remaining mass (%),Year,1.211011
+Qi,NA,2,66.93578,Remaining mass (%),Year,1.816514
+Qi,NA,3,44.29904,Remaining mass (%),Year,24.11212
