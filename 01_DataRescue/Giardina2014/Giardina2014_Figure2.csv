@@ -1,73 +1,73 @@
-"a-h, Effects of MAT on SOC MRT (a-d; means; y-axis scale varies) and SOC stocks (e-h; means -1 s.e.m.; y-axis scale varies) for 0-10, 10-30, 30-50 and 50-91.5 cm soil depths in tropical montane forest in Hawaii. No error bars are provided for radiocarbon analyses as they were performed on one composite sample per site and depth. Regression analyses revealed that none of the relationships was significant, and so dashed lines represent means across all plots along the MAT gradient (n = 9).",,,,,,
-x,y,y value SE difference,x value unit,y value unit,Graph Label,Depth
-13,470.508,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-13.798,64.545,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-15.113,137.255,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-15.512,40.309,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-16.099,22.131,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-16.099,131.196,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-16.704,119.077,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-17.296,119.077,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-18.188,446.271,,MAT ${^\circ}$C,Mean Residence Time (yr),a,depth (0-10 cm)
-13,2588.232,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-13.797,873.419,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-15.094,344.754,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-15.499,1820.751,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-16.103,868.096,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-16.103,1119.119,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-16.704,1181.874,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-17.305,993.606,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-18.207,3566.573,,MAT ${^\circ}$C,Mean Residence Time (yr),b,depth (10-30 cm)
-13.007,5205.883,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-13.799,2911.763,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-15.08,5470.588,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-15.494,4411.757,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-16.097,2735.291,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-16.097,3794.116,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-16.7,3088.227,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-17.302,1941.175,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-18.206,7411.766,,MAT ${^\circ}$C,Mean Residence Time (yr),c,depth (30-50 cm)
-13.008,10373.493,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-13.837,5602.404,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-15.117,7337.352,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-15.532,8638.554,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-16.135,8638.554,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-16.135,5168.676,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-16.662,10048.197,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-17.302,3867.465,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-18.206,13192.77,,MAT ${^\circ}$C,Mean Residence Time (yr),d,depth (50-91.5 cm)
-12.962,4083.333,485.477,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-13.789,3083.332,346.993,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-15.068,3749.997,406.747,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-15.519,3666.666,344.796,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-16.083,2333.332,297.933,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-16.083,4166.663,330.65,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-16.684,3250,398.25,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-17.248,4333.332,695.116,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-18.15,2916.663,441.023,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),e,depth (0-10 cm)
-12.962,7583.334,1833.335,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-13.827,6916.668,916.666,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-15.068,5833.335,583.334,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-15.519,7000.001,666.699,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-16.083,6166.669,1416.665,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-16.083,6916.668,1333.332,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-16.684,8250.001,1249.998,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-17.248,666.669,6499.999,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-18.113,5416.669,833.333,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),f,depth (10-30 cm)
-12.962,5642.203,660.55,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-13.827,5559.632,1486.239,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-15.068,5394.494,412.844,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-15.519,6385.32,577.977,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-16.083,6220.182,495.415,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-16.684,5807.338,247.709,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-17.248,5889.909,660.544,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-18.113,4155.962,330.27,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),g,depth (30-50 cm)
-12.962,7918.61,837.205,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-13.827,6662.791,1360.469,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-15.068,10220.933,627.906,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-15.519,11581.402,509.499,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-16.083,10744.189,1263.867,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-16.083,11476.744,2036.782,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-16.684,9802.327,1377.307,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-17.248,10953.488,1054.568,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
-18.113,7290.697,575.257,MAT ${^\circ}$C,Soil Organic Carbon (g C $m^{-2}$),h,depth (50-91.5 cm)
+"**Figure 2 | Mean residence time (MRT) and soil carbon (SOC) storage do not vary with mean annual temperature (MAT). a-h**, Effects of MAT on SOC MRT (**a-d**; means; *y*-axis scale varies) and SOC stocks (**e-h**; means ±1 s.e.m.; *y*-axis scale varies) for 0-10, 10-30, 30-50 and 50-91.5 cm soil depths in tropical montane forest in Hawaii. No error bars are provided for radiocarbon analyses as they were performed on one composite sample per site and depth. Regression analyses revealed that none of the relationships was significant, and so dashed lines represent means across all plots along the MAT gradient (*n*=9).",,,,,,
+x,y,y value SE difference,x value unit,y value unit,graph label,depth (cm)
+13,475.5,,MAT (°C),Mean Residence Time (yr),a,0-10
+13.80,67.3,,MAT (°C),Mean Residence Time (yr),a,0-10
+15.10,137.2,,MAT (°C),Mean Residence Time (yr),a,0-10
+15.5,40.3,,MAT (°C),Mean Residence Time (yr),a,0-10
+16.10,135.4,,MAT (°C),Mean Residence Time (yr),a,0-10
+16.10,22.1,,MAT (°C),Mean Residence Time (yr),a,0-10
+16.70,119.1,,MAT (°C),Mean Residence Time (yr),a,0-10
+17.30,121.3,,MAT (°C),Mean Residence Time (yr),a,0-10
+18.20,446.3,,MAT (°C),Mean Residence Time (yr),a,0-10
+13,2601,,MAT (°C),Mean Residence Time (yr),b,10-30
+13.79,880.4,,MAT (°C),Mean Residence Time (yr),b,10-30
+15.09,3505,,MAT (°C),Mean Residence Time (yr),b,10-30
+15.49,1811,,MAT (°C),Mean Residence Time (yr),b,10-30
+16.10,1119,,MAT (°C),Mean Residence Time (yr),b,10-30
+16.10,883.2,,MAT (°C),Mean Residence Time (yr),b,10-30
+16.70,1181,,MAT (°C),Mean Residence Time (yr),b,10-30
+17.30,993.6,,MAT (°C),Mean Residence Time (yr),b,10-30
+18.20,3566,,MAT (°C),Mean Residence Time (yr),b,10-30
+13,5173,,MAT (°C),Mean Residence Time (yr),c,30-50
+13.80,2861,,MAT (°C),Mean Residence Time (yr),c,30-50
+15.10,5470,,MAT (°C),Mean Residence Time (yr),c,30-50
+15.50,4411,,MAT (°C),Mean Residence Time (yr),c,30-50
+16.10,2685,,MAT (°C),Mean Residence Time (yr),c,30-50
+16.10,3394,,MAT (°C),Mean Residence Time (yr),c,30-50
+16.70,3088,,MAT (°C),Mean Residence Time (yr),c,30-50
+17.30,1941,,MAT (°C),Mean Residence Time (yr),c,30-50
+18.20,7411,,MAT (°C),Mean Residence Time (yr),c,30-50
+13,10373,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+13.8,5602,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+15.10,7337,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+15.5,8638,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+16.10,8638,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+16.10,5168,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+16.70,10048,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+17.30,3867,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+18.20,13192,,MAT (°C),Mean Residence Time (yr),d,50-91.5
+12.98,4083,485.477,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+13.80,3083,346.993,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+15.08,3709,406.747,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+15.52,3666,344.796,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+16.10,2333,297.933,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+16.10,4166,330.65,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+16.70,3250,398.25,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+17.29,4333,695.116,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+18.15,2816,441.023,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
+12.97,7633,1833.335,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+13.83,6916,916.66,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+15.08,5833,583.334,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+15.51,7023,668.699,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+16.10,6166,816.665,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+16.10,6916,733.332,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+16.70,8276,1249.998,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+17.30,6681,649.99,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+18.15,5416,833.333,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
+12.97,5622,660.55,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+13.83,5519,1486.239,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+15.10,5394,412.844,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+15.50,6345,577.977,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+16.10,6220.182,495.415,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+16.70,5807,247.709,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+17.248,5889,660.544,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+18.15,4105,330.27,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
+12.97,7918,837.205,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+13.83,6612,1360.469,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+15.08,10220,627.906,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+15.5,11581,509.499,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+16.10,10744,1263.867,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+16.10,11476,2036.782,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+16.70,9772,1377.307,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+17.25,10953,1054.568,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+18.15,7190,575.257,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
