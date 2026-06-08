@@ -21,6 +21,17 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: lead #secondary, review
       - standardization: lead #review
       - curation: lead #review
+  - id: vaasukimarupaka #use the github name as an id
+    name:
+      given: Vaasuki
+      family: Marupaka
+    orcid: 0000-0002-3854-1764
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: transcriber (table, methods) #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
 
 affiliations:
   - id: uf-ees
@@ -42,16 +53,8 @@ affiliations:
     
 timelog:
   - activity: 
-      description: add general UF affilation
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2026-01-29 T1530
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P05M
-  - activity: 
       description: revised execute with only provided files
-      who: ktoddbrown #github username
+      who:  #github username
       #when you started and ended, can be just a year or down to the minute
       start: 2025-01-22 T1400
       #start: YYYY-MM-DD THH:MM
@@ -65,7 +68,14 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P30M
-version: 'vs202512' #template version, remove before use
+  - activity: 
+      description: grad student uf essie
+      who: vaasukimarupaka #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-05-18
+      #alternatively duration can be combined with a being/end
+      duration: PT40M
+version: 'vs202605' #template version, remove before use
 ---
 
 
@@ -185,7 +195,7 @@ These files are in the Santos1984 data rescue.
   - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
@@ -225,6 +235,61 @@ And is crosschecked with the secondary transcription
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
 diff --strip-trailing-cr --suppress-common-lines -y 01_DataRescue/Santos1984/Santos1984_Table1.csv 01_DataRescue/Santos1984/Santos1984_Table_1_MA.csv
+```
+
+## Figure 1
+
+```{r}
+#| label: figure1Check
+#| eval: true #remove when you have the file transcribed
+
+figCaption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+figData <- read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |> 
+  mutate(`x value` = as.numeric(`x value`), # this changes the str to numeric
+    `y value` = as.numeric(`y value`))
+
+# ggplot(data = figData,
+#        aes(x = `x value`,
+#            y = `y value`)) +
+#   geom_point(aes(shape = site, 
+#                  fill = date),
+#              size = 3) +
+#   scale_shape_manual(values = c("Co" = 21, "M" = 22, "S" = 23, "Ch" = 24)) +
+#   # scale_fill_grey(start = 0.9, end = 0.2) +
+#   facet_wrap(~`graph label`, ncol = 1) +
+#   labs(x = unique(figData$`x axis label`),
+#        y = unique(figData$`y axis label`),
+#        shape = "Site",
+#        fill = "Date") +
+#   theme_bw()
+
+ggplot(figData,
+       aes(x = `x value`,
+           y = `y value`)) +
+  geom_point(aes(shape = site, 
+                 fill = date),
+             size = 3) +
+  scale_shape_manual(values = c("Ch" = 24, "Co" = 21, 
+                                "M" = 22, "S" = 23)) +
+  scale_fill_manual(values = c("Aug-Oct" = "gray85",
+                               "Jun-Oct" = "gray65",
+                               "Mar-Jun" = "gray40",
+                               "Mar-Oct" = "gray15")) +
+  guides(fill = guide_legend(override.aes = list(shape = 21, color = "black")),
+         shape = guide_legend(override.aes = list(fill = "white"))) +
+  facet_wrap(~`graph label`, ncol = 1) +
+  labs(x = unique(figData$`x axis label`),
+       y = unique(figData$`y axis label`),
+       shape = "Site",
+       fill = "Date") +
+  scale_x_continuous(breaks = seq(0, 180, by = 20)) +
+  theme_linedraw()
+
 ```
 
 ## Methods
@@ -296,16 +361,30 @@ data.lvl0.ls <- list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
+    ), #End 'Table1' element
     #Repeat for all tables and figures...
+    Figure1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |> 
+  mutate(`x value` = as.numeric(`x value`), # this changes the str to numeric
+         `y value` = as.numeric(`y value`))
+    )
    ) #end 'data' element
 )
 
