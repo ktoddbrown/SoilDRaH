@@ -4,7 +4,7 @@ format:
   html:
     toc: true
     code-fold: true
-    eval: false
+    eval: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -281,11 +281,11 @@ for(row_index in 1:nrow(download_table)){
 # Level 0 data
 
 ```{r}
+#| label: readLevel0
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
 
-#TODO Add in skips and captions appropriately here. Check read in formats
 data.lvl0.ls <- list(
   ####Read in a list of all the bib files####
   citation = list(
@@ -332,6 +332,20 @@ data.lvl0.ls <- list(
         col_types = readr::cols(.default = readr::col_character())
       )
     ), #end site
+    TableFraction = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableFraction.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end fraction
+    TableDisturbance = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableDisturbance.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end disturbance
     ###Profile table####
     TableProfile = list(
       primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
@@ -376,7 +390,15 @@ data.lvl0.ls <- list(
   
 ```
 
-## Primary data: Layer table
+## Data structure
+
+The tables here are fairly extensive (both wide and long) we provide the names of the different tables and their columns below.
+
+TODO: Call out the names of each of the list elements explicitly below
+
+## Primary data example: Layer table
+
+Since we are primarily interested in soil data, which is in the layer table, we show a more detailed view of the layer table here.
 
 ```{r}
 knitr::kable(data.lvl0.ls$data$TableLayer$primary |> 
@@ -384,37 +406,10 @@ knitr::kable(data.lvl0.ls$data$TableLayer$primary |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 
-```
-
-## Primary data: Profile table
-
-```{r}
-
-knitr::kable(data.lvl0.ls$data$TableProfile$primary |> 
-               head()) |>
+knitr::kable(data.lvl0.ls$data$TableLayer$meta) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
-
 ```
 
-## Primary data: Dataset table
 
-```{r}
-
-knitr::kable(data.lvl0.ls$data$TableDataset$primary |> 
-               head()) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
-
-## Primary data: Citation table
-
-```{r}
-
-knitr::kable(data.lvl0.ls$data$TableCitation$primary |> 
-               head()) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
+# References
