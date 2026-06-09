@@ -51,7 +51,7 @@ rsconnect/
 docs
 
 # temp folder where we stash a lot of data
-temp/*
+temp/*.csv
 */temp/*
 temp*
 
