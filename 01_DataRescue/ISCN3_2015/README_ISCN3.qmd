@@ -154,6 +154,7 @@ These files are in the ISCN3 data rescue.
 - [Readme_ISCN3.qmd](README_ISCN3.qmd) This is the primary file that documents the transcriptions and decision made during data rescue.
 - [ISCN3_2015.bib](ISCN3_2015.bib) citation for project website and primary journal article transcribed
 - [ISCN3_Contributors.bib](ISCN3_Contributors.bib) citations for the contributed datasets to ISCN
+- [ISCN3_ISCN3_citation.csv](ISCN3_ISCN3_citation.csv) Rescued citations where the citations were replaced with bib references
 - [README_TemplateCV.md](README_TemplateCV.md) control vocabulary text information
 - [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv) control vocabulary tables
 - [README_TemplateSubmit.md](README_TemplateSubmit.md)  submission guidance header
@@ -189,11 +190,11 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
 + Do
   - [x] Code up data download from EDI
   - [x] Transcribe the EDI tables in `TemplateSubmit.pdf` into `ISCN3_TemplateSubmit_TableX.csv` 
-  - [ ] Transcribe `TemplateSubmit.pdf` markdown for preamble text
-  - [X] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
-  - [ ] Transcribe `TemplateCV.pdf` markdown for preamble text
-  - [X] Create a bib file with the recommended citations
-  - [ ] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
+  - [x] Transcribe `TemplateSubmit.pdf` markdown for preamble text
+  - [x] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
+  - [x] Transcribe `TemplateCV.pdf` markdown for preamble text
+  - [x] Create a bib file with the recommended citations
+  - [x] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
   - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
   - [ ] Read in primary tables and template information 
   - [ ] read function match `02_DataHarmonization/readAres2001.R` function inputs and output formats
@@ -201,7 +202,7 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
   - [x] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
   - [ ] push everything to the lead fork
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
@@ -210,6 +211,10 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
 ## Citation notes
 
   - `AK DSC Project SOC stock computation` had a bad url for the doi that linked to a spam site. Updating doi with the EDI pasta link.
+  - `Jorgensen_ARCN` has this reference citation: Jorgenson, M.T., Swanson, D.K., Macander, M. 2001. Ecological subsections of Noatak National Preserve. 73. But when looked up, it does not match the destination file.
+  - `Kane` dataset has this citation reference: Valentine, David. 2004. Soil profiles along productivity gradients in interior Alaska: Summer 2003, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:133, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=133. Fixed this citation in rescued citations file with the correct reference citation.
+  - `NASIS-2014` link doesn't work anymore.
+  - `Worldwide soil carbon and nitrogen data` dataset has invalid doi.
 
 TODO: add in documentation for the citation corrections including what files were changed
 
@@ -257,7 +262,7 @@ for(row_index in 1:nrow(download_table)){
   } #end file exists check
 } #end for loop through the download table
 
-#load in the orginal tables for ISCN3
+#load in the original tables for ISCN3
 originalTables <- plyr::dlply(
   #take the rows that have the data csv and not the metadata (read that in from transcriptions)
     .data =  dplyr::filter(download_table, 
@@ -296,6 +301,7 @@ data.lvl0.ls <- list(
       #manual correction to out of date citations, orginally
       #...this was the `temp/ISCN_citation.csv`
       primary = readr::read_delim(file = rescuedContributedCitations, 
+                                  skip = 1,
                                   delim = ';', 
                                   col_types = 
                                     readr::cols(.default =  readr::col_character()))
@@ -355,3 +361,45 @@ data.lvl0.ls <- list(
   
 ```
 
+## Primary data: Layer table
+
+```{r}
+knitr::kable(data.lvl0.ls$data$TableLayer$primary |> 
+               head()) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+## Primary data: Profile table
+
+```{r}
+
+knitr::kable(data.lvl0.ls$data$TableProfile$primary |> 
+               head()) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+## Primary data: Dataset table
+
+```{r}
+
+knitr::kable(data.lvl0.ls$data$TableDataset$primary |> 
+               head()) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
+```
+
+## Primary data: Citation table
+
+```{r}
+
+knitr::kable(data.lvl0.ls$data$TableCitation$primary |> 
+               head()) |>
+  kable_paper() |>
+  scroll_box(width = "100%", height = "300px")
+
+```
