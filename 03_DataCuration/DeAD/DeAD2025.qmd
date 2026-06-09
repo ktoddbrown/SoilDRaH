@@ -155,7 +155,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | 
 |------------|------------|
-| Barba 2016 | @Barba2016 |
 | Martínez 2010 | @Martinez2010 |
 | Blanco 2011 | @Blanco2011 |
 | LadoMonserrat 2016 | @LadoMonserrat2016 |
