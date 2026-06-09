@@ -1,0 +1,76 @@
+---
+title: "SoilDRaH Semantic Checks and Development"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+    
+timelog:
+  - activity: 
+      description: First draft
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-06-09
+      #start: YYYY-MM-DD THH:MM
+      duration: P30M
+---
+
+# Purpose
+
+We need a common way to talk about data across different studies.
+
+# Approach
+
+```{mermaid}
+location -> surface_location
+location -> observation_time
+location -> depth_interval
+location -> field_treatment
+location -- sample_event
+sample_event -- sample
+sample_event -> 
+```
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+
+```
+
+```{r}
+old_dataModel <- read_csv2(file = 'level1DataModel.csv')
+old_variables <- read_csv(file = 'of_variable.csv')
+old_types <- read_csv(file = 'is_type.csv')
+```
+
+```{r}
+
+```
+
