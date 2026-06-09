@@ -29,7 +29,6 @@
 "stand_type","type of tree stand at site, generally species","draft"
 "stem_density","stem density of a tree","incomplete"
 "total_rainfall","total annual rainfall","draft"
-"core_comment","coment on soil core","draft"
 "data_license","license for data use","draft"
 "delta_13_carbon","measure of the ratio of stable carbon isotopes 13C to 12C","draft"
 "dry_bulk_density","bulk density of dry soil","draft"
