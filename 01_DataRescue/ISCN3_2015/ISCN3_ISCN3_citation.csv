@@ -10,7 +10,7 @@ NA;Bockheim;new;NA;NA;NA;NA;@bockheim1999soil;NA;NA;NA;40267.605555555558
 NA;Bockheim;new;NA;NA;NA;NA;@bockheim2003predicting;NA;NA;NA;40267.605555555558
 NA;Bonanza LTER;new;Lola Oliver;University of Alaska - Fairbanks;fnlko@uaf.edu;NA;@yarie1998soil;NA;NA;NA;40150.918749999997
 NA;Bonanza LTER;new;NA;NA;NA;NA;@cleve1993control;NA;NA;NA;40150.918749999997
-NA;Heckman lithosequence;new;@heckman2009geologic;NA;NA;NA;NA;41983
+NA;Heckman lithosequence;new;Kate Heckman;USFS, Northern Research Station;kaheckman@fs.fed.us;@heckman2009geologic;NA;NA;NA;NA;41983
 NA;Heckman/Swanston Biscuit Burn;new;Katherine Heckman;Oregon State University;kaheckman@fs.fed.us;@heckman2013influence;NA;NA;NA;NA;41983
 NA;ISCN No SOC stock computation;analysis;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2014. ISCN Database: Soil carbon stock computations from raw data. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;42071
 NA;ISCN SOC stock computation;analysis;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2014. ISCN Database: Soil carbon stock computations from raw data. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;42071
@@ -34,7 +34,7 @@ NA;Lu_PIMA;new;Chien-Lu Ping;University of Alaska - Fairbanks;pfclp@uaa.alaska.e
 NA;Myers-Smith;new;Isla Myers-Smith;University of Edinburgh;ftihm@uaf.edu;NA;@myers2005soil;NA;NA;NA;40436.222222222219
 NA;Myers-Smith;new;NA;NA;NA;NA;@myers2007influence;NA;NA;NA;40436.222222222219
 NA;NASIS Sept/2014;correction;USDA-NRCS, National Soil Survey Center;USDA-Natural Resources Conservation Service;soildbhelp@lin.usda.gov;NA;@SoilSurveyStaff2014;NA;This work benefited from extensive data contributions to the International Soil Carbon Network from the USDA Natural Resources Conservation Service, National Cooperative Soil Survey.;NA;41893
-NA;Northern Circumpolar Soil Carbon Database (NCSCD);new;Gustaf Hugelius;Stockholm University;gustaf.hugelius@natgeo.su.se;@hugelius2013northern;@hugelius2013new;NA;NA;41983
+NA;Northern Circumpolar Soil Carbon Database (NCSCD);new;Gustaf Hugelius;Stockholm University;gustaf.hugelius@natgeo.su.se;@hugelius2013northern;@hugelius2013new;Cite Hugelius et al if using any data from this dataset.;NA;NA;41983
 NA;NRCS 2014:2011 name aliasing;correction;Luke Nave;International Soil Carbon Network;lukenave@umich.edu;NA;International Soil Carbon Network, 2015. ISCN Database: NRCS 2014:2011 database name aliasing. <Access Date>.;NA;Please see <http://iscn.fluxdata.org/Data/Pages/DataPolicy.aspx> for acknowledgment and citation guidelines for ISCN data products.;NA;41893
 NA;NRCS Sept/2014;migration;Soil Survey Lab;USDA Natural Resources Conservation Service;soildbhelp@lin.usda.gov;NA;@soil_survey_staff_2014;NA;This work benefited from extensive data contributions to the International Soil Carbon Network from the USDA Natural Resources Conservation Service, National Cooperative Soil Survey.;NA;41893
 NA;Oak Ridge National Lab_Loblolly_DWJ;new;Dale Johnson;University of Nevada - Reno;dwj@cabnr.unr.edu;NA;@johnson2003changes;NA;NA;NA;40779
@@ -60,7 +60,7 @@ NA;USGS Harden;new;NA;NA;NA;NA;@manies2004soil;NA;NA;NA;40436.222222222219
 NA;USGS Harden;new;NA;NA;NA;NA;@harden2008bonanza;NA;NA;NA;40436.222222222219
 NA;USGS Harden;new;NA;NA;NA;NA;@harden2006effects;NA;NA;NA;40436.222222222219
 NA;USGS Harden;new;NA;NA;NA;NA;@neff2005fire;NA;NA;NA;40436.222222222219
-NA;USGS Harden Yazoo;new;Jennifer Harden;USGS;jharden@usgs.gov;@huntington1998soil;@harden1999mississippi;NA;NA;40668
+NA;USGS Harden Yazoo;new;Jennifer Harden;USGS;jharden@usgs.gov;@huntington1998soil;@harden1999mississippi;use Harden as primary citation, consult Huntington for additional info if needed.;NA;NA;40668
 NA;USGS Muhs;new;Daniel R. Muhs;USGS;dmuhs@usgs.gov;NA;NA;NA;NA;NA;41176.955555555556
 NA;USGS_S3C;new;Gary Buell;USGS;grbuell@usgs.gov;http://pubs.usgs.gov/of/2004/1227/;@buell2004site;NA;NA;NA;40596
 NA;Vogel;new;Jason Vogel;Texas A&M University;jvogel@ufl.edu;NA;@vogel2008carbon;NA;NA;NA;40150.918749999997

@@ -216,8 +216,6 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
   - `NASIS-2014` link doesn't work anymore.
   - `Worldwide soil carbon and nitrogen data` dataset has invalid doi.
 
-TODO: add in documentation for the citation corrections including what files were changed
-
 ## Download ISCN3
 
 The ISCN3 is downloaded from EDI (@ISCN3). 
@@ -262,21 +260,21 @@ for(row_index in 1:nrow(download_table)){
   } #end file exists check
 } #end for loop through the download table
 
-#load in the original tables for ISCN3
-originalTables <- plyr::dlply(
-  #take the rows that have the data csv and not the metadata (read that in from transcriptions)
-    .data =  dplyr::filter(download_table, 
-                           table %in% 
-                             c('citation', 'dataset', 'profile', 'layer')), 
-    .variables = c('table'),
-    .fun = function(xx){
-      return(
-        readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
-                                           xx$file_name), 
-                          delim = ';', 
-                          col_types = readr::cols(.default = readr::col_character())))
-    }
-  )
+# #load in the original tables for ISCN3
+# originalTables <- plyr::dlply(
+#   #take the rows that have the data csv and not the metadata (read that in from transcriptions)
+#     .data =  dplyr::filter(download_table, 
+#                            table %in% 
+#                              c('citation', 'dataset', 'profile', 'layer')), 
+#     .variables = c('table'),
+#     .fun = function(xx){
+#       return(
+#         readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
+#                                            xx$file_name), 
+#                           delim = ';', 
+#                           col_types = readr::cols(.default = readr::col_character())))
+#     }
+#   )
 
 ```
 
@@ -289,39 +287,52 @@ originalTables <- plyr::dlply(
 
 #TODO Add in skips and captions appropriately here. Check read in formats
 data.lvl0.ls <- list(
-  #Read in a list of all the bib files
+  ####Read in a list of all the bib files####
   citation = list(
     #Citation for the article transcriptions are pulled from
     primary = read.bib(file = primaryCitation.file), 
     #Citations for all referenced articles
     contributed = read.bib(file = contributionsCitation.file)
   ),
+  ####Read in the tables and their meta data###
   data = list(
+    ####Citation table####
     TableCitation = list(
-      #manual correction to out of date citations, orginally
+      #manual correction to out of date citations, originally
       #...this was the `temp/ISCN_citation.csv`
-      primary = readr::read_delim(file = rescuedContributedCitations, 
+      primary = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
                                   skip = 1,
                                   delim = ';', 
                                   col_types = 
-                                    readr::cols(.default =  readr::col_character()))
-      #no submission template meta data
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      caption = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                  n_max = 1,
+                                  delim = ';',
+                                  col_names = FALSE,
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character()))[[1]]
+      #look in the metadata in the profile table for some variables
     ), #end citation list
+    ####Dataset table####
     TableDataset = list(
       primary = readr::read_delim(file = 'temp/ISCN3_dataset.csv', 
                                   delim = ';', 
                                   col_types = 
                                     readr::cols(.default = 
                                                   readr::col_character()))
-      #no submission template meta data
+      #look in the metadata in the profile table for some variables
     ), #end dataset list
+    ###Site table####
     TableSite = list(
-      #no primary data here for sites
-      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableSite.csv',
+      #no primary data here for sites, look in the profile and layer tables
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableSite.csv',
                                 delim = ",",
         col_types = readr::cols(.default = readr::col_character())
       )
     ), #end site
+    ###Profile table####
     TableProfile = list(
       primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
                                   delim = ';', 
@@ -330,20 +341,24 @@ data.lvl0.ls <- list(
                                                   readr::col_character())),
       meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableProfile.csv',
                                 delim = ",",
-                                col_types = readr::cols(.default = readr::col_character()))
+                                col_types = 
+                                  readr::cols(.default =
+                                                readr::col_character()))
     ), #end profile
+    #### Layer table ####
     TableLayer = list(
       primary = readr::read_delim(file = 'temp/ISCN3_layer.csv', 
                                   delim = ';', 
-                                    col_types = 
-                                      readr::cols(.default = 
-                                                    readr::col_character())),
-        meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
-                                  delim = ",",
-                                  col_types = readr::cols(
-                                    .default = readr::col_character()))
-      ) #end layer table
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
+                                delim = ",",
+                                col_types = readr::cols(
+                                  .default = readr::col_character()))
+    ) #end layer table
     ), # end data list
+  #### General control vocabulary that is not broke down by table ####
   control_vocabulary = list(
     readme = read_lines(file = 'README_TemplateCV.md'),
     caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
