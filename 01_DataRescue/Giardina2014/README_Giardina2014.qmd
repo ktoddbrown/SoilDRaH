@@ -122,12 +122,6 @@ For the discussion of this data rescue see the Github issue: https://github.com/
 @Giardina2014 examines soil carbon efflux by measuring radiocarbon mean residence time at specific sites in Hawaii. They examined multiple factors such as soil respiration, turnover, bulk soil-organic-carbon, and total below-ground carbon flux (TBCF). Using their data, they tested assumptions that increased temperatures due to global warming are increasing the efflux of carbon and reducing soil carbon storage. The data found indicates that the effluxes are explained by accelerated below ground carbon processes resulting in more efflux with no long term impact on soil carbon storage.
   
 
-
-
-  
-
-  
-
 ## Tables and figures
 
 Figures:
@@ -225,17 +219,24 @@ figure2dataframe<-read_csv(file = figure2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          #col_types = cols(.default = col_character())
-         ) |> 
+         )
   #mutate("errornumber" = as.numeric(`y value SE difference`))
-  mutate(elow= y - `y value SE difference`,
-         ehigh= y + `y value SE difference`)
+  
+figure2dataframe <- figure2dataframe %>%
+  mutate(elow = y - `y value SE difference`,
+         ehigh = y + `y value SE difference`)
+
+#names(figure2dataframe)
 
 
-ggplot(data=figure2dataframe)+
+ggplot(data = figure2dataframe)+
   geom_point(aes(x=x,y=y))+
-  #geom_errorbar(x=x, ymin=)
-  facet_grid(`y value unit`~`Depth`, scales='free')+
-  labs(x='MAT drgC')
+  geom_errorbar(aes(
+    x = x,
+    ymin = elow,
+    ymax = ehigh))+
+ facet_grid(`y value unit`~`depth (cm)`, scales='free',)+
+  labs(x='MAT °C')
   
 
 ```
