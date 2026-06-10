@@ -66,14 +66,14 @@ url: https://www.ufl.edu/
 who: ChaseSaxour 
 start: 2026-01-15 
 end: 
-duration: PT
+duration: PT7H30M
 
 - activity: 
   description: Secondary Transcription
 who: laylakalndjian
 start: 2026-03-05 
 end: 2026-03-06
-duration: P45M
+duration: Pt45M
 
 ---
 
@@ -174,7 +174,7 @@ The land use description can be found in the methods section. The main vegetatio
 - [X] Create a copy of this template folder and rename it to Giardina2014
 - [X] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
 - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-- [ ] Add the reviewer to the author list in the yml
+- [X] Add the reviewer to the author list in the yml
 + Do
 - [X] Create a spreadsheet with TableN and export it to csv
 - [X] Extract points from FigureM and export it to csv
@@ -183,11 +183,11 @@ The land use description can be found in the methods section. The main vegetatio
 - [X] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
 - [X] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
 - [X] Create a bib file with the citations from the methods section
-- [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+- [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-- [ ] cross check with second transcriber for tables and methods, and resolve any differences
-- [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-- [ ] push to your local fork and create a pull request to the main branch of the primary repository
+- [X] cross check with second transcriber for tables and methods, and resolve any differences
+- [X] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+- [X] push to your local fork and create a pull request to the main branch of the primary repository
 - [ ] address any revisions in your pull request review
 - [ ] celebrate!
   
@@ -195,11 +195,11 @@ The land use description can be found in the methods section. The main vegetatio
   
   <!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
   
-  Figure 2 was modified ....
+  Figure 2 was modified by removing the trend lines and has a different grid pattern than the original.
 
 ```{r}
 #| label: figure2Check
-#| eval: false #remove when you have the file transcribed
+#| eval: true #remove when you have the file transcribed
 
 
 read_csv(file = figure2.file, #read in the specific file
@@ -244,7 +244,7 @@ ggplot(data = figure2dataframe)+
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
+#| label: comparefigure2
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
