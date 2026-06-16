@@ -32,6 +32,14 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: transcriber (table, methods) #secondary, review
       - standardization: lead #review
       - curation: lead #review
+  - id: laylakalandjian
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: transcriber
 
 affiliations:
   - id: uf-ees
@@ -75,6 +83,10 @@ timelog:
       start: 2026-05-18
       #alternatively duration can be combined with a being/end
       duration: PT40M
+  - activity:
+      description: Figure 1 transcription
+      who: laylakalandjian
+      duration: PT60M
 version: 'vs202605' #template version, remove before use
 ---
 
