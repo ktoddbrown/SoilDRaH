@@ -87,6 +87,13 @@ timelog:
       description: Figure 1 transcription
       who: laylakalandjian
       duration: PT60M
+  - activity: 
+      description: figure 1 and methods
+      who: angelacanini-a11y #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-05-18
+      #alternatively duration can be combined with a being/end
+      duration: PT120M
 version: 'vs202605' #template version, remove before use
 ---
 
