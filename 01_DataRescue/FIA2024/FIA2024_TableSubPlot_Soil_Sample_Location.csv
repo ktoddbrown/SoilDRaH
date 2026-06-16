@@ -1,4 +1,4 @@
-﻿"Oracle table name: SUBP_SOIL_SAMPLE_LOC; FIADB User Guides - Volume: Database Description (version 9.4); Chapter 8: Database Tables - Soils, Pacific
+"Oracle table name: SUBP_SOIL_SAMPLE_LOC; FIADB User Guides - Volume: Database Description (version 9.4); Chapter 8: Database Tables - Soils, Pacific
 Northwest Research Station (PNWRS). The soils tables in this chapter are currently only populated by the PNWRS FIA work unit
 (SURVEY.RSCD = 26, 27).
 Refer to the ""The Forest Inventory and Analysis Database: Database Description and User Guide for Phase 3 (version 6.0.1)"" for documentation pertaining to other soils tables populated by FIA (available at web address: https://research.fs.usda.gov/products/dataandtools/fia-datamart).",,,,

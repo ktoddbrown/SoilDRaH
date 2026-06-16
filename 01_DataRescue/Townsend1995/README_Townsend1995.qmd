@@ -52,7 +52,7 @@ methodsCitation.file <- 'Townsend1995_Methods.bib'
 This documents the data transcription for  .
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/74
 
-> Full citation here
+> Townsend, A.R., Vitousek, P.M. and Trumbore, S.E. (1995), Soil Organic Matter Dynamics Along Gradients in Temperature and Land Use on the Island of Hawaii. Ecology, 76: 721-733. https://doi.org/10.2307/1939339
 
 # Data Summary
 
@@ -90,15 +90,15 @@ This data is identified as a data source for the Hawai'i Soil Organic Carbon Dat
 
 Table 1 was modified by replacing delta symbols with text as well as removing superscripts *a*, *b*, and *c* denoting values used in the results section for an equation.
 
-```{r table1}
+```{r}
+#| label: read_Table1
 #| code-fold: true
 #| message: false
 
-filename <- table1.file
-read_csv(file = filename,
+read_csv(file = table1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table1.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
@@ -107,26 +107,55 @@ read_csv(file = filename,
 
 Table 2 was modified by combining grouped headings into column/header names.
 
-```{r table1}
+```{r}
+#| label: readTable2
 #| code-fold: true
 #| message: false
 
-filename <- table2.file
-read_csv(file = filename,
+read_csv(file = table2.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = filename, 
+  kable(caption = read_csv(file = table2.file, 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption)
 ```
 
-{{< include Townsend1995_Methods.md >}}
 
-# Transcription comparison
+## Methods
 
-```{bash eval=FALSE}
-diff --strip-trailing-cr --suppress-common-lines -y temp/Townsend1995_Methods_KTB.md Townsend1995_Methods_LK.Rmd
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y Scowcroft2004_Methods.md  Scowcroft2004_Methods_AW.md
+
+diff --strip-trailing-cr --suppress-common-lines -y Scowcroft2004_Table1.csv Scowcroft2004_Table1_AW.csv
+
 ```
+
+Any different to the cross check for the methods section will be output after this line.
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+
 
 # Files
 
@@ -160,7 +189,7 @@ These files are in the Townsend1995 data rescue.
 - [x] add contribution yaml
 - [x] describe filed in human readable form inside ReadMe
 
-
+<!---
 ## Citation notes from Methods
 
 Below are the citation notes from the methods section.
@@ -203,14 +232,19 @@ Pending: 7 techincal reports and book chapters to manually enter
     + no citation
     + given appearence in microbial biomass section, it is likely this citation: Chaussod,R. and Nicolardot,B., 19831980666, French, Journal article, 19, (4), Revue db
     
+    Coleman was a misquoted year 1977 instead of 1978
+    
+    Fieldes1965 also had a misquoted year
+--->
+
 # Level 0: raw data reads
 
 The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
 Here we draft the read function that will be transferred to the R scripts.
 In the future this draft will be echoed from the R scripts.
 
-```{r readLevel0}
-
+```{r}
+#| label: readLevel0
 data.lvl0.df <- list(citation = 
                     list(primary = 
                            read.bib(file = primaryCitation.file), 

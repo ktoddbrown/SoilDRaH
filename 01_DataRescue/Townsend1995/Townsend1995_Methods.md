@@ -17,7 +17,7 @@ The ages were determined by using air photos of the region taken in 1977, 1965, 
 With the exception of stream cuts, the topography on a shield volcano such as Mauna Kea is quite consistent; all five sites were relatively level at a given altitude and all had a gradual slope towards the sea.
 Soil depth to older substrate was at least 1 m in all sites.
 To check our assumption that soil type was similar, we measured soil pH in CaCl<sub>2</sub> and in NaF of samples taken at 0, 20, 40, and 60 cm in each of the five sites.
-NaF pH is used as an index of allophane activity [@Fieldes1965, @Uehara1981].
+NaF pH is used as an index of allophane activity [@Fieldes1966, @Uehara1981].
 Soil pH values in both solutions were slightly lower at 0 cm in the forests (presumably due to surface litter), but overall values were extremely similar among the five sites (Fig. 1).
 
 ## *Soil carbon*
@@ -78,14 +78,14 @@ Soils were processed and combusted in a quartz tube as described above; the resu
 <sup>14</sup>C was measured using Accelerator Mass Spectrometry (AMS; @Trumbore1993).
 The CO<sub>2</sub> was catalytically reduced to graphite AMS targets [@Vogel1987], and measurements were made at the Center for Accelerator Mass Spectrometry at Lawrence Livermore National Laboratory.
 $\delta^{13} \text{C}$ corrections were made using results from the same samples.
-Values are expressed as Δ<sup>14</sup>C, the deviation in parts per thousand of the $^{14}C/^{12}C$ ratio in the sample from that of an absolute standard (oxalic acid decay corrected to 1950, @Stuvier1977).
+Values are expressed as Δ<sup>14</sup>C, the deviation in parts per thousand of the $^{14}C/^{12}C$ ratio in the sample from that of an absolute standard (oxalic acid decay corrected to 1950, @Stuiver1977).
 The values reported here are averages of the 0 and 20 cm samples, weighted by their respective carbon contents.
 
 ## *Microbial biomass*
 
 The microbial biomass for each site was estimated using the chloroform fumigation technique [@Jenkinson1976].
 Ten 10-g samples of soil per site were fumigated in 100-mL beakers in a vacuum dessicator for 24 h; the beakers were then removed from the desiccator and placed into mason jars for 20 d.
-CO<sub>2</sub> evolved from the soils over days 1-10 and 11-20 was measured using base trap vials containing 5 mL of 1 mol/L NaOH [@Coleman1978].
+CO<sub>2</sub> evolved from the soils over days 1-10 and 11-20 was measured using base trap vials containing 5 mL of 1 mol/L NaOH [@Coleman1977].
 The vials were removed following each sampling period, BaCl was added to precipitate out the CO<sub>2</sub> in solution, and each vial was titrated with 1 mol/L HCl.
 Five vials were placed in empty mason jars to serve as blanks.
 Microbial biomass C was computed using the equation of @Chaussod1982:

@@ -68,29 +68,34 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 library(stringr) # regular expressions
 
-# data directory, primary annotations & control vocabularies
-dataDownload.dir <- 'temp'
-controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
+# Download url for the entire FIA database
+downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+# name the zip file
+CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
+
+#Download data directory
+#Change this file to run locally for you
+dataDir  <- 'temp'
 
 # The below csv tables are used to construct annotations for FIADB
-AnnotationsDir <- '.'
-ENTIRE_PLOT_Annotations <- 'FIA2024_TableEntirePLOT.csv'
-ENTIRE_SURVEY_Annotations <- 'FIA2024_TableSurvey.csv'
-ENTIRE_SOILS_SUBPLOT_Annotations <- 'FIA2024_TableSubPlot.csv'
-ENTIRE_SOILS_SAMPLE_LOC_Annotations <- 'FIA2024_TableSubPlot_Soil_Sample_Location.csv'
-ENTIRE_SOILS_SUBPLOT_Layer_Annotations <- 'FIA2024_TableSubplot_Soil_Sample_Layer.csv'
-ENTIRE_TREE_Annotations <- 'FIA2024_TableTREE.csv'
+annotationFilenames <- c(FIA_Plot_Annotations = 'FIA2024_TableEntirePLOT.csv',
+                   #ENTIRE_SOILS_VISIT Table appears in datamart download 
+                   #...but is not documented in manual
+                   FIA_Survey_Annotations = 'FIA2024_TableSurvey.csv',
+                   FIA_Subplot_Annotations = 'FIA2024_TableSubPlot.csv',
+                   FIA_Subplot_SampleLoc_Annotations =
+                     'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
+                   #ENTIRE_SOILS_EROSION Table appears in datamart download 
+                   #...but is not documented in manual
+                   FIA_Subplot_Lab_Annotations =
+                     'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
+                   FIA_Tree_Annotations = 'FIA2024_TableTREE.csv'
+)
 
-annotationFilenames <- c(FIA_Plot_Annotations = ENTIRE_PLOT_Annotations,
-                         #  soilsVisit_Annotations = ENTIRE_SOILS_VISIT_Annotations,
-                         FIA_Survey_Annotations = ENTIRE_SURVEY_Annotations,
-                         FIA_Subplot_Annotations = ENTIRE_SOILS_SUBPLOT_Annotations,
-                         FIA_subPLot_SampleLoc_Annotations = ENTIRE_SOILS_SAMPLE_LOC_Annotations,
-                         #ENTIRE_SOILS_EROSION_Annotations,
-                         FIA_SubPLot_Lab_Annotations = ENTIRE_SOILS_SUBPLOT_Layer_Annotations,
-                         FIA_Tree_Annotations = ENTIRE_TREE_Annotations)
+#Pulled from nested table in the manual
+controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
 
-# Bibliograph files
+# Bibliography files
 primaryCitation.file <- 'FIA2024.bib'
 
 # read function
@@ -117,17 +122,28 @@ For more than 80 years, the FIA program has been recognized as a world leader in
 
 Taken from [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
 
-Documentation for this database is concentrated in two documents below:
+> **Background**
+The Forest Inventory and Analysis (FIA) research program has been in existence since mandated by Congress in 1928. FIA reports on status and trends in forest area and location; in the species, size, and health of trees; in total tree growth, mortality, and removals by harvest; in wood production and utilization rates by various products; and in forest land ownership. Before 1999, all inventories were conducted on a periodic basis. The passage of the 1998 Farm Bill requires FIA to collect data annually on plots within each State. This kind of up-to-date information is essential to frame realistic forest policies and programs. USDA Forest Service regional research stations are responsible for conducting these inventories and publishing summary reports for individual States.
+In addition to published reports, the Forest Service provides data collected in each inventory to those interested in further analysis. This report describes a standard format in which data can be obtained. This standard format, referred to as the Forest Inventory and Analysis Database (FIADB) structure, was developed to provide users with as much data as possible in a consistent manner among States. A number of inventories conducted prior to the implementation of the annual inventory are available in the FIADB. However, various data attributes may be empty or the items may have been collected or computed differently. Annual inventories use a common plot design and common data collection procedures nationwide, resulting in greater consistency among FIA work units than earlier inventories. Data field definitions note inconsistencies caused by different sampling designs and processing methods.
 
-  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen,
-Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling,
-Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume:
-database description (version 9.4), nationwide forest inventory (NFI). U.S. Department of
-Agriculture, Forest Service. 1016 p. [Online]. Available at web address:
-https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide
--nfi
+> **The FIA Database**
+The Forest Inventory and Analysis Database (FIADB) was developed to provide users with data in a consistent format, spanning all States and inventories. The first version of FIADB replaced two FIA regional databases; the Eastern States (Eastwide database) documented by Hansen and others (1992), and Western States (Westwide database) documented by Woudenberg and Farrenkopf (1995). A new national plot design provided the impetus for replacing these two databases, and FIA work units adopted the new design in all State inventories initiated after 1998. The FIADB table structure is currently derived from the National Information Management System (NIMS), which was designed to process and store annual inventory data. A number of changes in the FIADB structure have been made to accommodate the data processing and storage requirements of NIMS. As a result, data from periodic inventories are stored in a format consistent with annual inventory data.
+
+Documentation for FIA database is concentrated in the following documents below (The order being the version history of the user manual documentation):
+
+Currently documented in @burrill2024d, with past documentation in @burrill2024a, @burrill2024b, @burrill2024c, @burrill2023, @burrill2021, @woudenberg2010, @woudenberg1995westwide, @hansen1992eastwide.
+
+Annotations for analysis relevant tables were manually transcribed (@burrill2024d) and cross checked.
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume: database description (version 9.4), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1016 p. [Online]. Available at web address: https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume: database description (version 9.3), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1026 p. [Online]. Available at web address: https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume database description (version 9.2), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1042 p. [Online]. Available at web address: https://www.fs.usda.gov/research/products/dataandtools/datasets/fia-datamart
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Williams, Mary A.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
   + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
-  + Forest Inventory and Analysis. 2014. The Forest Inventory and Analysis Database: Database description and user guide version 6.0.1 for Phase 3. U.S. Department of Agriculture, Forest Service. 182 p. [Online]. Available: http://www.fia.fs.fed.us/library/database‐documentation/.
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christiansen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2021. The Forest Inventory and Analysis Database: database description and user guide version 9.0.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1026 p. [Online]. Available at web address: http://www.fia.fs.fed.us/library/database-documentation/.
+  + Woudenberg, Sharon W.; Conkling, Barbara L.; O’Connell, Barbara M.; LaPoint, Elizabeth B.; Turner, Jeffery A.; Waddell, Karen L. 2010. The Forest Inventory and Analysis Database: Database description and users manual version 4.0 for Phase 2. Gen. Tech. Rep. RMRS-GTR-245. Fort Collins, CO: U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station. 339 p.
+  + Woudenberg, S.W.; Farrenkopf, T.O. 1995. The Westwide forest inventory data base: user's manual. Gen. Tech. Rep. INT-GTR-317. Ogden, UT: U.S. Department of Agriculture, Forest Service, Intermountain Research Station. 67 p.
+  + Hansen, M.H.; Frieswyk, T.; Glover, J.F.; Kelly, J.F. 1992. The Eastwide forest inventory data base: users manual. Gen. Tech. Rep. NC-151. St. Paul, MN: U.S. Department of Agriculture, Forest Service, North Central Forest Experiment Station. 48 p.
 
 The annotations table draws heavily on these above documents with augmentation from private communication with Forest Service scientist.
 
@@ -135,6 +151,46 @@ The annotations table draws heavily on these above documents with augmentation f
 
 This data is identified as a data source for ISCN4 data harmonization and curation project.
 There are six tables currently annotated in the FIADB data collection.
+This represents the data directly relevant for layer-level: 
+
+  + soil carbon measurements: 
+    - bulk density `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY`
+    - bulk density fine fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY_FINES`
+    - organic carbon fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_ORG_PCT`
+    - total carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_TOTAL_PCT`
+    - inorganic carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_INORG_PCT`
+    - coarse fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$COARSE_FRACTION_PCT`
+  + depth of sample and layer information:
+    - layer thickness `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_THICKNESS`
+    - layer type `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_TYPE`
+    - core size `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_SIZE`
+    - core length `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_LENGTH`
+    - depth of refuse for four locations `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_1`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_2`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_3`, and `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_4`
+  + sampling time: 
+    - inventory year
+      * `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`
+  + sample location: 
+    - latitude `ENTIRE_PLOT$LAT`
+    - longitude `ENTIRE_PLOT$LON`
+    - state name `ENTIRE_SURVEY$STATENM`
+
+
+This focuses us on four main tables.
+Each table has a column called CN that identifies unique records for that table.
+This is then cross references with other tables according to the following:
+  
+  1) ENTIRE_SURVEY: `SRV_CN`
+  2) ENTIRE_PLOT: `PLT_CN`
+  3) ENTIRE_SUBP_SOIL_SAMPLE_LOC: `SSSL_CN`
+  4) ENTIRE_SUBP_SOIL_SAMPLE_LAB
+
+The above annotation tables are associated with the following CSV data tables:
+
+  * `ENTIRE_PLOT.CSV`: *FIA2024_TableEntirePLOT.csv*
+  * `ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv`:  *FIA2024_TableSubPlot_Soil_Sample_Location.csv* 
+  * `ENTIRE_SUBP_SOIL_SAMPLE_LAB.csv` : *FIA2024_table_subplot_soil_sample_layer*
+  * Missing data description: 
+
 This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
 
 Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
@@ -144,15 +200,16 @@ These files are in the FIADB 2024 data rescue.
 -   [Readme](README_FIA2024.qmd)
     -   This is the primary file that documents the transcriptions and decision made during data rescue.
 -   [FIA2024.bib](FIA2024.bib)
-    -   citation for database transcribed
--   [AnnotationsDir](AnnotationsDir)
-    -   this includes the annotations constructed using template.pdfs tables pulled from fia data mart portal with individual tables (plot, subplot, subplot layer, subplot location, survey, tree tables)
+    -   citation for database transcribed from user manuals and other documentation
+-   Annotations
+    -   this includes the annotations constructed using user manual (latest version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
         + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
         + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
         + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
         + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
         + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
         + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
+    - Note: the soil erosion and visit table is not exclusively annotated in the documented user manual; hence, we pulled annotations for these tables using column header search in the manual. 
 - [temp/](temp/)
         + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -187,37 +244,34 @@ These files are in the FIADB 2024 data rescue.
 
 ## Download FIA 2024
 
-```{r, echo=FALSE}
-#Change this file to run locally for you
-dataDir  <- '~/Documents/Research/ISCN4/FIADB_2026_pull/CSV_FIADB_ENTIRE/'
-
-```
-
 # Data processing
 
 ```{r}
+#| label: downloadData
+#| echo: false
+#| eval: false # i already have data downloaded to my local
 # This data pull may have a high memory demand
 # Ensure verbose is defined
 if (!exists("verbose")) verbose <- T
 if(verbose) warning('This function may have a high memory demand.')
 
-# Download entire FIA database
-downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
-# What name is the downloaded file
-filename <- "CSV_FIADB_ENTIRE.zip"
-if(!file.exists(file.path(dataDir, filename))){
+# # Download entire FIA database
+# downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+# # What name is the downloaded file
+# filename <- "CSV_FIADB_ENTIRE.zip"
+if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
   if(verbose) message('Database not found, downloading...')
   if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
   utils::download.file(url = downloadUrl, 
                        destfile = file.path(dataDir, 
-                                            filename))
+                                            CSV_FIADB_ENTIRE_filename))
 }
   
   # Unzip zip file
 if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
   if(verbose) message('Unzipping file...')
   if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
-  utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
+  utils::unzip(file.path(dataDir, CSV_FIADB_ENTIRE_filename), exdir = dataDir, overwrite = FALSE)
   if(verbose) message('Unzipping done.')
 }
 
@@ -326,9 +380,10 @@ Using the FIABD pdf manual v.9.4(2024), we manually transcribe the annotations i
 annotations <- list(
   FIA2024_annotations = lapply(annotationFilenames, function(xx) {
     readr::read_delim(
-      file = file.path(AnnotationsDir, xx),
+      file = xx,
       delim = ",",
-      col_types = readr::cols(.default = readr::col_character())
+      col_types = readr::cols(.default = readr::col_character()),
+      comment = '#'
     )
   }))
 

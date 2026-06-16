@@ -4,6 +4,7 @@ format:
   html:
     toc: true
     code-fold: true
+    eval: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -52,7 +53,11 @@ timelog:
       end: 2026-03-25
       start: 2026-02-06
       duration: PT30H
-      timelog:
+  - activity: 
+      description: Revise readme
+      who: ktoddbrown
+      end: 2026-06-02T16:28
+      start: 2026-06-02
 ---
 
 ```{r}
@@ -70,30 +75,42 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 library(stringr) # regular expressions
 
-# data directory, primary annotations & control vocabularies
+# Data download directory from EDI
 dataDownload.dir <- 'temp'
+
+### Level 0 rescued files ####
+# These files have some level of manual rescue/transcription to them
+
+# Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
 controlVocabulary <- 'ISCN3_TemplateCVs.csv'
-rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+
+## Files from the `TemplateSubmit.pdf` document include a formatted header
+##... and the table discriptions
+
+# Transcription of the header from the EDI file `TemplateSubmit.pdf`
 readME_templateSubmit <- 'README_TemplateSubmit.md'
 
-# The below csv tables are used to construct annotations for ISCN4
-AnnotationsDir <- '.'
+# Rescued transcriptions of individual table meta data from the 
+#... EDI file `TemplateSubmit.pdf` for the layer, profile, site
+#... disturbance, and fraction tables. These do not match exactly the 
+#... EDI archived tables but do provide the metadata for those tables
 ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
 ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
 ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
 ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
 ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
 
-annotationFilenames <- c(layerAnnotations = ISCN3_layerAnnotations,
-                          profileAnnotations = ISCN3_profileAnnotations,
-                          siteAnnotations = ISCN3_siteAnnotations,
-                          disturbanceAnnotations = ISCN3_disturbanceAnnotations,
-                          fractionAnnotations = ISCN3_fractionAnnotations)
+#### Files that have to do with the fixed citations
 
-# Bibliograph files
+# Transcribed citations from the EDI file `ISCN3_citation.csv`
+#...table and then extended manually when files were mis-cited
+rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+
+# Bibliography files
 primaryCitation.file <- 'ISCN3_2015.bib'
 contributionsCitation.file <- 'ISCN3_Contributors.bib'
 
+### Reference to the read function
 # read function
 readsource.file <- 'readISCN3.R'
 if(file.exists(readsource.file)){
@@ -125,39 +142,39 @@ ISCN3 contains four primary data tables:
   * `citation` containing the citation and additional references information for the contributed datasets,
   * `dataset` with study information that extends the basic citation
 
+The EDI data archive also includes metadata in submission templates.
+This information is in pdfs files and required a manual transcription.
+
 ## Files
 
 <!--- Include a brief explanation to all the files in the folder--->
 
 These files are in the ISCN3 data rescue.
 
--   [Readme](README_ISCN3.qmd)
-    -   This is the primary file that documents the transcriptions and decision made during data rescue.
--   [ISCN3_2015.bib](ISCN3_2015.bib)
-    -   citation for project website and primary journal article transcribed
--   [ISCN3_Contributors.bib](ISCN3_Contributors.bib)
-    -   citations for the contributed datasets to ISCN
--   [AnnotationsDir](AnnotationsDir)
-    -   this includes the annotations constructed using template.pdfs tables pulled from edi with individual tables (layer, profile, site, fraction, and disturbance)
-        + [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv)
-        + [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv)
-        + [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv)
-        + [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv)
-        + [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv)
-        + [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv)
-        + [README_TemplateCV.md](README_TemplateCV.md)
-        + [README_TemplateSubmit.md](README_TemplateSubmit.md)
--   [temp/](temp/)
-    -   the download location for ISCN3 files archived on EDI web portal
-    -   this folder includes the following files:
-        + [ISCN3_citation.csv](ISCN3_citation.csv)
-        + [ISCN3_dataset.csv](ISCN3_dataset.csv)
-        + [ISCN3_layer.csv](ISCN3_layer.csv)
-        + [ISCN3_profile.csv](ISCN3_profile.csv)
-        + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
-        + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
-        + [TemplateCVs.pdf](TemplateCVs.pdf)
-        + [TemplateSubmit.pdf](TemplateSubmit.pdf)
+- [Readme_ISCN3.qmd](README_ISCN3.qmd) This is the primary file that documents the transcriptions and decision made during data rescue.
+- [ISCN3_2015.bib](ISCN3_2015.bib) citation for project website and primary journal article transcribed
+- [ISCN3_Contributors.bib](ISCN3_Contributors.bib) citations for the contributed datasets to ISCN
+- [ISCN3_ISCN3_citation.csv](ISCN3_ISCN3_citation.csv) Rescued citations where the citations were replaced with bib references
+- [README_TemplateCV.md](README_TemplateCV.md) control vocabulary text information
+- [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv) control vocabulary tables
+- [README_TemplateSubmit.md](README_TemplateSubmit.md)  submission guidance header
+- [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv) submission guidence that has meta data for the site table
+- [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv) submission guidance that has meta data for the profile table
+- [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv) submission guidance that has meta data for the layer table
+- [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv) submission guidance that has meta data for the disturbance table (not in ISCN3 tables)
+- [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv) submission guidance that has meta data for the fraction table (not in ISCN3 tables)
+- [temp/README.md](temp/README.md) a placeholder file for the download folder that contains the EDI citation.
+
+The ISCN3 files are archived on EDI web portal and will be downloaded to the `temp` folder in the chunk below:
+
+  + [ISCN3_citation.csv](ISCN3_citation.csv)
+  + [ISCN3_dataset.csv](ISCN3_dataset.csv)
+  + [ISCN3_layer.csv](ISCN3_layer.csv)
+  + [ISCN3_profile.csv](ISCN3_profile.csv)
+  + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
+  + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
+  + [TemplateCVs.pdf](TemplateCVs.pdf) transcribed source pdf
+  + [TemplateSubmit.pdf](TemplateSubmit.pdf) transcribed source pdf
 
 # Data Rescue working notes 
 
@@ -173,11 +190,11 @@ These files are in the ISCN3 data rescue.
 + Do
   - [x] Code up data download from EDI
   - [x] Transcribe the EDI tables in `TemplateSubmit.pdf` into `ISCN3_TemplateSubmit_TableX.csv` 
-  - [ ] Transcribe `TemplateSubmit.pdf` markdown for preamble text
-  - [X] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
-  - [ ] Transcribe `TemplateCV.pdf` markdown for preamble text
-  - [X] Create a bib file with the recommended citations
-  - [ ] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
+  - [x] Transcribe `TemplateSubmit.pdf` markdown for preamble text
+  - [x] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
+  - [x] Transcribe `TemplateCV.pdf` markdown for preamble text
+  - [x] Create a bib file with the recommended citations
+  - [x] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
   - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
   - [ ] Read in primary tables and template information 
   - [ ] read function match `02_DataHarmonization/readAres2001.R` function inputs and output formats
@@ -185,7 +202,7 @@ These files are in the ISCN3 data rescue.
   - [x] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
   - [ ] push everything to the lead fork
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
@@ -194,10 +211,15 @@ These files are in the ISCN3 data rescue.
 ## Citation notes
 
   - `AK DSC Project SOC stock computation` had a bad url for the doi that linked to a spam site. Updating doi with the EDI pasta link.
+  - `Jorgensen_ARCN` has this reference citation: Jorgenson, M.T., Swanson, D.K., Macander, M. 2001. Ecological subsections of Noatak National Preserve. 73. But when looked up, it does not match the destination file.
+  - `Kane` dataset has this citation reference: Valentine, David. 2004. Soil profiles along productivity gradients in interior Alaska: Summer 2003, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:133, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=133. Fixed this citation in rescued citations file with the correct reference citation.
+  - `NASIS-2014` link doesn't work anymore.
+  - `Worldwide soil carbon and nitrogen data` dataset has invalid doi.
 
 ## Download ISCN3
 
-The ISCN3 is downloaded from EDI (@ISCN3). Below we loop through the files that are expected and download them.
+The ISCN3 is downloaded from EDI (@ISCN3). 
+Below we loop through the files that are expected and download them.
 
 ```{r}
 #| label: dataDownloadEDI
@@ -207,6 +229,7 @@ The ISCN3 is downloaded from EDI (@ISCN3). Below we loop through the files that 
 # link the table name to the download url and file path(s) for data package
 pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
 
+#transcribe from the EDI site, should be stable and not need future updates
 download_table <- tibble::tribble(
   ~table, ~entity_id, ~file_name, 
   'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
@@ -221,108 +244,172 @@ download_table <- tibble::tribble(
 #One by one, download the data in each row from the download_table
 #... and store that in the appropriate file path location on your computer
 for(row_index in 1:nrow(download_table)){
-  if(!file.exists(file.path(dataDownload.dir,download_table$file_name[row_index]))){
+  #check to see if the file exists before trying to download it
+  if(!file.exists(file.path(dataDownload.dir,
+                            download_table$file_name[row_index]))){
+    #tell the user you are downloading the file
     print(paste('Download file:', 
                 download_table$file_name[row_index]))
+    #use the utility download function to pull the file based on the 
+    #... pasta url for ISCN3 and the entity ID, match that up with the file
+    #... name on that row
     utils::download.file(
       paste0(pasta_package, download_table$entity_id[row_index]), 
-      file.path(dataDownload.dir,download_table$file_name[row_index]), 
+      file.path(dataDownload.dir, download_table$file_name[row_index]), 
       extra  = "--max-time 300")
-  }
-}
+  } #end file exists check
+} #end for loop through the download table
 
-originalTables <- plyr::dlply(
-    .data = download_table |>
-      dplyr::filter(table %in% c('citation', 'dataset', 'profile', 'layer')), 
-    .variables = c('table'),
-    .fun = function(xx){
-      return(
-        readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
-                                           xx$file_name), 
-                          delim = ';', 
-                          col_types = readr::cols(.default = readr::col_character())))
-    }
-  )
-
-```
-
-Using the [TemplateCVs.pdf](TemplateCVs.pdf) and [TemplateSubmit.pdf](TemplateSubmit.pdf), we manually transcribe the annotations into different tables; layer, profile, site, disturbance, and fraction for level0. These annotations will further be extended to a standard data model for our level01 data.
-
-```{r}
-annotations <- list(
-  caption = readr::read_lines(file = readME_templateSubmit),
-  ISCN3_annotations = lapply(annotationFilenames, function(xx) {
-    readr::read_delim(
-      file = file.path(AnnotationsDir, xx),
-      delim = ",",
-      col_types = readr::cols(.default = readr::col_character())
-    )
-  }))
-
-### Read in control vocabulary###
-#Read in the results as tables or figure transcriptions. This includes
-#...the caption as well as the tables themselves
-controlVocabulary.ls <- list(
-  caption = readr::read_delim(file = controlVocabulary,
-                       col_types = cols(.default = col_character()),
-                       n_max = 5, col_names = FALSE)$X1[1:5],
-  primary_CV = readr::read_delim(file = controlVocabulary,
-    delim = ',', 
-    skip = 5, # we want to only keep the headers without the preamble text.
-    col_types = readr::cols(.default = readr::col_character())))
+# #load in the original tables for ISCN3
+# originalTables <- plyr::dlply(
+#   #take the rows that have the data csv and not the metadata (read that in from transcriptions)
+#     .data =  dplyr::filter(download_table, 
+#                            table %in% 
+#                              c('citation', 'dataset', 'profile', 'layer')), 
+#     .variables = c('table'),
+#     .fun = function(xx){
+#       return(
+#         readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
+#                                            xx$file_name), 
+#                           delim = ';', 
+#                           col_types = readr::cols(.default = readr::col_character())))
+#     }
+#   )
 
 ```
 
 # Level 0 data
 
 ```{r}
+#| label: readLevel0
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
 
 data.lvl0.ls <- list(
-  #Read in a list of all the bib files
-  citation.ls = list(
+  ####Read in a list of all the bib files####
+  citation = list(
     #Citation for the article transcriptions are pulled from
     primary = read.bib(file = primaryCitation.file), 
     #Citations for all referenced articles
-    contributed = read.bib(file = contributionsCitation.file),
-    #Read in the bib transcription for the contributed bib rescued object
-    rescuedCitations = read_delim(file = rescuedContributedCitations,
-                                skip = 1)
+    contributed = read.bib(file = contributionsCitation.file)
   ),
-  primaryData.ls = originalTables,
-  primaryAnnotations.ls = annotations,
-  controlVocabulary.ls = controlVocabulary.ls)
-
+  ####Read in the tables and their meta data###
+  data = list(
+    ####Citation table####
+    TableCitation = list(
+      #manual correction to out of date citations, originally
+      #...this was the `temp/ISCN_citation.csv`
+      primary = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                  skip = 1,
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      caption = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                  n_max = 1,
+                                  delim = ';',
+                                  col_names = FALSE,
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character()))[[1]]
+      #look in the metadata in the profile table for some variables
+    ), #end citation list
+    ####Dataset table####
+    TableDataset = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_dataset.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character()))
+      #look in the metadata in the profile table for some variables
+    ), #end dataset list
+    ###Site table####
+    TableSite = list(
+      #no primary data here for sites, look in the profile and layer tables
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableSite.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end site
+    TableFraction = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableFraction.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end fraction
+    TableDisturbance = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableDisturbance.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end disturbance
+    ###Profile table####
+    TableProfile = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableProfile.csv',
+                                delim = ",",
+                                col_types = 
+                                  readr::cols(.default =
+                                                readr::col_character()))
+    ), #end profile
+    #### Layer table ####
+    TableLayer = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_layer.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
+                                delim = ",",
+                                col_types = readr::cols(
+                                  .default = readr::col_character()))
+    ) #end layer table
+    ), # end data list
+  #### General control vocabulary that is not broke down by table ####
+  control_vocabulary = list(
+    readme = read_lines(file = 'README_TemplateCV.md'),
+    caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                       n_max = 1,
+                       col_names = FALSE,
+                       delim = ",",
+                       col_types = readr::cols(
+                         .default = readr::col_character()))[[1]],
+    primary = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                       skip = 1,
+                       delim = ",",
+                       col_types = readr::cols(
+                         .default = readr::col_character())))
+  )
+  
 ```
 
-## Primary data: layer table
+## Data structure
+
+The tables here are fairly extensive (both wide and long) we provide the names of the different tables and their columns below.
+
+TODO: Call out the names of each of the list elements explicitly below
+
+## Primary data example: Layer table
+
+Since we are primarily interested in soil data, which is in the layer table, we show a more detailed view of the layer table here.
 
 ```{r}
-knitr::kable(data.lvl0.ls$primaryData.ls$layer |> 
+knitr::kable(data.lvl0.ls$data$TableLayer$primary |> 
                head()) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
 
-```
-
-## Primary annotations: layer table
-
-```{r}
-knitr::kable(data.lvl0.ls$primaryAnnotations.ls$ISCN3_annotations$layerAnnotations |> 
-               head()) |>
+knitr::kable(data.lvl0.ls$data$TableLayer$meta) |>
   kable_paper() |>
   scroll_box(width = "100%", height = "300px")
-
 ```
 
-## Primary rescued citations
 
-```{r}
-knitr::kable(data.lvl0.ls$citation.ls$rescuedCitations |> 
-               head()) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
-
-```
+# References
