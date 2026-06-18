@@ -1,5 +1,5 @@
 name: 01_NewDataRescue
-title: "[AuthorLastYYYY or ShortNameYYYY]"
+title: "[AuthorLastYYYY or ShortNameYYYY] Level 0"
 labels: "Data Rescue"
 description: "Make sure to hit all the main points for a data data rescue taking data from a non-machine readable format to a machine readable format."
 body:
@@ -18,3 +18,8 @@ body:
     attributes:
       label: "Working branch"
       description: "Link to data rescue branch which is likely on a different fork then this primary repository."
+  - type: input
+    attributes:
+      label: Team
+      description: "Who are you working with on this issue you would like to tag in? List their GitHub usernames here"
+      placeholder: "@ktoddbrown"
