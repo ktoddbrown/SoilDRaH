@@ -1,9 +1,7 @@
 name: DataHarmonization
 title: "[AuthorLastYYYY or ShortNameYYYY] Level 1"
 labels: ["Data Harmonization"]
-
-description: "This issue tracks a data contribution as it moves from a level 0 data rescue to a level 1 data harmonization. The end product here will be an R script that takes level 0 data rescue and produces a set of standarized data frames."
-
+description: "This issue tracks a data contribution as it moves from a level 0 data rescue to a level 1 data harmonization."
 body:
   - type: input
     attributes:
