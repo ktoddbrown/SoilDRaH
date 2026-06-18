@@ -16,22 +16,5 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: "Data summary"
-      description: "What is the data about?"
-      placeholder: "This paper looks at ... They use this data to ..."
-  - type: textarea
-    attributes:
-      label: "Fit for purpose"
-      description: "How does this data set meet the fit for purpose criteria for a specific data collection?"
-  - type: textarea
-    attributes:
-      label: "Tables and figures"
-      description: "List the tables and figures with descriptions."
-  - type: textarea
-    attributes:
-      label: Plan
-      description: "Which of the tables and figures are you going to rescue?"
-  - type: textarea
-    attributes:
       label: "Working branch"
-      description: "Link to data rescue branch."
+      description: "Link to data rescue branch which is likely on a different fork then this primary repository."
