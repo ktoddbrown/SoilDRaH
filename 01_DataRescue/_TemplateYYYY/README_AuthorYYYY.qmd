@@ -3,13 +3,14 @@ title: "Data Rescue: Author YYYY"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
+    eval: true #if you want to not evaluate the chunks and just check the rendering, switch this to false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - AuthorYYYY_Methods.bib #contains the citations in the methods section
   - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  #remove ktoddbrown if they did not work on the rescue directly
   - id: ktoddbrown #use the github name as an id
     name:
       given: Katherine
@@ -21,7 +22,7 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: lead #secondary, review
       - standardization: lead #review
       - curation: lead #review
-
+      
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -41,6 +42,12 @@ affiliations:
     url: https://www.ufl.edu/
     
 timelog:
+  #remove activites below and add activites for the data rescue. Include one activity for developing the data rescue plan, each data element (table, figures, methods, bibliography), readme write-up, and anything else related to the data rescue.
+  - activity:
+      description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/262. Changes include more details in the commented guidence, additional table and figure examples.
+      who: ktoddbrown
+      start: 2026-06-18 T1430
+      duration: P45M
   - activity: 
       description: add general UF affilation
       who: ktoddbrown #github username
@@ -187,15 +194,61 @@ These files are in the AuthorYYYY data rescue.
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
+## Figure M
+
+<!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
+
+Figure M was modified ....
+
+```{r}
+#| label: figureMCheck
+
+
+plot.df <- read_csv(file = figureM.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  mutate(across(c(`Depth [cm]`, `Soil organic carbon density [g cm$-1$]`),
+                as.numeric)) #make things numbers
+         
+ggplot(data = plot.df, 
+       mapping = aes(x = `Depth [cm]`, y = `Soil organic carbon density [g cm$-1$]`, color=Site)) +
+  geom_line() +
+  geom_point() +
+  #depth below surface is often plotted flipped and downward positive
+  scale_x_reverse() +
+  coord_flip() +
+  labs(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareTableN
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template should not have a conflict here.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+```
+
+
 ## Table N
 
 <!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
 
-Table N was modified ....
+Table N was modified by dropping the sub-table as a leading column into the transcribed table.
 
 ```{r}
 #| label: table1Check
-#| eval: false #remove when you have the file transcribed
 
 
 read_csv(file = tableN.file, #read in the specific file
@@ -212,16 +265,16 @@ read_csv(file = tableN.file, #read in the specific file
   )
 ```
 
-And is crosschecked with the secondary transcription
+And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
 #| label: compareTableN
-#| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template has an example of an unresolved conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_AC.csv AuthorYYYY_TableN.csv
 ```
 
 ## Methods
@@ -233,7 +286,9 @@ Any different to the cross check for the methods section will be output after th
 #| eval: false
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
+#... Note the template example does NOT have a conflict.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_AC.md AuthorYYYY_Methods.md
 ```
 
 ### Methods  - Text
@@ -243,7 +298,6 @@ The final text transcription from the Methods section is rendered below.
 ```{r}
 #| label: readMethods
 #| output: asis
-#| eval: true
 
 # This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
 
@@ -290,7 +344,7 @@ data.lvl0.ls <- list(
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
   data = list(
-    Table1 = list(
+    TableN = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
       caption = read_csv(file = tableN.file,
@@ -299,6 +353,18 @@ data.lvl0.ls <- list(
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
       primary = read_csv(file = tableN.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table1' element
+    FigureM = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = figureM.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = figureM.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element
