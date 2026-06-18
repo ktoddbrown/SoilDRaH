@@ -7,14 +7,14 @@ body:
     attributes:
       value: |
         This template is for data that requires translation into a non-machine readable (typically PDF) form to one that is machine readable (typically csv or md). 
-  - type: input
+  - type: textarea
     attributes:
       label: Citation
       description: "What is the full citation for the dataset with url?"
       placeholder: "Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-03)."
     validations:
       required: true
-  - type: textarea
+  - type: input
     attributes:
       label: "Working branch"
       description: "Link to data rescue branch which is likely on a different fork then this primary repository."

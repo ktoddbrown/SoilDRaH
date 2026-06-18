@@ -17,7 +17,7 @@ body:
       placeholder: "Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405"
     validations:
       required: true
-  - type: textarea
+  - type: input
     attributes:
       label: "Working branch"
       description: "Link to data rescue branch which is likely on a different fork then this primary repository."
