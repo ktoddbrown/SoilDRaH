@@ -50,11 +50,6 @@ po/*~
 rsconnect/
 docs
 
-# temp folder where we stash a lot of data
-temp/*
-*/temp/*
-temp*
-
 #MacOS files
 *DS_Store
 
@@ -63,4 +58,15 @@ temp*
 */*/*_files/*
 */*/*/*_files/*
 *.html
+
+#Binary files
 *.pdf
+*.xlsx
+*.xls
+
+#Big download files
+01_DataRescue/CPEAT2025/temp/CPEAT/*.txt
+01_DataRescue/CPEAT2025/temp/*
+
+#Ignore anything in the primary temp folder
+/temp/*

@@ -1,0 +1,40 @@
+---
+title: "Summary of data rescues"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+
+```
+
+# Counts: Studies, tables, and figures
+
+```{r}
+
+directories.ls <- tibble(filenames = list.files(path = '.',
+                      recursive = FALSE)) |>
+  filter(!str_detect(filenames, '^\\w+\\.\\w+$'))
+
+readME.ls <- tibble(filenames = list.files(path = '.',
+                      recursive = TRUE)) |>
+  filter(str_detect(filenames, '^\\w+/\\w+\\.\\wmd$')) 
+  filter(str_detect(filenames, '^\\w+/README\\w+\\.\\w+$')) #only look at 
+```
+
+# Template adherence
+
+## YAML
+
+## Sections
+
+# People and time
+
+# Level 1
+
