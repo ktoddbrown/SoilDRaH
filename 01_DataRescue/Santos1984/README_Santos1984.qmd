@@ -93,8 +93,14 @@ timelog:
       #when you started and ended, can be just a year or down to the minute
       start: 2026-05-18
       #alternatively duration can be combined with a being/end
+      duration: PT120M 
+  - activity: 
+      description: Table 1 and BibTex
+      who: mbalvarez72 #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-05-18
+      #alternatively duration can be combined with a being/end
       duration: PT120M
-version: 'vs202605' #template version, remove before use
 ---
 
 
