@@ -1,14 +1,14 @@
 ---
-title: "Data Rescue: Author YYYY"
+title: "Data Rescue: Lyons 2010"
 format:
   html:
     toc: true
-    eval: true #if you want to not evaluate the chunks and just check the rendering, switch this to false
+    eval: false #if you want to not evaluate the chunks and just check the rendering, switch this to false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Lyons2010_Methods.bib #contains the citations in the methods section
+  - Lyons2010.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   #remove ktoddbrown if they did not work on the rescue directly
   - id: ktoddbrown #use the github name as an id
@@ -18,10 +18,21 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     orcid: 0000-0002-3109-8130
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
+    role:
+      - transcription: review
+   #   - standardization: #review
+    #  - curation: lead #review
+
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+   #   - standardization: #review
+    #  - curation: lead #review
       
 affiliations:
   - id: uf-ees
@@ -72,7 +83,6 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P30M
-version: 'vs202512' #template version, remove before use
 ---
 
 
@@ -90,17 +100,17 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
-methods.file <- "AuthorYYYY_Methods.md"
-tableN.file <- 'AuthorYYYY_TableN.csv'
-figureM.file <- 'AuthorYYYY_FigureM.csv'
+methods.file <- "Lyons2010_Methods.md"
+tableN.file <- 'Lyons2010_TableN.csv'
+figureM.file <- 'Lyons2010_FigureM.csv'
 
 # Bibliography files
-primaryCitation.file <- 'AuthorYYYY.bib'
-methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+primaryCitation.file <- 'Lyons2010.bib'
+methodsCitation.file <- 'Lyons2010_Methods.bib'
 
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
+readsource.file <- '../../02_DataHarmonization/readLyons2010.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -116,53 +126,60 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 <!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+> Lyons, K. G., & McCarthy, W. A. (2010). Early decomposition of Ashe juniper (Juniperus ashei) wood in open and shaded habitat. Rangeland Ecology & Management, 63(3), 359-365. https://doi.org/10.2111/REM-D-09-00077.1
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/267.
 
 <!--- After you read through the paper write a brief summary of what the study
 measured and what the data was used for in. This should be <250 words.--->
 
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+@Lyons2010 primarily measures the decomposition rate and elemental composition of Ashe juniper wood collected from a grassland in the Edwards Plateau. They used open and shaded habitats with the litterbags. They used this data to determine there was no change in the wood decomposition between the open and shaded habitats during low rainfall periods. 
 
-## Tables and figures
-
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
-
-- Table 
-  1) Describe the data in the first table.
+## Figures
 
 - Figure 
-  1)  Describe the data in the first figure
+  1) Figure 1: Ashe juniper wood percent biomass reaming as a function time and SHADE vs. OPEN treatments, with total seasonal precipitation charted as well.
+  2) Figure 2: Ashe juniper wood change in percent nitrogen through time. 
+  3) Figure 3: Ashe juniper wood change in C:N through time
 
-## Fit for purpose: ProjectName
+## Fit for purpose: DeAD
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+### Main Variables of Interest
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+  - Location: The experiment was conducted along a 26-ha area within the C.L. Browning Ranch in Blanco County, Texas. The coordinates are lat 30°15′53″N; long 98°19′43″W.
+  - Duration: Ashe juniper wood was collected in February 2005, mulched, passively dried and sifted through. The litterbags were put out in April 2005 and the last litterbag was collected in November 2007. 
+  - Mass loss: The Ashe juniper wood percent biomass remaining between the two treatments are charted in Figure 1. 
+  - Solar exposure: This experiment had two treatments, that determined the solar exposure on the litterbags. 
+  - Soil carbon stock: The change in the C:N ratio of the Ashe juniper wood is found in Figure 3
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
-  
+### Other Relevant Variables
+
+  - Litter species: Ashe juniper (*Juniperus ashei*)
+  - Microsite data: The vegetation of the site is isolated tree/shrub complexes, with plateau live oak and open native grasslands
+  - Microclimate relative humidity: The climate of the Edwards Plateau is subtropical-subhumid.  
+  - Litter chemical composition: The C:N ratio of the decomposing wood is found within Figure 3. 
+  - Litter bag materials and method: 110 fiberglass mesh litterbags (16 $\times$ 16) were constructed for the experiment, with each bag having 20 grams of wood. The mesh openings was 1.0-mm. Procedure for the creation of the litterbags was taken from @Robertson1999.
+  - Treatments: The experiment had two treatements, OPEN and SHADED. The OPEN treatment was the transect that was in an open habitat. The SHADE treatment was the transect under a closed canopy. 
+  - Land management: The site chosen had been cleared of Ashe juniper in June-September 2004 and the felled wood was left behind. The cattle was removed from the ranch property in 2003, before it had a history of moderate to intense grazing. 
+
+
 ## Files
 
-<!--- Include a brief explaination to all the files in the folder--->
+These files are in the @Lyons2010 data rescue.
 
-These files are in the AuthorYYYY data rescue.
-
-- [Readme](README_AUTHORYYYY.qmd)
+- [Readme](README_Lyons2010.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [Lyons2010.bib](Lyons2010.bib)
   + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+- [Lyons2010_Methods.bib](Lyons2010_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
+- [Lyons2010_Methods.md](Lyons2010_Methods.md)
   + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
+- [Lyons2010_FigureN.csv](Lyons2010_TableN.csv)
   + table N from primary article with ...
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
@@ -172,23 +189,22 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [ ] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [ ] Extract points from Figure 1-3 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
   - [ ] Create a bib file with the citations from the methods section
   - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] cross check with second transcriber for figures and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
