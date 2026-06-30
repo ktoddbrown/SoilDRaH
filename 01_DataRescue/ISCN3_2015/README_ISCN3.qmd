@@ -390,26 +390,226 @@ data.lvl0.ls <- list(
   
 ```
 
-## Data structure
+<!---- consider making a diagram or nested list to identify the data structures here--->
 
-The tables here are fairly extensive (both wide and long) we provide the names of the different tables and their columns below.
 
-TODO: Call out the names of each of the list elements explicitly below
-
-## Primary data example: Layer table
-
-Since we are primarily interested in soil data, which is in the layer table, we show a more detailed view of the layer table here.
+The code is also in `{r} readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
 
 ```{r}
-knitr::kable(data.lvl0.ls$data$TableLayer$primary |> 
-               head()) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
+#| label: checkReadFunction_lvl0
 
-knitr::kable(data.lvl0.ls$data$TableLayer$meta) |>
-  kable_paper() |>
-  scroll_box(width = "100%", height = "300px")
+if(file.exists(readsource.file) & FALSE){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ISCN2025
+Broad classes of information that we are looking for include:
+
+For this analysis we are interested in:
+
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+ 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+    - study_id
+    - contributing_id
+    - site_id
+    - profile_id
+    - layer_id
+  + `of_variable`
+    - `organic_carbon`
+    - `bulk_density`
+    - `coarse_fraction`
+    - `depth`
+    - `geo_location`
+    - `citation`
+    - `doi`
+    - `bibtex`
+  + `is_type`
+    - `unit`
+    - `method`
+    - `value`
+    - `upper`
+    - `lower`
+    - `datum`
+    - `latitude`
+    - `longitude`
+  + `with_entry`
+  + `from_source`
+
+ 
+ <!--- TODO we are experimenting with some new variable names here and will need to go back and revise the vocabulary. --->
+
+```{r}
+#| label: createLvl1
+
+# What is true across all of ISCN3
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                     #TODO figure out how to convert the citation to a string
+                   'citation', 'value', data.lvl0.ls$citation$primary, 'EDI download page',
+                   'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
+                   'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
+                   'observation_date', 'unit', 'days since 1900-01-01', 'infered given past history in Excel.')
+
+#Site table
+site.df <- data.lvl0.ls$data$TableProfile$primary |>
+  select("dataset_name_sub", "dataset_name_soc", #ID
+         "site_name", "profile_name", #ID
+         "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+         "state (state_province)", "country (country)", #region
+         "observation_date (YYYY-MM-DD)", #observation_date
+         "profile_zero_ref (profile_zero_ref)") |>  #depth
+  pivot_longer(cols = all_of(c(
+    "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+    "state (state_province)", "country (country)", #region
+    "observation_date (YYYY-MM-DD)", #observation_date
+    "profile_zero_ref (profile_zero_ref)"
+    )),
+    names_to = 'column_header', values_to = 'with_entry') |>
+  mutate(of_variable = case_when(
+    column_header %in% c("lat (dec. deg)", "long (dec. deg)", "datum (datum)") ~ 'geolocation',
+    column_header %in% c("state (state_province)", "country (country)") ~ 'region', #region
+    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'observation_date', #observation_date
+    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'depth',
+      .default = NA_character_),
+  is_type = case_when(
+    column_header %in% c("lat (dec. deg)") ~ 'latitude',
+    column_header %in% c("long (dec. deg)") ~ 'longitude',
+    column_header %in% c("datum (datum)") ~ 'datum',
+    column_header %in% c("state (state_province)") ~ 'state',
+    column_header %in% c("country (country)") ~ 'country',
+    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'date', #observation_date
+    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'zero_reference',
+      .default = NA_character_)
+    )
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
 ```
 
 
 # References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
