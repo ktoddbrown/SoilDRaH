@@ -413,7 +413,7 @@ if(file.exists(readsource.file) & FALSE){
 }
 ```
 
-# Level 1 data - CURATION PROJECT
+# Level 1 data - ISCN 2025
 
 This data is identified as a data source for the ISCN2025
 Broad classes of information that we are looking for include:
@@ -439,21 +439,37 @@ The final format of the data frame here will include the following
   + `of_variable`
     - `organic_carbon`
     - `bulk_density`
-    - `coarse_fraction`
+    - `particle_size_distribution`
     - `depth`
+    - `observation_date`
     - `geo_location`
+    - `region`
     - `citation`
+    - `reference`
+    - `acknowledgement`
+    - `curator`
+    - `contact`
     - `doi`
     - `bibtex`
+    - `description`
+    - `coarse_fraction`
   + `is_type`
     - `unit`
     - `method`
     - `value`
     - `upper`
     - `lower`
+    - `zero_reference`
     - `datum`
     - `latitude`
     - `longitude`
+    - `state`
+    - `country`
+    - `date`
+    - `person_name`
+    - `email`
+    - `organization`
+    - `usage`
   + `with_entry`
   + `from_source`
 
@@ -462,14 +478,6 @@ The final format of the data frame here will include the following
 
 ```{r}
 #| label: createLvl1
-
-# What is true across all of ISCN3
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                     #TODO figure out how to convert the citation to a string
-                   'citation', 'value', data.lvl0.ls$citation$primary, 'EDI download page',
-                   'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
-                   'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
-                   'observation_date', 'unit', 'days since 1900-01-01', 'infered given past history in Excel.')
 
 #Site table
 site.df <- data.lvl0.ls$data$TableProfile$primary |>
@@ -485,7 +493,8 @@ site.df <- data.lvl0.ls$data$TableProfile$primary |>
     "observation_date (YYYY-MM-DD)", #observation_date
     "profile_zero_ref (profile_zero_ref)"
     )),
-    names_to = 'column_header', values_to = 'with_entry') |>
+    names_to = 'column_header', values_to = 'with_entry',
+    values_drop_na = TRUE) |>
   mutate(of_variable = case_when(
     column_header %in% c("lat (dec. deg)", "long (dec. deg)", "datum (datum)") ~ 'geolocation',
     column_header %in% c("state (state_province)", "country (country)") ~ 'region', #region
@@ -501,18 +510,145 @@ site.df <- data.lvl0.ls$data$TableProfile$primary |>
     column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'date', #observation_date
     column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'zero_reference',
       .default = NA_character_)
-    )
+    ) |>
+  mutate(from_source = 'Table Profile')
+
+#collection table
+collection.df <- data.lvl0.ls$data$TableDataset$primary |>
+  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+         #"dataset_type (dataset_type)",
+         "curator_name", "curator_organization", "curator_email", 
+         "contact_name", "contact_email", 
+         "dataset_description") |>
+  mutate(source_from = 'Table Dataset') |>
+  full_join(
+    data.lvl0.ls$data$TableCitation$primary |>
+      select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+             "reference", 
+             "citation", "citation_usage", 
+             "acknowledgement", "acknowledgement_usage") |>
+      mutate(source_from = 'Table Citation')) |>
+  pivot_longer(cols = -c(dataset_name, source_from),
+               names_to = 'column_header', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = str_extract(column_header, '^[^_]+'),
+         is_type = str_extract(column_header, '[^_]+$')) |>
+  mutate(is_type = if_else(of_variable == is_type, 'value', is_type))
+
+layer.df <- data.lvl0.ls$data$TableLayer$primary |>
+  #make layer names unique, some were numeric based and got truncated 
+  mutate(layer_name = sprintf('%s (%s to %s)', layer_name, `layer_top (cm)`, `layer_bot (cm)`)) |>
+  #There are 2136 layers that are not uniquely defined, looks like rows doubled form NRCS prep codes
+  mutate(row_name = paste0('R', 1:n())) |>
+  select('row_name', 
+         #"ISCN 1-1 (2015-12-10)", 
+         "dataset_name_sub", "dataset_name_soc", 
+         "site_name", "profile_name", 
+         #"lat (dec. deg)", "long (dec. deg)", "datum (datum)",
+         #"state (state_province)", "country (country)", 
+         #"observation_date (YYYY-MM-DD)",
+         "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
+         #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
+         #"vegclass_local", 
+         #"soil_taxon", "soil_series", 
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
+         "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
+         #"n_tot (percent)", 
+         #"c_to_n (mass ratio)", 
+         "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
+         #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
+         "caco3 (percent)", 
+         #"sand_tot_psa (percent)", "silt_tot_psa (percent)", "clay_tot_psa (percent)", 
+         "wpg2_method", "wpg2 (percent)", 
+         #"cat_exch (cmol H+ kg-1)", 
+         #"al_dith (specified by al_fe_units)", "al_ox (specified by al_fe_units)", "al_other (specified by al_fe_units)", "fe_dith (specified by al_fe_units)", "fe_ox (specified by al_fe_units)", "fe_other (specified by al_fe_units)", "mn_dith (specified by al_fe_units)", "mn_ox (specified by al_fe_units)", "mn_other (specified by al_fe_units)", "al_fe_units (extract_units)", "al_fe_method",
+         #"ca_al (specified by bc_units)", "ca_ext (specified by bc_units)", "k_ext (specified by bc_units)", "mg_ext (specified by bc_units)", "na_ext (specified by bc_units)", "bc_units (extract_units)", "bc_method", "base_sum (specified by cec_h_units)", "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
+         #"bs (percent)", "bs_sum (percent)", 
+         #"h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)", "metal_ext_units (extract_units)", "metal_ext_method", 
+         #"p_bray (specified by p_units)", "p_ox (specified by p_units)", "p_meh (specified by p_units)", "p_other (specified by p_units)", "p_units (extract_units)", "p_method", 
+         #"root_quant_size", "root_weight (g)",
+         #"15n (‰)", "13c (‰)", "14c (‰)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", "fraction_modern", "fraction_modern_sigma", 
+         #"textureClass", "locator_parent_alias"
+         ) |>
+  pivot_longer(cols = -contains('_name'),
+               names_to = 'column_header', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = 
+           case_when(
+             column_header %in% c("layer_top (cm)", "layer_bot (cm)", "layer_note") ~ 'layer',
+             #column_header %in% c("color") ~ 'soil_color',
+             #column_header %in% c("hzn_desgn_other", "hzn", "hzn_desgn") ~ 'soil_horizon',
+             #column_header %in% c("soil_taxon", "soil_series") ~ 'soil_classificaction',
+             #Bulk density types taken from metadata
+             column_header %in% c( "bd_samp (g cm-3)") ~ 'bulk_density_fine_earth',
+             #yes this bd_whole and bd_tot are correct according to the meta data
+             column_header %in% c("bd_whole (g cm-3)") ~ 'bulk_density_estimated_fine_earth',
+             column_header %in% c( "bd_tot (g cm-3)") ~ 'bulk_density_whole_soil',
+             column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
+             #And the splitting strategy with soil carbon
+             column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
+             column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_volume_density',
+             column_header %in% c("loi (percent)") ~'loss_on_ignition',
+             #need to associated with other carbon variables later
+             column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',
+             column_header %in% c("c_tot (percent)") ~ 'carbon_total',
+             column_header %in% c("caco3 (percent)") ~ 'carbon_inorganic',
+             column_header %in% c("wpg2_method", "wpg2 (percent)") ~ 'coarse_fraction',
+             .default = NA_character_
+           ),
+         is_type = 
+           case_when(
+             str_detect(column_header, 'note') ~ 'note',
+             str_detect(column_header, 'method') ~ 'method',
+             str_detect(column_header, 'NRCS_prep_code') ~ 'NRCS_prep_code',
+             str_detect(column_header, 'flag') ~ 'flag',
+             column_header == "layer_top (cm)" ~ 'upper',
+             column_header == "layer_bot (cm)" ~ 'lower',
+             .default = 'value')) |>
+  #Check the classifications of the columns
+#   select(column_header, of_variable, is_type) |> unique() |> view()
+#   Check for uniquenesss
+#  filter(n() > 1, .by =c(contains('_name'), of_variable, is_type))
+  mutate(source_from = 'Table Layer' )
+
+#this is nto exactly clean but I think it's workable
+  layer.meta <- layer.df |>
+    select(column_header, of_variable) |>
+    unique() |>
+    mutate(ISCN_variable = str_extract(column_header, '^\\S+')) |>
+        mutate(across(everything(), str_trim)) |>
+    left_join(data.lvl0.ls$data$TableLayer$meta |>
+        mutate(across(everything(), str_trim)),
+              by = c('ISCN_variable' = 'Variable')) |>
+    select(column_header, of_variable, 
+           ISCN_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
+    pivot_longer(cols = c(ISCN_vocabulary, name, unit, description),
+                 names_to = 'is_type', values_to = 'with_entry',
+                 values_drop_na = TRUE) |>
+    mutate(from_source = 'Meta for Layer (ISCN3_TemplateSubmit_TableLayer.csv)')
+
+  
+
+# What is true across all of ISCN3
+study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'citation', 'value', '@ISCN3', 'EDI download page',
+                   'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
+                   'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
+                   'observation_date', 'format', 'days since 1900-01-01', 'infered given past history in Excel.') |> 
+  bind_rows(layer.meta)
 
 #### Create level 1 #####
-## Pull everything together into by stacking the meta and primary data tables
+## Pull everything together
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    arrange(row_id, column_name,
-            of_variable, is_type, with_entry, from_source)
+  study = study.df,
+  collection = collection.df,
+  site = site.df,
+  layer = layer.df,
+  citations = c(data.lvl0.ls$citation$primary, data.lvl0.ls$citation$contributed)
   )
 
 ```
+
 
 ## Check for new variables
 
