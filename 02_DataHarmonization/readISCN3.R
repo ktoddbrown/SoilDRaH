@@ -33,33 +33,37 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   # These files have some level of manual rescue/transcription to them
   
   # Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
-  controlVocabulary <- 'ISCN3_TemplateCVs.csv'
+  controlVocabulary <- file.path(dataDir, 'ISCN3_TemplateCVs.csv')
   
   ## Files from the `TemplateSubmit.pdf` document include a formatted header
   ##... and the table discriptions
   
-  # Transcription of the header from the EDI file `TemplateSubmit.pdf`
-  readME_templateSubmit <- 'README_TemplateSubmit.md'
+  # Transcription of the submission guidelines from the EDI file `TemplateSubmit.pdf`
+  readME_templateSubmit <- file.path(dataDir, 'README_TemplateSubmit.md')
+  
+  #Transcription of the control vocabulary pdf from EDI TemplateCVs.pdf
+  readme_templateCV <- file.path(dataDir, 'README_TemplateCV.md')
+  ISCN3_controlVocab <- file.path(dataDir, 'ISCN3_TemplateCVs.csv')
   
   # Rescued transcriptions of individual table meta data from the 
   #... EDI file `TemplateSubmit.pdf` for the layer, profile, site
   #... disturbance, and fraction tables. These do not match exactly the 
   #... EDI archived tables but do provide the metadata for those tables
-  ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
-  ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
-  ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
-  ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
-  ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
+  ISCN3_layerAnnotations <- file.path(dataDir, 'ISCN3_TemplateSubmit_TableLayer.csv')
+  ISCN3_profileAnnotations <- file.path(dataDir, 'ISCN3_TemplateSubmit_TableProfile.csv')
+  ISCN3_siteAnnotations <- file.path(dataDir, 'ISCN3_TemplateSubmit_TableSite.csv')
+  ISCN3_disturbanceAnnotations <- file.path(dataDir, 'ISCN3_TemplateSubmit_TableDisturbance.csv')
+  ISCN3_fractionAnnotations <- file.path(dataDir, 'ISCN3_TemplateSubmit_TableFraction.csv')
   
   #### Files that have to do with the fixed citations
   
   # Transcribed citations from the EDI file `ISCN3_citation.csv`
   #...table and then extended manually when files were mis-cited
-  rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+  rescuedContributedCitations <- file.path(dataDir, 'ISCN3_ISCN3_citation.csv')
   
   # Bibliography files
-  primaryCitation.file <- 'ISCN3_2015.bib'
-  contributionsCitation.file <- 'ISCN3_Contributors.bib'
+  primaryCitation.file <- file.path(dataDir, 'ISCN3_2015.bib')
+  contributionsCitation.file <- file.path(dataDir, 'ISCN3_Contributors.bib')
   
   ### dataDownloadEDI ####
   ### "Download and identify each file in the EDI package."
@@ -124,13 +128,13 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
       TableCitation = list(
         #manual correction to out of date citations, originally
         #...this was the `temp/ISCN_citation.csv`
-        primary = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+        primary = readr::read_delim(file = rescuedContributedCitations, 
                                     skip = 1,
                                     delim = ';', 
                                     col_types = 
                                       readr::cols(.default = 
                                                     readr::col_character())),
-        caption = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+        caption = readr::read_delim(file = rescuedContributedCitations, 
                                     n_max = 1,
                                     delim = ';',
                                     col_names = FALSE,
@@ -141,7 +145,8 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
       ), #end citation list
       ####Dataset table####
       TableDataset = list(
-        primary = readr::read_delim(file = 'temp/ISCN3_dataset.csv', 
+        primary = readr::read_delim(file = file.path(dataDownload.dir,
+                                                     'ISCN3_dataset.csv'), 
                                     delim = ';', 
                                     col_types = 
                                       readr::cols(.default = 
@@ -151,33 +156,34 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
       ###Site table####
       TableSite = list(
         #no primary data here for sites, look in the profile and layer tables
-        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableSite.csv',
+        meta = readr::read_delim(file = ISCN3_siteAnnotations,
                                  delim = ",",
                                  col_types = readr::cols(.default = readr::col_character())
         )
       ), #end site
       TableFraction = list(
         #no primary data here
-        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableFraction.csv',
+        meta = readr::read_delim(file = ISCN3_fractionAnnotations,
                                  delim = ",",
                                  col_types = readr::cols(.default = readr::col_character())
         )
       ), #end fraction
       TableDisturbance = list(
         #no primary data here
-        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableDisturbance.csv',
+        meta = readr::read_delim(file = ISCN3_disturbanceAnnotations,
                                  delim = ",",
                                  col_types = readr::cols(.default = readr::col_character())
         )
       ), #end disturbance
       ###Profile table####
       TableProfile = list(
-        primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
+        primary = readr::read_delim(file = file.path(dataDownload.dir,
+                                                     'ISCN3_profile.csv'), 
                                     delim = ';', 
                                     col_types = 
                                       readr::cols(.default = 
                                                     readr::col_character())),
-        meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableProfile.csv',
+        meta = readr::read_delim( file = ISCN3_profileAnnotations,
                                   delim = ",",
                                   col_types = 
                                     readr::cols(.default =
@@ -185,12 +191,13 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
       ), #end profile
       #### Layer table ####
       TableLayer = list(
-        primary = readr::read_delim(file = 'temp/ISCN3_layer.csv', 
+        primary = readr::read_delim(file = file.path(dataDownload.dir,
+                                                     'ISCN3_layer.csv'), 
                                     delim = ';', 
                                     col_types = 
                                       readr::cols(.default = 
                                                     readr::col_character())),
-        meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
+        meta = readr::read_delim( file = ISCN3_layerAnnotations, 
                                   delim = ",",
                                   col_types = readr::cols(
                                     .default = readr::col_character()))
@@ -198,14 +205,14 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     ), # end data list
     #### General control vocabulary that is not broke down by table ####
     control_vocabulary = list(
-      readme = read_lines(file = 'README_TemplateCV.md'),
-      caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+      readme = read_lines(file = readme_templateCV),
+      caption = readr::read_delim( file = ISCN3_controlVocab, 
                                    n_max = 1,
                                    col_names = FALSE,
                                    delim = ",",
                                    col_types = readr::cols(
                                      .default = readr::col_character()))[[1]],
-      primary = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+      primary = readr::read_delim( file = ISCN3_controlVocab, 
                                    skip = 1,
                                    delim = ",",
                                    col_types = readr::cols(
