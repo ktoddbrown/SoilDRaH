@@ -112,7 +112,7 @@ contributionsCitation.file <- 'ISCN3_Contributors.bib'
 
 ### Reference to the read function
 # read function
-readsource.file <- 'readISCN3.R'
+readsource.file <- '../../02_DataHarmonization/readISCN3.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -260,22 +260,6 @@ for(row_index in 1:nrow(download_table)){
   } #end file exists check
 } #end for loop through the download table
 
-# #load in the original tables for ISCN3
-# originalTables <- plyr::dlply(
-#   #take the rows that have the data csv and not the metadata (read that in from transcriptions)
-#     .data =  dplyr::filter(download_table, 
-#                            table %in% 
-#                              c('citation', 'dataset', 'profile', 'layer')), 
-#     .variables = c('table'),
-#     .fun = function(xx){
-#       return(
-#         readr::read_delim(file = file.path(dataDir = dataDownload.dir, 
-#                                            xx$file_name), 
-#                           delim = ';', 
-#                           col_types = readr::cols(.default = readr::col_character())))
-#     }
-#   )
-
 ```
 
 # Level 0 data
@@ -392,15 +376,15 @@ data.lvl0.ls <- list(
 
 <!---- consider making a diagram or nested list to identify the data structures here--->
 
+## Check function match
 
-The code is also in `{r} readsource.file` and returned with the `dataLevel = 'level0'` argument.
-Below verifies that the data from the function matches what is coded above.
+Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl0
 
-if(file.exists(readsource.file) & FALSE){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readISCN3(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -436,40 +420,142 @@ The final format of the data frame here will include the following
     - site_id
     - profile_id
     - layer_id
-  + `of_variable`
-    - `organic_carbon`
-    - `bulk_density`
-    - `particle_size_distribution`
-    - `depth`
-    - `observation_date`
-    - `geo_location`
-    - `region`
-    - `citation`
-    - `reference`
-    - `acknowledgement`
-    - `curator`
-    - `contact`
-    - `doi`
-    - `bibtex`
-    - `description`
-    - `coarse_fraction`
-  + `is_type`
-    - `unit`
-    - `method`
-    - `value`
-    - `upper`
-    - `lower`
-    - `zero_reference`
-    - `datum`
-    - `latitude`
-    - `longitude`
-    - `state`
-    - `country`
-    - `date`
-    - `person_name`
-    - `email`
-    - `organization`
-    - `usage`
+  + `of_variable`:
+    * acknowledgement:
+      + `is_type`:
+        - usage
+        - value
+    * bulk_density:
+      + `is_type`:
+        - ISCN_vocabulary
+        - NRCS_prep_code
+        - description
+        - method
+        - name
+        - unit
+        - value
+    * bulk_density_estimated_fine_earth:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * bulk_density_fine_earth:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * bulk_density_whole_soil:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon:
+      + `is_type`:
+        - ISCN_vocabulary
+        - NRCS_prep_code
+        - description
+        - method
+        - name
+        - unit
+    * carbon_inorganic:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon_organic_fraction:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon_organic_volume_density:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - flag
+        - method
+        - name
+        - unit
+        - value
+    * carbon_total:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * citation:
+      + `is_type`:
+        - usage
+        - value
+    * coarse_fraction:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - method
+        - name
+        - unit
+        - value
+    * contact:
+      + `is_type`:
+        - email
+        - name
+    * curator:
+      + `is_type`:
+        - email
+        - name
+        - organization
+    * dataset:
+      + `is_type`: 
+        - description
+    * depth:
+      + `is_type`: 
+        - zero_reference
+    * geolocation:
+      + `is_type`:
+        - datum
+        - latitude
+        - longitude
+        - unit
+    * layer:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - lower
+        - name
+        - note
+        - unit
+        - upper
+    * loss_on_ignition:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * observation_date:
+      + `is_type`:
+        - date
+        - format
+    * reference:
+      + `is_type`: 
+        - value
+    * region:
+      + `is_type`:
+        - country
+        - state
+    * version:
+      + `is_type`:
+        - value
   + `with_entry`
   + `from_source`
 
@@ -478,6 +564,7 @@ The final format of the data frame here will include the following
 
 ```{r}
 #| label: createLvl1
+#| code-summary: 'Create a level 1 data set with SoilDRaH standard vocabulary and table structures.'
 
 #Site table
 site.df <- data.lvl0.ls$data$TableProfile$primary |>
@@ -527,7 +614,8 @@ collection.df <- data.lvl0.ls$data$TableDataset$primary |>
              "reference", 
              "citation", "citation_usage", 
              "acknowledgement", "acknowledgement_usage") |>
-      mutate(source_from = 'Table Citation')) |>
+      mutate(source_from = 'Table Citation'),
+    by = join_by(dataset_name, source_from)) |>
   pivot_longer(cols = -c(dataset_name, source_from),
                names_to = 'column_header', values_to = 'with_entry',
                values_drop_na = TRUE) |>
@@ -621,8 +709,8 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
         mutate(across(everything(), str_trim)),
               by = c('ISCN_variable' = 'Variable')) |>
     select(column_header, of_variable, 
-           ISCN_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
-    pivot_longer(cols = c(ISCN_vocabulary, name, unit, description),
+           ISCN3_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
+    pivot_longer(cols = c(ISCN3_vocabulary, name, unit, description),
                  names_to = 'is_type', values_to = 'with_entry',
                  values_drop_na = TRUE) |>
     mutate(from_source = 'Meta for Layer (ISCN3_TemplateSubmit_TableLayer.csv)')
@@ -647,79 +735,57 @@ data.lvl1.ls <- list(
   citations = c(data.lvl0.ls$citation$primary, data.lvl0.ls$citation$contributed)
   )
 
+rm(list = setdiff(ls(), c('data.lvl0.ls','data.lvl1.ls', 
+                          'readsource.file', 'readISCN3')))
+
 ```
 
-
-## Check for new variables
-
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+## Check semantics
 
 ```{r}
-#| label: check_of_variable
+#| label: buildSemanticYAML
 
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
+library(yaml)
 
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
+variable_type.df <- plyr::ldply(data.lvl1.ls, function(xx){
+  if(!is.data.frame(xx)){
+    return(NULL)
+  }else{
+  ans <- xx |>
+    select(of_variable, is_type) |>
+      unique()
+  
+  return(ans)
+  }
+}) 
 
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
+variable_type.ls <- variable_type.df |>
   select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
+  #filter(n() > 1, .by = everything()) #citation-value is repeated and ok
+  unique() |>
+  arrange(of_variable, is_type) |>
+  plyr::dlply(.variables = 'of_variable', .fun = function(xx){
+    return(list(is_type = xx$is_type))
+  }) 
 
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
 
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
+#use this to construct the opening list at the top of the level 1 section
+# as.yaml(variable_type.ls) |> cat()
+
+#TODO change this when the variable/type is moved over to a yaml
+ref.ls <- variable_type.ls
+
+check.df <- variable_type.df |>
+  mutate(has_variable = of_variable %in% names(ref.ls)) |>
+  mutate(has_type = is_type %in% ref.ls[[unique(of_variable)]]$is_type,
+         .by = of_variable)
+
+if(!all(check.df$has_variable)){
+  stop('There are variables that needed to be added to the semantics')
 }
 
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
-}else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+if(!all(check.df$has_type)){
+  stop('There are types that need to be added to the semantics')
 }
 ```
 
@@ -731,10 +797,10 @@ Check for an exact match with the read function.
 #| label: checkReadFunction_lvl1
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readISCN3(dataDir = '.',
                                          dataLevel = 'level1')
   
-  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
     print('Read function output matches ReadMe code for level 1.')
   }else{
     print('There is a mismatch in the level 1 data objects between the code here and the read function.')

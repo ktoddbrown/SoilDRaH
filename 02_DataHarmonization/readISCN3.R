@@ -1,47 +1,27 @@
 #' Load ISCN3
 #'
-#' This function first downloads the layer, profile, citation, and dataset tables from the International Soil Carbon Network version 3 Database as well as the annotation table for ISCN3 into a data frame.
-#' 
-#' Generally QA/QC is not done in this read function.
-#' However there are data model relevant currents that need to be imposed in the long table
-#'    1) layer names are expanded to include upper/lower interval bounds for two datasets which appear to have trailing zeros dropped from a digit identifier
-#'    2) shared soc column_id between the profile and layer tables refer to the entire profile or layer level soc values respectively. We add a `profile` to the column_id to distinguish these columns.
-#'
-#' There are three return formats
-#' 1) original - this option preserves the source tables and does not change the data model.
-#' 2) long - this returns one table with the id-of_variable-is_type-with_entry. Some of the tables here are pivot-bind and others are join-pivot (see discussion #60) in an attempt to balance memory size with ease of working with the data downstream. This option should be sunset in the future.
-#' 3) pivot-bind - this option only uses the pivot-bind table append and returns one table with the id-of_variable-is_type-with_entry tuple. This should use less memory then the hybrid long option above.
-#'
 #' Database citation: Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
 #'
-#' @param dataDir path to the folder containing data files.
+#' @param dataDir path to the folder SoilDRaH/01_DataRescue/ISCN3_2015.
+#' @param dataLevel flag for level 0 or level 1 data return
 #' @param verbose boolean flag denoting whether or not to print status messages
-#' @param annotationFilename path to the annotation file (generally located in 'data' of the git repository)
-#' @param format flag for the format to return the data 
 #' 
 #' @return list of annotation and data tables
 #'
 #' @importFrom tibble tribble cols col_character
 #' @importFrom readr read_delim
-#' @importFrom dplyr mutate bind_rows filter select if_else rename left_join full_join join_by
+#' @importFrom dplyr mutate bind_rows filter select if_else left_join full_join join_by
 #' @importFrom tidyr pivot_longer
-#' @importFrom plyr dlply
 #' 
 #' @export
 #' 
 
-readISCN3 <- function(dataDir,
-                      annotationFilenames,
-                      controlVocabularyFile,
-                      # primaryBibFile,
-                      # contributedBibfile,
-                      format = c('level0', 'long', 'pivotBind',
-                                 'wide', 'joinPivot')[1],
-                      verbose = TRUE){
+readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
+                          verbose = FALSE){
   
-  ### dev sets
-  #dataDir <- '~/Dropbox (UFL)/Research/Datasets/ISCN3'
-  #annotationFilename <- 'data/ISCN3Annotations.csv'
+  ### set veriables for development
+  #dataDir <- '01_DataRescue/ISCN3_2015'
+  #dataLevel <-  c('level0', 'level1')[1]
   
   ### construct file paths ####
   # verify that the user specified a file path
@@ -49,10 +29,51 @@ readISCN3 <- function(dataDir,
     stop('Data folder must be specified.')
   }
   
-  ### Download the data ####
+  ### setup ####
+  # These files have some level of manual rescue/transcription to them
+  
+  # Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
+  controlVocabulary <- 'ISCN3_TemplateCVs.csv'
+  
+  ## Files from the `TemplateSubmit.pdf` document include a formatted header
+  ##... and the table discriptions
+  
+  # Transcription of the header from the EDI file `TemplateSubmit.pdf`
+  readME_templateSubmit <- 'README_TemplateSubmit.md'
+  
+  # Rescued transcriptions of individual table meta data from the 
+  #... EDI file `TemplateSubmit.pdf` for the layer, profile, site
+  #... disturbance, and fraction tables. These do not match exactly the 
+  #... EDI archived tables but do provide the metadata for those tables
+  ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
+  ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
+  ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
+  ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
+  ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
+  
+  #### Files that have to do with the fixed citations
+  
+  # Transcribed citations from the EDI file `ISCN3_citation.csv`
+  #...table and then extended manually when files were mis-cited
+  rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+  
+  # Bibliography files
+  primaryCitation.file <- 'ISCN3_2015.bib'
+  contributionsCitation.file <- 'ISCN3_Contributors.bib'
+  
+  ### dataDownloadEDI ####
+  ### "Download and identify each file in the EDI package."
+  dataDownload.dir <- file.path(dataDir, 'temp')
+  # verify that the user specified a file path
+  if(!file.exists(dataDownload.dir)){
+    warning(paste('creating directory for download:', dataDownload.dir))
+    dir.create(dataDownload.dir)
+  }
+  
   # link the table name to the download url and file path(s) for data package
   pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
   
+  #transcribe from the EDI site, should be stable and not need future updates
   download_table <- tibble::tribble(
     ~table, ~entity_id, ~file_name, 
     'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
@@ -67,293 +88,311 @@ readISCN3 <- function(dataDir,
   #One by one, download the data in each row from the download_table
   #... and store that in the appropriate file path location on your computer
   for(row_index in 1:nrow(download_table)){
-    if(!file.exists(file.path(dataDownload.dir,download_table$file_name[row_index]))){
+    #check to see if the file exists before trying to download it
+    if(!file.exists(file.path(dataDownload.dir,
+                              download_table$file_name[row_index]))){
+      #tell the user you are downloading the file
       print(paste('Download file:', 
                   download_table$file_name[row_index]))
+      #use the utility download function to pull the file based on the 
+      #... pasta url for ISCN3 and the entity ID, match that up with the file
+      #... name on that row
       utils::download.file(
         paste0(pasta_package, download_table$entity_id[row_index]), 
-        file.path(dataDownload.dir,download_table$file_name[row_index]), 
+        file.path(dataDownload.dir, download_table$file_name[row_index]), 
         extra  = "--max-time 300")
-    }
-  }
+    } #end file exists check
+  } #end for loop through the download table
   
-  #### Read primary data files ####
-  # Using the download_table specified above, pull the primary data tables by
-  # Note that the tables are ';' separated and we do not let R guess the column
-  # ...types because the sparse columns will read as falls logical columns.
   
-  if(verbose) print('Read ISCN3 primary data.')
+  ### readLevel0 ####
+  #This chunk has two purposes. 
+  #...1) Check the formatting by reading in everything 
+  #...2) Create a list of everything to process later in level 1
   
-  orginalTables <- plyr::dlply(
-    .data = download_table |>
-      dplyr::filter(table %in% c('citation', 'dataset', 'profile', 'layer')), 
-    .variables = c('table'),
-    .fun = function(xx){
-      return(
-        readr::read_delim(file = file.path(dataDir, xx$file_name), delim = ';', 
-                          col_types = readr::cols(.default = readr::col_character())))
-    }
+  data.lvl0.ls <- list(
+    ####Read in a list of all the bib files####
+    citation = list(
+      #Citation for the article transcriptions are pulled from
+      primary = read.bib(file = primaryCitation.file), 
+      #Citations for all referenced articles
+      contributed = read.bib(file = contributionsCitation.file)
+    ),
+    ####Read in the tables and their meta data###
+    data = list(
+      ####Citation table####
+      TableCitation = list(
+        #manual correction to out of date citations, originally
+        #...this was the `temp/ISCN_citation.csv`
+        primary = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                    skip = 1,
+                                    delim = ';', 
+                                    col_types = 
+                                      readr::cols(.default = 
+                                                    readr::col_character())),
+        caption = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                    n_max = 1,
+                                    delim = ';',
+                                    col_names = FALSE,
+                                    col_types = 
+                                      readr::cols(.default = 
+                                                    readr::col_character()))[[1]]
+        #look in the metadata in the profile table for some variables
+      ), #end citation list
+      ####Dataset table####
+      TableDataset = list(
+        primary = readr::read_delim(file = 'temp/ISCN3_dataset.csv', 
+                                    delim = ';', 
+                                    col_types = 
+                                      readr::cols(.default = 
+                                                    readr::col_character()))
+        #look in the metadata in the profile table for some variables
+      ), #end dataset list
+      ###Site table####
+      TableSite = list(
+        #no primary data here for sites, look in the profile and layer tables
+        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableSite.csv',
+                                 delim = ",",
+                                 col_types = readr::cols(.default = readr::col_character())
+        )
+      ), #end site
+      TableFraction = list(
+        #no primary data here
+        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableFraction.csv',
+                                 delim = ",",
+                                 col_types = readr::cols(.default = readr::col_character())
+        )
+      ), #end fraction
+      TableDisturbance = list(
+        #no primary data here
+        meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableDisturbance.csv',
+                                 delim = ",",
+                                 col_types = readr::cols(.default = readr::col_character())
+        )
+      ), #end disturbance
+      ###Profile table####
+      TableProfile = list(
+        primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
+                                    delim = ';', 
+                                    col_types = 
+                                      readr::cols(.default = 
+                                                    readr::col_character())),
+        meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableProfile.csv',
+                                  delim = ",",
+                                  col_types = 
+                                    readr::cols(.default =
+                                                  readr::col_character()))
+      ), #end profile
+      #### Layer table ####
+      TableLayer = list(
+        primary = readr::read_delim(file = 'temp/ISCN3_layer.csv', 
+                                    delim = ';', 
+                                    col_types = 
+                                      readr::cols(.default = 
+                                                    readr::col_character())),
+        meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
+                                  delim = ",",
+                                  col_types = readr::cols(
+                                    .default = readr::col_character()))
+      ) #end layer table
+    ), # end data list
+    #### General control vocabulary that is not broke down by table ####
+    control_vocabulary = list(
+      readme = read_lines(file = 'README_TemplateCV.md'),
+      caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                                   n_max = 1,
+                                   col_names = FALSE,
+                                   delim = ",",
+                                   col_types = readr::cols(
+                                     .default = readr::col_character()))[[1]],
+      primary = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                                   skip = 1,
+                                   delim = ",",
+                                   col_types = readr::cols(
+                                     .default = readr::col_character())))
   )
   
-  #### Read annotations ####
-  # Read in the annotations data frame made that was generated for this project
-  # ...In this case, this was done by hand.
-  # ...Note that this is a comma delineated file and we, again, restrict the
-  # ...column types to characters.
-  if(verbose) print('Read in the annotations file generated by SoilDRaH.')
-  # annotations.df <- readr::read_delim(
-  #   file = annotationFilename,
-  #   delim = ',', 
-  #   col_types = readr::cols(.default = readr::col_character()))
-  annotations <- lapply(annotationFilenames, function(xx) {
-    readr::read_delim(
-      file = file.path(AnnotationsDir, xx),
-      delim = ",",
-      col_types = readr::cols(.default = readr::col_character())
-    )
-  })
-  
-  ### Read in control vocabulary###
-  if(verbose) print('Read in the control vocabulary file generated by SoilDRaH.')
-  controlVocabulary.df <- readr::read_delim(
-    file = controlVocabularyFile,
-    delim = ',', 
-    col_types = readr::cols(.default = readr::col_character()))
-  
-  ### Read in bibliography files###
-  # if(verbose) print('Read in the bibliiography files generated by SoilDRaH.')
-  # Bibliography <- list(primary = NULL, contributed = NULL)
-  # if(!is.null(primaryBibFile) && file.exists(primaryBibFile)){
-  #   Bibliography$primary <- bibtex::read.bib(primaryBibFile)
-  # }
-  # 
-  # if(!is.null(contributedBibfile) && file.exists(contributedBibfile)){
-  #   Bibliography$contributed <- bibtex::read.bib(contributedBibfile)
-  # }
-  
-  #### Return orginal ####
-  # If the orginal format is asked for, then stop here and return the primary
-  # ... data tables, download documentation, and the annotations.
-  if(format == 'level0'){
-    return(list(level0_data = c(orginalTables, 
-                             list(files = download_table)),
-                annotations = annotations,
-                otherMeta = list(control_vocabulary = controlVocabulary.df))) 
-    # bibliography = Bibliography
+  # If the level 0 format is asked for, then stop here and 
+  # return the list we just made.
+  if(dataLevel == 'level0'){
+    return(data.lvl0.ls)
   }
   
-  #### Correct non-unique layer identifies
-  orginalTables$layer <- orginalTables$layer |>
-    #temp <- orginalTables$layer |> #debugging code
-    #Modify the layer_name for World Soils and Northern Circumpolar
-    #... to correct for repeated id's
-    #... this was probably caused by Excel dropping the tailing 0's form
-    #... a digit-based identifier
-    #Do this across all the layer_names
-    dplyr::mutate(
-      layer_name = paste0(layer_name, '::interval ', 
-                          `layer_top (cm)`, '-', 
-                          `layer_bot (cm)`))
+  ### createLvl1 ####
+  ### 'Create a level 1 data set with SoilDRaH standard vocabulary and table structures.'
   
-  if(format == 'long'){
-    
-    #### Modify annotations####
-    ## Modify the annotations to reflect the changes to the profile columns
-    
-    annotations.df <- annotations.df |>
-      #The profile and layer tables share top/bottom layer and soc values _but_
-      #...they refer to different observations (profile summary vs layer).
-      #...Append the table name before these columns
-      dplyr::mutate(
-        column_id = dplyr::if_else(column_id %in%
-                                     c('layer_top (cm)', 'layer_bot (cm)', 
-                                       'soc (g cm-2)', 'soc_method', 'soc_carbon_flag') &
-                                     table_id == 'profile', 
-                                   paste0('profile::', column_id), 
-                                   column_id))
-    
-    #### Combine the profile+layer tables ####
-    #The profile and layer tables share 'dataset_name_sub', 'dataset_name_soc', 
-    #...'site_name', 'profile_name'. Merge these two tables first and then 
-    #...shoe-string them 
-    long.df <- orginalTables$profile |>
-      #The profile and layer tables share top/bottom layer and soc values _but_
-      #...they refer to different observations (profile summary vs layer).
-      #...Append the table name before these columns
-      dplyr::rename(`profile::layer_top (cm)` = `layer_top (cm)`,
-                    `profile::layer_bot (cm)` = `layer_bot (cm)`,
-                    `profile::soc (g cm-2)` = `soc (g cm-2)`,
-                    `profile::soc_method` = `soc_method`, 
-                    `profile::soc_carbon_flag` = soc_carbon_flag) |>
-      dplyr::full_join(
-        #join the tables together to get the profile information distributed
-        orginalTables$layer,
-        by = dplyr::join_by(
-          `ISCN 1-1 (2015-12-10)`, 
-          dataset_name_sub, dataset_name_soc, 
-          `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`, 
-          `state (state_province)`, `country (country)`,
-          `observation_date (YYYY-MM-DD)`, site_name, profile_name, 
-          soil_taxon, soil_series,
-          vegclass_local, locator_parent_alias))  |>
-      tidyr::pivot_longer(cols = -c(dataset_name_sub, dataset_name_soc,
-                                    site_name, profile_name, layer_name),
-                          names_to = 'column_id',
-                          values_to = 'with_entry',
-                          values_drop_na = TRUE) |> #nrow 20 269 712
-      #remove duplicates
-      unique() #nrow 20 229 958
-    
-    
-    #### Combine citation+dataset tables ####
-    #The citation and the dataset share a common key 'dataset_name'
-    #...in addition they are hybrid formats where each row is not
-    #...uniquely identified. We first make these tables long and then
-    #...stack them.
-    dataset_name.df <- orginalTables$citation |>
-      tidyr::pivot_longer(cols = -dataset_name,
-                          names_to = 'column_id',
-                          values_to = 'with_entry',
-                          values_drop_na = TRUE) |>
-      dplyr::bind_rows(
-        orginalTables$dataset |>
-          tidyr::pivot_longer(cols = -dataset_name,
-                              names_to = 'column_id',
-                              values_to = 'with_entry',
-                              values_drop_na = TRUE) ) |>
-      unique()
-    
-    #### Populate dataset information at layer level ####
-    ##There are two foreign key dataset citations with both the sub and soc
-    ##Cross references them here with the key columns from the profile+layer 
-    ##tables
-    
-    ##Pull the unique identifiers to cross reference the citation and dataset
-    # ... tables
-    key.df <- long.df |>
-      dplyr::select(dataset_name_soc, dataset_name_sub, site_name, profile_name,
-                    layer_name) |>
-      unique() #nrow 470 578
-    
-    dataset.df <- key.df |>
-      dplyr::left_join(dataset_name.df,
-                       by = dplyr::join_by(dataset_name_sub == dataset_name),
-                       relationship = "many-to-many") |> #nrow 1 427 130
-      dplyr::bind_rows( key.df |>
-                          dplyr::left_join(
-                            dataset_name.df,
-                            by = dplyr::join_by(
-                              dataset_name_soc == dataset_name),
-                            relationship = "many-to-many")  #nrow 1 299 471
-      ) |>
-      unique()
-    
-    ####Stack the two tables####
-    ##Stack the data and minimize memory using factors
-    ans.df <- dataset.df |>
-      dplyr::bind_rows(long.df) |> #1.8 Gb
-      dplyr::mutate(across(c(dataset_name_sub, dataset_name_soc, 
-                             site_name, profile_name, layer_name, 
-                             column_id), as.factor))
-    #1.06 Gb; nrow 32 905 350
-    
-    # make sure that the user knows this is a lot of data
-    if(verbose) message('Returning long data (>1Gb).')
-    
-    #### Return long ####
-    
-    return(list(long =  ans.df,
-                annotation = annotations.df))
+  #Site table
+  site.df <- data.lvl0.ls$data$TableProfile$primary |>
+    dplyr::select("dataset_name_sub", "dataset_name_soc", #ID
+           "site_name", "profile_name", #ID
+           "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+           "state (state_province)", "country (country)", #region
+           "observation_date (YYYY-MM-DD)", #observation_date
+           "profile_zero_ref (profile_zero_ref)") |>  #depth
+    tidyr::pivot_longer(cols = all_of(c(
+      "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+      "state (state_province)", "country (country)", #region
+      "observation_date (YYYY-MM-DD)", #observation_date
+      "profile_zero_ref (profile_zero_ref)"
+    )),
+    names_to = 'column_header', values_to = 'with_entry',
+    values_drop_na = TRUE) |>
+    dplyr::mutate(of_variable = case_when(
+      column_header %in% c("lat (dec. deg)", "long (dec. deg)", "datum (datum)") ~ 'geolocation',
+      column_header %in% c("state (state_province)", "country (country)") ~ 'region', #region
+      column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'observation_date', #observation_date
+      column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'depth',
+      .default = NA_character_),
+      is_type = case_when(
+        column_header %in% c("lat (dec. deg)") ~ 'latitude',
+        column_header %in% c("long (dec. deg)") ~ 'longitude',
+        column_header %in% c("datum (datum)") ~ 'datum',
+        column_header %in% c("state (state_province)") ~ 'state',
+        column_header %in% c("country (country)") ~ 'country',
+        column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'date', #observation_date
+        column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'zero_reference',
+        .default = NA_character_)
+    ) |>
+    dplyr::mutate(from_source = 'Table Profile')
+  
+  #collection table
+  collection.df <- data.lvl0.ls$data$TableDataset$primary |>
+    dplyr::select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+           #"dataset_type (dataset_type)",
+           "curator_name", "curator_organization", "curator_email", 
+           "contact_name", "contact_email", 
+           "dataset_description") |>
+    dplyr::mutate(source_from = 'Table Dataset') |>
+    dplyr::full_join(
+      data.lvl0.ls$data$TableCitation$primary |>
+        dplyr::select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+               "reference", 
+               "citation", "citation_usage", 
+               "acknowledgement", "acknowledgement_usage") |>
+        dplyr::mutate(source_from = 'Table Citation'),
+      by = join_by(dataset_name, source_from)) |>
+    tidyr::pivot_longer(cols = -c(dataset_name, source_from),
+                 names_to = 'column_header', values_to = 'with_entry',
+                 values_drop_na = TRUE) |>
+    dplyr::mutate(of_variable = str_extract(column_header, '^[^_]+'),
+           is_type = str_extract(column_header, '[^_]+$')) |>
+    dplyr::mutate(is_type = dplyr::if_else(of_variable == is_type, 'value', is_type))
+  
+  layer.df <- data.lvl0.ls$data$TableLayer$primary |>
+    #make layer names unique, some were numeric based and got truncated 
+    dplyr::mutate(layer_name = sprintf('%s (%s to %s)', layer_name, `layer_top (cm)`, `layer_bot (cm)`)) |>
+    #There are 2136 layers that are not uniquely defined, looks like rows doubled form NRCS prep codes
+    dplyr::mutate(row_name = paste0('R', 1:n())) |>
+    dplyr::select('row_name', 
+           #"ISCN 1-1 (2015-12-10)", 
+           "dataset_name_sub", "dataset_name_soc", 
+           "site_name", "profile_name", 
+           #"lat (dec. deg)", "long (dec. deg)", "datum (datum)",
+           #"state (state_province)", "country (country)", 
+           #"observation_date (YYYY-MM-DD)",
+           "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
+           #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
+           #"vegclass_local", 
+           #"soil_taxon", "soil_series", 
+           "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
+           "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
+           #"n_tot (percent)", 
+           #"c_to_n (mass ratio)", 
+           "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
+           #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
+           "caco3 (percent)", 
+           #"sand_tot_psa (percent)", "silt_tot_psa (percent)", "clay_tot_psa (percent)", 
+           "wpg2_method", "wpg2 (percent)", 
+           #"cat_exch (cmol H+ kg-1)", 
+           #"al_dith (specified by al_fe_units)", "al_ox (specified by al_fe_units)", "al_other (specified by al_fe_units)", "fe_dith (specified by al_fe_units)", "fe_ox (specified by al_fe_units)", "fe_other (specified by al_fe_units)", "mn_dith (specified by al_fe_units)", "mn_ox (specified by al_fe_units)", "mn_other (specified by al_fe_units)", "al_fe_units (extract_units)", "al_fe_method",
+           #"ca_al (specified by bc_units)", "ca_ext (specified by bc_units)", "k_ext (specified by bc_units)", "mg_ext (specified by bc_units)", "na_ext (specified by bc_units)", "bc_units (extract_units)", "bc_method", "base_sum (specified by cec_h_units)", "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
+           #"bs (percent)", "bs_sum (percent)", 
+           #"h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)", "metal_ext_units (extract_units)", "metal_ext_method", 
+           #"p_bray (specified by p_units)", "p_ox (specified by p_units)", "p_meh (specified by p_units)", "p_other (specified by p_units)", "p_units (extract_units)", "p_method", 
+           #"root_quant_size", "root_weight (g)",
+           #"15n (‰)", "13c (‰)", "14c (‰)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", "fraction_modern", "fraction_modern_sigma", 
+           #"textureClass", "locator_parent_alias"
+    ) |>
+    tidyr::pivot_longer(cols = -contains('_name'),
+                 names_to = 'column_header', values_to = 'with_entry',
+                 values_drop_na = TRUE) |>
+    dplyr::mutate(of_variable = 
+             case_when(
+               column_header %in% c("layer_top (cm)", "layer_bot (cm)", "layer_note") ~ 'layer',
+               #column_header %in% c("color") ~ 'soil_color',
+               #column_header %in% c("hzn_desgn_other", "hzn", "hzn_desgn") ~ 'soil_horizon',
+               #column_header %in% c("soil_taxon", "soil_series") ~ 'soil_classificaction',
+               #Bulk density types taken from metadata
+               column_header %in% c( "bd_samp (g cm-3)") ~ 'bulk_density_fine_earth',
+               #yes this bd_whole and bd_tot are correct according to the meta data
+               column_header %in% c("bd_whole (g cm-3)") ~ 'bulk_density_estimated_fine_earth',
+               column_header %in% c( "bd_tot (g cm-3)") ~ 'bulk_density_whole_soil',
+               column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
+               #And the splitting strategy with soil carbon
+               column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
+               column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_volume_density',
+               column_header %in% c("loi (percent)") ~'loss_on_ignition',
+               #need to associated with other carbon variables later
+               column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',
+               column_header %in% c("c_tot (percent)") ~ 'carbon_total',
+               column_header %in% c("caco3 (percent)") ~ 'carbon_inorganic',
+               column_header %in% c("wpg2_method", "wpg2 (percent)") ~ 'coarse_fraction',
+               .default = NA_character_
+             ),
+           is_type = 
+             case_when(
+               str_detect(column_header, 'note') ~ 'note',
+               str_detect(column_header, 'method') ~ 'method',
+               str_detect(column_header, 'NRCS_prep_code') ~ 'NRCS_prep_code',
+               str_detect(column_header, 'flag') ~ 'flag',
+               column_header == "layer_top (cm)" ~ 'upper',
+               column_header == "layer_bot (cm)" ~ 'lower',
+               .default = 'value')) |>
+    #Check the classifications of the columns
+    #   dplyr::select(column_header, of_variable, is_type) |> unique() |> view()
+    #   Check for uniquenesss
+    #  dplyr::filter(n() > 1, .by =c(contains('_name'), of_variable, is_type))
+    dplyr::mutate(source_from = 'Table Layer' )
+  
+  #this is nto exactly clean but I think it's workable
+  layer.meta <- layer.df |>
+    dplyr::select(column_header, of_variable) |>
+    unique() |>
+    dplyr::mutate(ISCN_variable = str_extract(column_header, '^\\S+')) |>
+    dplyr::mutate(across(everything(), str_trim)) |>
+    dplyr::left_join(data.lvl0.ls$data$TableLayer$meta |>
+                dplyr::mutate(across(everything(), str_trim)),
+              by = c('ISCN_variable' = 'Variable')) |>
+    dplyr::select(column_header, of_variable, 
+           ISCN3_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
+    tidyr::pivot_longer(cols = c(ISCN3_vocabulary, name, unit, description),
+                 names_to = 'is_type', values_to = 'with_entry',
+                 values_drop_na = TRUE) |>
+    dplyr::mutate(from_source = 'Meta for Layer (ISCN3_TemplateSubmit_TableLayer.csv)')
+  
+  
+  
+  # What is true across all of ISCN3
+  study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                      'citation', 'value', '@ISCN3', 'EDI download page',
+                      'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
+                      'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
+                      'observation_date', 'format', 'days since 1900-01-01', 'infered given past history in Excel.') |> 
+    dplyr::bind_rows(layer.meta)
+  
+  #### Create level 1 #####
+  ## Pull everything together
+  data.lvl1.ls <- list(
+    study = study.df,
+    collection = collection.df,
+    site = site.df,
+    layer = layer.df,
+    citations = c(data.lvl0.ls$citation$primary, data.lvl0.ls$citation$contributed)
+  )
+  
+  if(dataLevel == 'level1'){
+    return(data.lvl1.ls)
   }
   
-  if(format == 'pivotBind'){
-    
-    #pivot (non id columns) and bind all tables
-    pivotBind.df <- data.frame()
-    for(table_name in names(orginalTables)){
-      if(verbose) message(paste('pivot and binding table', table_name))
-      id_cols <- annotations.df |>
-        #replace '--' with NA in annotation table
-        mutate(across(.cols = everything(), ~na_if(., '--'))) |>
-        #identify id columns or observation id
-        filter(is_type == 'identifier') |>
-        filter(table_id %in% table_name)
-      
-      pivotBind.df <- orginalTables[[table_name]] |>
-        # TODO - We tried to be clever and remove duplicate (by *_name) entries 
-        # ... but ran into the fact that (*_name) is not a unique identifer, even
-        # ... for the non-SOC columns due to some of the "Worldwide soil carbon and
-        # ... nitrogen data" entries.
-        # ... the solution here generates a longer larger dataframe but is more
-        # ... straight-forward.
-        mutate(row_id  = paste0('R', 1:n())) |>
-        pivot_longer(cols = -one_of(c(id_cols$column_id, 'row_id')),
-                     names_to = 'column_id',
-                     values_to = 'with_entry',
-                     values_drop_na = TRUE) |>
-        mutate(table_id = table_name) |>
-        bind_rows(pivotBind.df)
-    }
-    
-    #pivotBind.df is 1.1 Gb
-    return(list('pivotBind' = pivotBind.df,
-                annotations = annotations.df))
-  }else if(format == 'joinPivot' | format == 'wide'){
-    temp1 <- orginalTables$citation |>
-      #fill down the curator name, org, and email by dataset to resolve NA's
-      mutate(curator_name = curator_name[1],
-             curator_organization = curator_organization[1],
-             curator_email = curator_email[1],
-        .by = dataset_name) |>
-      full_join(orginalTables$dataset, 
-                by = join_by(`ISCN 1-1 (2015-12-10)`, dataset_name,
-                             `dataset_type (dataset_type)`, curator_name,
-                             curator_organization, curator_email),
-                suffix = c('curation', 'dataset'))
-    
-    temp2 <- orginalTables$profile |>
-      full_join(orginalTables$layer, 
-                by = join_by(`ISCN 1-1 (2015-12-10)`, 
-                             dataset_name_sub, dataset_name_soc,
-                             `lat (dec. deg)`, `long (dec. deg)`,
-                             `datum (datum)`, `state (state_province)`, 
-                             `country (country)`, 
-                             `observation_date (YYYY-MM-DD)`, 
-                             site_name, profile_name, 
-                             soil_taxon, soil_series, vegclass_local,
-                             locator_parent_alias),
-suffix = c('::layer', '::profile'))
-    
-    wide <- temp2 |>
-      left_join(temp1,
-                by = join_by(`ISCN 1-1 (2015-12-10)`, 
-                             dataset_name_sub == dataset_name),
-                suffix = c('::profile_layer', '::citation_dataset')) |>
-      left_join(temp1,
-                by =join_by(`ISCN 1-1 (2015-12-10)`,
-                            dataset_name_soc == dataset_name),
-                suffix = c('', '::soc'))
-    #wide table is 0.7 Gb
-    #489107 observation of 170 variables
-    
-    if(verbose) print('returning the wide format of size 0.7 Gb.')
-    
-    if(format == 'wide'){
-      ##TODO need to mutate the annotations to match what is in the table
-      ##
-      newAnnotations <- annotations.df
-      return(list(wide = wide,
-                  annotations = newAnnotations))
-    }
-    joinPivot <- wide |>
-      mutate(row_id = paste0('R', 1:n())) |>
-      pivot_longer(cols = -c(`ISCN 1-1 (2015-12-10)`, dataset_name_sub,
-                             site_name, profile_name, layer_name),
-                   values_drop_na = TRUE)
-    
-      return(list(joinPivot = joinPivot,
-                  annotations = newAnnotations))
-  }
-  
-  stop("format option unknown")
+  stop("dataLevel option unknown")
 }
