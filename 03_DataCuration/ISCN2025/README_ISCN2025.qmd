@@ -10,6 +10,7 @@ bibliography:
   - ../../01_DataRescue/CPEAT2025/CPEAT2025.bib #CPEAT citation
   - ../../01_DataRescue/CPEAT2025/CPEAT2025_Methods.bib #CPEAT source
   - ../../01_DataRescue/ISCN3_2015/ISCN3_2015.bib #ISCN3 citation
+  - ../../01_DataRescue/ISCN3_2015/ISCN3_Contributors.bib #ISCN3 sources
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -55,10 +56,6 @@ timelog:
 
 ```{r}
 #| label: setup
-#| include: true
-#| warning: false
-#| message: false
-#| echo: false
 
 
 library(tidyverse) # data processing
@@ -68,6 +65,8 @@ library(bibtex) # reading in BibTex files to R
 # Bibliograph files
 refernceCitation.file <- 'ISCN2025.bib'
 
+source('../../02_DataHarmonization/readCPEAT2025.R')
+source('../../02_DataHarmonization/readISCN3.R')
 ```
 
 # Purpose
@@ -102,21 +101,120 @@ These include:
   - Status: Reprocessing into the new repository structure
 + ISCN3 (@ISCN3)
   - This database was originally compiled in 2015, we want to update the old NCSS data.
-  - Status: Reprocessing into the new repository structure
+  - Status: Level 0 and 1 are complete
 
 
 
 # Data Level 1 
 
 ```{r}
-#Source and append all the level 1 tuples
+#| label: readLevel1
 
+ISCN3.ls <- readISCN3(dataDir = '../../01_DataRescue/ISCN3_2015',
+                      dataLevel = 'level1')
+
+#CPEAT throws a warning but is going to be hell to debug
+CPEAT.ls <- readCPEAT2025(dataDir = '../../01_DataRescue/CPEAT2025',
+                          dataLevel = 'level1')
 ```
 
 # Data Level 2
 
+We want to pull
+
+* Location, geolocation and region
+* Depth
+* Soil organic carbon: organic carbon density, organic carbon fraction, bulk density, and coarse fraction
+
+as well as a bib file and citation/acknowledgement md.
+
 ```{r}
-#Map the comparable methods and align any needed vocabulary
+#| label: pullLocation
+
+CPEAT.ls$data$core$of_variable_DRaH |> table()
+CPEAT.ls$data$primary$of_variable_DRaH |> table()
+
+CPEAT_primary.df <- CPEAT.ls$data$primary |>
+  filter(of_variable_DRaH %in% 
+           c('carbon_percent', 
+             'dry_bulk_density', 
+             #'field_water_percent', 
+             'inorganic_carbon_percent', 
+             'layer_bottom', 'layer_middle', 'layer_thickness', 'layer_top',
+             'loss_on_ignition', 
+             'organic_carbon_density', 
+             'organic_carbon_percent', 'organic_matter_density', 
+             'organic_matter_percent', 'total_carbon_percent')) |>
+  filter(any(c( 'organic_carbon_density', 'organic_matter_density', 'dry_bulk_density') %in% of_variable_DRaH),
+         .by = c(bibKey, row_id)) |>
+  filter(is_type == 'value', !is.na(with_entry)) |>
+  select(bibKey, row_id, of_variable_DRaH, with_entry) |>
+  unique() |>
+  #deal with 10 double layer observations by randomly picking one of two
+  dplyr::reframe(with_entry = sample(with_entry, size = 1),
+                 .by = c(bibKey, row_id, of_variable_DRaH)) |>
+  pivot_wider(names_from = of_variable_DRaH, values_from = with_entry)
+  #calculate upper/lower from mid
+  
+
+organic_matter_to_carbon <- 0.5
+
+layer.df <- CPEAT_primary.df |>
+  mutate(layer_lower = as.numeric(layer_middle) * 100 + #convert from m to cm
+           0.5 * as.numeric(layer_thickness),
+         layer_upper = as.numeric(layer_middle) * 100 -
+           0.5 * as.numeric(layer_thickness),
+         carbon_organic_density = 
+           case_when(
+             #do we have a carbon density?
+             !is.na(organic_carbon_density) ~ 
+               as.numeric(organic_carbon_density),
+             !is.na(organic_matter_density) ~ #conver from matter if needed
+               organic_matter_to_carbon * as.numeric(organic_matter_density),
+             #if we don't have bulk density then we can't move forward
+             is.na(dry_bulk_density) ~ NA_real_,
+             #start with organic carbon percent
+             !is.na(organic_carbon_percent) ~ as.numeric(dry_bulk_density) * 
+               as.numeric(organic_carbon_percent) / 100,
+             #then assume peat soils are mostly organic
+             !is.na(carbon_percent) ~ as.numeric(dry_bulk_density) * 
+               as.numeric(carbon_percent) / 100,
+             !is.na(total_carbon_percent) ~ as.numeric(dry_bulk_density) * 
+               as.numeric(total_carbon_percent) / 100,
+             !is.na(loss_on_ignition) ~ as.numeric(dry_bulk_density) * 
+               organic_matter_to_carbon * as.numeric(loss_on_ignition)/100,
+             !is.na(organic_matter_percent) ~ as.numeric(dry_bulk_density) * 
+               organic_matter_to_carbon * as.numeric(organic_matter_percent)/100,
+             .default = NA_real_)) |>
+  select(bibKey, #row_id, #layer_middle, layer_thickness,
+         layer_lower, layer_upper, carbon_organic_density) |>
+  filter(is.finite(layer_lower + layer_upper + organic_matter_to_carbon))
+
+site.df <- CPEAT.ls$data$core |>
+  filter(of_variable_DRaH %in% c(#'citation', #in bibkey
+                            #'core_comment', 
+                            #'data_license', 
+                            #'elevation', 'elevation_end', 'elevation_start',
+                            'latitude', 'longitude', 
+                            'observation_year', 
+                            #'peatland_class', 
+                            #'principal_investigator', 
+                            #'projects', 
+                            'region', 
+                            #'related_research', 
+                            #'sampling_method', 
+                            'site_name')) |>
+  select(bibKey, of_variable_DRaH, with_entry) |>
+  filter(bibKey %in% layer.df$bibKey) |>
+  pivot_wider(names_from = of_variable_DRaH, values_from = with_entry) |>
+  mutate(across(.cols = c(latitude, longitude, observation_year), as.numeric),
+         study_id = 'CPEAT')
+
+bib.ls <- c(CPEAT.ls$citation$methods[unique(site.df$bibKey, layer.df$bibKey)],
+            CPEAT.ls$citation$primary)
+
+CPEAT.ls$data$primary$of_variable_DRaH |> table()
+
 ```
 
 ```{r}
