@@ -562,8 +562,8 @@ doi_core <- datafunction.lvl0.ls$data$study |>
 ### Also check to make sure we have their replacements
 replaced_core <- datafunction.lvl0.ls$data$study |>
   #remove 112 dois that have been replaced
-  filter(of_variable %in% 'replaced_by') #|>
-mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
+  filter(of_variable %in% 'replaced_by') |>
+  mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
 
 if(all(replaced_core$replacement_doi %in% doi_core$doi)){
   if(verbose) message('Replacement cores present in dataset')
