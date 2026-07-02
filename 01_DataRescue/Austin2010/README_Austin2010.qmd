@@ -1,28 +1,36 @@
 ---
-title: "Data Rescue: Author YYYY"
+title: "Data Rescue: Austin 2010"
 format:
   html:
     toc: true
-    eval: true #if you want to not evaluate the chunks and just check the rendering, switch this to false
+    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - AuthorYYYY_Methods.bib #contains the citations in the methods section
-  - AuthorYYYY.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Austin2010_Methods.bib #contains the citations in the methods section
+  - Austin2010.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
-  #remove ktoddbrown if they did not work on the rescue directly
-  - id: ktoddbrown #use the github name as an id
+  - id: ashbonner310 #use the github name as an id
+    name:
+      given: Ashley
+      family: Bonner
+    orcid: 0000-0001-7882-6353
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead 
+      
+  - id: ktoddbrown 
     name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
     affiliation:
       - ref: uf-ees
-    role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
-      
+    role: 
+      - transcription: review
+
+
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -33,46 +41,39 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
-  - id: uf
-    name: University of Florida
-    city: Gainesville
-    state: Florida
-    country: USA
-    postal-code: 32611
-    url: https://www.ufl.edu/
     
 timelog:
-  #remove activites below and add activites for the data rescue. Include one activity for developing the data rescue plan, each data element (table, figures, methods, bibliography), readme write-up, and anything else related to the data rescue.
-  - activity:
-      description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/262. Changes include more details in the commented guidence, additional table and figure examples.
-      who: ktoddbrown
-      start: 2026-06-18 T1430
-      duration: P45M
   - activity: 
-      description: add general UF affilation
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2026-01-29 T1530
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P05M
-  - activity: 
-      description: revised execute with only provided files
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
-  - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
+      description: Start moving rescue from old template to new template, particularly the README.
+      who: ashbonner310 
+      start: 2026-01-29 T16:45
+      end: 2026-01-29 T17:15
       duration: P30M
-version: 'vs202512' #template version, remove before use
+  - activity: 
+      description: Continue moving rescue from old template to new template, particularly moving files other than README.
+      who: ashbonner310 
+      start: 2026-01-30 T15:02
+      end: 2026-01-30 T15:34
+      duration: P32M
+  - activity: 
+      description: Finish moving rescue from old template to new template.
+      who: ashbonner310 
+      start: 2026-01-30 T17:51
+      end: 2026-01-30 T18:45
+      duration: P54M
+  - activity: 
+      description: Fixing some old errors, starting the cross-check.
+      who: ashbonner310 
+      start: 2026-04-10 T15:45
+      end: 2026-04-10 T17:00
+      duration: P1H15M
+  - activity: 
+      description: Finishing cross-check, rebuilding plot from paper.
+      who: ashbonner310 
+      start: 2026-04-10 T15:45
+      end: 2026-04-10 T17:00
+      duration: P1H15M
+version: 'vs202512' 
 ---
 
 
@@ -90,80 +91,85 @@ library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
-methods.file <- "AuthorYYYY_Methods.md"
-tableN.file <- 'AuthorYYYY_TableN.csv'
-figureM.file <- 'AuthorYYYY_FigureM.csv'
+methods.file <- "Austin2010_Methods.md"
+figure1.file <- 'Austin2010_Figure1.csv'
 
-# Bibliography files
-primaryCitation.file <- 'AuthorYYYY.bib'
-methodsCitation.file <- 'AuthorYYYY_Methods.bib'
+# Bibliograph files
+primaryCitation.file <- 'Austin2010.bib'
+methodsCitation.file <- 'Austin2010_Methods.bib'
 
-# read function; you will need to create this function after you have your data
-#... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
-if(file.exists(readsource.file)){
-  source(readsource.file)
-}
+# read function
+# readsource.file <- '../../../R/readAuthorYYYY.R'
+# source('readsource.file')
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+# of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+# is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
 
 # Data Summary
 
-<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
+> A.T. Austin, & C.L. Ballaré, Dual role of lignin in plant litter decomposition in terrestrial ecosystems, Proceedings of the National Academy of Sciences. U.S.A. 107 (10) 4618-4622, https://doi.org/10.1073/pnas.0909396107 (2010).
 
-> Full citation here, exact format does not matter but it should be complete enough to find the paper. Please include the doi
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/119.
 
-For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/#.
-
-<!--- After you read through the paper write a brief summary of what the study
-measured and what the data was used for in. This should be <250 words.--->
-
-AuthorYYYY primarily measures ... 
-They use this data to look at ...
+@Austin2010 was interested in photodegredation rates of litter decomposition based on litter chemistry (specifically based on the levels of lignin and cellulose). 
+They also used wavelength-specific light attenuation filters to determine what wavelengths of light contribute to abiotic mass loss.
 
 ## Tables and figures
 
-<!--- Write a brief discription of all the tables and figures in this source. This should include full variable names when possible. It is perfectly fine to restate the captions here or copy other text that feels complete. Please keep this to a single sentence for each table/figure.--->
-
-- Table 
-  1) Describe the data in the first table.
+- Table
+This paper contains no tables.
 
 - Figure 
-  1)  Describe the data in the first figure
+  1) Mass loss over experimental attenuation of specific regions of the solar spectrum; panel A covers mass loss of litter and panel B covers mass loss of a synthetic cellulose-lignin substrate.
+  2) Radiation absorbance spectra of synthetic cellulose-lignin substrates enriched with different quantities of lignin.
+  3) Degradation of synthetic cellulose-lignin substrates under biotic conditions and abiotic conditions with full solar radiation.
+  4) Panel A shows initial to final lignin concentrations of the synthetic cellulose-lignin substrate in both abiotic and biotic experiments, while panels B and C compare observed lignin loss compared to predictions based on the assumption that all degradation was due to biotic or abiotic conditions.
 
-## Fit for purpose: ProjectName
+Since we are only interested in the litter decay, we are rescuing only Figure 1.
 
-<!--- Write a brief discription of the project you are processing this data source for. This could be a copy-paste from other documentation. ---->
+## Fit for purpose: DeAD
 
-This data is identified as a data source for PROJECT.
-The purpose of this PROJECT is...
+This paper was identified for data rescue with the Decomposition Across Drylands (DeAD) project. 
+The DeAD data rescue project is concerned with documenting and preserving data which documents litter decay rates in arid and semi-arid ecosystems.
 
-<!--- Include a list of the key variables identified for the project. This is used to identify the elements for the paper for the data rescue. An example is below for a basic geo-located soil carbon stock project. --->
+The paper contains data from two seperate experiments, one using a synthetic cellulose-lignin substrate which we are not including in the data rescue, and an experiment using collected litter which we are rescuing.
 
-  - Location: The geo-location is given in the site description section of the methods. Both latitude and longitude are given but not the datum/projection that was used.
-  - Soil carbon stock: Soil carbon stock was calculated from organic carbon fraction and bulk density and is reported in table 3 across two treatments and one control. Coarse fraction was not reported and does not appear to be included.
-  
+ - Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+ - Duration: 120 days
+ - Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+ - Solar exposure: Litter treated with filters (see treatments below)
+ - Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+ - Vegetation Coverage: Open Woodland
+ - Litter Chemistry: Found via standard acid detergent method:
+    + cellulose and sugars, 49.1 ± 0.4%
+    + hemicellulose, 37.3 ± 0.2%
+    + lignin,7.3 ± 0.2%.
+ - Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+ - Treatments: 
+    + Plastic box placed in chicken wire cage to allow for free flow of air.
+    + Rainout shelter
+    + No contact with ground; wire cage suspended 30cm above ground.
+    + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+
+
 ## Files
 
-<!--- Include a brief explaination to all the files in the folder--->
+These files are in the Austin2010 data rescue.
 
-These files are in the AuthorYYYY data rescue.
-
-- [Readme](README_AUTHORYYYY.qmd)
+- [Readme](README_Austin2010.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [AuthorYYYY.bib](AuthorYYYY.bib)
+- [Austin2010.bib](Austin2010.bib)
   + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
+- [Austin2010_Methods.bib](Austin2010_Methods.bib)
   + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
+- [Austin2010_Methods.md](Austin2010_Methods.md)
   + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
+- [Austin2010_Figure1.csv](Austin2010_TableN.csv)
+  + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure. 
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -172,123 +178,86 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
-  - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [X] Read the article or data resource and the discription of the target project
+  - [X] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Austin2010'
+  - [X] Create a copy of this template folder and rename it to Austin2010
+  - [X] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [X] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with TableN and export it to csv
-  - [ ] Extract points from FigureM and export it to csv
-  - [ ] Transcribe or copy the method section
-  - [ ] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [X] Extract points from Figure1 and export it to csv
+  - [X] Transcribe or copy the method section
+  - [X] Insert references to bib entries (note: none included in this paper's methods section.)
+  - [X] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [X] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [X] Create a bib file with the citations from the methods section (note: none included in this paper's methods section.)
+  - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] cross check with second transcriber for tables and methods, and resolve any differences
+  - [X] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions in your pull request review
+  - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
 
-## Figure M
+## Figure 1
 
-<!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
+Figure 1 is the only data retrieved from this paper as the rest of the data is using a synthetic substrate, and we are only interested in data on nonsynthetic litter decay.
+Initial digitization for Figure 1 was performed with the [Plot Digitization app](https://plotdigitizer.com/app).
+Values were rounded to one additional decimal place than the y-axis on the original graph.
+For this figure, the original bar graph had a y-axis labeled to the hundredths place, so the outputs from the digitizer were rounded to the thousandths place.
+The measurement in (% d$^{-1}$) was converted to (% per day) for ease of notation.
 
-Figure M was modified ....
+The Figure .csv has five columns: substrate, transmitted wavelengths in nm, Mass Loss in $\%$ per day, height of the error bar (SEM), and letters indicating significant differences for Tukey HSD post-hoc comparisons.
 
-```{r}
-#| label: figureMCheck
+```{r figure1}
 
+read_csv(file = figure1.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
 
-plot.df <- read_csv(file = figureM.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  mutate(across(c(`Depth [cm]`, `Soil organic carbon density [g cm$-1$]`),
-                as.numeric)) #make things numbers
-         
-ggplot(data = plot.df, 
-       mapping = aes(x = `Depth [cm]`, y = `Soil organic carbon density [g cm$-1$]`, color=Site)) +
-  geom_line() +
-  geom_point() +
-  #depth below surface is often plotted flipped and downward positive
-  scale_x_reverse() +
-  coord_flip() +
-  labs(caption = read_csv(file = tableN.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
+Figure1.df<- read_csv(file = figure1.file,
+                   skip = 1)
+
+ggplot(data = Figure1.df) + 
+  geom_col(aes(x = `Transmitted Wavelengths (nm)`,
+               y = `Mass loss (% per day)`)) + 
+  geom_errorbar(aes(x = `Transmitted Wavelengths (nm)`,
+                    ymin = `Mass loss (% per day)`,
+                    ymax = `Mass loss (% per day) SEM`),
+                width = 0.2) + 
+  geom_text(
+    aes(label = Letter, 
+        x = `Transmitted Wavelengths (nm)`,
+        y = `Mass loss (% per day) SEM` + 0.002),
+    position = position_dodge(0.9),
+    vjust = 0
+  ) +
+  facet_wrap(~Substrate,
+             ncol = 1,
+             scales = 'free_x')
+
 ```
 
-And is crosschecked with the secondary transcription (expected to be empty)
+And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
+#| label: compareFigure1
+#| eval: false
 
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template should not have a conflict here.
-
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure1_LK.csv Austin2010_Figure1.csv
 ```
 
-
-## Table N
-
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table N was modified by dropping the sub-table as a leading column into the transcribed table.
-
-```{r}
-#| label: table1Check
-
-
-read_csv(file = tableN.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
-```
-
-And is crosschecked with the secondary transcription (expected to be empty)
-
-```{bash}
-#| label: compareTableN
-
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template has an example of an unresolved conflict.
-
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_AC.csv AuthorYYYY_TableN.csv
-```
-
-## Methods
+## Methods 
 
 Any different to the cross check for the methods section will be output after this line.
 
-```{bash}
+```{bash eval=FALSE}
 #| label: compareMethods
 #| eval: false
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note the template example does NOT have a conflict.
-
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_AC.md AuthorYYYY_Methods.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
 ```
 
 ### Methods  - Text
@@ -298,6 +267,7 @@ The final text transcription from the Methods section is rendered below.
 ```{r}
 #| label: readMethods
 #| output: asis
+#| eval: true
 
 # This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
 
@@ -316,9 +286,9 @@ This generally doesn't read well in the final report so commenting it out here b
 Some citations are missing, those are noted here and how best guess were generated.
 Think of this as a lab notebook documenting how you found each citation.
 
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
+- [x] (Van Soest 1963) @VanSoest1963
+  + Van Soest PJ (1963) Use of detergents in analysis of fibrous feeds II: A rapid method for the determination of fiber and lignin. J Assoc Of c Agr Chem 46:829–835.
+  + direct export
 ---->
 
 # Level 0 Data rescue
@@ -344,27 +314,15 @@ data.lvl0.ls <- list(
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
   data = list(
-    TableN = list(
+    Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
-                         col_types = cols(.default = col_character()),
-                         skip = 1)
-    ), #End 'Table1' element
-    FigureM = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = figureM.file,
-                         col_types = cols(.default = col_character()),
-                         n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = figureM.file,
+      primary = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ) #End 'Table1' element

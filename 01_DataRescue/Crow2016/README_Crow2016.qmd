@@ -1,0 +1,1386 @@
+---
+title: "Data Rescue: Crow 2016"
+format:
+  html: https://doi.org/10.1080/17583004.2016.1213140
+    toc: true
+date: 2026-04-16
+date-format: YYYY-MM-DD
+bibliography:
+  - Crow2016_Methods.bib #contains citations in methods section
+  - Crow2016.bib #contains citations for data source
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Transcription"
+        - "Review"
+   - id: waldera
+    name:
+      given: Ashlynn
+      family: Walder
+    affiliation:
+      - uf-ise
+    role:
+      - transcription: lead
+      #- standardization:
+      #- curation:
+  - id: savascott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - uf-ees
+    role: 
+      - transcription: secondary
+      #- standardization: 
+      #- curation: 
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Industrial and Systems Eningeering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "303 Weil Hall \nP.O. Box 116595"
+    postal-code: 32603
+    url: https://ise.ufl.edu
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: waldera #github username
+      start: 2025-09-30
+      end: 2026-4-02
+      duration: 20H
+---
+---
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
+
+> Crow, S. E., Reeves, M., Turn, S., Taniguchi, S., Schubert, O. S., & Koch, N. (2016). Carbon balance implications of land use change from pasture to managed eucalyptus forest in Hawaii. Carbon Management, 7(3-4), 327–341. https://doi.org/10.1080/17583004.2016.1213140
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/123
+
+# Data Summary
+
+@Crow2016 evaluates carbon stocks in Hawaiian eucalyptus forests planted on former pasture land. It compares methods for measuring soil carbon to assess the impact of land-use change. The study considers both carbon sequestration and emissions from forest management to estimate the system’s net climate benefit.
+
+# Tables and figures
+
+- Tables
+  Table 1: Elevation, climate, soil series, and stand age for paired pasture and eucalyptus plots
+  Table 2: Soil carbon stocks by bulk density and equivalent mass methods, biomass carbon, and percent change from pasture
+  Table 3: Pasture productivity and carbon input rates
+  Table 4: Soil carbon concentration and bulk density by depth with statistical comparisons
+  Table 5: CO₂-equivalent emissions for a 7-year eucalyptus production cycle
+
+- Figures
+  Figure 1: Location of eucalyptus study plots and forest boundary over soil taxonomic layers
+  Figure 2: Life cycle inventory for greenhouse gas impact calculations
+  Figure 3: Soil carbon stocks by depth and mass for pasture vs. eucalyptus plots
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Island of Hawaii, Hamakua Coast region; pasture land planted with managed Eucalyptus grandis forest.
+- Soil carbon stock: Approximately 533 Mg C ha⁻¹ in the top 1 m.
+- Soil type: Volcanic ash–derived soils with very strong organic matter and clay mineral interaction.
+- Land use: Conversion of former pasture to monoculture eucalyptus plantation.
+
+# Files
+
+These files are in the AuthorYYYY data rescue.
+
+- [Readme](Crow2016_README.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Crow2016.bib](Crow2016.bib)
+  + citation for article transcribed
+- [Crow2016_Methods.bib](Crow2016_Methods.bib)
+  + citations for the methods section of the article
+- [Crow2016_Methods.md](Crow2016_Methods.md)
+  + methods transcribed from primary article
+- [Crow2016_Table1.csv](Crow2016_Table1.csv)
+  + table 1 from primary article with 
+- [Crow2016_Table2.csv](Crow2016_Table2.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+- [Crow2016_Table4.csv](Crow2016_Table4.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+- [Crow2016_Figure3.csv](Crow2016_Figure3.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [ ] describe files in human readable form inside ReadMe
+- [ ] description with Git issue with link
+- [ ] add contribution yaml
+- [ ] create excel sheet with Tables 1-5
+- [ ] export excel table to csv
+- [ ] copy over methods section into markdown
+- [ ] pull down citations in methods section to bib file
+- [ ] add in citation links to methods
+- [ ] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+### Table N
+
+Table N was modified ....
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Table.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include AuthorYYYY_Methods.Rmd >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
+```
+
+
+## Table 1
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 1 was modified ....
+
+```{r}
+#| label: table1Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = "Crow2016_Table1.csv", #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = "Crow2016_Table1.csv", #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table1_AW.csv Crow2016_Table1_SRS.csv
+
+```
+
+## Table 2
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 2 was modified ....
+
+```{r}
+#| label: table2Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = "Crow2016_Table2.csv", #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = "Crow2016_Table2.csv", #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table2_AW.csv Crow2016_Table2_SRS.csv
+
+
+
+```
+
+## Table 4
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 4 was modified ....
+
+```{r}
+#| label: table4Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = "Crow2016_Table4.csv", #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = "Crow2016_Table4.csv", #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table4_AW.csv Crow2016_Table4_SRS.csv
+
+```
+
+## Figure 3
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+Figure 3 was modified ....
+
+```{r}
+#| label: Figure3Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = "Crow2016_Figure3.csv", #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = "Crow2016_Figure3.csv", #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Figure3_AW.csv Crow2016_Figure3_SRS.csv
+
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Methods_AW.md  Crow2016_Methods_SRS.md
+
+
+```
+
+
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines("Crow2016_Methods.md") |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [x] Anon. (2008). SimaPro Craft Version 7.1.8. PRé Consultants. http://www.pre-sustainability.com/simapro-lca-software  
+  + copy from bib
+
+- [x] Anon. (2011). U.S. Life Cycle Inventory Database. National Renewable Energy Laboratory. http://www.nrel.gov/lci/  
+  + copy from bib
+
+- [x] Bare, J. (2011). TRACI 2.0: The tool for the reduction and assessment of chemical and other environmental impacts 2.0. Clean Technologies and Environmental Policy, 13, 687–696. https://doi.org/10.1007/s10098-010-0338-9  
+  + copy from bib
+
+- [x] Blackmore, M., & Vitousek, P. M. (2000). Cattle grazing, forest loss, and fuel loading in a dry forest ecosystem at Pu’u Wa’aWa’a Ranch, Hawai‘i. Biotropica, 32, 625–632. https://doi.org/10.1111/j.1744-7429.2000.tb00509.x  
+  + copy from bib
+
+- [x] Chapin, F. S., Bloom, A. J., Field, C. B., & Waring, R. H. (1987). Plant responses to multiple environmental factors. BioScience, 37, 49–57. https://doi.org/10.2307/1310177  
+  + copy from bib
+
+- [x] Ecoinvent. (2007). Ecoinvent Data v2.0 Ecoinvent Reports No. 1–25.  
+  + copy from bib
+
+- [x] Ellsworth, L. M., Litton, C. M., Taylor, A. D., & Kauffman, J. B. (2013). Spatial and temporal variability of Guinea grass (Megathyrsus maximus) fuel loads and moisture on Oahu, Hawaii. International Journal of Wildland Fire, 22, 1083–1092. https://doi.org/10.1071/WF12051  
+  + copy from bib
+
+- [x] Giambelluca, T. W., Chen, Q., Frazier, A. G., et al. (2013). Online rainfall atlas of Hawai‘i. Bulletin of the American Meteorological Society, 94, 313–316. https://doi.org/10.1175/BAMS-D-11-00228.1  
+  + copy from bib
+
+- [x] Giardina, C. P., & Ryan, M. G. (2002). Total belowground carbon allocation in a fast-growing Eucalyptus plantation estimated using a carbon balance approach. Ecosystems, 5, 487–499. https://doi.org/10.1007/s10021-002-0130-8  
+  + copy from bib
+
+- [x] Gifford, R. M., & Roderick, M. L. (2003). Soil carbon stocks and bulk density: Spatial or cumulative mass coordinates as a basis of expression. Global Change Biology, 9, 1507–1514. https://doi.org/10.1046/j.1365-2486.2003.00677.x  
+  + copy from bib
+
+- [x] Houghton, J. T., Ding, Y., Griggs, D. J., et al. (2001). Climate change 2001: The scientific basis. Cambridge University Press.  
+  + copy from bib
+
+- [x] Misra, R. K., Turnbull, C. R. A., Cromer, R. N., Gibbons, A. K., & LaSala, A. V. (1998). Below- and above-ground growth of Eucalyptus nitens in a young plantation. Forest Ecology and Management, 106, 283–293. https://doi.org/10.1016/S0378-1127(97)00339-3  
+  + copy from bib
+
+- [x] Motooka, P. S., Nelson, D., Nagai, G., & Ching, L. (2003). Weeds of Hawaiʻi’s pastures and natural areas: An identification and management guide. College of Tropical Agriculture. https://www.ctahr.hawaii.edu/invweed/weedshi.html  
+  + copy from bib
+
+- [x] Reeves, M. I. (2012). The potential carbon sequestration of Eucalyptus grandis in conjunction with its use as a biofuel feedstock. University of Hawaii at Manoa. https://scholarspace.manoa.hawaii.edu/server/api/core/bitstreams/c0d4b15a-e96e-4122-9c37-c4627aa771b93/content  
+  + copy from bib
+
+- [x] Saint-André, L., Thongo M’Bou, A., Mabiala, A., et al. (2005). Age-related equations for above- and below-ground biomass of a Eucalyptus hybrid in Congo. Forest Ecology and Management, 205, 199–214. https://doi.org/10.1016/j.foreco.2004.10.006  
+  + copy from bib
+
+- [x] Schukrt, T. H., Strand, R. F., Cole, T. G., & McDuffie, K. E. (1988). Equations for predicting biomass of six introduced tree species, island of Hawaii. U.S. Department of Agriculture Forest Service. https://doi.org/10.2737/PSW-RN-401  
+  + copy from bib
+
+- [x] Thorne, M. S., & Hewlett, J. P. (2013). Hawaii forage production estimator tool. https://globalrangelands.org/hawaii/hawaii-forage-production-estimator-tool  
+  + copy from bib
+
+- [x] Turn, S., Keffer, V., Dalla, S., Evans, D., & Wang, W. (2005). Preliminary gasification testing of Eucalyptus fuels. http://hawaii.gov/dbedt/info/energy/publications/biomass-gasification-2005.pdf  
+  + copy from bib
+
+- [x] Turn, S., Smith, L., Koch, N., & Taniguchi, S. (2014). Energy analysis of Eucalyptus grandis production in Hawaii. Journal of Renewable and Sustainable Energy, 6, 043104. https://doi.org/10.1063/1.4885119  
+  + copy from bib
+
+- [x] Wendt, J. W., & Hauser, S. (2013). An equivalent soil mass procedure for monitoring soil organic carbon in multiple soil layers. European Journal of Soil Science, 64, 58–65. https://doi.org/10.1111/ejss.12002  
+  + copy from bib
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = "Crow2016.bib"), 
+    #Citations for all referenced articles
+    methods = read.bib(file = "Crow2016_Methods.bib")
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = "Crow2016_Methods."),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = "Crow2016_Table1.csv",
+                       col_types = cols(.default = col_character()),
+                       n_max = 1, col_names = FALSE)$X1[1],
+
+    #Read in all the data, skipping the first row with the caption and read
+    #...in the table as character. This element is a tibble (data.frame).
+    primary = read_csv(file = "Crow2016_Table1.csv",
+                       col_types = cols(.default = col_character()),
+                       skip = 1)
+  ), #End 'Table1' element
+
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+      - uf-ise
+    role:
+      - transcription: lead
+      #- standardization:
+      #- curation:
+  - id: savascott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - uf-ees
+    role: 
+      - transcription: secondary
+      #- standardization: 
+      #- curation: 
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-mae
+    name: University of Florida
+    department: Industrial and Systems Eningeering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "303 Weil Hall \nP.O. Box 116595"
+    postal-code: 32603
+    url: https://ise.ufl.edu
+    
+timelog:
+  - activity: 
+      description: Revise based on feedback
+      who: waldera #github username
+      start: 2025-09-30
+      end: 2026-4-02
+      duration: 20H
+---
+---
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(bibtex)
+```
+
+This documents the data transcription for  .
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/.
+
+> Crow, S. E., Reeves, M., Turn, S., Taniguchi, S., Schubert, O. S., & Koch, N. (2016). Carbon balance implications of land use change from pasture to managed eucalyptus forest in Hawaii. Carbon Management, 7(3-4), 327–341. https://doi.org/10.1080/17583004.2016.1213140
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/123
+
+# Data Summary
+
+@Crow2016 evaluates carbon stocks in Hawaiian eucalyptus forests planted on former pasture land. It compares methods for measuring soil carbon to assess the impact of land-use change. The study considers both carbon sequestration and emissions from forest management to estimate the system’s net climate benefit.
+
+# Tables and figures
+
+- Tables
+  Table 1: Elevation, climate, soil series, and stand age for paired pasture and eucalyptus plots
+  Table 2: Soil carbon stocks by bulk density and equivalent mass methods, biomass carbon, and percent change from pasture
+  Table 3: Pasture productivity and carbon input rates
+  Table 4: Soil carbon concentration and bulk density by depth with statistical comparisons
+  Table 5: CO₂-equivalent emissions for a 7-year eucalyptus production cycle
+
+- Figures
+  Figure 1: Location of eucalyptus study plots and forest boundary over soil taxonomic layers
+  Figure 2: Life cycle inventory for greenhouse gas impact calculations
+  Figure 3: Soil carbon stocks by depth and mass for pasture vs. eucalyptus plots
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Island of Hawaii, Hamakua Coast region; pasture land planted with managed Eucalyptus grandis forest.
+- Soil carbon stock: Approximately 533 Mg C ha⁻¹ in the top 1 m.
+- Soil type: Volcanic ash–derived soils with very strong organic matter and clay mineral interaction.
+- Land use: Conversion of former pasture to monoculture eucalyptus plantation.
+
+# Files
+
+These files are in the AuthorYYYY data rescue.
+
+- [Readme](Crow2016_README.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Crow2016.bib](Crow2016.bib)
+  + citation for article transcribed
+- [Crow2016_Methods.bib](Crow2016_Methods.bib)
+  + citations for the methods section of the article
+- [Crow2016_Methods.md](Crow2016_Methods.md)
+  + methods transcribed from primary article
+- [Crow2016_Table1.csv](Crow2016_Table1.csv)
+  + table 1 from primary article with 
+- [Crow2016_Table2.csv](Crow2016_Table2.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+- [Crow2016_Table4.csv](Crow2016_Table4.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+- [Crow2016_Figure3.csv](Crow2016_Figure3.csv)
+  + table 1 from primary article with 
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf document
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [ ] describe files in human readable form inside ReadMe
+- [ ] description with Git issue with link
+- [ ] add contribution yaml
+- [ ] create excel sheet with Tables 1-5
+- [ ] export excel table to csv
+- [ ] copy over methods section into markdown
+- [ ] pull down citations in methods section to bib file
+- [ ] add in citation links to methods
+- [ ] cross check with second transcriber for tables and methods
+- [ ] submit to independent review
+- [ ] archive on SoilDRaH
+
+### Table N
+
+Table N was modified ....
+
+```{r table1}
+#| code-fold: true
+#| message: false
+
+filename <- 'Table.csv'
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+
+{{< include AuthorYYYY_Methods.Rmd >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods_BCD.Rmd
+```
+
+
+## Table 1
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 1 was modified ....
+
+```{r}
+#| label: table1Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = TableN.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table1_AW.csv Crow2016_Table1_SRS.csv
+
+```
+
+## Table 2
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 2 was modified ....
+
+```{r}
+#| label: table2Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = TableN.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table2_AW.csv Crow2016_Table2_SRS.csv
+
+```
+
+## Table 4
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 4 was modified ....
+
+```{r}
+#| label: table4Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = TableN.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Table4_AW.csv Crow2016_Table4_SRS.csv
+
+```
+
+## Figure 3
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+Figure 3 was modified ....
+
+```{r}
+#| label: Figure3Check
+#| eval: false #remove when you have the file transcribed
+
+
+read_csv(file = TableN.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Figure3_AW.csv Crow2016_Figure3_SRS.csv
+
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Methods_AW.md  Crow2016_Methods_SRS.md
+
+
+```
+
+```
+
+
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Crow2016_Methods_AW.md  Crow2016_Methods_SRS.md
+
+
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [x] Anon. (2008). SimaPro Craft Version 7.1.8. PRé Consultants. http://www.pre-sustainability.com/simapro-lca-software  
+  + copy from bib
+
+- [x] Anon. (2011). U.S. Life Cycle Inventory Database. National Renewable Energy Laboratory. http://www.nrel.gov/lci/  
+  + copy from bib
+
+- [x] Bare, J. (2011). TRACI 2.0: The tool for the reduction and assessment of chemical and other environmental impacts 2.0. Clean Technologies and Environmental Policy, 13, 687–696. https://doi.org/10.1007/s10098-010-0338-9  
+  + copy from bib
+
+- [x] Blackmore, M., & Vitousek, P. M. (2000). Cattle grazing, forest loss, and fuel loading in a dry forest ecosystem at Pu’u Wa’aWa’a Ranch, Hawai‘i. Biotropica, 32, 625–632. https://doi.org/10.1111/j.1744-7429.2000.tb00509.x  
+  + copy from bib
+
+- [x] Chapin, F. S., Bloom, A. J., Field, C. B., & Waring, R. H. (1987). Plant responses to multiple environmental factors. BioScience, 37, 49–57. https://doi.org/10.2307/1310177  
+  + copy from bib
+
+- [x] Ecoinvent. (2007). Ecoinvent Data v2.0 Ecoinvent Reports No. 1–25.  
+  + copy from bib
+
+- [x] Ellsworth, L. M., Litton, C. M., Taylor, A. D., & Kauffman, J. B. (2013). Spatial and temporal variability of Guinea grass (Megathyrsus maximus) fuel loads and moisture on Oahu, Hawaii. International Journal of Wildland Fire, 22, 1083–1092. https://doi.org/10.1071/WF12051  
+  + copy from bib
+
+- [x] Giambelluca, T. W., Chen, Q., Frazier, A. G., et al. (2013). Online rainfall atlas of Hawai‘i. Bulletin of the American Meteorological Society, 94, 313–316. https://doi.org/10.1175/BAMS-D-11-00228.1  
+  + copy from bib
+
+- [x] Giardina, C. P., & Ryan, M. G. (2002). Total belowground carbon allocation in a fast-growing Eucalyptus plantation estimated using a carbon balance approach. Ecosystems, 5, 487–499. https://doi.org/10.1007/s10021-002-0130-8  
+  + copy from bib
+
+- [x] Gifford, R. M., & Roderick, M. L. (2003). Soil carbon stocks and bulk density: Spatial or cumulative mass coordinates as a basis of expression. Global Change Biology, 9, 1507–1514. https://doi.org/10.1046/j.1365-2486.2003.00677.x  
+  + copy from bib
+
+- [x] Houghton, J. T., Ding, Y., Griggs, D. J., et al. (2001). Climate change 2001: The scientific basis. Cambridge University Press.  
+  + copy from bib
+
+- [x] Misra, R. K., Turnbull, C. R. A., Cromer, R. N., Gibbons, A. K., & LaSala, A. V. (1998). Below- and above-ground growth of Eucalyptus nitens in a young plantation. Forest Ecology and Management, 106, 283–293. https://doi.org/10.1016/S0378-1127(97)00339-3  
+  + copy from bib
+
+- [x] Motooka, P. S., Nelson, D., Nagai, G., & Ching, L. (2003). Weeds of Hawaiʻi’s pastures and natural areas: An identification and management guide. College of Tropical Agriculture. https://www.ctahr.hawaii.edu/invweed/weedshi.html  
+  + copy from bib
+
+- [x] Reeves, M. I. (2012). The potential carbon sequestration of Eucalyptus grandis in conjunction with its use as a biofuel feedstock. University of Hawaii at Manoa. https://scholarspace.manoa.hawaii.edu/server/api/core/bitstreams/c0d4b15a-e96e-4122-9c37-c4627aa771b93/content  
+  + copy from bib
+
+- [x] Saint-André, L., Thongo M’Bou, A., Mabiala, A., et al. (2005). Age-related equations for above- and below-ground biomass of a Eucalyptus hybrid in Congo. Forest Ecology and Management, 205, 199–214. https://doi.org/10.1016/j.foreco.2004.10.006  
+  + copy from bib
+
+- [x] Schukrt, T. H., Strand, R. F., Cole, T. G., & McDuffie, K. E. (1988). Equations for predicting biomass of six introduced tree species, island of Hawaii. U.S. Department of Agriculture Forest Service. https://doi.org/10.2737/PSW-RN-401  
+  + copy from bib
+
+- [x] Thorne, M. S., & Hewlett, J. P. (2013). Hawaii forage production estimator tool. https://globalrangelands.org/hawaii/hawaii-forage-production-estimator-tool  
+  + copy from bib
+
+- [x] Turn, S., Keffer, V., Dalla, S., Evans, D., & Wang, W. (2005). Preliminary gasification testing of Eucalyptus fuels. http://hawaii.gov/dbedt/info/energy/publications/biomass-gasification-2005.pdf  
+  + copy from bib
+
+- [x] Turn, S., Smith, L., Koch, N., & Taniguchi, S. (2014). Energy analysis of Eucalyptus grandis production in Hawaii. Journal of Renewable and Sustainable Energy, 6, 043104. https://doi.org/10.1063/1.4885119  
+  + copy from bib
+
+- [x] Wendt, J. W., & Hauser, S. (2013). An equivalent soil mass procedure for monitoring soil organic carbon in multiple soil layers. European Journal of Soil Science, 64, 58–65. https://doi.org/10.1111/ejss.12002  
+  + copy from bib
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = tableN.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = tableN.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ) #End 'Table1' element
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
