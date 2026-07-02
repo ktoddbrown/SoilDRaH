@@ -9,7 +9,7 @@ In addition, litter bags could be left in place safely for several years and own
 The 26-ha area chosen for the experimental site was located at the eastern edge of the property (lat 30°15'53''N; long 98°19'43''W) on a northwest-facing hillside of mixed oak–juniper woodland with a 10–15% slope.
 Ashe juniper had been cleared from the area in June–September 2004 and the intact, felled wood was left in place.
 The site consists of shallow, undulating Inceptisols typical of eroded slopes in humid and subhumid areas on limestone substrate [@Riskind1986; @US1999].
-The soils are of the Brackett–Real association on Glen Rose limestone formation [@Dittemore1979].
+The soils are of the Brackett–Real association on Glen Rose limestone formation [@US1999].
 Vegetation at the site is characterized by isolated tree/shrub complexes, dominated by plateau live oak and open native grasslands.
 
 The climate of the Edwards Plateau is subtropical–subhumid, characterized by dry winters and hot summers, with a mean annual temperature of 20°C [@Larkin1983].
