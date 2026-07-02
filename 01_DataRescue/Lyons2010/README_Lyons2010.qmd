@@ -101,8 +101,7 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Lyons2010_Methods.md"
-tableN.file <- 'Lyons2010_TableN.csv'
-figureM.file <- 'Lyons2010_FigureM.csv'
+figureM.file <- 'Lyons2010_Figure2.csv'
 
 # Bibliography files
 primaryCitation.file <- 'Lyons2010.bib'
@@ -124,21 +123,16 @@ is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 # Data Summary
 
-<!---- Fill in the full citation here, generally found on the journal page and link in the issue that you started on GitHub. Though this is at the top of the document, this should be one of the last things you do because a lot of this will be a direct copy-paste into the issue template. --->
-
 > Lyons, K. G., & McCarthy, W. A. (2010). Early decomposition of Ashe juniper (Juniperus ashei) wood in open and shaded habitat. Rangeland Ecology & Management, 63(3), 359-365. https://doi.org/10.2111/REM-D-09-00077.1
 
 
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/267.
 
-<!--- After you read through the paper write a brief summary of what the study
-measured and what the data was used for in. This should be <250 words.--->
-
 @Lyons2010 primarily measures the decomposition rate and elemental composition of Ashe juniper wood collected from a grassland in the Edwards Plateau. They used open and shaded habitats with the litterbags. They used this data to determine there was no change in the wood decomposition between the open and shaded habitats during low rainfall periods. 
 
 ## Figures
 
-- Figure 
+- Figures 
   1) Figure 1: Ashe juniper wood percent biomass reaming as a function time and SHADE vs. OPEN treatments, with total seasonal precipitation charted as well.
   2) Figure 2: Ashe juniper wood change in percent nitrogen through time. 
   3) Figure 3: Ashe juniper wood change in C:N through time
@@ -179,8 +173,8 @@ These files are in the @Lyons2010 data rescue.
   + citations for the methods section of the article
 - [Lyons2010_Methods.md](Lyons2010_Methods.md)
   + methods transcribed from primary article
-- [Lyons2010_FigureN.csv](Lyons2010_TableN.csv)
-  + table N from primary article with ...
+- [Lyons2010_Figure2.csv](Lyons2010_Table2.csv)
+  + figure 2 from primary article with Ashe juniper wood change in percent nitrogen
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -194,14 +188,14 @@ These files are in the @Lyons2010 data rescue.
   - [x] Create a copy of this template folder and rename it to AuthorYYYY
   - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
   - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [x] Add the reviewer to the author list in the yml
 + Do
   - [ ] Extract points from Figure 1-3 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
+  - [x] Create a bib file with the citations from the methods section
   - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [ ] cross check with second transcriber for figures and methods, and resolve any differences
@@ -210,14 +204,14 @@ These files are in the @Lyons2010 data rescue.
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
-## Figure M
+## Figure 2
 
 <!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
 
 Figure M was modified ....
 
 ```{r}
-#| label: figureMCheck
+#| label: figure2Check
 
 
 plot.df <- read_csv(file = figureM.file, #read in the specific file
@@ -247,7 +241,7 @@ ggplot(data = plot.df,
 And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
-#| label: compareTableN
+#| label: compareFigure2
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -257,14 +251,14 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.c
 ```
 
 
-## Table N
+## Figure 3
 
 <!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
 
 Table N was modified by dropping the sub-table as a leading column into the transcribed table.
 
 ```{r}
-#| label: table1Check
+#| label: table3Check
 
 
 read_csv(file = tableN.file, #read in the specific file
@@ -284,7 +278,7 @@ read_csv(file = tableN.file, #read in the specific file
 And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
-#| label: compareTableN
+#| label: compareFigure3
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -314,6 +308,7 @@ The final text transcription from the Methods section is rendered below.
 ```{r}
 #| label: readMethods
 #| output: asis
+#| eval: true
 
 # This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
 

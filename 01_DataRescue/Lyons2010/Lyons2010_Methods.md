@@ -13,7 +13,7 @@ The soils are of the Brackett–Real association on Glen Rose limestone formatio
 Vegetation at the site is characterized by isolated tree/shrub complexes, dominated by plateau live oak and open native grasslands.
 
 The climate of the Edwards Plateau is subtropical–subhumid, characterized by dry winters and hot summers, with a mean annual temperature of 20°C [@Larkin1983].
-It exists along a rainfall gradient of approximately 38 cm ⋅ yr$^{-1}$ in the west to 84 cm ⋅ yr${^-}1$ in the east [@VanAuken1979] and extends over 93240 km$^2$ [@Riskind1986].
+It exists along a rainfall gradient of approximately 38 cm ⋅ yr$^{-1}$ in the west to 84 cm ⋅ yr$^{-1}$ in the east [@VanAuken1979] and extends over 93240 km$^2$ [@Riskind1986].
 We obtained meteorological information from the nearest National Oceanic and Atmospheric Administration (NOAA) Satellite and Information Service, National Environmental Data and Information Service (NESDIS) at Johnson City, Texas, 8.85 km west of our experimental site.
 
 ## Experimental Design
@@ -58,7 +58,7 @@ A 0.20-g subsample of each was analyzed for total C and N using an Elementar Var
 
 Trends in the data through time and as a function of open vs. shaded habitat were analyzed using repeated measures analysis of variance (ANOVA).
 We used simple linear and singleexponential models to assess the trends in decomposition through time.
-@Wieder1982 recommend the use of single-exponential models for decay functions because they are generally a better fit for the trends in these data and allow for more accurate extrapolation through time.
+@Weider1982 recommend the use of single-exponential models for decay functions because they are generally a better fit for the trends in these data and allow for more accurate extrapolation through time.
 Differences in soil water content between OPEN and SHADE treatments were analyzed by one-way ANOVA.
 All statistical analyses were done using JMP [@SAS2005].
 A yearly decay rate was calculated using the single-exponential decay equation: *mass*$_t$ = *mass*$_o$e$^{-kt}$ [@Jenny1949], based on the assumption that the rate of decomposition is constant [@Weider1982].
