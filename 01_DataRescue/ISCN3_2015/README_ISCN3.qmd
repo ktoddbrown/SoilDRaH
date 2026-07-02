@@ -1,5 +1,5 @@
 ---
-title: "Data Rescue: ISCN3 Feb 2026"
+title: "Data Rescue: ISCN3"
 format:
   html:
     toc: true
