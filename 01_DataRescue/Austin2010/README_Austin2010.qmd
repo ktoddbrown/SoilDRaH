@@ -73,6 +73,12 @@ timelog:
       start: 2026-04-10 T15:45
       end: 2026-04-10 T17:00
       duration: P1H15M
+  - activity:
+      description: Start level 1 as class example
+      who: ktoddbrown
+      start: 2026-07-07 T17:36
+      end: 2026-07-07 T18:00
+      duration: P24M
 version: 'vs202512' 
 ---
 
@@ -352,16 +358,31 @@ if(file.exists(readsource.file)){
 }
 ```
 
-# Level 1 data - CURATION PROJECT
+# Level 1 data - DeAD
 
-This data is identified as a data source for the ...
-Broad classes of information that we are looking for include:
+This data is identified as a data source for the DeAD (Decomposition Across Drylands).
+Broad classes of information that we are looking for include location, duration, mass loss, solar exposure and litter chemsitry.
+
+More specifically:
 
 <!--- Include description of where the data is located in the source.--->
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+- Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+ - Duration: 120 days
+ - Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+ - Solar exposure: Litter treated with filters (see treatments below)
+ - Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+ - Vegetation Coverage: Open Woodland
+ - Litter Chemistry: Found via standard acid detergent method:
+    + cellulose and sugars, 49.1 ± 0.4%
+    + hemicellulose, 37.3 ± 0.2%
+    + lignin,7.3 ± 0.2%.
+ - Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+ - Treatments: 
+    + Plastic box placed in chicken wire cage to allow for free flow of air.
+    + Rainout shelter
+    + No contact with ground; wire cage suspended 30cm above ground.
+    + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
 This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
@@ -382,14 +403,25 @@ The `of_variable` being used here are:
 
 ```{r}
 #| label: createLvl1
-#| eval: false
+#| eval: true
 
 #### Method-section only data ####
 #Create a table for the data in the method-section that is not directly 
 #...associated with any table. Often this is study level information.
 
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'country', 'Argentina', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'region', 'province', 'Córdoba', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'latitude', as.character(-1*(31 + 4/60)), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'longitude', as.character(64 + 31/60), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'unit', 'decimal degrees', paste('Converted from method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'exposure_duration', 'value', '120', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
+                   'exposure_duration', 'unit', 'days', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' '))
+)
+
+treatment.df <- tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
+                        'control', 'attenuated_wavelenth', 'transmission_fraction', '0.95') |>
+  mutate(from_source = paste('Method ln4:', paste(data.lvl0.ls$method[12], collapse = ' ')))
 
 #### Table/Figure N ####
 # Process the primary data from Table/Figure M by maintaining data groups and 
