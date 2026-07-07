@@ -67,6 +67,9 @@ refernceCitation.file <- 'ISCN2025.bib'
 
 source('../../02_DataHarmonization/readCPEAT2025.R')
 source('../../02_DataHarmonization/readISCN3.R')
+
+#conversion factor between `organic matter` or `loss on ignition` and `organic carbon`
+organic_matter_to_carbon <- 0.5
 ```
 
 # Purpose
@@ -92,7 +95,7 @@ These include:
 
 + CPEAT (@Loisel2021, @CPEAT_web)
   - This is a collection of peat cores (@PCPEAT)
-  - Status: Level 0 complete. Finalizing Level 1
+  - Status: Level 2 in progress
 + FIA
   - This is a US Forest Service database.
   - Status: Reprocessing into the new repository structure
@@ -101,7 +104,7 @@ These include:
   - Status: Reprocessing into the new repository structure
 + ISCN3 (@ISCN3)
   - This database was originally compiled in 2015, we want to update the old NCSS data.
-  - Status: Level 0 and 1 are complete
+  - Status: Level 2 in progress
 
 
 
@@ -109,6 +112,7 @@ These include:
 
 ```{r}
 #| label: readLevel1
+#| warning: false
 
 ISCN3.ls <- readISCN3(dataDir = '../../01_DataRescue/ISCN3_2015',
                       dataLevel = 'level1')
@@ -128,13 +132,18 @@ We want to pull
 
 as well as a bib file and citation/acknowledgement md.
 
+**TODO**
++ move over the vocabulary to density being mass /volume and stocks being mass / area
++ Cheange CPEAT naming conventions to lead with `carbon`
+
 ```{r}
 #| label: level2_CPEAT
 
 #CPEAT.ls$data$core$of_variable_DRaH |> table()
 #CPEAT.ls$data$primary$of_variable_DRaH |> table()
 
-CPEAT_primary.df <- CPEAT.ls$data$primary |>
+CPEAT_layer.df <- CPEAT.ls$data$primary |>
+  #### Subset the primary data table from CPEAT ####
   filter(of_variable_DRaH %in% 
            c('carbon_percent', 
              'dry_bulk_density', 
@@ -145,46 +154,60 @@ CPEAT_primary.df <- CPEAT.ls$data$primary |>
              'organic_carbon_density', 
              'organic_carbon_percent', 'organic_matter_density', 
              'organic_matter_percent', 'total_carbon_percent')) |>
-  filter(any(c( 'organic_carbon_density', 'organic_matter_density', 'dry_bulk_density') %in% of_variable_DRaH),
-         .by = c(bibKey, row_id)) |>
-  filter(is_type == 'value', !is.na(with_entry)) |>
-  select(bibKey, row_id, of_variable_DRaH, with_entry) |>
-  unique() |>
-  #deal with 10 double layer observations by randomly picking one of two
+  #make sure we have some sense of the soil density either as a SOC (that we want) 
+  #...or as a bulk density that we can use to calculate SOC
+  filter(any(c( 'organic_carbon_density', 'organic_matter_density', 
+                'dry_bulk_density') %in% of_variable_DRaH),
+         .by = c(bibKey, row_id)) |> #for each observation aka row
+  filter(is_type == 'value', #only look at values for now
+         !is.na(with_entry)) |> #drop missing values
+  select(bibKey, row_id, of_variable_DRaH, with_entry) |> #drop extra columns
+  unique() |> #TODO: go back and investigate 160 repeats
+  #TODO: go back and investigate. 10 double layer observations by randomly picking one of two
   dplyr::reframe(with_entry = sample(with_entry, size = 1),
                  .by = c(bibKey, row_id, of_variable_DRaH)) |>
-  pivot_wider(names_from = of_variable_DRaH, values_from = with_entry)
-  #calculate upper/lower from mid
-  
-
-organic_matter_to_carbon <- 0.5
-
-layer.df <- CPEAT_primary.df |>
-  mutate(layer_lower = as.numeric(layer_middle) * 100 + #convert from m to cm
-           0.5 * as.numeric(layer_thickness),
-         layer_upper = as.numeric(layer_middle) * 100 -
-           0.5 * as.numeric(layer_thickness),
+  #expand to human readable format, remember we are only looking at values
+  pivot_wider(names_from = of_variable_DRaH, values_from = with_entry) |>
+  mutate(across(.cols = c('carbon_percent', 
+             'dry_bulk_density', 
+             #'field_water_percent', 
+             'inorganic_carbon_percent', 
+             #'layer_bottom', 'layer_top', #filtered out this above
+             'layer_middle', 'layer_thickness', 
+             'loss_on_ignition', 
+             'organic_carbon_density', 
+             'organic_carbon_percent', 'organic_matter_density', 
+             'organic_matter_percent', 'total_carbon_percent'),
+             .fns = as.numeric)) |>
+  mutate(
+    ####Reconstruct the CPEAT layer bounds ####
+    layer_lower = layer_middle * 100 + #convert from m to cm
+           0.5 * layer_thickness,
+         layer_upper = layer_middle * 100 -
+           0.5 * layer_thickness,
+    ####Reconstruct the CPEAT ORganic carbon density ####
          carbon_organic_density = 
            case_when(
              #do we have a carbon density?
              !is.na(organic_carbon_density) ~ 
-               as.numeric(organic_carbon_density),
-             !is.na(organic_matter_density) ~ #conver from matter if needed
-               organic_matter_to_carbon * as.numeric(organic_matter_density),
+               organic_carbon_density,
+             !is.na(organic_matter_density) ~ #convert from matter if needed
+               organic_matter_to_carbon * organic_matter_density,
              #if we don't have bulk density then we can't move forward
              is.na(dry_bulk_density) ~ NA_real_,
-             #start with organic carbon percent
-             !is.na(organic_carbon_percent) ~ as.numeric(dry_bulk_density) * 
-               as.numeric(organic_carbon_percent) / 100,
-             #then assume peat soils are mostly organic
-             !is.na(carbon_percent) ~ as.numeric(dry_bulk_density) * 
-               as.numeric(carbon_percent) / 100,
-             !is.na(total_carbon_percent) ~ as.numeric(dry_bulk_density) * 
-               as.numeric(total_carbon_percent) / 100,
-             !is.na(loss_on_ignition) ~ as.numeric(dry_bulk_density) * 
-               organic_matter_to_carbon * as.numeric(loss_on_ignition)/100,
-             !is.na(organic_matter_percent) ~ as.numeric(dry_bulk_density) * 
-               organic_matter_to_carbon * as.numeric(organic_matter_percent)/100,
+             #start with organic carbon percent, 
+             #... assume organic soils with no coarse fraction because these are peats
+             !is.na(organic_carbon_percent) ~ dry_bulk_density * 
+               organic_carbon_percent / 100,
+             #then assume peat soils have negligable inorganic carbon
+             !is.na(carbon_percent) ~ dry_bulk_density * 
+               carbon_percent / 100,
+             !is.na(total_carbon_percent) ~ dry_bulk_density * 
+               total_carbon_percent / 100,
+             !is.na(loss_on_ignition) ~ dry_bulk_density * 
+               organic_matter_to_carbon * loss_on_ignition/100,
+             !is.na(organic_matter_percent) ~ dry_bulk_density * 
+               organic_matter_to_carbon * organic_matter_percent/100,
              .default = NA_real_),
          carbon_organic_density_formula = 
            case_when(
@@ -201,13 +224,23 @@ layer.df <- CPEAT_primary.df |>
              !is.na(organic_matter_percent) ~ paste('Bulk density unspecified * organic matter * correction factor', organic_matter_to_carbon),
              .default = NA_character_) |> as.factor()
          ) |>
+  #### Clean up the CPEAT layer table####
   select(site_bib = bibKey, #row_id, #layer_middle, layer_thickness,
          layer_lower, layer_upper, 
+         bulk_density = dry_bulk_density,
+         carbon_organic_percent = organic_carbon_percent,
+         carbon_percent = carbon_percent, carbon_total_percent= total_carbon_percent,
+         loss_on_ignition_percent = loss_on_ignition,
+         #organic_matter_percent, #all NA
          carbon_organic_density, carbon_organic_density_formula) |>
-  filter(is.finite(layer_lower + layer_upper + organic_matter_to_carbon)) |>
+  #only keep layers where we can estimate organic carbon
+  filter(is.finite(carbon_organic_density),
+         is.finite(layer_lower), is.finite(layer_upper)) |>
+  #Add in the identifiers for the study
   mutate(study_bib = 'Loisel2021', study_name = 'CPEAT')
 
-site.df <- CPEAT.ls$data$core |>
+#### Pull the site table for CPEAT####
+CPEAT_site.df <- CPEAT.ls$data$core |>
   filter(of_variable_DRaH %in% c(#'citation', #in bibkey
                             #'core_comment', 
                             #'data_license', 
@@ -227,9 +260,38 @@ site.df <- CPEAT.ls$data$core |>
   mutate(across(.cols = c(latitude, longitude, observation_year), as.numeric))|>
            mutate(study_bib = 'Loisel2021', study_name = 'CPEAT')
 
-bib.ls <- c(CPEAT.ls$citation$methods[unique(site.df$site_bib, layer.df$site_bib)],
+###Pull relevant references for CPEAT ###
+bib.ls <- c(CPEAT.ls$citation$methods[unique(CPEAT_site.df$site_bib, CPEAT_layer.df$site_bib)],
             CPEAT.ls$citation$primary)
 
+```
+
+### CPEAT Figures
+
+```{r}
+ggplot(CPEAT_layer.df |>
+         pivot_longer(cols = where(is.numeric),
+                      names_to = 'variable', values_to = 'numerical_value')) +
+  geom_histogram(aes(x=numerical_value)) +
+  facet_wrap(~variable, scales = 'free') +
+  theme_bw() +
+  labs(title = 'Numerical values of CPEAT')
+
+ggplot(CPEAT_layer.df) +
+  geom_point(aes(x=carbon_organic_density / bulk_density * 100,
+                 y = bulk_density)) +
+  theme_bw() +
+  labs(title = 'Bulk density vs organic carbon fraction [g cm-3]',
+       x = 'Organic carbon fraction (infered from SOC/BD) [percent]')
+
+ggplot(CPEAT_layer.df |>
+         mutate(carbon_organic_density_formula = 
+                  str_wrap(carbon_organic_density_formula, width = 30))) +
+  geom_histogram(aes(x=carbon_organic_density)) +
+  facet_wrap(~carbon_organic_density_formula, scale = 'free') +
+  theme_bw() +
+  labs(title = 'SOC estimates by methods', 
+         x = 'Soil organic carbon [g cm-3]')
 ```
 
 ```{r}
