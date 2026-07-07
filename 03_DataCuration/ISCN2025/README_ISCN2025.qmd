@@ -323,7 +323,7 @@ ggplot(CPEAT_site.df) +
 ```{r}
 #| label: ISCN3_level2
 
-temp <- ISCN3.ls$layer |>
+ISCN_layer.df <- ISCN3.ls$layer |>
   filter(
     #remove prior calculations so that we can keep our decision tree consistent
     !(dataset_name_soc %in% c('ISCN SOC stock computation',
@@ -344,10 +344,7 @@ temp <- ISCN3.ls$layer |>
   # ISCN3 calculated SOC resulted in 879 double entries of non-soc columns
   #... drop them here.
   reframe(with_entry = unique(with_entry),
-          .by = -c(row_name, with_entry)) #nrow(temp) #412495
-
-ISCN_layer.df <- temp |>
-  #filter(of_variable %in% 'layer') |>
+          .by = -c(row_name, with_entry)) |> #nrow(temp) #412495
   select(contains('name'), of_variable, is_type, with_entry) |>
   #drop 488 poorly identified observations
   #TODO go back and try to clean this up when you have time
@@ -434,12 +431,12 @@ ISCN_layer.df <- temp |>
       .default = NA_character_
       #ISCN_layer.df |> select(coarse_fraction_method, coarse_fraction_method_new) |> unique() |> view()
     )) |>
+  # figure out the methods/notes frequencies and use that to make decisions below
   # reframe(count = n(),
   #         .by = c(contains('method'), ends_with('note'), ends_with('value'))) |>
-  
   mutate(
-    #deal with organic carbon fraction in the study level metadata
-    #coarse_fraction_method"              "coarse_fraction_value"
+    #deal with coarse fraction in the study level metadata, leave then alone here
+    #coarse_fraction_method", "coarse_fraction_value"
     #Deal with bulk density: "bulk_density_fine_earth_value", 
     #..."bulk_density_method", "bulk_density_value", "bulk_density_whole_soil_value"
     bulk_density_method_new = case_when(
@@ -475,8 +472,10 @@ ISCN_layer.df <- temp |>
       .default = NA_character_
     ),
     carbon_organic_fraction_method_new = case_when(
-      is.finite(carbon_organic_fraction_value) ~ paste('carbon fraction organic:', carbon_method),
-      is.finite(carbon_total_value - carbon_inorganic_value) ~ paste('carbon fraction organic: calculated total - inorganic: ', carbon_method),
+      is.finite(carbon_organic_fraction_value) ~ 
+        paste('carbon fraction organic:', carbon_method),
+      is.finite(carbon_total_value - carbon_inorganic_value) ~ 
+        paste('carbon fraction organic: calculated total - inorganic: ', carbon_method),
       .default = NA_character_
     ),
     carbon_total_fraction_method_new = case_when(
@@ -487,15 +486,16 @@ ISCN_layer.df <- temp |>
   mutate(bulk_density_new_value = case_when(
     #first take the bulk density for stocks if it's there 
       str_detect(bulk_density_method_new, 
-                 "measured: sampled volume and fine earth mass") &
-        is.finite(bulk_density_fine_earth_value) ~ 
-        bulk_density_fine_earth_value, #240 layers
-      str_detect(bulk_density_method_new, 
-                 "measured: sampled volume and fine earth mass") &
+                 "bulk density stocks: measured: sampled volume and fine earth mass") &
         is.finite(bulk_density_value) ~ 
         bulk_density_value, #3588 layers
+      str_detect(bulk_density_method_new, 
+                 "bulk density stocks: measured: sampled volume and fine earth mass") &
+        is.finite(bulk_density_fine_earth_value) ~ 
+        bulk_density_fine_earth_value, #240 layers
+      #If there is courase fraction...
       is.finite(coarse_fraction_value) & 
-        #... with whole soil
+        #... Take the whole soil so we can convert the mass to fine earth using coarse fraction
         is.finite(bulk_density_whole_soil_value) ~
         bulk_density_whole_soil_value,
       is.finite(coarse_fraction_value) & 
