@@ -61,6 +61,7 @@ timelog:
 library(tidyverse) # data processing
 library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
+library(maps)
 
 # Bibliograph files
 refernceCitation.file <- 'ISCN2025.bib'
@@ -255,7 +256,7 @@ CPEAT_site.df <- CPEAT.ls$data$core |>
                             #'sampling_method', 
                             'site_name')) |>
   select(site_bib = bibKey, of_variable_DRaH, with_entry) |>
-  filter(site_bib %in% layer.df$site_bib) |>
+  filter(site_bib %in% CPEAT_layer.df$site_bib) |>
   pivot_wider(names_from = of_variable_DRaH, values_from = with_entry) |>
   mutate(across(.cols = c(latitude, longitude, observation_year), as.numeric))|>
            mutate(study_bib = 'Loisel2021', study_name = 'CPEAT')
@@ -284,15 +285,40 @@ ggplot(CPEAT_layer.df) +
   labs(title = 'Bulk density vs organic carbon fraction [g cm-3]',
        x = 'Organic carbon fraction (infered from SOC/BD) [percent]')
 
+```
+
+```{r}
+#| fig-width: 3
+#| fig-asp: 2.5
 ggplot(CPEAT_layer.df |>
          mutate(carbon_organic_density_formula = 
                   str_wrap(carbon_organic_density_formula, width = 30))) +
   geom_histogram(aes(x=carbon_organic_density)) +
-  facet_wrap(~carbon_organic_density_formula, scale = 'free') +
+  facet_wrap(~carbon_organic_density_formula, scale = 'free_y', ncol = 1) +
+  scale_x_log10() +
   theme_bw() +
   labs(title = 'SOC estimates by methods', 
          x = 'Soil organic carbon [g cm-3]')
 ```
+
+```{r}
+
+ggplot(CPEAT_site.df) +
+  geom_point(aes(y=latitude, x=longitude), shape = 'x', color = 'red') +
+  geom_polygon(data = map_data('world'), aes(x=long, y=lat, group = group),
+               fill = NA, color = 'darkgrey') +
+  theme_bw() +
+  theme(axis.title = element_blank()) +
+  labs(title = 'CPEAT sites with SOC stocks')
+
+ggplot(CPEAT_site.df) +
+  geom_histogram(aes(x=observation_year)) +
+  theme_bw() +
+  labs(title = 'CPEAT sites with SOC stocks',
+       x = 'Observation year [CE]')
+```
+
+## ISCN3
 
 ```{r}
 #| label: ISCN3_level2
