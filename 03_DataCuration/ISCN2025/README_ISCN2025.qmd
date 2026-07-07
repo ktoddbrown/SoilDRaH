@@ -129,10 +129,10 @@ We want to pull
 as well as a bib file and citation/acknowledgement md.
 
 ```{r}
-#| label: pullLocation
+#| label: level2_CPEAT
 
-CPEAT.ls$data$core$of_variable_DRaH |> table()
-CPEAT.ls$data$primary$of_variable_DRaH |> table()
+#CPEAT.ls$data$core$of_variable_DRaH |> table()
+#CPEAT.ls$data$primary$of_variable_DRaH |> table()
 
 CPEAT_primary.df <- CPEAT.ls$data$primary |>
   filter(of_variable_DRaH %in% 
@@ -185,10 +185,27 @@ layer.df <- CPEAT_primary.df |>
                organic_matter_to_carbon * as.numeric(loss_on_ignition)/100,
              !is.na(organic_matter_percent) ~ as.numeric(dry_bulk_density) * 
                organic_matter_to_carbon * as.numeric(organic_matter_percent)/100,
-             .default = NA_real_)) |>
-  select(bibKey, #row_id, #layer_middle, layer_thickness,
-         layer_lower, layer_upper, carbon_organic_density) |>
-  filter(is.finite(layer_lower + layer_upper + organic_matter_to_carbon))
+             .default = NA_real_),
+         carbon_organic_density_formula = 
+           case_when(
+             !is.na(organic_carbon_density) ~ 'provided SOC',
+             !is.na(organic_matter_density) ~ paste('organic matter * correction factor', organic_matter_to_carbon),
+             #if we don't have bulk density then we can't move forward
+             is.na(dry_bulk_density) ~ 'missing bulk density',
+             #start with organic carbon percent
+             !is.na(organic_carbon_percent) ~ 'Bulk density unspecified * organic carbon',
+             #then assume peat soils are mostly organic
+             !is.na(carbon_percent) ~ 'Bulk density unspecified * carbon unspecified',
+             !is.na(total_carbon_percent) ~ 'Bulk density unspecified * carbon total',
+             !is.na(loss_on_ignition) ~ paste('Bulk density unspecified * loss on ignition * correction factor', organic_matter_to_carbon),
+             !is.na(organic_matter_percent) ~ paste('Bulk density unspecified * organic matter * correction factor', organic_matter_to_carbon),
+             .default = NA_character_) |> as.factor()
+         ) |>
+  select(site_bib = bibKey, #row_id, #layer_middle, layer_thickness,
+         layer_lower, layer_upper, 
+         carbon_organic_density, carbon_organic_density_formula) |>
+  filter(is.finite(layer_lower + layer_upper + organic_matter_to_carbon)) |>
+  mutate(study_bib = 'Loisel2021', study_name = 'CPEAT')
 
 site.df <- CPEAT.ls$data$core |>
   filter(of_variable_DRaH %in% c(#'citation', #in bibkey
@@ -204,17 +221,302 @@ site.df <- CPEAT.ls$data$core |>
                             #'related_research', 
                             #'sampling_method', 
                             'site_name')) |>
-  select(bibKey, of_variable_DRaH, with_entry) |>
-  filter(bibKey %in% layer.df$bibKey) |>
+  select(site_bib = bibKey, of_variable_DRaH, with_entry) |>
+  filter(site_bib %in% layer.df$site_bib) |>
   pivot_wider(names_from = of_variable_DRaH, values_from = with_entry) |>
-  mutate(across(.cols = c(latitude, longitude, observation_year), as.numeric),
-         study_id = 'CPEAT')
+  mutate(across(.cols = c(latitude, longitude, observation_year), as.numeric))|>
+           mutate(study_bib = 'Loisel2021', study_name = 'CPEAT')
 
-bib.ls <- c(CPEAT.ls$citation$methods[unique(site.df$bibKey, layer.df$bibKey)],
+bib.ls <- c(CPEAT.ls$citation$methods[unique(site.df$site_bib, layer.df$site_bib)],
             CPEAT.ls$citation$primary)
 
-CPEAT.ls$data$primary$of_variable_DRaH |> table()
+```
 
+```{r}
+#| label: ISCN3_level2
+
+temp <- ISCN3.ls$layer |>
+  filter(
+    #remove prior calculations so that we can keep our decision tree consistent
+    !(dataset_name_soc %in% c('ISCN SOC stock computation',
+                                "AK DSC Project SOC stock computation" ) &
+        of_variable %in% c('carbon_organic_area_density')),
+    #remove NRCS, adding back in an updated version
+    !(dataset_name_sub %in% c('NRCS Sept/2014')),
+    of_variable %in% c("layer", 
+                       "bulk_density", 
+                       "bulk_density_estimated_fine_earth", #not in once nrcs removed
+                       "bulk_density_fine_earth",
+                       "bulk_density_whole_soil", 
+                       "carbon", "carbon_inorganic", "carbon_organic_fraction", 
+                       "carbon_organic_area_density", 
+                       "carbon_total", "coarse_fraction",
+                       "loss_on_ignition")) |>
+# nrow(temp) #413374 observations 
+  # ISCN3 calculated SOC resulted in 879 double entries of non-soc columns
+  #... drop them here.
+  reframe(with_entry = unique(with_entry),
+          .by = -c(row_name, with_entry)) #nrow(temp) #412495
+
+ISCN_layer.df <- temp |>
+  #filter(of_variable %in% 'layer') |>
+  select(contains('name'), of_variable, is_type, with_entry) |>
+  #drop 488 poorly identified observations
+  #TODO go back and try to clean this up when you have time
+  filter(n() == 1, .by = c(contains('name'), of_variable, is_type)) |>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '_', 
+              values_from = with_entry) |> #nrow(ISCN_layer.df) #63066
+  mutate(across(ends_with('_value'), as.numeric),
+         across(ends_with('_method'), as.factor),
+         across(ends_with('_note'), as.factor)) |>
+  mutate(across(ends_with('_value'), function(xx){if_else(xx < 0, NA, xx)})) |>
+  #Dropping dataset_name_soc which is either dataset_name_sub or an ISCN flag
+  select(-dataset_name_soc) |>
+  #match the dataset name across the table
+  rename(dataset_name = dataset_name_sub) |>
+  #### Harmonize explicit ISCN3 methods #####
+  #mutate(across(ends_with('_value'), is.finite)) |>
+  #Drop carbon_organic_area_density_method which only contains 'no fill' or NA
+  select(-carbon_organic_area_density_method) |>
+  mutate(
+    bulk_density_method = case_when(
+      #bd_samp values are means of multiple observations
+      #took average of similar horizons types
+      str_detect(bulk_density_method, 'multiple observations') |
+        str_detect(bulk_density_method, 'average of .* horizons') ~ 'averaged: composit',
+      #core volume/mass
+      str_detect(bulk_density_method, 'core volume/mass') ~ 'measured: core volume and unspecified mass',
+      #Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.
+      #g of <2mm fraction divided by total volume of material (often includes roots)
+      str_detect(bulk_density_method, 
+                 'Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.') |
+        str_detect(bulk_density_method, 
+                   'g of <2mm .* by total volume') ~ 'measured: sampled volume and fine earth mass',
+      #predicted from %C
+      #BD was estimated based on C % using a power-based regression model based on individual soil samples where both C % (x) and DBD (y) were available (n= 831, R2= 0.73): y= 1.2559x-0.6831. In samples with permafrsot, the regression-derived BD was corrected for volumetric ice-content
+      str_detect(bulk_density_method, 'predict') |
+        str_detect(bulk_density_method, 
+                   'BD was estimated based on C %') ~ 'calculated: organic carbon',
+      #calculated based on soil texture, rock fragment, and organic matter content
+      str_detect(bulk_density_method, 'calculat') ~ 'calculated: texture, rock, and organic matter',
+      #bd = (1.45*0.111)/((loi/100)*1.45+(1-(loi/100))*0.111) 
+      str_detect(bulk_density_method, 'bd = .*loi') ~ 'calculated: loss on igintion',
+      #estimated from weight per unit area 
+      str_detect(bulk_density_method, 'estimat') ~ 'estimated: weight per area',
+      #gap-filled with value from nearby sample, gap-filled from horizon type
+      str_detect(bulk_density_method, 'gap-filled') |
+        # interpolated from adjacent horizons
+        # gap-filled from horizon type
+        str_detect(bulk_density_method, 'interpolated')~ 'estimated: gap filled',
+      #TODO Pull NRCS codes M and G
+      str_detect(bulk_density_method, '^[GM]$') ~ NA_character_,
+      #bd = dry weight/volume, measured as weight per unit volume, 
+    .default = NA_character_),
+    #check bulk density methods
+    #ISCN_layer.df |> select(bulk_density_method, bulk_density_method_new) |> unique() |> view()
+    carbon_method = case_when(
+      carbon_method == "MIR" ~ 'measured: MIR',
+      #"dry combustion, LECO analyzer", "dry combustion", "dry combustion (CHN) of oven-dried, root-free sample, <2mm fraction",
+      #"mean of ≥3 samples, dry combustion, Perkin-Elmer \d{4}",
+      str_detect(carbon_method, 'dry combustion') |
+        #"Perkin Elmer CHN (model 2400).",
+        str_detect(carbon_method, 'Perkin Elmer') |
+        #"Determined total %C from high temp combustion + elemental analyzer (on <2mm fine earth fraction)", "Element Analyzer.  Loss of Ignition", "Carlo Erba CN Elemental Analyzer.", "all mineral samples fumigated in 12M HCl (48h) to remove carbonates (Hedges and Stern 1984) then run by combustion analyzer re Manies et al, 2006",
+        str_detect(carbon_method, '[eE]lement(al)? [Aa]nalyzer') |
+        #"Leco TruSpec CHN (model 630-100-400).",
+        str_detect(carbon_method, 'Leco') |
+        #"assumed to have no inorganic carbonate ; Combustion analyser 1200 deg C  (Manies et al, 2006)", "Fumigated in 12 M HCl (48 h) to remove carbonates (Hedges and Stern, 1984);.freeze-dried and kept in a desiccator; elemental analyzer (Carlo Erba 2500) used to determine C% and N% content (all samples were we have N% values).",
+        str_detect(carbon_method, 'analy[zs]er') ~ 'measured: elemental analyzer',
+      #"wet oxidation",
+      str_detect(carbon_method, 'wet oxidation') ~ 'measured: wet oxidation',
+      #"manometric",
+      str_detect(carbon_method, 'manometric') ~ 'measured: manometric',
+      #"Site vegetation reflects pH; acidic vegetation sites do not have carbonates, but sites with non-tussock vegetation could also contain carbonates within the %C measurement reported here",
+      #"Loss on Ignition (LOI, weight %) at 550° C (for 6 h) was used to determine organic content, and at 950° C (for 2h) to determine carbonate content (Dean, 1974; Heiri et al., 2001).  A 3rd order polynomial regression model based on individual soil samples where both LOI and C% (from elemental analyser) were available (n= 171, R2= 0.98) was used to predict C% (y) for the soil samples where only LOI% was available: y= (-0.00005x3)+(0.0059x2)+(0.362x)"
+      #TODO pull codes from NRCS
+      str_detect(bulk_density_method, '^[GMLAT]$') ~ NA_character_,
+      # "8",
+      .default = NA_character_),
+    coarse_fraction_method = case_when(
+      str_detect(coarse_fraction_method, 'measured') ~ 'measured',
+      str_detect(coarse_fraction_method, 'estimated') |
+        str_detect(coarse_fraction_method, 'assumed') ~ 'estimated',
+      str_detect(coarse_fraction_method, 'observed in profile') ~ 'estimated: field observation',
+      str_detect(coarse_fraction_method, 'weight of >2mm') ~ NA_character_,
+      .default = NA_character_
+      #ISCN_layer.df |> select(coarse_fraction_method, coarse_fraction_method_new) |> unique() |> view()
+    )) |>
+  # reframe(count = n(),
+  #         .by = c(contains('method'), ends_with('note'), ends_with('value'))) |>
+  
+  mutate(
+    #deal with organic carbon fraction in the study level metadata
+    #coarse_fraction_method"              "coarse_fraction_value"
+    #Deal with bulk density: "bulk_density_fine_earth_value", 
+    #..."bulk_density_method", "bulk_density_value", "bulk_density_whole_soil_value"
+    bulk_density_method_new = case_when(
+      #Make a stock bulk density that does not need a coarse fraction correction
+      str_detect(bulk_density_method, 
+                 "measured: sampled volume and fine earth mass") ~ 
+        paste('bulk density for stocks:', bulk_density_method),
+      #coarse fraction correction available
+      is.finite(coarse_fraction_value) & 
+        #... with whole soil
+        is.finite(bulk_density_whole_soil_value) ~
+        paste('bulk density of whole soil:', bulk_density_method),
+      is.finite(coarse_fraction_value) & 
+       #... with fine earth
+       is.finite(bulk_density_fine_earth_value) ~
+        paste('bulk density of fine earth:', bulk_density_method),
+      #Without coarse fraction, what do we prioritize
+      is.finite(bulk_density_value) ~ #assume data providers knew we wanted to calculate stocks
+        paste('bulk density unspecified:', bulk_density_method),
+      is.finite(bulk_density_fine_earth_value) ~ #under-estimate stocks
+        paste('bulk density of fine earth:', bulk_density_method),
+      is.finite(bulk_density_whole_soil_value) ~ #over-estimate stocks
+        paste('bulk density of whole soil:', bulk_density_method),
+      .default = NA_character_
+    ),
+    carbon_organic_area_density_method_new = case_when(
+      is.finite(carbon_organic_area_density_value) &
+        is.na(carbon_organic_area_density_flag) ~
+        'unspecified formula',
+      is.finite(carbon_organic_area_density_value) &
+        !is.na(carbon_organic_area_density_flag) ~
+        paste('forumla: ', carbon_organic_area_density_flag),
+      .default = NA_character_
+    ),
+    carbon_organic_fraction_method_new = case_when(
+      is.finite(carbon_organic_fraction_value) ~ paste('carbon fraction organic:', carbon_method),
+      is.finite(carbon_total_value - carbon_inorganic_value) ~ paste('carbon fraction organic: calculated total - inorganic: ', carbon_method),
+      .default = NA_character_
+    ),
+    carbon_total_fraction_method_new = case_when(
+      is.finite(carbon_total_value) ~ paste('carbon fraction total:', carbon_method),
+      .default = NA_character_
+    )
+  ) |>
+  mutate(bulk_density_new_value = case_when(
+    #first take the bulk density for stocks if it's there 
+      str_detect(bulk_density_method_new, 
+                 "measured: sampled volume and fine earth mass") &
+        is.finite(bulk_density_fine_earth_value) ~ 
+        bulk_density_fine_earth_value, #240 layers
+      str_detect(bulk_density_method_new, 
+                 "measured: sampled volume and fine earth mass") &
+        is.finite(bulk_density_value) ~ 
+        bulk_density_value, #3588 layers
+      is.finite(coarse_fraction_value) & 
+        #... with whole soil
+        is.finite(bulk_density_whole_soil_value) ~
+        bulk_density_whole_soil_value,
+      is.finite(coarse_fraction_value) & 
+       #... with fine earth
+       is.finite(bulk_density_fine_earth_value) ~
+        bulk_density_fine_earth_value,
+      #Without coarse fraction, what do we prioritize
+      is.finite(bulk_density_value) ~ #assume data providers knew we wanted to calculate stocks
+        bulk_density_value,
+      is.finite(bulk_density_fine_earth_value) ~ #under-estimate stocks
+        bulk_density_fine_earth_value,
+      is.finite(bulk_density_whole_soil_value) ~ #over-estimate stocks
+        bulk_density_whole_soil_value,
+      .default = NA_real_
+    ),
+    carbon_organic_area_density_new_value = case_when(
+      is.finite(carbon_organic_area_density_value) &
+        is.na(carbon_organic_area_density_flag) ~
+        carbon_organic_area_density_value,
+      is.finite(carbon_organic_area_density_value) &
+        !is.na(carbon_organic_area_density_flag) ~
+        carbon_organic_area_density_value,
+      .default = NA_real_
+    ),
+    carbon_organic_fraction_new_value = case_when(
+      is.finite(carbon_organic_fraction_value) ~ carbon_organic_fraction_value,
+      is.finite(carbon_total_value - carbon_inorganic_value) ~
+        carbon_total_value - carbon_inorganic_value,
+      .default = NA_real_
+    ),
+    carbon_total_fraction_new_value = case_when(
+      is.finite(carbon_total_value) ~ carbon_total_value,
+      .default = NA_real_
+    )
+    ) |>
+  #### Merge method notes with column name information
+  # select(contains('carbon')) |>
+  # mutate(across(ends_with('value'), is.finite)) |>
+  # reframe(across(ends_with('value'), sum),
+  #         .by = c(contains('flag'), contains('method'), contains('note'))) |>
+  select(contains('name'),
+         contains('layer'),
+         #provided SOC estimations
+         carbon_organic_area_density_value = carbon_organic_area_density_new_value,
+         carbon_organic_area_density_method = carbon_organic_area_density_method_new,
+         #bulk density estimations
+         bulk_density_value = bulk_density_new_value,
+         bulk_density_method = bulk_density_method_new,
+         #carbon fractions
+         carbon_organic_fraction_value = carbon_organic_fraction_new_value,
+         carbon_total_fraction_value = carbon_total_fraction_new_value,
+         #coarse fraction
+         coarse_fraction_value, coarse_fraction_method
+         )
+
+ISCN_site.df <- ISCN3.ls$site |>
+  semi_join(ISCN_layer.df,
+            by = join_by(dataset_name_sub == dataset_name, site_name, profile_name)) |>
+  select(contains('name'), with_entry, of_variable, is_type) |>
+  pivot_wider(names_from = c(of_variable, is_type),
+              names_sep = '_', values_from = with_entry) |>
+  mutate(observation_date_date = as_date(as.numeric(observation_date_date), 
+                                         origin = ymd('1900-01-01')),
+         across(c(geolocation_latitude, geolocation_longitude),
+                  .fns = as.numeric),
+         across(c(geolocation_datum, region_country, region_state, depth_zero_reference),
+                .fns = as.factor)) |>
+  select(-dataset_name_soc) |>
+  rename(dataset_name = dataset_name_sub)
+
+```
+
+```{r}
+
+ggplot(ISCN_layer.df) +
+  geom_histogram(aes(x = carbon_organic_fraction_value)) +
+  geom_vline(xintercept = 55, color = 'red') +
+  scale_x_log10()
+
+
+ggplot(ISCN_layer.df) +
+  geom_histogram(aes(x = bulk_density_value)) +
+  #density of quartz
+  geom_vline(xintercept = 2.65, color = 'red') +
+  scale_x_log10()
+
+ggplot(ISCN_layer.df) +
+  geom_histogram(aes(x = carbon_organic_area_density_value / (as.numeric(layer_lower) - as.numeric(layer_upper)) )) +
+  geom_vline(xintercept = 55/100 * 2.65, color = 'red') +
+  scale_x_log10()
+
+ggplot(ISCN_layer.df) +
+  geom_histogram(aes(x = coarse_fraction_value)) +
+  geom_vline(xintercept = 100, color = 'red') +
+  scale_x_log10()
+
+ggplot(ISCN_layer.df) +
+  geom_point(aes(x = carbon_organic_fraction_value, y=bulk_density_value)) 
+
+ggplot(ISCN_layer.df |>
+         filter(carbon_organic_area_density_value < 10)) +
+  geom_point(aes(x = carbon_organic_area_density_value / (as.numeric(layer_lower) - as.numeric(layer_upper)), 
+                 y = bulk_density_value * carbon_organic_fraction_value / 100 )) +
+  scale_x_log10() + scale_y_log10() +
+  geom_abline(color = 'grey')
+
+ggplot(ISCN_layer.df |>
+         filter(carbon_organic_area_density_value < 10)) +
+  geom_histogram(aes(x = (carbon_organic_area_density_value / (as.numeric(layer_lower) - as.numeric(layer_upper)) -  bulk_density_value * carbon_organic_fraction_value / 100 ) / (carbon_organic_area_density_value / (as.numeric(layer_lower) - as.numeric(layer_upper))))) 
 ```
 
 ```{r}
