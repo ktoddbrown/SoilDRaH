@@ -337,7 +337,7 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
                column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
                #And the splitting strategy with soil carbon
                column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
-               column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_volume_density',
+               column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_area_density',
                column_header %in% c("loi (percent)") ~'loss_on_ignition',
                #need to associated with other carbon variables later
                column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',

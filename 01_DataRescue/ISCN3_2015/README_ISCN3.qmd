@@ -477,7 +477,7 @@ The final format of the data frame here will include the following
         - name
         - unit
         - value
-    * carbon_organic_volume_density:
+    * carbon_organic_area_density:
       + `is_type`:
         - ISCN_vocabulary
         - description
@@ -667,7 +667,8 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
              #column_header %in% c("color") ~ 'soil_color',
              #column_header %in% c("hzn_desgn_other", "hzn", "hzn_desgn") ~ 'soil_horizon',
              #column_header %in% c("soil_taxon", "soil_series") ~ 'soil_classificaction',
-             #Bulk density types taken from metadata
+             #Bulk density types taken from metadata states that whole soil bulk density with coarse fraction removed
+             #Nave et al. New Forests. 2019 implies that this is a fine earth bulk density in it's methods description of how ISCN3 was used.
              column_header %in% c( "bd_samp (g cm-3)") ~ 'bulk_density_fine_earth',
              #yes this bd_whole and bd_tot are correct according to the meta data
              column_header %in% c("bd_whole (g cm-3)") ~ 'bulk_density_estimated_fine_earth',
@@ -675,7 +676,7 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
              column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
              #And the splitting strategy with soil carbon
              column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
-             column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_volume_density',
+             column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_area_density',
              column_header %in% c("loi (percent)") ~'loss_on_ignition',
              #need to associated with other carbon variables later
              column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',
