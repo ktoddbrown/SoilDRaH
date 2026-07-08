@@ -1,0 +1,16 @@
+"Figure 2. Ashe juniper wood change in percent nitrogen through time,
+shaded and open treatments combined. Linear fit (solid line): $r^2$ = 250.794,
+*F* = 5362.81, *P* < 0.0001; single-exponential (dotted line): $r^2$ = 50.787,
+*F* = 5348.54, *P* < 0.0001.",,,,
+x value,y value,y upper SE,x label,y label
+0.00,0.159,0.174884418,Time (year),Nitrogen (%)
+0.17,0.140,0.151001497,Time (year),Nitrogen (%)
+0.33,0.134,0.144838193,Time (year),Nitrogen (%)
+0.42,0.126,0.1355932,Time (year),Nitrogen (%)
+0.75,0.136,0.143297384,Time (year),Nitrogen (%)
+1.00,0.164,0.17257317,Time (year),Nitrogen (%)
+1.25,0.280,0.318952242,Time (year),Nitrogen (%)
+1.33,0.286,0.32665639,Time (year),Nitrogen (%)
+1.58,0.339,0.379815097,Time (year),Nitrogen (%)
+2.25,0.364,0.395993834,Time (year),Nitrogen (%)
+2.67,0.438,0.516178737,Time (year),Nitrogen (%)
