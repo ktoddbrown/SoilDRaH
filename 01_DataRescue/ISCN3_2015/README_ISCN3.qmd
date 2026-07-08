@@ -670,6 +670,7 @@ site.df <- site_geocluster |>
             by = join_by(dataset_name_sub, site_name,
                          `lat (dec. deg)`, `long (dec. deg)`,
                          observation_date))
+  #
 
 uniqueSpaceTime <- site.df |>
   filter(!is.na(temporal_id) & ! is.na(geolocation_id)) |>
@@ -793,7 +794,9 @@ bulkdensity.df <- layer.df  |>
          #length(unique(value_bd)) > 1,
          .by = c(geolocation_id, temporal_id, layer_id, method_bd)) |> #nrow 39 679
 mutate(of_variable = 'bulk_density',
-       unit = 'g cm-3')
+       unit = 'g cm-3') |>
+  select(ends_with('_id'), variable = of_variable, value = value_bd, 
+         unit = unit, method = method_bd)
 ```
 
 ```{r}
@@ -814,7 +817,7 @@ soc.df <- layer.df  |>
                      soc_carbon_flag),
            .default = 'unspecified'))) |>
   filter(value >= 0) |> #46 337
-#Deal with duplicate values
+  #Deal with duplicate values
   mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
                             unique(sample_id), 
                             paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
@@ -827,8 +830,140 @@ soc.df <- layer.df  |>
 ```
 
 ```{r}
-
+carbon_fraction.df <- layer.df  |>
+  select(c(ends_with('_id'), 
+           `oc (percent)`, `c_tot (percent)`, `caco3 (percent)`,
+           cNRCS_prep_code, c_method))  |>
+  pivot_longer(cols = contains('percent'),
+               names_to = 'column_name', values_to = 'value', 
+               values_drop_na = TRUE) |>
+  mutate(value = as.numeric(value), 
+         method = case_when(
+           !is.na(c_method) & !is.na(cNRCS_prep_code) ~ 
+             sprintf('c_method:%s;cNRCS_prep_code:%s',
+                     c_method, cNRCS_prep_code),
+           !is.na(c_method) & is.na(cNRCS_prep_code) ~ 
+             sprintf('c_method:%s',
+                     c_method),
+           is.na(c_method) & !is.na(cNRCS_prep_code) ~ 
+             sprintf('cNRCS_prep_code:%s',
+                     cNRCS_prep_code),
+           .default = 'unspecified')) |> #51 977 between 0 and 87
+  mutate(method = paste(case_when(column_name == 'oc (percent)' ~ 'carbon_organic',
+                                  column_name == 'c_tot (percent)' ~ 'carbon_total',
+                                  column_name == 'caco3 (percent)' ~ 'carbon_inorganic_CaCO3'),
+                        method, sep = ';')) |>
+  #Deal with duplicate values
+  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
+         method = paste(unique(method[!is.na(method)]), collapse = ';'),
+         #there are a small ammount of layers that share OC, C and/or CaCO3 values
+         #... which is possible, so group on this as well.
+         .by = c(geolocation_id, temporal_id, layer_id, column_name, value)) |> 
+  unique() |> #45 278
+  select(geolocation_id, temporal_id, layer_id, sample_id, value, method) |>
+  mutate(variable = 'carbon_fraction',
+         unit = 'mass-percent (carbon to fine earth)')
 ```
+
+```{r}
+organic_fraction.df <- layer.df  |>
+  select(ends_with('_id'), `loi (percent)`)  |>
+  filter(!is.na(`loi (percent)`)) |> #938
+  #pick digits based on hist(str_length(soc.df$`loi (percent)`))
+  mutate(value = round(as.numeric(`loi (percent)`), digits = 5)) |>
+  filter(value >= 0) |>
+  #Deal with duplicate values
+  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
+         .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
+  unique() |> #936
+  select(geolocation_id, temporal_id, layer_id, sample_id, value) |>
+  mutate(variable = 'organic_matter_fraction',
+         unit = 'mass-percent (organic to fine earth)',
+         method = 'loss on ignition')
+```
+
+```{r}
+depth.df <- layer.df  |>
+  select(dataset_name = dataset_name_sub, site_name, #cross with the site dataframe
+         ends_with('_id'), starts_with('layer'), 
+         `profile_zero_ref (profile_zero_ref)`) |> #72 503
+  filter(!is.na(`layer_top (cm)` + `layer_bot (cm)`)) |> #72 503
+  #pick digits based on hist(str_length(soc.df$`loi (percent)`))
+  mutate(upper = round(as.numeric(`layer_top (cm)`), digits = 0),
+         lower = round(as.numeric(`layer_bot (cm)`), digits = 0),
+         zero_ref = `profile_zero_ref (profile_zero_ref)`) |>
+  #Deal with duplicate values
+  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
+         .by = c(geolocation_id, temporal_id, layer_id, upper, lower, zero_ref)) |> 
+  unique() |> #54 770
+  select(geolocation_id, temporal_id, layer_id, sample_id, upper, lower, zero_ref) |>
+  mutate(variable = 'depth_interval',
+         unit = 'cm')
+```
+
+```{r}
+geolocation.df <- layer.df |>
+  select(geolocation_id, `lat (dec. deg)`, `long (dec. deg)`, datum = `datum (datum)`) |>
+  unique() |> #5408
+  #Deal with duplicate values
+  reframe(latitude = mean(`lat (dec. deg)`),
+          longitude = mean(`long (dec. deg)`),
+          resolution = mean(c(diff(range(`lat (dec. deg)`)),
+                              diff(range(`long (dec. deg)`)))),
+          count = n(),
+          .by = c(geolocation_id, datum)) |> #5133
+  mutate(unit = 'decimal degrees',
+         variable = 'geolocation')
+
+region.df <- layer.df |>
+  select(geolocation_id, country = `country (country)`, state = `state (state_province)`) |>
+  pivot_longer(c(country, state),
+               names_to = 'region', values_to = 'value',
+                values_drop_na = TRUE) |>
+  filter(value != 'Unknown') |>
+  unique() |> #5383
+  #Deal with duplicate values
+  reframe(value = paste(sort(unique(value)), collapse = ';'),
+          .by = c(geolocation_id, region)) |>
+  pivot_wider(names_from = region, values_from = value) |>
+  mutate(variable = 'region')
+
+temporal.df <- layer.df |> 
+  select(temporal_id, observation_date, `observation_date (YYYY-MM-DD)`, observation_date_formula) |>
+  unique() |> #667
+  #Deal with duplicate values
+  reframe(date = mean(observation_date),
+          resolution = as.numeric(difftime(max(observation_date), min(observation_date), 
+                                           units = 'days'))/365,
+          count = n(),
+         .by = c(temporal_id)) |>
+  mutate(unit = 'decimal year (CE)',
+         variable = 'observation_date')
+  
+```
+
+```{r}
+sample.df <- soc.df |>
+  bind_rows(bulkdensity.df) |>
+  bind_rows(organic_fraction.df) |>
+  bind_rows(carbon_fraction.df)
+
+#depth.df already here
+
+geolocation.df <- geolocation.df |>
+  bind_rows(region.df)
+
+#temporal.df already here
+# need to pull citations
+```
+
+##DONT RUN BELOW
 
 ```{r}
 soc.df |>
