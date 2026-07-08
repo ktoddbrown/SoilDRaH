@@ -54,35 +54,48 @@ affiliations:
     
 timelog:
   #remove activites below and add activites for the data rescue. Include one activity for developing the data rescue plan, each data element (table, figures, methods, bibliography), readme write-up, and anything else related to the data rescue.
-  - activity:
-      description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/262. Changes include more details in the commented guidence, additional table and figure examples.
-      who: ktoddbrown
-      start: 2026-06-18 T1430
-      duration: P45M
   - activity: 
-      description: add general UF affilation
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2026-01-29 T1530
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P05M
+      description: Developing the data rescue plan and ReadMe write-up
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-06-08 
+      duration: PT1H
   - activity: 
-      description: revised execute with only provided files
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
+      description: First Tran Methods
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-06-08 
+      duration: PT1H
   - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P30M
+      description: First Tran Figure 1
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-07-02 
+      duration: PT1H15M
+  - activity: 
+      description: First Tran Figure 2
+      who: SavaScott
+      end: 2026-07-02
+      start: 2026-07-02 
+      duration: PT45M
+  - activity: 
+      description: First Tran Figure 3
+      who: SavaScott
+      end: 2026-07-07
+      start: 2026-07-07 
+      duration: PT1H30M
+  - activity: 
+      description: Bibliography files
+      who: SavaScott
+      end: 2026-07-01
+      start: 2026-07-01 
+      duration: PT45M
+  - activity: 
+      description: Coding of Figures
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-07-08 
+      duration: PT45M
 ---
 
 
@@ -101,7 +114,9 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Lyons2010_Methods.md"
-figureM.file <- 'Lyons2010_Figure2.csv'
+figure1.file <- 'Lyons2010_Figure1.csv'
+figure2.file <- 'Lyons2010_Figure2.csv'
+figure3.file <- 'Lyons2010_Figure3.csv'
 
 # Bibliography files
 primaryCitation.file <- 'Lyons2010.bib'
@@ -131,7 +146,9 @@ For the discussion of this data rescue see the Github issue: https://github.com/
 @Lyons2010 primarily measures the decomposition rate and elemental composition of Ashe juniper wood collected from a grassland in the Edwards Plateau. They used open and shaded habitats with the litterbags. They used this data to determine there was no change in the wood decomposition between the open and shaded habitats during low rainfall periods. 
 
 ## Figures
-
+- Tables
+  1) This paper has no tables
+  
 - Figures 
   1) Figure 1: Ashe juniper wood percent biomass reaming as a function time and SHADE vs. OPEN treatments, with total seasonal precipitation charted as well.
   2) Figure 2: Ashe juniper wood change in percent nitrogen through time. 
@@ -190,7 +207,7 @@ These files are in the @Lyons2010 data rescue.
   - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [x] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Extract points from Figure 1-3 and export it to csv
+  - [x] Extract points from Figure 1-3 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -204,44 +221,79 @@ These files are in the @Lyons2010 data rescue.
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
-## Figure 2
+## Figure 1
 
-<!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
-
-Figure M was modified ....
+Figure 1 was modified to seperate the two different y variables into different graphs. It was also motified to combine the two footnotes into one text box per variable. 
 
 ```{r}
-#| label: figure2Check
+#| label: figure1Check
+#| code-fold: true
+#| message: false
+#| eval: true
 
+library(ggplot2)
+library(readr)
+library(dplyr) 
 
-plot.df <- read_csv(file = figureM.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  mutate(across(c(`Depth [cm]`, `Soil organic carbon density [g cm$-1$]`),
-                as.numeric)) #make things numbers
-         
-ggplot(data = plot.df, 
-       mapping = aes(x = `Depth [cm]`, y = `Soil organic carbon density [g cm$-1$]`, color=Site)) +
-  geom_line() +
-  geom_point() +
-  #depth below surface is often plotted flipped and downward positive
-  scale_x_reverse() +
-  coord_flip() +
-  labs(caption = read_csv(file = tableN.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
+fig1Caption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig1Data <- read_csv(file = figure1.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig1DataPrecip <- fig1Data %>% filter(`y label` == "precipitation (mm)")
+fig1DataBiomass <- fig1Data %>% filter(`y label` == "Biomass remaining (%)")
+
+fig1DataBiomass <- fig1DataBiomass %>% mutate(
+  `y value` = as.numeric(`y value`),
+  `y value SE high` = as.numeric(`y value SE high`)
+)
+
+fig1DataBiomass <- fig1DataBiomass %>%
+  mutate(error_var = `y value SE high` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+# Precipitation graph - Combined Bar and Line Graph
+
+ggplot(fig1DataPrecip, aes(x = `x value`, y = `y value`)) +
+geom_bar(data = fig1DataPrecip %>% filter(`graph type` == "bar graph"), stat = "identity", fill = "azure4") +
+ geom_point(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), size = 1.5,
+  stroke = 1,
+  color = "black") + geom_line(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), color = "black") + scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600)) + geom_text(
+    data = fig1DataPrecip %>% filter(footnotes != "-" & !is.na(footnotes)), 
+    aes(label = footnotes),
+    vjust = -0.5,
+    size = 3,
+    color = "black") + labs(
+       x = "Time (year)",
+       y = "Precipitation (mm)",
+       caption = fig1Caption)
+
+# Biomass remaining - Double Line Graph
+
+ggplot(fig1DataBiomass, aes(x = `x value`, y = `y value`, shape = `treatment`, fill = `treatment`)) + geom_point(size = 1.5,
+  stroke = 1) +
+  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100)) + 
+  geom_errorbar(aes(ymin = ymin, ymax = ymax, color = treatment), width = 0.1) + scale_color_manual(values = c(
+    "biomass OPEN" = "azure4",
+    "biomass SHADE" = "black"
+  )) + labs(
+       x = "Time (year)",
+       y = "Biomass remaining (%)",
+       caption = fig1Caption)
+  
+
 ```
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
-#| label: compareFigure2
+#| label: compareFigure1
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -251,28 +303,102 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.c
 ```
 
 
-## Figure 3
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+## Figure 2
 
-Table N was modified by dropping the sub-table as a leading column into the transcribed table.
+Figure 2 was modified to drop the trendline and the line connecting the points together. The caption was also modified to include markdown notation. 
 
 ```{r}
-#| label: table3Check
+#| label: figure2Check
+#| code-fold: true
+#| message: false
+#| eval: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig2Data <- fig2Data %>%
+  mutate(error_var = `y SE high value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
 
 
-read_csv(file = tableN.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
+ggplot(fig2Data, aes(x = `x value`, y = `y value`)) + 
+  geom_point(size = 1.5,
+  stroke = 1,
+  color = "black") +
+  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), position = position_dodge(width = 0.01), width = 0.05) +
+labs(
+  x = "Time (year)",
+  y = "Nitrogen (%)",
+  caption = fig2Caption
+)
+
+
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure2
+
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+```
+
+
+## Figure 3
+
+Figure 3 was modified to drop the trendline and the line connecting the points together. The caption was also modified to include markdown notation. 
+
+```{r}
+#| label: figure3Check
+#| code-fold: true
+#| message: false
+#| eval: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig3Caption <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig3Data <- read_csv(file = figure3.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig3Data <- fig3Data %>%
+  mutate(error_var = `y SE high value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+ggplot(fig3Data, aes(x = `x value`, y = `y value`)) + 
+  geom_point(size = 1.5,
+  stroke = 1,
+  color = "black") +
+  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), position = position_dodge(width = 0.01), width = 0.05) +
+labs(
+  x = "Time (year)",
+  y = "C:N ratio",
+  caption = fig2Caption
+)
+
 ```
 
 And is crosschecked with the secondary transcription (expected to be empty)
