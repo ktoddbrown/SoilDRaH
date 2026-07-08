@@ -1,0 +1,16 @@
+"Figure 3. Ashe juniper wood change in carbon:nitrogen (C:N) through
+time, shaded and open treatments combined. Linear fit (solid line):
+$r^2$ = 0.726, *F* = 246.44, *P* < 0.0001; single-exponential (dotted line):
+$r^2$ = 0.772, *F* = 315.86, *P* < 0.0001.",,,,
+x value,y value,upper y SE,x label ,y label
+0,312.7272788,346.0606006,Time (year),C:N ratio
+0.164686781,345.4545492,367.8787809,Time (year),C:N ratio
+0.334773171,364.8484965,395.1515201,Time (year),C:N ratio
+0.418466557,390.9090915,419.9999986,Time (year),C:N ratio
+0.755939471,361.8181845,379.3939501,Time (year),C:N ratio
+1.001619895,303.030319,317.5757725,Time (year),C:N ratio
+1.252699805,180.6060666,205.4545589,Time (year),C:N ratio
+1.328293838,174.5454702,200.0000139,Time (year),C:N ratio
+1.579373748,147.8787961,168.4848738,Time (year),C:N ratio
+2.251619957,138.1818086,150.3030569,Time (year),C:N ratio
+2.67008639,121.8181734,141.818172,Time (year),C:N ratio
