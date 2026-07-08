@@ -738,6 +738,9 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   arrange(geolocation_id, temporal_id, layer_id) |> #full address
   mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s',
                                dataset_name_sub, site_name, profile_name, layer_name))
+```
+
+```{r}
 
 bulkdensity.df <- layer.df  |>
   select(c(ends_with('_id'), starts_with('bd'))) |>
@@ -757,8 +760,8 @@ bulkdensity.df <- layer.df  |>
   select(geolocation_id, temporal_id, layer_id, sample_id,
          column_name_bd, value_bd, method_bd) |> #59 459
   #Deal with duplicate values
-  mutate(sample_id = ifelse(n() == 1 & length(unique(sample_id)) > 1,
-                            sample_id, 
+  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
                             paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
          column_name_bd = ifelse(n() == 1 & length(unique(column_name_bd)) > 1,
                             column_name_bd, 
@@ -788,11 +791,47 @@ bulkdensity.df <- layer.df  |>
   # remove observations which are poorly specified, roughly 22%
   filter(n() == 1,
          #length(unique(value_bd)) > 1,
-         .by = c(geolocation_id, temporal_id, layer_id, method_bd)) #nrow 39 679
+         .by = c(geolocation_id, temporal_id, layer_id, method_bd)) |> #nrow 39 679
+mutate(of_variable = 'bulk_density',
+       unit = 'g cm-3')
+```
 
+```{r}
+soc.df <- layer.df  |>
+  select(c(ends_with('_id'), starts_with('soc'), dataset_name_soc))  |>
+  filter(!is.na(`soc (g cm-2)`)) |> #46 343
+  #pick digits based on hist(str_length(soc.df$`soc (g cm-2)`))
+  mutate(value = round(as.numeric(`soc (g cm-2)`), digits = 5),
+         method_soc = paste0('dataset_name_soc:', dataset_name_soc, ';', case_when(
+           !is.na(soc_method) & !is.na(soc_carbon_flag) ~ 
+             sprintf('soc_method:%s;soc_carbon_flag:%s',
+                     soc_method, soc_carbon_flag),
+           !is.na(soc_method) & is.na(soc_carbon_flag) ~ 
+             sprintf('soc_method:%s',
+                     soc_method),
+           is.na(soc_method) & !is.na(soc_carbon_flag) ~ 
+             sprintf('soc_carbon_flag:%s',
+                     soc_carbon_flag),
+           .default = 'unspecified'))) |>
+  filter(value >= 0) |> #46 337
+#Deal with duplicate values
+  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
+         method = paste(unique(method_soc[!is.na(method_soc)]), collapse = ';'),
+         .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
+  unique() |> #41 750
+  select(geolocation_id, temporal_id, layer_id, sample_id, value, method) |>
+  mutate(variable = 'organic_carbon_stock',
+         unit = 'g cm-2')
+```
 
+```{r}
 
-bulkdensity.df |>
+```
+
+```{r}
+soc.df |>
   select(geolocation_id, temporal_id, layer_id) |>
   unique() |> #nrow() #46 354 layers total
   mutate(has_location = !is.na(geolocation_id),
