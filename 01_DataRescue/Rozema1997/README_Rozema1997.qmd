@@ -1,11 +1,11 @@
 ---
-title: "Data Rescue: Author YYYY"
+title: "Data Rescue: Rozema 1997"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
+    eval: true 
 date: last-modified
-date-format: YYYY-MMMM
+date-format: YYYY-MM
 bibliography:
   - Rozema1997_Methods.bib #contains the citations in the methods section
   - Rozema1997.bib #contains citation for the data source, generally a single citation of the primary paper
@@ -25,9 +25,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     name:
       given: Arunima
       family: Anegondi
-    orcid: #####
     affiliation:
-      - ref: uf-ees
+      - ref: uf
     role: 
       - transcription: lead (Table 1, methods)
       
@@ -35,9 +34,8 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
     name:
       given: Mirah
       family: Blanchard
-    orcid: ####
     affiliation:
-      - ref: uf-ees
+      - ref: uf
     role: 
       - transcription: lead (Table 1)
       - transcription: secondary (Figure 1, methods)
@@ -66,6 +64,16 @@ timelog:
       who: ashbonner310 
       start: 2026-04-13 T1515
       duration: P30M
+  - activity:
+      description: transcriptions (Table 1, Figure 1, methods)
+      who: Misheph
+      start: 2026-05-01
+      duration: P1H30M    
+  - activity:
+      description: transcriptions (Table 1, methods)
+      who: anegondia
+      start: 2026-04-01
+      duration: P1H
   - activity: 
       description: coding in file names, updating rescue plan and rescue info, cross checking tables and figure 
       who: ashbonner310
@@ -204,9 +212,9 @@ These files are in the Rozema1997 data rescue.
 + Measure
   - [X] cross check with second transcriber for tables and methods, and resolve any differences
   - [X] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions in your pull request review
-  - [ ] celebrate!
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
+  - [X] address any revisions in your pull request review
+  - [X] celebrate!
 
 ## Table 1
 
@@ -482,6 +490,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
@@ -601,6 +610,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -628,6 +638,7 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -674,6 +685,7 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
