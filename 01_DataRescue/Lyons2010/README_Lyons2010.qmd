@@ -327,7 +327,7 @@ fig2Data <- read_csv(file = figure2.file,
                    show_col_types = FALSE)
 
 fig2Data <- fig2Data %>%
-  mutate(error_var = `y SE high value` - `y value`,
+  mutate(error_var = `y upper SE value` - `y value`,
          ymin = `y value` - error_var,
          ymax = `y value` + error_var)
 
@@ -355,7 +355,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #| label: compareFigure2
 
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure2_SV.csv Lyons2010_Figure2.csv
 ```
 
 
