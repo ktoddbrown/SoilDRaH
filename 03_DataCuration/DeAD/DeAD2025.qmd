@@ -127,23 +127,20 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link | Data Harmonization - GitHub Issue |
 |------------|-----------|----------|----------|--------|
+| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | [Austin 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Austin2010) | [277](https://github.com/ktoddbrown/SoilDRaH/issues/277) |
 
 ## Data Rescue - digitized
 
 <!---- Move to this table when the data rescue is complete and it is ready for tuple harmonization. --->
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link |
-<<<<<<< HEAD
 |------------|----------|-----------|----------|
 | Lin2015 | @Lin2015 | [185](https://github.com/ktoddbrown/SoilDRaH/issues/185) | [Lin 2015](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Lin2015) |
-| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | [Austin 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Austin2010) |
-| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | [Dimitrakopoulos 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/(https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Dimitrakopoulos2010)) |
+| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | [Dimitrakopoulos 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Dimitrakopoulos2010) |
 | Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | [Gaxiola 2015](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Gaxiola2015) |
 | Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | [Kavvadias 2001](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Kavvadias2001) |
-=======
-| Lin2015 | @Lin2015 | [185](https://github.com/ktoddbrown/SoilDRaH/issues/185) | [Lin 2015](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Lin2015) |
-
->>>>>>> 97d46da (Moved Lin2015 to Digitized - first DeAD rescue pull request to be approved!)
+| Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | [Rozema 1997](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Rozema1997) |
+| Lyons 2010 | @Lyons2010 | [267](https://github.com/ktoddbrown/SoilDRaH/issues/267) | [Lyons 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Lyons2010)
 
 
 ## In process
@@ -152,17 +149,18 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | lead point of contact|
 |------------|----------|-----------|----------|
-| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | ashbonner310 |
-| Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | savascott |
-| Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | savascott |
-| Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | sierrav-droid |
-| Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | anegondia |
 | Day 2007 | @Day2007 | [227](https://github.com/ktoddbrown/SoilDRaH/issues/227) | angelacanini-a11y |
-| Bravo-Oveido 2017 | @BravoOveido2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
+| Bravo-Oviedo 2017 | @BravoOviedo2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
 | Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
 | Santos 1984 | @Santos1984 | [241](https://github.com/ktoddbrown/SoilDRaH/issues/241) | laylakalandjian |
-| Wang 2017 | @Wang2017 | [251](https://github.com/ktoddbrown/SoilDRaH/issues/251) | AmandaLopez14 and JennavieveK |
-| Barba 2016 | @Barba2016 | [252](https://github.com/ktoddbrown/SoilDRaH/issues/252) | sierrav-droid |
+| Wang 2017 | @Wang2017 | [251](https://github.com/ktoddbrown/SoilDRaH/issues/251) | JennavieveK |
+| Barba 2016 | @Barba2016 | [252](https://github.com/ktoddbrown/SoilDRaH/issues/252) | semantic-nomad |
+| Martínez 2010 | @Martinez2010 | [259](https://github.com/ktoddbrown/SoilDRaH/issues/259) | angelacanini-a11y |
+| Blanco 2011 | @Blanco2011 | [260](https://github.com/ktoddbrown/SoilDRaH/issues/260) | SavaScott |
+| Qasemian 2014 | @Qasemian2014 | [280](https://github.com/ktoddbrown/SoilDRaH/issues/280) | SavaScott |
+| Kumada 2008 | @Kumada2008 | TBA | laylakalandjian |
+| Duguay 2000 | @Duguay2000 | TBA | Ben (need github handle) |
+| Dirks 2010 | @Dirks2010 | TBA | Matthew (need github handle) |
 
 ## Imported to bib
 
@@ -170,16 +168,9 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | 
 |------------|------------|
-| Martínez 2010 | @Martinez2010 |
-| Blanco 2011 | @Blanco2011 |
 | LadoMonserrat 2016 | @LadoMonserrat2016 |
-| Lyons 2010 | @Lyons2010 |
 | Almagro 2012 | @Almagro2012 |
-| Duguay 2000 | @Duguay2000 |
-| Dirks 2010 | @Dirks2010 |
-| Kumada 2008 | @Kumada2008 |
 | Gliksman 2016 | @Gliksman2016 |
-| Qasemian 2014 | @Qasemian2014 |
 | Sagi 2019 | @Sagi2019 |
 | Bates 2007 | @Bates2007 |
 | dosSantos 2019 | @dosSantos2019 |
