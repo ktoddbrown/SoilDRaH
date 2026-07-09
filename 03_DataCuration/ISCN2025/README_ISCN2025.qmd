@@ -564,7 +564,23 @@ ISCN_site.df <- ISCN3.ls$site |>
          across(c(geolocation_datum, region_country, region_state, depth_zero_reference),
                 .fns = as.factor)) |>
   select(-dataset_name_soc) |>
-  rename(dataset_name = dataset_name_sub)
+  rename(dataset_name = dataset_name_sub) |>
+  full_join(ISCN3.ls$collection |>
+              filter(of_variable %in% c('citation', 'reference'),
+                     dataset_name %in% c('Permafrost_RCN', ISCN_site.df$dataset_name)) |>
+              select(dataset_name, with_entry) |>
+              reframe(site_bib = str_extract(with_entry, '(?<=@)\\w+') |>
+                        unlist() |>
+                        paste0( collapse = ';') |>
+                        str_remove(pattern= ';?NA;?'),
+                      .by = dataset_name) |>
+              filter(!is.na(site_bib)),
+            by = join_by(dataset_name)) |>
+  mutate(study_bib = 'ISCN3')
+
+ISCN_citations.ls <- ISCN3.ls$citations[
+  c('ISCN3', unlist(str_split(ISCN3_bib$site_bib, pattern = ';')))
+  ]
 
 ```
 
