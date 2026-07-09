@@ -121,6 +121,13 @@ if(file.exists(readsource.file)){
 of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
 is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
+level1_controlVocabulary <- list(soc = 'carbon',
+                                 bd = 'bulk_density',
+                                 cf = 'coarse_fraction',
+                                 layer = 'layer',
+                                 geolocation = 'geolocation',
+                                 om = 'organic_fraction')
+
 ```
 
 # Data Summary
@@ -176,7 +183,7 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
   + [TemplateCVs.pdf](TemplateCVs.pdf) transcribed source pdf
   + [TemplateSubmit.pdf](TemplateSubmit.pdf) transcribed source pdf
 
-# Data Rescue working notes 
+<!---- # Data Rescue working notes 
 
 ## Data Rescue Plan
 
@@ -215,7 +222,7 @@ The ISCN3 files are archived on EDI web portal and will be downloaded to the `te
   - `Kane` dataset has this citation reference: Valentine, David. 2004. Soil profiles along productivity gradients in interior Alaska: Summer 2003, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:133, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=133. Fixed this citation in rescued citations file with the correct reference citation.
   - `NASIS-2014` link doesn't work anymore.
   - `Worldwide soil carbon and nitrogen data` dataset has invalid doi.
-
+--->
 ## Download ISCN3
 
 The ISCN3 is downloaded from EDI (@ISCN3). 
@@ -405,201 +412,47 @@ Broad classes of information that we are looking for include:
 For this analysis we are interested in:
 
   * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Observation time**: observation year
   * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
   * **Layer depth**: Depth of surveyed soil layer
- 
 
-Information from the methods and other sections are pulled into tables with line by line source citations.
-This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+Note that level 1 data processing below removes the NRCS data contribution from ISCN3.
+See the SoilDRaH entry for the NCSS data as a updated replacement for this or work directly with the level 0 data above.
 
-The final format of the data frame here will include the following 
-
-  + grouping ids
-    - study_id
-    - contributing_id
-    - site_id
-    - profile_id
-    - layer_id
-  + `of_variable`:
-    * acknowledgement:
-      + `is_type`:
-        - usage
-        - value
-    * bulk_density:
-      + `is_type`:
-        - ISCN_vocabulary
-        - NRCS_prep_code
-        - description
-        - method
-        - name
-        - unit
-        - value
-    * bulk_density_estimated_fine_earth:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * bulk_density_fine_earth:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * bulk_density_whole_soil:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * carbon:
-      + `is_type`:
-        - ISCN_vocabulary
-        - NRCS_prep_code
-        - description
-        - method
-        - name
-        - unit
-    * carbon_inorganic:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * carbon_organic_fraction:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * carbon_organic_area_density:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - flag
-        - method
-        - name
-        - unit
-        - value
-    * carbon_total:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * citation:
-      + `is_type`:
-        - usage
-        - value
-    * coarse_fraction:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - method
-        - name
-        - unit
-        - value
-    * contact:
-      + `is_type`:
-        - email
-        - name
-    * curator:
-      + `is_type`:
-        - email
-        - name
-        - organization
-    * dataset:
-      + `is_type`: 
-        - description
-    * depth:
-      + `is_type`: 
-        - zero_reference
-    * geolocation:
-      + `is_type`:
-        - datum
-        - latitude
-        - longitude
-        - unit
-    * layer:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - lower
-        - name
-        - note
-        - unit
-        - upper
-    * loss_on_ignition:
-      + `is_type`:
-        - ISCN_vocabulary
-        - description
-        - name
-        - unit
-        - value
-    * observation_date:
-      + `is_type`:
-        - date
-        - format
-    * reference:
-      + `is_type`: 
-        - value
-    * region:
-      + `is_type`:
-        - country
-        - state
-    * version:
-      + `is_type`:
-        - value
-  + `with_entry`
-  + `from_source`
-
- 
- <!--- TODO we are experimenting with some new variable names here and will need to go back and revise the vocabulary. --->
+This code takes a two step approach. First it isolates each of the variables of interest with the `is_type` observations as columns. Any known corrections or filters are applied in this first step.
 
 ```{r}
-#| label: ISCN3_corrections_citations
-#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
+#| label: level1_constants
 
-
-#collection table
-collection.df <- 
-  #### Create cross key for the citation dataset naming to include the double
-  #### citations needed for the Permafrost RCN data sets
-  data.lvl0.ls$data$TableDataset$primary |>
-  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
-         #"dataset_type (dataset_type)",
-         "curator_name", "curator_organization", "curator_email", 
-         "contact_name", "contact_email", 
-         "dataset_description"
-  ) |>
-  #expand the Permafrost RCN datasets so we can pull in that citation
-  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
-          .by = everything()) |>
-  full_join(
-    data.lvl0.ls$data$TableCitation$primary |>
-      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
-             "reference", 
-             "citation", "citation_usage", 
-             "acknowledgement", "acknowledgement_usage") |>
-      mutate(source_from = 'Table Citation'),
-    relationship = "many-to-many",
-    by = join_by(dataset_name_citation)) |>
-  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
-  filter(!str_detect(dataset_name, 'NRCS')) 
-  
+precisions.ls <- list(latLong_digits = 4, #assume lat/lon precision of 0.0001
+                      #cluster resolution in lat/lon degrees
+                      geolocationCluster_resolution = 0.001, 
+                      #cluster resolution in years
+                      observationYear_resolution = 2, 
+                      #assume precision of 1cm
+                      depth_digits = 0) 
 ```
+
+## Space-time locations: resolution and clusters
+
+ISCN3 provides latitude/longitude and observation date.
+We have identified three main issues with the data collection:
+
+  1) Locations appear overly precise with several extending to 8 or more reported degrees of precision that appear to be numerical errors.
+    - *To resolve* round the lat/lon values to `{r} precisions.ls$latLong_digits` digits.
+  2) Several locations appear to be repeated with both the lat/long reported extremely closely and shared values of bulk density or soil carbon elements reported.
+    - *To resolve* this complete the degree distance between all lat/lon and applied a `{r} precisions.ls$geolocationCluster_resolution` cluster height to define geolocation groups.
+    - *Note* that this ignores datum corrections, if exact location matters (<100m) you may need to reprocess the data from level 0.
+  3) Observation dates appear to have standard export issues often seen in Access/Excel csv exports. Observation dates do not adhere to the reported YYYY-MM-DD format and are instead numerical values. Given the distribution of points its likely that some of these values were orginally entered as years and others reported as days-since-origin. Excel has historically exported their dates as days since 1900-01-01.
+    - *To resolve* any values below 2015 were assumed to be CE-year and assigned the first of that year. Values above 2015 were assumed to be days since 1900-01-01.
+  4) Observation dates also had minor disagreements between likely duplicate entries.
+    - *To resolve*, similar to geolocations, a distance matrix was calculated and clusters within `{r} precisions.ls$observationYear_resolution` were assigned unique identifies.
 
 ```{r}
 #| label: ISCN3_geo
 #| code-summary: 'ISCN3 repeats geolocation, identify clusters by location and observation time. ISCN3 also has inconsistant formating in the observation date; if number below 2015 assume year, otherwise days since origin.'
 
-#Site table
+#Format numerical values and impose precision
 site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
   select("dataset_name_sub", "dataset_name_soc", #ID
          "site_name", "profile_name", #ID
@@ -619,7 +472,9 @@ site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
            as.factor(),
     observation_date = 
            case_when(is.na(date_number) ~ NA_Date_,
+                     #assign origin based on Excel/Access historical convention
                      date_number > 2015 ~ as_date(date_number, origin = ymd('1900-01-01')),
+                     #process things with just the year specified using the truncated flag
                      date_number <= 2015 ~ ymd(`observation_date (YYYY-MM-DD)`, 
                                                quiet = TRUE,
                                                truncated = 2),
@@ -630,39 +485,64 @@ site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
   #... many numbers look overly precise and there was likely numerical error
   #....introduced during initial processing (excel/access exports?)
   mutate(across(c(`lat (dec. deg)`, `long (dec. deg)`), 
-                .fns = round, digits = 4))  
+                .fns = round, digits = precisions.ls$latLong_digits))
 
+#Define the location clusters if there are finite latitude/longitude reported using clusters on eucludian distances
 site_geocluster <- site_org.df |>
   select("dataset_name_sub", #ID
          "site_name",  #ID
          "lat (dec. deg)", "long (dec. deg)") |>
   #there is one site in the 'World soil carbon and nitrogen data' that has two
-  #  #... lat-long locations specified. Kick it out.
+  #... lat-long locations specified. Kick it out.
   unique() |> filter(n() == 1, .by = c(dataset_name_sub, site_name)) |>
+  #remove any location that is missing lat/lon, don't assign a geocluster
   filter(is.finite(`lat (dec. deg)` + `long (dec. deg)`)) |>
+  #Create a distance matrix based on the latitude and longitude,
+  #...cluster the sites, and cut out similar groups. 
+  #...Looking at the tree heights and the spread of the lat/lon, 
+  #...it looks like the height corresponds to the degree separation of the 
+  #...points. Degrees 0.001 will correspond to 100m and is one order of 
+  #...magnitude greater then the enforced precision.
   mutate(geolocation_id = sprintf('geocluster_%05d',
            dist(matrix(c(`lat (dec. deg)`, `long (dec. deg)`), ncol = 2)) |>
            hclust() |>
-           cutree(h = 0.001))) #|> #Using euclidean distance, corresponds to ~100m
-  #filter(n() > 1, .by = geolocation_id)
+           cutree(h = precisions.ls$geolocationCluster_resolution))) #|> #Using euclidean distance
+  #filter(n() > 1, .by = geolocation_id) #take a look at the clustered locations
 
-# temp <- dist(matrix(c(site_geocluster$`lat (dec. deg)`, site_geocluster$`long (dec. deg)`), ncol = 2)) |>
-#            hclust()
-#summary(temp$height < 0.0001) #5443 unique sites
-#summary(temp$height > 0.001) #5117 unique sites
-#summary(temp$height < 0.01) #4205 unique sites
+#What happens if we change the tolerance
+# temp <-  dist(matrix(c(site_geocluster$`lat (dec. deg)`,
+#              site_geocluster$`long (dec. deg)`), ncol = 2)) |>
+#           hclust()
+#summary(temp$height > 0.0001) #5443 unique clusters
+#summary(temp$height > 0.001) #5117 unique clusters
+#summary(temp$height > 0.01) #4205 unique clusters
+
+#Define time clusters similarlly to the spatial clusters
 site_temporalCluster <- site_org.df |>
   select("dataset_name_sub", #ID
          "site_name",  #ID
          observation_date) |>
-  filter(is.finite(observation_date)) |>
-  unique() |>
+  #only define a cluster if we have an observation date
+  filter(is.finite(observation_date)) |> unique() |>
+  #create the temporal cluster
   mutate(date_year = year(observation_date),
-         temporal_id = sprintf('timecluster_%02d',
-                               dist(matrix(decimal_date(observation_date), ncol = 1)) |> 
-           hclust() |>
-           cutree(h = 2))) #max height here corresponds to year span, consider two years to be effectively the same observation time
+         temporal_id = sprintf(
+           'timecluster_%02d',
+           dist(matrix(decimal_date(observation_date), ncol = 1)) |> 
+             hclust() |>
+             cutree(h = precisions.ls$observationYear_resolution))) #max height here corresponds to year span, consider two years to be effectively the same observation time
 
+#temp <-  dist(matrix(decimal_date(site_temporalCluster$observation_date), ncol = 1)) |>
+#           hclust()
+#range(temp$height) # 0.00000 94.60383
+#summary(temp$height > 1) #75 clusters
+#summary(temp$height > 2) #43 clusters
+#summary(temp$height > 5) #21 clusters
+#summary(temp$height > 10) #11 clusters
+
+#reconstruct the site information with the clusters developed above
+#...note that we keep the exact lat/long and observate date provided 
+#...and they are now associated with neighborhood clusters
 site.df <- site_geocluster |>
   full_join(site_temporalCluster,
             by = join_by(dataset_name_sub, site_name)) |>
@@ -670,14 +550,26 @@ site.df <- site_geocluster |>
             by = join_by(dataset_name_sub, site_name,
                          `lat (dec. deg)`, `long (dec. deg)`,
                          observation_date))
-  #
 
 uniqueSpaceTime <- site.df |>
   filter(!is.na(temporal_id) & ! is.na(geolocation_id)) |>
   select(temporal_id, geolocation_id) |> unique() |> nrow()
 ```
 
-There are `{r} uniqueSpaceTime` number of unique geolocation-time pairs reported.
+There are `{r} uniqueSpaceTime` unique geolocation-time pairs reported.
+
+## Layer processing: constructing identifiers
+
+Processing the layer table 
+
+  1) Layer observations appear to be duplicated for different SOC calculations and entered in under multiple datasets.
+    - *To resolve* add in the clusters developed in the site processing above so that we can better identify duplicate entries of variables when processing each variable type later in the code.
+  2) Identifiers provided under the `.*_name` pattern are not unique leading to issues pivoting the data during processing.
+    - *To resolve* construct a `layer_id` from available zero reference and the upper/lower bounds. Ensure that the upper/lower bounds have a realistic resolution of 1 cm. Also construct a `sample_id` from the `dataset_name`, `site_name`, `profile_name`, and `layer_name`. The sample id is slightly redundent but allows us to consolodate the identifiers.
+
+Things to also note here:
+  - Removing the NRCS layers reduced row counts from 445 829 to 72 503.
+  - Location information is given in both the site and layer tables. We assume the site is correct and ignore the layer information.
 
 ```{r}
 #| label: ISCN3preprocess_layer
@@ -686,17 +578,14 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   select(#"ISCN 1-1 (2015-12-10)", 
          "dataset_name_sub", "dataset_name_soc", 
          "site_name", "profile_name", 
-         #"lat (dec. deg)", "long (dec. deg)",
-         #"state (state_province)", "country (country)", 
-         #"observation_date (YYYY-MM-DD)",
+         #"lat (dec. deg)", "long (dec. deg)", "state (state_province)", "country (country)", "observation_date (YYYY-MM-DD)", #use location information from the site not layer
          "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
          #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
          #"vegclass_local", 
          #"soil_taxon", "soil_series", 
          "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
          "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
-         #"n_tot (percent)", 
-         #"c_to_n (mass ratio)", 
+         #"n_tot (percent)", "c_to_n (mass ratio)", 
          "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
          #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
          "caco3 (percent)", 
@@ -715,30 +604,35 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   #remove 373 326 layers. Work with the current NRCS data download instead
   filter(!str_detect(dataset_name_sub, 'NRCS')) |> #72503 obs of 25 variables
   #remove columns that are empty because some of these are NRCS only observations
-  filter_out(if_all(everything(), is.na)) |> #does not remove columns right now
+  filter_out(if_all(everything(), is.na)) |> #does not remove columns right now but might if the variables were expanded
+  #add in the site information so that we can get the cluster ids
   left_join(site.df,
             by = join_by(dataset_name_sub, dataset_name_soc, site_name, profile_name)) |> 
   mutate(across(c(`layer_top (cm)`, `layer_bot (cm)`), as.numeric)) |>
-  #layer resolution should not drop below 1-cm so construct the identifier from the unique combinations of the top/bottom layers
+  #Construct the layer ID from the rounded depths and 
+  #...add in the zero reference if it exists
   mutate(layer_id = case_when( 
     !is.na(`profile_zero_ref (profile_zero_ref)`) &
-      !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ sprintf('layer (zero-ref:%s) [%d,%d]',
-                                                            `profile_zero_ref (profile_zero_ref)`,
-                                                            round(`layer_top (cm)`, digits = 0),
-                                                            round(`layer_bot (cm)`, digits = 0)),
+      !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~
+      sprintf('layer (zero-ref:%s) [%d,%d]',
+              `profile_zero_ref (profile_zero_ref)`,
+              round(`layer_top (cm)`, digits = precisions.ls$depth_digits),
+              round(`layer_bot (cm)`, digits = precisions.ls$depth_digits)),
     is.na(`profile_zero_ref (profile_zero_ref)`) &
-      !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ sprintf('layer [%d,%d]',
-                                                            round(`layer_top (cm)`, digits = 0),
-                                                            round(`layer_bot (cm)`, digits = 0)),
+      !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ 
+      sprintf('layer [%d,%d]',
+              round(`layer_top (cm)`, digits = precisions.ls$depth_digits),
+              round(`layer_bot (cm)`, digits = precisions.ls$depth_digits)),
     !is.na(`profile_zero_ref (profile_zero_ref)`) &
-      is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ sprintf('layer (zero-ref:%s)',
-                                                            `profile_zero_ref (profile_zero_ref)`),
+      is.na(`layer_top (cm)` + `layer_bot (cm)`) ~
+      sprintf('layer (zero-ref:%s)',
+              `profile_zero_ref (profile_zero_ref)`),
     is.na(`profile_zero_ref (profile_zero_ref)`) &
       is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ NA_character_,
     .default = 'missing'
-    )
-    ) |>
+    )) |>
   arrange(geolocation_id, temporal_id, layer_id) |> #full address
+  #create a sample_id for simplification later from key:value pairs of the names
   mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s',
                                dataset_name_sub, site_name, profile_name, layer_name))
 ```
@@ -956,6 +850,39 @@ temporal.df <- layer.df |>
          .by = c(temporal_id)) |>
   mutate(unit = 'decimal year (CE)',
          variable = 'observation_date')
+  
+```
+
+```{r}
+#| label: ISCN3_corrections_citations
+#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
+
+
+#collection table
+collection.df <- 
+  #### Create cross key for the citation dataset naming to include the double
+  #### citations needed for the Permafrost RCN data sets
+  data.lvl0.ls$data$TableDataset$primary |>
+  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+         #"dataset_type (dataset_type)",
+         "curator_name", "curator_organization", "curator_email", 
+         "contact_name", "contact_email", 
+         "dataset_description"
+  ) |>
+  #expand the Permafrost RCN datasets so we can pull in that citation
+  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
+          .by = everything()) |>
+  full_join(
+    data.lvl0.ls$data$TableCitation$primary |>
+      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
+             "reference", 
+             "citation", "citation_usage", 
+             "acknowledgement", "acknowledgement_usage") |>
+      mutate(source_from = 'Table Citation'),
+    relationship = "many-to-many",
+    by = join_by(dataset_name_citation)) |>
+  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
+  filter(!str_detect(dataset_name, 'NRCS')) 
   
 ```
 
