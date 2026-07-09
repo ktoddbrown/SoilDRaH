@@ -596,7 +596,7 @@ collection.df <-
 ```
 
 ```{r}
-#| label: ISCN3_corrections_citations
+#| label: ISCN3_geo
 #| code-summary: 'ISCN3 repeats geolocation, identify clusters by location and observation time. ISCN3 also has inconsistant formating in the observation date; if number below 2015 assume year, otherwise days since origin.'
 
 #Site table
@@ -680,6 +680,8 @@ uniqueSpaceTime <- site.df |>
 There are `{r} uniqueSpaceTime` number of unique geolocation-time pairs reported.
 
 ```{r}
+#| label: ISCN3preprocess_layer
+
 layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   select(#"ISCN 1-1 (2015-12-10)", 
          "dataset_name_sub", "dataset_name_soc", 
@@ -742,9 +744,9 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
 ```
 
 ```{r}
-
+#| label: ISCN3_bulkDensity
 bulkdensity.df <- layer.df  |>
-  select(c(ends_with('_id'), starts_with('bd'))) |>
+  select(c(ends_with('_id'), starts_with('bd')), dataset_name = dataset_name_sub) |>
   mutate(across(.cols = ends_with('(g cm-3)'), .fns = as.numeric)) |>
   mutate(across(.cols = ends_with('(g cm-3)'), .fns = round, digits = 2)) |> #72 503
   pivot_longer(cols = where(is.numeric), names_to = 'column_name_bd',
@@ -759,7 +761,7 @@ bulkdensity.df <- layer.df  |>
       sprintf('bd_method:%s', bd_method),
     .default = NA_character_)) |>
   select(geolocation_id, temporal_id, layer_id, sample_id,
-         column_name_bd, value_bd, method_bd) |> #59 459
+         column_name_bd, value_bd, method_bd, dataset_name) |> #59 459
   #Deal with duplicate values
   mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
                             unique(sample_id), 
@@ -793,13 +795,14 @@ bulkdensity.df <- layer.df  |>
   filter(n() == 1,
          #length(unique(value_bd)) > 1,
          .by = c(geolocation_id, temporal_id, layer_id, method_bd)) |> #nrow 39 679
-mutate(of_variable = 'bulk_density',
-       unit = 'g cm-3') |>
+  mutate(of_variable = 'bulk_density',
+         unit = 'g cm-3') |>
   select(ends_with('_id'), variable = of_variable, value = value_bd, 
-         unit = unit, method = method_bd)
+         unit = unit, method = method_bd, dataset_name)
 ```
 
 ```{r}
+#| label: ISCN3_soc
 soc.df <- layer.df  |>
   select(c(ends_with('_id'), starts_with('soc'), dataset_name_soc))  |>
   filter(!is.na(`soc (g cm-2)`)) |> #46 343
@@ -822,16 +825,19 @@ soc.df <- layer.df  |>
                             unique(sample_id), 
                             paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
          method = paste(unique(method_soc[!is.na(method_soc)]), collapse = ';'),
+         dataset_name_soc = paste(unique(dataset_name_soc[!is.na(dataset_name_soc)]), collapse = ';'), #keep seperate for citations later
          .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
   unique() |> #41 750
-  select(geolocation_id, temporal_id, layer_id, sample_id, value, method) |>
+  select(geolocation_id, temporal_id, layer_id, sample_id, value, method, 
+         dataset_name = dataset_name_soc) |>
   mutate(variable = 'organic_carbon_stock',
          unit = 'g cm-2')
 ```
 
 ```{r}
+#|label: ISCN3_carbonfraction
 carbon_fraction.df <- layer.df  |>
-  select(c(ends_with('_id'), 
+  select(c(ends_with('_id'), dataset_name = dataset_name_sub,
            `oc (percent)`, `c_tot (percent)`, `caco3 (percent)`,
            cNRCS_prep_code, c_method))  |>
   pivot_longer(cols = contains('percent'),
@@ -862,14 +868,17 @@ carbon_fraction.df <- layer.df  |>
          #... which is possible, so group on this as well.
          .by = c(geolocation_id, temporal_id, layer_id, column_name, value)) |> 
   unique() |> #45 278
-  select(geolocation_id, temporal_id, layer_id, sample_id, value, method) |>
+  select(geolocation_id, temporal_id, layer_id, sample_id, value, method, dataset_name) |>
   mutate(variable = 'carbon_fraction',
          unit = 'mass-percent (carbon to fine earth)')
 ```
 
 ```{r}
+#| label: ISCN3_organicFraction
+#| 
 organic_fraction.df <- layer.df  |>
-  select(ends_with('_id'), `loi (percent)`)  |>
+  select(ends_with('_id'), dataset_name = dataset_name_sub,
+         `loi (percent)`)  |>
   filter(!is.na(`loi (percent)`)) |> #938
   #pick digits based on hist(str_length(soc.df$`loi (percent)`))
   mutate(value = round(as.numeric(`loi (percent)`), digits = 5)) |>
@@ -880,15 +889,16 @@ organic_fraction.df <- layer.df  |>
                             paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
          .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
   unique() |> #936
-  select(geolocation_id, temporal_id, layer_id, sample_id, value) |>
+  select(geolocation_id, temporal_id, layer_id, sample_id, value, dataset_name) |>
   mutate(variable = 'organic_matter_fraction',
          unit = 'mass-percent (organic to fine earth)',
          method = 'loss on ignition')
 ```
 
 ```{r}
+#| label: ISCN3_depth
 depth.df <- layer.df  |>
-  select(dataset_name = dataset_name_sub, site_name, #cross with the site dataframe
+  select(site_name, #cross with the site dataframe
          ends_with('_id'), starts_with('layer'), 
          `profile_zero_ref (profile_zero_ref)`) |> #72 503
   filter(!is.na(`layer_top (cm)` + `layer_bot (cm)`)) |> #72 503
@@ -908,6 +918,7 @@ depth.df <- layer.df  |>
 ```
 
 ```{r}
+#| label: ISCN3_spaceTime
 geolocation.df <- layer.df |>
   select(geolocation_id, `lat (dec. deg)`, `long (dec. deg)`, datum = `datum (datum)`) |>
   unique() |> #5408
@@ -948,19 +959,44 @@ temporal.df <- layer.df |>
   
 ```
 
+
 ```{r}
-sample.df <- soc.df |>
-  bind_rows(bulkdensity.df) |>
-  bind_rows(organic_fraction.df) |>
-  bind_rows(carbon_fraction.df)
+#| label: build_lvl1
+data.lvl1.ls <- list(
+  sample = soc.df |>
+    bind_rows(bulkdensity.df) |>
+    bind_rows(organic_fraction.df) |>
+    bind_rows(carbon_fraction.df) |>
+    rename(citation_id = dataset_name),
+  depth = depth.df,
+  geolocation = geolocation.df |>
+    bind_rows(region.df),
+  temporal = temporal.df,
+  study_bibKey = 'ISCN3'
+)
 
-#depth.df already here
+data.lvl1.ls$citation_key <-   data.lvl1.ls$sample |>
+    select(citation_id) |>
+    unique() |>
+    reframe(dataset_name = str_split(citation_id, patter = ';') |>
+              unlist(),
+            .by = citation_id) |>
+    left_join(
+      collection.df |>
+        pivot_longer(cols = c(citation, reference),
+                     names_to = 'variable',
+                     values_to = 'text', 
+                     values_drop_na = TRUE) |>
+        reframe(bib_key = 
+                  str_extract_all(text,'(?<=@)\\w+') |> unlist(),
+                .by = c(dataset_name, variable)),
+      by = join_by(dataset_name),
+      relationship = "many-to-many")
 
-geolocation.df <- geolocation.df |>
-  bind_rows(region.df)
-
-#temporal.df already here
-# need to pull citations
+allKeys <- data.lvl1.ls$citation_key |>
+  filter(is.finite(bib_key))
+data.lvl1.ls$citation <- c(data.lvl0.ls$citation$primary,
+                           data.lvl0.ls$citation$contributed[unique(allKeys$bib_key)])
 ```
 
 ##DONT RUN BELOW
