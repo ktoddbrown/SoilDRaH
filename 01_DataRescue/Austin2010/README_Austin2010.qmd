@@ -416,12 +416,32 @@ study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'geolocation', 'longitude', as.character(64 + 31/60), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
                    'geolocation', 'unit', 'decimal degrees', paste('Converted from method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
                    'exposure_duration', 'value', '120', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
-                   'exposure_duration', 'unit', 'days', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' '))
-)
+                   'exposure_duration', 'unit', 'days', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
+                   'soil_contact', 'value', 'none', paste('Method ln8-11:', paste(data.lvl0.ls$method[8:11], collapse = ' ')),
+                   'litter_type', 'value', 'perennial tussock grasses', paste('Method ln5-8:', paste(data.lvl0.ls$method[5:8], collapse = ' ')),
+                   'mass_loss', 'unit', 'mass-percent per day', 'Table 1 column name')
 
 treatment.df <- tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
-                        'control', 'attenuated_wavelenth', 'transmission_fraction', '0.95') |>
+                        'control', 'solar_filter', 'transmission_fraction', '0.95',
+                        'control', 'solar_filter', 'transmission_wavelength', 'all',
+                        'UV-B', 'solar_filter', 'attenuation', '280-315 nm',
+                        'UV', 'solar_filter', 'attenuation', '280-400 nm',
+                        'UV and blue', 'solar_filter', 'attenuation', '280-450 nm'
+                        ) |>
   mutate(from_source = paste('Method ln4:', paste(data.lvl0.ls$method[12], collapse = ' ')))
+
+litter_loss.df <- data.lvl0.ls$data$Table1$primary |>
+  select(litter_type = Substrate, transmission_wavelengths = `Transmitted Wavelengths (nm)`,
+         mass_loss = `Mass loss (% per day)`, mass_loss_sem = `Mass loss (% per day) SEM`) |>
+  #pull in the grass litter but not the artificial substrate  
+  filter(str_detect(litter_type, '[Gg]rass.*')) |>
+  mutate(treatement_id = case_when(
+    transmission_wavelengths == '>450' ~ 'UV and blue',
+    transmission_wavelengths == '>400' ~ 'UV',
+    transmission_wavelengths == '>315' ~ 'UV-B',
+    transmission_wavelengths == '>290' ~ 'control',
+    .default = '[bad coding. Stop!]'
+  ))
 
 #### Table/Figure N ####
 # Process the primary data from Table/Figure M by maintaining data groups and 
