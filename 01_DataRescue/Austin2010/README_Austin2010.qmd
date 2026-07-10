@@ -79,7 +79,12 @@ timelog:
       start: 2026-07-07 T17:36
       end: 2026-07-07 T18:00
       duration: P24M
-version: 'vs202512' 
+  - activity:
+      description: Walk through data frame transformation (class exercise)
+      who: ktoddbrown
+      start: 2026-07-9 T17:30
+      end: 2026-07-9 T18:00
+      duration: P30M
 ---
 
 
