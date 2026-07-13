@@ -1,77 +1,67 @@
-﻿"Figure 1. Ashe juniper wood percent biomass remaining (circles) as a
-function time and SHADE vs. OPEN treatment. Also shown are monthly
-(solid squares) and total seasonal (shaded columns) precipitation.
-Experiment was conducted April 2005 to November 2007, as indicated
-on graph. sp (spring) indicates March, April, May; su (summer), June,
-July, August; fa (fall), September, October, November; wi (winter),
-December, January, February. There is no significant difference between
-open and shaded treatments in percent biomass remaining through time
-(repeated measures: *F* = 1.463, *P* = 0.2657). Linear: $r^2$ = 0.333; *F*
-= 50.89; *P* < 0.0001; single-exponential: $r^2$ = 0.307; *F* = 45.17;
-*P* < 0.0001.",,,,,,,
-x value,y value,x label,y label,footnotes,graph type,treatment,y value upper SE 
-0.00,105.5,Time (year),Precipitation (mm),sp 2005,bar graph,-,-
-0.25,200.7,Time (year),Precipitation (mm),su 2005,bar graph,-,-
-0.50,108.6,Time (year),Precipitation (mm),fa 2005,bar graph,-,-
-0.75,49.7,Time (year),Precipitation (mm),wi 2005,bar graph,-,-
-1.00,119.0,Time (year),Precipitation (mm),sp 2006,bar graph,-,-
-1.25,109.7,Time (year),Precipitation (mm),su 2006,bar graph,-,-
-1.50,115.9,Time (year),Precipitation (mm),fa 2006,bar graph,-,-
-1.75,106.6,Time (year),Precipitation (mm),wi 2006,bar graph,-,-
-2.00,356.9,Time (year),Precipitation (mm),sp 2007,bar graph,-,-
-2.25,353.8,Time (year),Precipitation (mm),su 2007,bar graph,-,-
-2.50,107.6,Time (year),Precipitation (mm),fa 2007,bar graph,-,-
-0.00,6.2,Time (year),Precipitation (mm),-,line graph,-,-
+"Figure 1. Ashe juniper wood percent biomass remaining (circles) as a function time and SHADE vs. OPEN treatment. Also shown are monthly (solid squares) and total seasonal (shaded columns) precipitation. Experiment was conducted April 2005 to November 2007, as indicated on graph. sp (spring) indicates March, April, May; su (summer), June, July, August; fa (fall), September, October, November; wi (winter), December, January, February. There is no significant difference between open and shaded treatments in percent biomass remaining through time (repeated measures: *F* = 1.463, *P* = 0.2657). Linear: r$^2$ = 0.333; *F* = 50.89; *P* < 0.0001; single-exponential: r$^2$ = 0.307; *F* = 45.17; *P* < 0.0001.",,,,,,,
+x value,y value,x label,y label,footnotes,graph type,treatment,y value upper SE
+0.00,106,Time (year),Precipitation (mm),sp 2005,bar graph,-,-
+0.28,201,Time (year),Precipitation (mm),su 2005,bar graph,-,-
+0.51,109,Time (year),Precipitation (mm),fa 2005,bar graph,-,-
+0.79,49.5,Time (year),Precipitation (mm),wi 2005,bar graph,-,-
+0.99,120,Time (year),Precipitation (mm),sp 2006,bar graph,-,-
+1.26,111,Time (year),Precipitation (mm),su 2006,bar graph,-,-
+1.50,116,Time (year),Precipitation (mm),fa 2006,bar graph,-,-
+1.76,107,Time (year),Precipitation (mm),wi 2006,bar graph,-,-
+2.00,357,Time (year),Precipitation (mm),sp 2007,bar graph,-,-
+2.25,354,Time (year),Precipitation (mm),su 2007,bar graph,-,-
+2.48,108,Time (year),Precipitation (mm),fa 2007,bar graph,-,-
+0.00,7.5,Time (year),Precipitation (mm),-,line graph,-,-
 0.08,106.6,Time (year),Precipitation (mm),-,line graph,-,-
-0.17,27.9,Time (year),Precipitation (mm),-,line graph,-,-
+0.17,28.9,Time (year),Precipitation (mm),-,line graph,-,-
 0.25,74.5,Time (year),Precipitation (mm),-,line graph,-,-
-0.33,102.4,Time (year),Precipitation (mm),-,line graph,-,-
-0.42,10.3,Time (year),Precipitation (mm),-,line graph,-,-
-0.50,94.1,Time (year),Precipitation (mm),-,line graph,-,-
+0.33,103.0,Time (year),Precipitation (mm),-,line graph,-,-
+0.42,10.2,Time (year),Precipitation (mm),-,line graph,-,-
+0.50,94.3,Time (year),Precipitation (mm),-,line graph,-,-
 0.58,7.2,Time (year),Precipitation (mm),-,line graph,-,-
-0.67,4.1,Time (year),Precipitation (mm),-,line graph,-,-
-0.75,13.4,Time (year),Precipitation (mm),-,line graph,-,-
+0.67,4.0,Time (year),Precipitation (mm),-,line graph,-,-
+0.75,13.2,Time (year),Precipitation (mm),-,line graph,-,-
 0.83,12.4,Time (year),Precipitation (mm),-,line graph,-,-
 0.92,41.4,Time (year),Precipitation (mm),-,line graph,-,-
 1.00,45.5,Time (year),Precipitation (mm),-,line graph,-,-
 1.08,49.7,Time (year),Precipitation (mm),-,line graph,-,-
-1.17,39.3,Time (year),Precipitation (mm),-,line graph,-,-
-1.25,26.9,Time (year),Precipitation (mm),-,line graph,-,-
+1.17,39.8,Time (year),Precipitation (mm),-,line graph,-,-
+1.25,27.0,Time (year),Precipitation (mm),-,line graph,-,-
 1.33,50.7,Time (year),Precipitation (mm),-,line graph,-,-
-1.42,65.2,Time (year),Precipitation (mm),-,line graph,-,-
-1.50,60.0,Time (year),Precipitation (mm),-,line graph,-,-
-1.57,4.1,Time (year),Precipitation (mm),-,line graph,-,-
-1.67,25.9,Time (year),Precipitation (mm),-,line graph,-,-
-1.75,72.4,Time (year),Precipitation (mm),-,line graph,-,-
-1.83,9.3,Time (year),Precipitation (mm),-,line graph,-,-
-1.91,145.9,Time (year),Precipitation (mm),-,line graph,-,-
-2.00,57.9,Time (year),Precipitation (mm),-,line graph,-,-
-2.08,172.8,Time (year),Precipitation (mm),-,line graph,-,-
+1.42,65.3,Time (year),Precipitation (mm),-,line graph,-,-
+1.50,60.1,Time (year),Precipitation (mm),-,line graph,-,-
+1.58,4.2,Time (year),Precipitation (mm),-,line graph,-,-
+1.67,25.8,Time (year),Precipitation (mm),-,line graph,-,-
+1.75,72.2,Time (year),Precipitation (mm),-,line graph,-,-
+1.83,9.2,Time (year),Precipitation (mm),-,line graph,-,-
+1.92,145.3,Time (year),Precipitation (mm),-,line graph,-,-
+2.00,58.1,Time (year),Precipitation (mm),-,line graph,-,-
+2.08,173.0,Time (year),Precipitation (mm),-,line graph,-,-
 2.17,156.2,Time (year),Precipitation (mm),-,line graph,-,-
-2.25,113.8,Time (year),Precipitation (mm),-,line graph,-,-
-2.32,107.6,Time (year),Precipitation (mm),-,line graph,-,-
-2.42,66.2,Time (year),Precipitation (mm),-,line graph,-,-
+2.25,113.7,Time (year),Precipitation (mm),-,line graph,-,-
+2.33,107.6,Time (year),Precipitation (mm),-,line graph,-,-
+2.42,66.1,Time (year),Precipitation (mm),-,line graph,-,-
 2.50,21.7,Time (year),Precipitation (mm),-,line graph,-,-
 2.58,25.9,Time (year),Precipitation (mm),-,line graph,-,-
-0.00,100.0,Time (year),Precipitation (mm),-,line graph,biomass OPEN,-
-0.00,96.0,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,101.1
-0.25,79.7,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,93.2
+0.00,100.0,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,-
+0.01,95.9,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,101.0
+0.25,79.9,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,93.2
 0.33,76.9,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,88.3
 0.67,84.2,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,92.5
-0.92,72.2,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,87.6
-1.17,72.3,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,84.6
-1.25,83.2,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,85.8
-1.50,60.4,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,78.1
-2.16,71.1,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,82.8
-2.58,64.8,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,78.1
+0.92,72.4,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,87.6
+1.17,72.3,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,87.4
+1.25,83.4,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,86.0
+1.50,60.4,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,78.3
+2.17,71.0,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,82.9
+2.58,64.9,Time (year),Biomass remaining (%),-,line graph,biomass OPEN,78.1
 0.00,100.0,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,-
-0.08,86.3,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,102.8
-0.25,72.7,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,79.0
-0.33,85.3,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,97.2
-0.67,72.7,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,82.5
+0.01,86.3,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,102.9
+0.25,72.7,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,79.1
+0.33,85.4,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,97.2
+0.67,72.7,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,82.6
 0.92,67.6,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,76.9
-1.17,69.9,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,84.8
+1.17,69.9,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,84.9
 1.25,78.5,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,87.6
-1.49,75.1,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,79.5
-2.17,66.0,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,73.4
-2.58,55.2,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,57.3
+1.50,75.4,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,79.5
+2.17,66.1,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,73.5
+2.58,55.3,Time (year),Biomass remaining (%),-,line graph,biomass SHADE,57.3
