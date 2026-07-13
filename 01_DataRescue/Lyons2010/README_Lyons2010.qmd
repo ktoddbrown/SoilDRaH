@@ -3,7 +3,6 @@ title: "Data Rescue: Lyons 2010"
 format:
   html:
     toc: true
-    eval: false #if you want to not evaluate the chunks and just check the rendering, switch this to false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -31,6 +30,17 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: lead
+   #   - standardization: #review
+    #  - curation: lead #review
+
+  - id: sierrav-droid
+    name:
+      given: Sierra
+      family: Velazquez
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
    #   - standardization: #review
     #  - curation: lead #review
       
@@ -95,7 +105,19 @@ timelog:
       who: SavaScott
       end: 2026-07-08
       start: 2026-07-08 
-      duration: PT45M
+      duration: PT1H15M
+  - activity:
+      description: Second Transcription
+      who: sierrav-droid
+      end: 2026-07-09
+      start: 2026-07-08
+      duration: PT1H10M
+  - activity:
+      description: CC and Final ReadMe Update
+      who: SavaScott
+      end: 2026-07-09
+      start: 2026-07-13
+      duration: PT2H40M
 ---
 
 
@@ -145,7 +167,7 @@ For the discussion of this data rescue see the Github issue: https://github.com/
 
 @Lyons2010 primarily measures the decomposition rate and elemental composition of Ashe juniper wood collected from a grassland in the Edwards Plateau. They used open and shaded habitats with the litterbags. They used this data to determine there was no change in the wood decomposition between the open and shaded habitats during low rainfall periods. 
 
-## Figures
+## Tables and Figures
 - Tables
   1) This paper has no tables
   
@@ -190,10 +212,14 @@ These files are in the @Lyons2010 data rescue.
   + citations for the methods section of the article
 - [Lyons2010_Methods.md](Lyons2010_Methods.md)
   + methods transcribed from primary article
-- [Lyons2010_Figure2.csv](Lyons2010_Table2.csv)
+- [Lyons2010_Figure1.csv](Lyons2010_Figure1.csv)
+  + figure 1 from primary article with Ashe juniper wood percent biomass remaining (circles) as a function time as well as monthly and seasonal precipitation.
+- [Lyons2010_Figure2.csv](Lyons2010_Figure2.csv)
   + figure 2 from primary article with Ashe juniper wood change in percent nitrogen
+- [Lyons2010_Figure3.csv](Lyons2010_Figure3.csv)
+  + figure 3 from primary article with Ashe juniper wood change in carbon:nitrogen (C∶N) through tim
 - [temp/](temp/)
-    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+    + folder that will include the second transcriptions
 
 # Data Rescue working notes 
 
@@ -215,15 +241,15 @@ These files are in the @Lyons2010 data rescue.
   - [x] Create a bib file with the citations from the methods section
   - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for figures and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions in your pull request review
+  - [x] cross check with second transcriber for figures and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [] address any revisions in your pull request review
   - [ ] celebrate!
 
 ## Figure 1
 
-Figure 1 was modified to seperate the two different y variables into different graphs. It was also motified to combine the two footnotes into one text box per variable. 
+Figure 1 was modified to seperate the two different y variables into different graphs. It was also motified to combine the two footnotes into one text box per variable. Dashes were added to indicate NA's in the data.
 
 ```{r}
 #| label: figure1Check
@@ -243,23 +269,23 @@ fig1Data <- read_csv(file = figure1.file,
                    skip = 1,
                    show_col_types = FALSE)
 
-fig1DataPrecip <- fig1Data %>% filter(`y label` == "precipitation (mm)")
+fig1DataPrecip <- fig1Data %>% filter(`y label` == "Precipitation (mm)")
 fig1DataBiomass <- fig1Data %>% filter(`y label` == "Biomass remaining (%)")
 
 fig1DataBiomass <- fig1DataBiomass %>% mutate(
   `y value` = as.numeric(`y value`),
-  `y value SE high` = as.numeric(`y value SE high`)
+  `y value upper SE` = as.numeric(`y value upper SE`)
 )
 
 fig1DataBiomass <- fig1DataBiomass %>%
-  mutate(error_var = `y value SE high` - `y value`,
+  mutate(error_var = `y value upper SE` - `y value`,
          ymin = `y value` - error_var,
          ymax = `y value` + error_var)
 
 # Precipitation graph - Combined Bar and Line Graph
 
 ggplot(fig1DataPrecip, aes(x = `x value`, y = `y value`)) +
-geom_bar(data = fig1DataPrecip %>% filter(`graph type` == "bar graph"), stat = "identity", fill = "azure4") +
+geom_bar(data = fig1DataPrecip %>% filter(`graph type` == "bar graph"), stat = "identity", fill = "azure4", width = 0.13) +
  geom_point(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), size = 1.5,
   stroke = 1,
   color = "black") + geom_line(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), color = "black") + scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
@@ -275,18 +301,16 @@ geom_bar(data = fig1DataPrecip %>% filter(`graph type` == "bar graph"), stat = "
 
 # Biomass remaining - Double Line Graph
 
-ggplot(fig1DataBiomass, aes(x = `x value`, y = `y value`, shape = `treatment`, fill = `treatment`)) + geom_point(size = 1.5,
-  stroke = 1) +
-  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
-  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100)) + 
-  geom_errorbar(aes(ymin = ymin, ymax = ymax, color = treatment), width = 0.1) + scale_color_manual(values = c(
+ggplot(fig1DataBiomass, aes(x = `x value`, y = `y value`, shape = treatment, fill = treatment)) + geom_point(size = 1.5, stroke = 1) +
+scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100)) +
+geom_errorbar(aes(ymin = ymin, ymax = ymax, color = treatment), width = 0.1) + 
+  scale_color_manual(values = c(
     "biomass OPEN" = "azure4",
-    "biomass SHADE" = "black"
-  )) + labs(
-       x = "Time (year)",
-       y = "Biomass remaining (%)",
-       caption = fig1Caption)
-  
+     "biomass SHADE" = "black")) + 
+  labs(x = "Time (year)",
+y = "Biomass remaining (%)",
+caption = fig1Caption) 
 
 ```
 
@@ -294,12 +318,14 @@ And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
 #| label: compareFigure1
+#| eval: true
+
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure1_SV.csv Lyons2010_Figure1.csv
 ```
 
 
@@ -353,6 +379,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
 #| label: compareFigure2
+#| eval: true
 
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure2_SV.csv Lyons2010_Figure2.csv
@@ -405,12 +432,13 @@ And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{bash}
 #| label: compareFigure3
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template has an example of an unresolved conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_AC.csv AuthorYYYY_TableN.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure3_SV.csv Lyons2010_Figure3.csv
 ```
 
 ## Methods
@@ -464,49 +492,44 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: true
+
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
 
 data.lvl0.ls <- list(
-  #Read in a list of all the bib files
   citation = list(
-    #Citation for the article transcriptions are pulled from
     primary = read.bib(file = primaryCitation.file), 
-    #Citations for all referenced articles
     methods = read.bib(file = methodsCitation.file)
   ),
-  #Read in the text transcription of the article's methods section
   method = read_lines(file = methods.file),
-  #Read in the results as tables or figure transcriptions. This includes
-  #...the caption as well as the tables themselves
   data = list(
-    TableN = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
+    Figure1 = list(
+      caption = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = figure1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ), #End 'Table1' element
-    FigureM = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = figureM.file,
+    ),
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = figureM.file,
+      primary = read_csv(file = figure2.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
-   ) #end 'data' element
+    ),
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+   )
 )
 
 ```
@@ -516,6 +539,8 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
+
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
@@ -635,6 +660,8 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
+
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -662,6 +689,8 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
+
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -708,6 +737,8 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
+
 
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
