@@ -68,7 +68,7 @@ timelog:
       description: transcriptions (Table 1, Figure 1, methods)
       who: Misheph
       start: 2026-05-01
-      duration: P1H30M    
+      duration: P3H30M    
   - activity:
       description: transcriptions (Table 1, methods)
       who: anegondia
