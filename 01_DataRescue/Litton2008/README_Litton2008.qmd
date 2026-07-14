@@ -1,0 +1,264 @@
+---
+title: "Data Rescue: Litton 2008"
+format:
+  html:
+    toc: true
+date: 2025-07
+date-format: YYYY-MMMM
+bibliography:
+  - Litton2008_Methods.bib
+  - Litton2008.bib
+author:
+  - name:
+      given: Katherine
+      family: Todd-Brown
+      orcid: 0000-0002-3109-8130
+      note: https://github.com/ktoddbrown
+      affiliations:
+        - id: ESS UF
+          name: University of Florida
+          department: Environmental Engineering Sciences
+          city: Gainesville
+          state: FL
+          country: USA
+      role: 
+        - "Review"
+  - name:
+      given: Layla
+      family: Kalandjian
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/laylakalandjian
+  - name:
+      given: Savannah
+      family: Scott
+      affiliation:
+        - id: UF
+          name: University of Florida
+          city: Gainesville
+          state: FL
+          country: USA
+      role: "Transcription"
+      note: https://github.com/SavaScott
+---
+
+```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(kableExtra)
+
+methods.file <- 'Litton2008_Methods.md'
+table2.file <- 'Litton2008_Table2.csv'
+figure6.file <- 'Litton2008_Figure6.csv'
+primaryCitation.file <- 'Litton2008.bib'
+methodsCitation.file <- 'Litton2008_Methods.bib'
+```
+
+This documents the data transcription for Litton 2008.
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/91.
+
+LITTON, C.M., SANDQUIST, D.R. and CORDELL, S. (2008), A non-native invasive grass increases soil carbon flux in a Hawaiian tropical dry forest. Global Change Biology, 14: 726-739. https://doi.org/10.1111/j.1365-2486.2008.01546.x
+
+# Data Summary
+
+This paper focuses on the invasion of non-native plants in terrestrial ecosystems, particularly by looking at the presence of *P. setaceum* in the Kaupulehu Dry Forest Preserve and its impact on underground C cycling. Litton examines both C pools and fluxes in invaded and non-invaded plots over a 2-year time period.
+
+## Fit for purpose: HiCSC
+
+This data is identified as a data source for the Hawai'i Soil Organic Carbon Database https://osf.io/hmtv6/ as part of the HiCSC.
+
+- Location: Latitude/Longitude as well as time of observation identified in methods section under *Study area* subsection.
+- Soil carbon stock: Depth of soil mentioned in methods section under *Soil C pools* subsection.
+- Soil type: Soil type identified in methods section. 
+- Land use: Identified in methods section under *Study area* subsection.
+
+# Tables and figures
+
+Figure 1: Two-year time course of treatment means for monthly soil-surface CO2 efflux, weekly soil temperature, and weekly soil water potential with weekly cumulative precipitation
+Figure 2: Soil surface CO2 efflux vs soil water potential
+Figure 3: Daily soil-surface CO2 efflux and precipitation
+Figure 4: Soil-surface CO2 efflux vs total leaf area index
+Figure 5: Two-year time course of monthly tree litterfall and total annual aboveground litterfall
+Figure 6: *In situ* foliage decomposition of dominant tree with non-native invasive grass vs without
+Figure 7: C4 grass contribution (%) to soil C pools and fluxes
+
+Table 1: Stand characteristics of study site with and without *Pennisetum setaceum*
+Table 2: Soil carbon pools in grass and grass removal plots
+Table 3: Cumulative annual flux of C from soils in grass and grass removal plots
+  
+### Table 2
+
+Table 2 was modified to combine row subheadings, separated with a hyphen. Column names were combined with sublabels. Additionally, notes at bottom of table combined with table title in the caption.
+
+```{r table2}
+#| code-fold: true
+#| message: false
+
+filename <- table2.file
+read_csv(file = filename,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = filename, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+```
+
+### Figure 6
+
+Data from Figure 6 pulled using Plot Digitizer and altered into a csv. SE stands for Standard Error, Standard error high and lows from bar graph included as separate columns. Letters indicating statistically significant differences were listed in a new column titled "letter".
+
+```{r figure6}
+#| label: figure6Check
+#| code-fold: true
+#| message: false
+
+fig6Caption <- read_csv(file = figure6.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig6Data <- read_csv(file = figure6.file,
+                   skip = 1,
+                                      col_types = cols(.default = col_character()))
+
+fig6Data$`Litter Type` <- factor(fig6Data$`Litter Type`,
+                                  levels = unique(fig6Data$`Litter Type`))
+fig6Data$`Mass remaining (%)` <- as.numeric(fig6Data$`Mass remaining (%)`)
+fig6Data$`SE High`<- as.numeric(fig6Data$`SE High`)
+fig6Data$`SE Low`<- as.numeric(fig6Data$`SE Low`)
+fig6Data$`Type Label` <- factor(fig6Data$`Type Label`, levels = c("Removal", "Grass"))
+
+ggplot(fig6Data, aes(x = `Litter Type`, y = `Mass remaining (%)`, fill = interaction(`Litter Type`, `Type Label`))) +
+  geom_bar(stat = "identity", color = "black", width = 0.5, position = position_dodge(width = 1)) +
+  scale_y_continuous(breaks = c(0, 15, 30, 45, 60, 75), limits = c(0, 75)) +
+  scale_fill_manual(values = c("white", "lightgray", "darkgray")) +
+  facet_grid(~ `Type Label`, scales = "free_x", space = "free_x") +
+  geom_errorbar(aes(ymin = `SE Low`, ymax = `SE High`, group = `Type Label`),
+                position = position_dodge(width = 1),
+                width = 0.25) +
+  theme_classic() +
+  theme(
+    legend.position = "none",
+    strip.background = element_blank(),
+    strip.text = element_text(size = 14, face = "bold"),
+    axis.line = element_line(color = "black"),
+    panel.spacing = unit(0, "lines")
+  ) +
+  scale_x_discrete(expand = expansion(mult = c(0.1, 0.1))) +
+  geom_text(aes(
+    label = `Letter`, y = `SE High` + 2),
+    position = position_dodge(width = 1),
+    vjust = 0,
+    size = 5
+  ) +
+    labs(y = "Mass Remaining (%)",
+         x = "Species")
+
+```
+
+{{< include Litton2008_Methods.md >}}
+
+# Transcription comparison
+
+```{bash eval=FALSE}
+diff --strip-trailing-cr --suppress-common-lines -y Litton2008_Table2.csv Litton2008_Table2_SRS.csv
+```
+
+# Files
+
+These files are in the Litton2008 data rescue.
+
+- [Readme](README_Litton2008.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Litton2008.bib](Litton2008.bib)
+  + citation for article transcribed.
+- [Litton2008_Methods.bib](Litton2008_Methods.bib)
+  + citations for the methods section of the article.
+- [Litton2008_Methods.md](Litton2008_Methods.md)
+  + methods transcribed from primary article.
+- [Litton2008_Table2.csv](Litton2008_Table2.csv)
+  + table 2 from primary article with Soil C values.
+- [Litton2008_Figure6.csv](Litton2008_Figure6.csv)
+  + figure 6 from primary article with litter decomposition.
+- [temp/](temp/)
+    + scratch folder that will not be archived includes excel and article pdf documents.
+
+# Working notes 
+
+## Data Rescue Plan
+
+- [x] describe files in human readable form inside ReadMe
+- [x] description with Git issue with link
+- [x] add contribution yaml
+- [x] create excel sheet with Table 2
+- [x] export excel table to csv
+- [x] copy over methods section into markdown
+- [x] use plot digitizer to pull figure 6
+- [x] pull down citations in methods section to bib file
+- [x] add in citation links to methods
+- [x] cross check with second transcriber for tables and methods
+- [x] submit to independent review
+- [x] archive on SoilDRaH
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r readLevel0}
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles in methods section
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table2 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table1' element
+    Figure6 = list(
+      caption = read_csv(file = figure6.file,
+                         col_types = cols(.default = col_character()), n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure6.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                    dataLevel = 'level0')
+
+if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  print('Read function matches code here.')
+}else{
+  print('There is a mismatch in the data objects between the code here and the read function.')
+}
+
+```

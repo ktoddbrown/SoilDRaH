@@ -1,243 +1,817 @@
 ---
-title: "ISCN3 report"
-date: "Summer 2024"
-output: 
-  html_document: 
+title: "Data Rescue: ISCN3"
+format:
+  html:
     toc: true
-    number_sections: true
-    code_folding: show
+    code-fold: true
+    eval: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - ISCN3_Contributors.bib  #contains the citations for contributed datasets by authors
+  - ISCN3_2015.bib #contains citation for the data source, generally a single citation of the primary paper
+nocite: |
+  @* #add all citations
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    orcid: 0000-0002-3854-1764
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead #secondary, review
+      - standardization: lead
+      - curation: lead #review
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: Vaasuki Marupaka
+      end: 2026-03-25
+      start: 2026-02-06
+      duration: PT30H
+  - activity: 
+      description: Revise readme
+      who: ktoddbrown
+      end: 2026-06-02T16:28
+      start: 2026-06-02
 ---
 
-The purpose of this document is to summarize the International Soil Carbon Network Database and demonstrate how to use the `readISCN3` function.
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
 
-> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers. For more information about the ISCN, its scientific community and resources, data policies and partner networks visit: http://iscn.fluxdata.org/. For information about processes used to construct the DB: https://iscn.fluxdata.org/data/data-information/.
 
+# libraries
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+library(stringr) # regular expressions
 
-*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-13).
+# Data download directory from EDI
+dataDownload.dir <- 'temp'
 
-Below is an example of how to use the `readISCN3` function and basic reporting on the soil organic carbon related measurements.
+### Level 0 rescued files ####
+# These files have some level of manual rescue/transcription to them
 
-# Set up
+# Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
+controlVocabulary <- 'ISCN3_TemplateCVs.csv'
 
-```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
+## Files from the `TemplateSubmit.pdf` document include a formatted header
+##... and the table discriptions
 
-library(readr) # read in the csv tables
-library(tibble) # use tibbles instead of a data frame
-library(plyr) # transform a list into a data frame for the bind
-library(dplyr) # work with data tables filters/joins/reframes
-library(tidyr) # work with data table pivots
-library(ggplot2) # make plots
-library(stringr) # extract text from descriptions
-library(knitr) # make prettier tables
-library(kableExtra) #make tables scrollable
-library(tidyverse)
-library(maps)
+# Transcription of the header from the EDI file `TemplateSubmit.pdf`
+readME_templateSubmit <- 'README_TemplateSubmit.md'
 
-source("../../R/readISCN3.R", local = knitr::knit_global())
+# Rescued transcriptions of individual table meta data from the 
+#... EDI file `TemplateSubmit.pdf` for the layer, profile, site
+#... disturbance, and fraction tables. These do not match exactly the 
+#... EDI archived tables but do provide the metadata for those tables
+ISCN3_layerAnnotations <- 'ISCN3_TemplateSubmit_TableLayer.csv'
+ISCN3_profileAnnotations <- 'ISCN3_TemplateSubmit_TableProfile.csv'
+ISCN3_siteAnnotations <- 'ISCN3_TemplateSubmit_TableSite.csv'
+ISCN3_disturbanceAnnotations <- 'ISCN3_TemplateSubmit_TableDisturbance.csv'
+ISCN3_fractionAnnotations <- 'ISCN3_TemplateSubmit_TableFraction.csv'
 
-#locate the data locally
-dataDir <- '../temp/ISCN3'
-dataAnnotations <- '../../data/ISCN3Annotations.csv'
+#### Files that have to do with the fixed citations
+
+# Transcribed citations from the EDI file `ISCN3_citation.csv`
+#...table and then extended manually when files were mis-cited
+rescuedContributedCitations <- 'ISCN3_ISCN3_citation.csv'
+
+# Bibliography files
+primaryCitation.file <- 'ISCN3_2015.bib'
+contributionsCitation.file <- 'ISCN3_Contributors.bib'
+
+### Reference to the read function
+# read function
+readsource.file <- '../../02_DataHarmonization/readISCN3.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
+
 ```
 
+# Data Summary
 
-```{r, echo=FALSE}
-#Change this file to run locally for you
-dataDir  <- '~/UFL Dropbox/Katherine Todd-Brown/Research/Datasets/ISCN3'
+> The ISCN is an international scientific community devoted to the advancement of soil carbon research. The ISCN manages an open-access, community-driven soil carbon database. This is version 3-1 of the ISCN Database, released in December 2015. It gathers 38 separate data set contributions, totaling 67,112 sites with data from 71,198 soil profiles and 431,324 soil layers.
 
-```
+*Data source citation:* Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2026-03-01).
+
+## Fit for purpose: ISCN4
+
+This data is identified as a data source for ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
+
+ISCN3 contains four primary data tables:
+
+  * `profile` containing the profile information including geolocation and site information, 
+  * `layer` containing layer level soil characterizations, 
+  * `citation` containing the citation and additional references information for the contributed datasets,
+  * `dataset` with study information that extends the basic citation
+
+The EDI data archive also includes metadata in submission templates.
+This information is in pdfs files and required a manual transcription.
+
+## Files
+
+<!--- Include a brief explanation to all the files in the folder--->
+
+These files are in the ISCN3 data rescue.
+
+- [Readme_ISCN3.qmd](README_ISCN3.qmd) This is the primary file that documents the transcriptions and decision made during data rescue.
+- [ISCN3_2015.bib](ISCN3_2015.bib) citation for project website and primary journal article transcribed
+- [ISCN3_Contributors.bib](ISCN3_Contributors.bib) citations for the contributed datasets to ISCN
+- [ISCN3_ISCN3_citation.csv](ISCN3_ISCN3_citation.csv) Rescued citations where the citations were replaced with bib references
+- [README_TemplateCV.md](README_TemplateCV.md) control vocabulary text information
+- [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv) control vocabulary tables
+- [README_TemplateSubmit.md](README_TemplateSubmit.md)  submission guidance header
+- [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv) submission guidence that has meta data for the site table
+- [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv) submission guidance that has meta data for the profile table
+- [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv) submission guidance that has meta data for the layer table
+- [ISCN3_TemplateSubmit_TableDisturbance.csv](ISCN3_TemplateSubmit_TableDisturbance.csv) submission guidance that has meta data for the disturbance table (not in ISCN3 tables)
+- [ISCN3_TemplateSubmit_TableFraction.csv](ISCN3_TemplateSubmit_TableFraction.csv) submission guidance that has meta data for the fraction table (not in ISCN3 tables)
+- [temp/README.md](temp/README.md) a placeholder file for the download folder that contains the EDI citation.
+
+The ISCN3 files are archived on EDI web portal and will be downloaded to the `temp` folder in the chunk below:
+
+  + [ISCN3_citation.csv](ISCN3_citation.csv)
+  + [ISCN3_dataset.csv](ISCN3_dataset.csv)
+  + [ISCN3_layer.csv](ISCN3_layer.csv)
+  + [ISCN3_profile.csv](ISCN3_profile.csv)
+  + [ISCNtemplate.xlsx](ISCNtemplate.xlsx)
+  + [ISCNTranscribed_TemplateCVs.xlsx](ISCNTranscribed_TemplateCVs.xlsx)
+  + [TemplateCVs.pdf](TemplateCVs.pdf) transcribed source pdf
+  + [TemplateSubmit.pdf](TemplateSubmit.pdf) transcribed source pdf
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Code up data download from EDI
+  - [x] Transcribe the EDI tables in `TemplateSubmit.pdf` into `ISCN3_TemplateSubmit_TableX.csv` 
+  - [x] Transcribe `TemplateSubmit.pdf` markdown for preamble text
+  - [x] Transcribe the EDI tables in `TemplateCV.pdf` into `ISCN_TemplateCV.csv`
+  - [x] Transcribe `TemplateCV.pdf` markdown for preamble text
+  - [x] Create a bib file with the recommended citations
+  - [x] Replace the citations with bib references and treat `ISCN3_ISCN3_citation.csv` as a rescue object 
+  - [ ] Create a recommended citations and acknowledgements table based on 'citations' as a markdown document that inserts the bib entries
+  - [ ] Read in primary tables and template information 
+  - [ ] read function match `02_DataHarmonization/readAres2001.R` function inputs and output formats
+  - [x] push annotations into an `old` folder as a place holder
+  - [x] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
+  - [ ] push everything to the lead fork
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Citation notes
+
+  - `AK DSC Project SOC stock computation` had a bad url for the doi that linked to a spam site. Updating doi with the EDI pasta link.
+  - `Jorgensen_ARCN` has this reference citation: Jorgenson, M.T., Swanson, D.K., Macander, M. 2001. Ecological subsections of Noatak National Preserve. 73. But when looked up, it does not match the destination file.
+  - `Kane` dataset has this citation reference: Valentine, David. 2004. Soil profiles along productivity gradients in interior Alaska: Summer 2003, Bonanza Creek LTER - University of Alaska Fairbanks. BNZ:133, http://www.lter.uaf.edu/data_detail.cfm?datafile_pkey=133. Fixed this citation in rescued citations file with the correct reference citation.
+  - `NASIS-2014` link doesn't work anymore.
+  - `Worldwide soil carbon and nitrogen data` dataset has invalid doi.
+
+## Download ISCN3
+
+The ISCN3 is downloaded from EDI (@ISCN3). 
+Below we loop through the files that are expected and download them.
 
 ```{r}
-iscn.ls <- readISCN3(dataDir = dataDir,
-                     annotationFilename = dataAnnotations,
-                     format = 'long')
+#| label: dataDownloadEDI
+#| code-summary: "Download and identify each file in the EDI package."
+
+### Download the data ####
+# link the table name to the download url and file path(s) for data package
+pasta_package <- 'https://pasta.lternet.edu/package/data/eml/edi/1160/1/'
+
+#transcribe from the EDI site, should be stable and not need future updates
+download_table <- tibble::tribble(
+  ~table, ~entity_id, ~file_name, 
+  'layer', "4af719a84f8981fcc63f1f92760cb253", 'ISCN3_layer.csv',
+  'profile', "40527580cc045d33d9a5aaf728bf204e", 'ISCN3_profile.csv',
+  'citation', "320e31ca911f187550ca2143c31fd408", 'ISCN3_citation.csv',
+  'dataset', "cdd0c7a4cac3f28d6d788c91f506775f", 'ISCN3_dataset.csv',
+  'control_vocabulary', "a8eef6e94b669b365e443c15d9402a03", 'ISCNTranscribed_TemplateCVs.xlsx',
+  'template', "cb5c1cd86e9ab17f699f7a05044325b7", 'ISCNtemplate.xlsx',
+  'other_pdfs', "eb320ae7b57296765f543cbb370b0f24", 'TemplateCVs.pdf',
+  'other_pdfs', "b81a7f4214d176280a5ff4e0f0d52d8b", 'TemplateSubmit.pdf')
+
+#One by one, download the data in each row from the download_table
+#... and store that in the appropriate file path location on your computer
+for(row_index in 1:nrow(download_table)){
+  #check to see if the file exists before trying to download it
+  if(!file.exists(file.path(dataDownload.dir,
+                            download_table$file_name[row_index]))){
+    #tell the user you are downloading the file
+    print(paste('Download file:', 
+                download_table$file_name[row_index]))
+    #use the utility download function to pull the file based on the 
+    #... pasta url for ISCN3 and the entity ID, match that up with the file
+    #... name on that row
+    utils::download.file(
+      paste0(pasta_package, download_table$entity_id[row_index]), 
+      file.path(dataDownload.dir, download_table$file_name[row_index]), 
+      extra  = "--max-time 300")
+  } #end file exists check
+} #end for loop through the download table
+
 ```
 
-# Data tables
-
-ISCN3 contains four primary data tables: `citation`, `dataset`, `profile`, and `layer`.
-Below are the column descriptions from the annotations.
-
-## Table: `citation`
+# Level 0 data
 
 ```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'citation') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
+#| label: readLevel0
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
 
-## Table: `dataset`
-
-```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'dataset') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `profile`
-
-```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'profile') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
-
-## Table: `layer`
-
-```{r}
-knitr::kable(iscn.ls$annotation %>%
-               dplyr::filter(is_type == 'description',
-                      table_id == 'layer') %>%
-               dplyr::select(column_id, of_variable, description = with_entry)) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
-```
-
-
-# Processing the ISCN3 database: `readISCN3`
-
-Calling the `readISCN3` function is shown below. 
-
-```{r eval=FALSE}
-iscn.ls <- readISCN3(dataDir = dataDir,
-                     annotationFilename = dataAnnotations,
-                     format = 'long')
-```
-
-The function itself is echoed here.
-
-```{r, file= '../../R/readISCN3.R'}
-```
-
-# Data processing
-
-Using the read function let's look at the soil organic carbon related functions for datsets that are not in the NRCS.
-
-## Soil organic carbon
-
-Looking only at geolocation, depth, and soil orgnaic carbon stocks.
-
-```{r}
-
-#Use the annotations to set up the column selection
-column_selection <- iscn.ls$annotation %>%
-  filter((of_variable %in% c('latitude', 'longitude',
-                            'state', 'country') & table_id == 'layer') |
-         (table_id == 'layer' & 
-         (of_variable %in% c('layer_observation_time',
-                            'upper_depth_bound', 'lower_depth_bound',
-                            'organic_carbon', 'coarse_fragment') |
-  str_detect(of_variable, 'bulk_density')))) %>%
-  filter(with_entry == '--') %>%
-  select(ends_with('_id'), of_variable, is_type)
-
-# Subset the ISCN database
-soc.ls <- iscn.ls$long %>% #nrow 17 967 513
-  # remove nrcs data
-  filter(!str_detect(dataset_name_sub, 'NRCS'),
-         !str_detect(dataset_name_soc, 'ISCN SOC stock'),
-         !str_detect(dataset_name_soc, 'AK DSC Project SOC')) %>% #nrow 1 043 250
-  # use the column selection to subset the database
-  right_join(column_selection, 
-             relationship = "many-to-many",
-  by = join_by(column_id))  #nrow 454 994
-
-#spread out the columns
-wide_soc <- soc.ls %>%
-  select(dataset_name_sub, profile_name, layer_name, of_variable, is_type, with_entry) %>%
-  #drop duplicates entries imposed by different soc calculation methods
-  unique() %>%
-  pivot_wider(names_from = c(of_variable, is_type), 
-              values_from = with_entry, values_fn = function(xx){paste(unlist(xx), collapse = '::')}) %>% #nrow 32 581 
-  #remove observations that don't have associated bulk density
-  filter(!is.na(bulk_density_sample_value) |
-           !is.na(bulk_density_other_value) |
-           !is.na(bulk_density_total_value) |
-           !is.na(bulk_density_whole_value) ) %>% #nrow 20 570
-  filter(!is.na(organic_carbon_value)) %>% #nrow 8 704
-  #Convert everything to numeric values
-  mutate(across(c(longitude_value, latitude_value,
-                  layer_observation_time_value,
-                  upper_depth_bound_value, lower_depth_bound_value,
-                  organic_carbon_value, coarse_fragment_value,
-                  bulk_density_sample_value,
-                  bulk_density_other_value,
-                  bulk_density_total_value,
-                  bulk_density_whole_value), as.numeric)) %>%
-  #convert the date from Excel format to a lubridate object
-  mutate(layer_observation_time_date = 
-           if_else(layer_observation_time_value < 2000,
-                   ymd(paste0(as.character(layer_observation_time_value), '-01-01')), 
-                   as_date(layer_observation_time_value, origin = ymd('1900-01-01'))))
+data.lvl0.ls <- list(
+  ####Read in a list of all the bib files####
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    contributed = read.bib(file = contributionsCitation.file)
+  ),
+  ####Read in the tables and their meta data###
+  data = list(
+    ####Citation table####
+    TableCitation = list(
+      #manual correction to out of date citations, originally
+      #...this was the `temp/ISCN_citation.csv`
+      primary = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                  skip = 1,
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      caption = readr::read_delim(file = 'ISCN3_ISCN3_citation.csv', 
+                                  n_max = 1,
+                                  delim = ';',
+                                  col_names = FALSE,
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character()))[[1]]
+      #look in the metadata in the profile table for some variables
+    ), #end citation list
+    ####Dataset table####
+    TableDataset = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_dataset.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character()))
+      #look in the metadata in the profile table for some variables
+    ), #end dataset list
+    ###Site table####
+    TableSite = list(
+      #no primary data here for sites, look in the profile and layer tables
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableSite.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end site
+    TableFraction = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableFraction.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end fraction
+    TableDisturbance = list(
+      #no primary data here
+      meta = readr::read_delim(file = 'ISCN3_TemplateSubmit_TableDisturbance.csv',
+                                delim = ",",
+        col_types = readr::cols(.default = readr::col_character())
+      )
+    ), #end disturbance
+    ###Profile table####
+    TableProfile = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_profile.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableProfile.csv',
+                                delim = ",",
+                                col_types = 
+                                  readr::cols(.default =
+                                                readr::col_character()))
+    ), #end profile
+    #### Layer table ####
+    TableLayer = list(
+      primary = readr::read_delim(file = 'temp/ISCN3_layer.csv', 
+                                  delim = ';', 
+                                  col_types = 
+                                    readr::cols(.default = 
+                                                  readr::col_character())),
+      meta = readr::read_delim( file = 'ISCN3_TemplateSubmit_TableLayer.csv', 
+                                delim = ",",
+                                col_types = readr::cols(
+                                  .default = readr::col_character()))
+    ) #end layer table
+    ), # end data list
+  #### General control vocabulary that is not broke down by table ####
+  control_vocabulary = list(
+    readme = read_lines(file = 'README_TemplateCV.md'),
+    caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                       n_max = 1,
+                       col_names = FALSE,
+                       delim = ",",
+                       col_types = readr::cols(
+                         .default = readr::col_character()))[[1]],
+    primary = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
+                       skip = 1,
+                       delim = ",",
+                       col_types = readr::cols(
+                         .default = readr::col_character())))
+  )
   
 ```
 
+<!---- consider making a diagram or nested list to identify the data structures here--->
+
+## Check function match
+
+Check for an exact match with the read function.
 
 ```{r}
-knitr::kable(wide_soc %>%
-               slice_head(n=100) ) %>%
-  kable_paper() %>%
-  scroll_box(width = "100%", height = "300px")
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readISCN3(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
 ```
 
-## Numeric histograms
+# Level 1 data - ISCN 2025
 
-```{r fig.width=9}
+This data is identified as a data source for the ISCN2025
+Broad classes of information that we are looking for include:
 
-plot.df <- wide_soc %>%
-  pivot_longer(cols = where(is.numeric), 
-               names_to = 'variable', values_to = 'value',
-               values_drop_na = TRUE)
+For this analysis we are interested in:
 
-ggplot(plot.df) +
-  geom_histogram(aes(x=value)) +
-  facet_wrap(~variable, scales = 'free')
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+ 
 
-ggplot(plot.df %>%
-         select(dataset_name_sub, profile_name, layer_observation_time_date) %>%
-         unique()) +
-  geom_histogram(aes(x=layer_observation_time_date))
-```
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
 
-## Bulk density vs organic carbon
+The final format of the data frame here will include the following 
+
+  + grouping ids
+    - study_id
+    - contributing_id
+    - site_id
+    - profile_id
+    - layer_id
+  + `of_variable`:
+    * acknowledgement:
+      + `is_type`:
+        - usage
+        - value
+    * bulk_density:
+      + `is_type`:
+        - ISCN_vocabulary
+        - NRCS_prep_code
+        - description
+        - method
+        - name
+        - unit
+        - value
+    * bulk_density_estimated_fine_earth:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * bulk_density_fine_earth:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * bulk_density_whole_soil:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon:
+      + `is_type`:
+        - ISCN_vocabulary
+        - NRCS_prep_code
+        - description
+        - method
+        - name
+        - unit
+    * carbon_inorganic:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon_organic_fraction:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * carbon_organic_volume_density:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - flag
+        - method
+        - name
+        - unit
+        - value
+    * carbon_total:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * citation:
+      + `is_type`:
+        - usage
+        - value
+    * coarse_fraction:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - method
+        - name
+        - unit
+        - value
+    * contact:
+      + `is_type`:
+        - email
+        - name
+    * curator:
+      + `is_type`:
+        - email
+        - name
+        - organization
+    * dataset:
+      + `is_type`: 
+        - description
+    * depth:
+      + `is_type`: 
+        - zero_reference
+    * geolocation:
+      + `is_type`:
+        - datum
+        - latitude
+        - longitude
+        - unit
+    * layer:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - lower
+        - name
+        - note
+        - unit
+        - upper
+    * loss_on_ignition:
+      + `is_type`:
+        - ISCN_vocabulary
+        - description
+        - name
+        - unit
+        - value
+    * observation_date:
+      + `is_type`:
+        - date
+        - format
+    * reference:
+      + `is_type`: 
+        - value
+    * region:
+      + `is_type`:
+        - country
+        - state
+    * version:
+      + `is_type`:
+        - value
+  + `with_entry`
+  + `from_source`
+
+ 
+ <!--- TODO we are experimenting with some new variable names here and will need to go back and revise the vocabulary. --->
 
 ```{r}
-plot.df <- wide_soc %>%
-  pivot_longer(cols = matches('bulk_density.*_value'), 
-               names_to = 'bulk_density_type', values_to = 'bulk_density',
-               values_drop_na = TRUE)
+#| label: createLvl1
+#| code-summary: 'Create a level 1 data set with SoilDRaH standard vocabulary and table structures.'
 
-ggplot(plot.df) +
-  geom_point(aes(x=bulk_density, y = organic_carbon_value)) +
-  facet_wrap(~bulk_density_type, scales = 'free')
+#Site table
+site.df <- data.lvl0.ls$data$TableProfile$primary |>
+  select("dataset_name_sub", "dataset_name_soc", #ID
+         "site_name", "profile_name", #ID
+         "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+         "state (state_province)", "country (country)", #region
+         "observation_date (YYYY-MM-DD)", #observation_date
+         "profile_zero_ref (profile_zero_ref)") |>  #depth
+  pivot_longer(cols = all_of(c(
+    "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
+    "state (state_province)", "country (country)", #region
+    "observation_date (YYYY-MM-DD)", #observation_date
+    "profile_zero_ref (profile_zero_ref)"
+    )),
+    names_to = 'column_header', values_to = 'with_entry',
+    values_drop_na = TRUE) |>
+  mutate(of_variable = case_when(
+    column_header %in% c("lat (dec. deg)", "long (dec. deg)", "datum (datum)") ~ 'geolocation',
+    column_header %in% c("state (state_province)", "country (country)") ~ 'region', #region
+    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'observation_date', #observation_date
+    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'depth',
+      .default = NA_character_),
+  is_type = case_when(
+    column_header %in% c("lat (dec. deg)") ~ 'latitude',
+    column_header %in% c("long (dec. deg)") ~ 'longitude',
+    column_header %in% c("datum (datum)") ~ 'datum',
+    column_header %in% c("state (state_province)") ~ 'state',
+    column_header %in% c("country (country)") ~ 'country',
+    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'date', #observation_date
+    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'zero_reference',
+      .default = NA_character_)
+    ) |>
+  mutate(from_source = 'Table Profile')
+
+#collection table
+collection.df <- data.lvl0.ls$data$TableDataset$primary |>
+  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+         #"dataset_type (dataset_type)",
+         "curator_name", "curator_organization", "curator_email", 
+         "contact_name", "contact_email", 
+         "dataset_description") |>
+  mutate(source_from = 'Table Dataset') |>
+  full_join(
+    data.lvl0.ls$data$TableCitation$primary |>
+      select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+             "reference", 
+             "citation", "citation_usage", 
+             "acknowledgement", "acknowledgement_usage") |>
+      mutate(source_from = 'Table Citation'),
+    by = join_by(dataset_name, source_from)) |>
+  pivot_longer(cols = -c(dataset_name, source_from),
+               names_to = 'column_header', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = str_extract(column_header, '^[^_]+'),
+         is_type = str_extract(column_header, '[^_]+$')) |>
+  mutate(is_type = if_else(of_variable == is_type, 'value', is_type))
+
+layer.df <- data.lvl0.ls$data$TableLayer$primary |>
+  #make layer names unique, some were numeric based and got truncated 
+  mutate(layer_name = sprintf('%s (%s to %s)', layer_name, `layer_top (cm)`, `layer_bot (cm)`)) |>
+  #There are 2136 layers that are not uniquely defined, looks like rows doubled form NRCS prep codes
+  mutate(row_name = paste0('R', 1:n())) |>
+  select('row_name', 
+         #"ISCN 1-1 (2015-12-10)", 
+         "dataset_name_sub", "dataset_name_soc", 
+         "site_name", "profile_name", 
+         #"lat (dec. deg)", "long (dec. deg)", "datum (datum)",
+         #"state (state_province)", "country (country)", 
+         #"observation_date (YYYY-MM-DD)",
+         "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
+         #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
+         #"vegclass_local", 
+         #"soil_taxon", "soil_series", 
+         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
+         "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
+         #"n_tot (percent)", 
+         #"c_to_n (mass ratio)", 
+         "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
+         #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
+         "caco3 (percent)", 
+         #"sand_tot_psa (percent)", "silt_tot_psa (percent)", "clay_tot_psa (percent)", 
+         "wpg2_method", "wpg2 (percent)", 
+         #"cat_exch (cmol H+ kg-1)", 
+         #"al_dith (specified by al_fe_units)", "al_ox (specified by al_fe_units)", "al_other (specified by al_fe_units)", "fe_dith (specified by al_fe_units)", "fe_ox (specified by al_fe_units)", "fe_other (specified by al_fe_units)", "mn_dith (specified by al_fe_units)", "mn_ox (specified by al_fe_units)", "mn_other (specified by al_fe_units)", "al_fe_units (extract_units)", "al_fe_method",
+         #"ca_al (specified by bc_units)", "ca_ext (specified by bc_units)", "k_ext (specified by bc_units)", "mg_ext (specified by bc_units)", "na_ext (specified by bc_units)", "bc_units (extract_units)", "bc_method", "base_sum (specified by cec_h_units)", "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
+         #"bs (percent)", "bs_sum (percent)", 
+         #"h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)", "metal_ext_units (extract_units)", "metal_ext_method", 
+         #"p_bray (specified by p_units)", "p_ox (specified by p_units)", "p_meh (specified by p_units)", "p_other (specified by p_units)", "p_units (extract_units)", "p_method", 
+         #"root_quant_size", "root_weight (g)",
+         #"15n (‰)", "13c (‰)", "14c (‰)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", "fraction_modern", "fraction_modern_sigma", 
+         #"textureClass", "locator_parent_alias"
+         ) |>
+  pivot_longer(cols = -contains('_name'),
+               names_to = 'column_header', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = 
+           case_when(
+             column_header %in% c("layer_top (cm)", "layer_bot (cm)", "layer_note") ~ 'layer',
+             #column_header %in% c("color") ~ 'soil_color',
+             #column_header %in% c("hzn_desgn_other", "hzn", "hzn_desgn") ~ 'soil_horizon',
+             #column_header %in% c("soil_taxon", "soil_series") ~ 'soil_classificaction',
+             #Bulk density types taken from metadata
+             column_header %in% c( "bd_samp (g cm-3)") ~ 'bulk_density_fine_earth',
+             #yes this bd_whole and bd_tot are correct according to the meta data
+             column_header %in% c("bd_whole (g cm-3)") ~ 'bulk_density_estimated_fine_earth',
+             column_header %in% c( "bd_tot (g cm-3)") ~ 'bulk_density_whole_soil',
+             column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
+             #And the splitting strategy with soil carbon
+             column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
+             column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_volume_density',
+             column_header %in% c("loi (percent)") ~'loss_on_ignition',
+             #need to associated with other carbon variables later
+             column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',
+             column_header %in% c("c_tot (percent)") ~ 'carbon_total',
+             column_header %in% c("caco3 (percent)") ~ 'carbon_inorganic',
+             column_header %in% c("wpg2_method", "wpg2 (percent)") ~ 'coarse_fraction',
+             .default = NA_character_
+           ),
+         is_type = 
+           case_when(
+             str_detect(column_header, 'note') ~ 'note',
+             str_detect(column_header, 'method') ~ 'method',
+             str_detect(column_header, 'NRCS_prep_code') ~ 'NRCS_prep_code',
+             str_detect(column_header, 'flag') ~ 'flag',
+             column_header == "layer_top (cm)" ~ 'upper',
+             column_header == "layer_bot (cm)" ~ 'lower',
+             .default = 'value')) |>
+  #Check the classifications of the columns
+#   select(column_header, of_variable, is_type) |> unique() |> view()
+#   Check for uniquenesss
+#  filter(n() > 1, .by =c(contains('_name'), of_variable, is_type))
+  mutate(source_from = 'Table Layer' )
+
+#this is nto exactly clean but I think it's workable
+  layer.meta <- layer.df |>
+    select(column_header, of_variable) |>
+    unique() |>
+    mutate(ISCN_variable = str_extract(column_header, '^\\S+')) |>
+        mutate(across(everything(), str_trim)) |>
+    left_join(data.lvl0.ls$data$TableLayer$meta |>
+        mutate(across(everything(), str_trim)),
+              by = c('ISCN_variable' = 'Variable')) |>
+    select(column_header, of_variable, 
+           ISCN3_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
+    pivot_longer(cols = c(ISCN3_vocabulary, name, unit, description),
+                 names_to = 'is_type', values_to = 'with_entry',
+                 values_drop_na = TRUE) |>
+    mutate(from_source = 'Meta for Layer (ISCN3_TemplateSubmit_TableLayer.csv)')
+
+  
+
+# What is true across all of ISCN3
+study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'citation', 'value', '@ISCN3', 'EDI download page',
+                   'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
+                   'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
+                   'observation_date', 'format', 'days since 1900-01-01', 'infered given past history in Excel.') |> 
+  bind_rows(layer.meta)
+
+#### Create level 1 #####
+## Pull everything together
+data.lvl1.ls <- list(
+  study = study.df,
+  collection = collection.df,
+  site = site.df,
+  layer = layer.df,
+  citations = c(data.lvl0.ls$citation$primary, data.lvl0.ls$citation$contributed)
+  )
+
+rm(list = setdiff(ls(), c('data.lvl0.ls','data.lvl1.ls', 
+                          'readsource.file', 'readISCN3')))
+
 ```
 
-## Geolocation
+## Check semantics
 
 ```{r}
+#| label: buildSemanticYAML
 
-world_map <- map_data("world")
+library(yaml)
 
-plot.df <- wide_soc %>%
-  select(dataset_name_sub, profile_name, 
-         latitude_value, longitude_value) %>%
-  unique()
+variable_type.df <- plyr::ldply(data.lvl1.ls, function(xx){
+  if(!is.data.frame(xx)){
+    return(NULL)
+  }else{
+  ans <- xx |>
+    select(of_variable, is_type) |>
+      unique()
+  
+  return(ans)
+  }
+}) 
 
-ggplot(data=world_map) + 
-   geom_polygon(colour="lightgrey", fill="white", aes(x=long, y=lat, group=group)) +
-  geom_point(data = plot.df, 
-             aes(x=longitude_value, y = latitude_value),
-             color = 'blue', alpha = .1) +
-  theme(axis.title = element_blank(),
-        axis.text = element_blank())
+variable_type.ls <- variable_type.df |>
+  select(of_variable, is_type) |>
+  #filter(n() > 1, .by = everything()) #citation-value is repeated and ok
+  unique() |>
+  arrange(of_variable, is_type) |>
+  plyr::dlply(.variables = 'of_variable', .fun = function(xx){
+    return(list(is_type = xx$is_type))
+  }) 
+
+
+#use this to construct the opening list at the top of the level 1 section
+# as.yaml(variable_type.ls) |> cat()
+
+#TODO change this when the variable/type is moved over to a yaml
+ref.ls <- variable_type.ls
+
+check.df <- variable_type.df |>
+  mutate(has_variable = of_variable %in% names(ref.ls)) |>
+  mutate(has_type = is_type %in% ref.ls[[unique(of_variable)]]$is_type,
+         .by = of_variable)
+
+if(!all(check.df$has_variable)){
+  stop('There are variables that needed to be added to the semantics')
+}
+
+if(!all(check.df$has_type)){
+  stop('There are types that need to be added to the semantics')
+}
 ```
 
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readISCN3(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
