@@ -444,10 +444,10 @@ We have identified three main issues with the data collection:
     - *To resolve* round the lat/lon values to `{r} precisions.ls$latLong_digits` digits.
   2) Several locations appear to be repeated with both the lat/long reported extremely closely and shared values of bulk density or soil carbon elements reported.
     - *To resolve* this complete the degree distance between all lat/lon and applied a `{r} precisions.ls$geolocationCluster_resolution` cluster height to define geolocation groups.
-    - *Note* that this ignores datum corrections, if exact location matters (<100m) you may need to reprocess the data from level 0.
+    - *Assume*: this ignores datum corrections, if exact location matters (<100m) you may need to reprocess the data from level 0.
   3) Observation dates appear to have standard export issues often seen in Access/Excel csv exports. Observation dates do not adhere to the reported YYYY-MM-DD format and are instead numerical values. Given the distribution of points its likely that some of these values were orginally entered as years and others reported as days-since-origin. Excel has historically exported their dates as days since 1900-01-01.
     - *To resolve* any values below 2015 were assumed to be CE-year and assigned the first of that year. Values above 2015 were assumed to be days since 1900-01-01.
-  4) Observation dates also had minor disagreements between likely duplicate entries.
+  4) Observation dates with minor disagreements are likely duplicate entries.
     - *To resolve*, similar to geolocations, a distance matrix was calculated and clusters within `{r} precisions.ls$observationYear_resolution` were assigned unique identifies.
 
 ```{r}
@@ -478,16 +478,15 @@ site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
                      date_number > 2015 ~ as_date(date_number, origin = ymd('1900-01-01')),
                      #process things with just the year specified using the truncated flag
                      date_number <= 2015 ~ ymd(`observation_date (YYYY-MM-DD)`, 
-                                               quiet = TRUE,
-                                               truncated = 2),
+                                               quiet = TRUE, truncated = 2),
          .default = NA_Date_)) |>
   #set the geolocations to numerics
-  mutate(across(c(`lat (dec. deg)`, `long (dec. deg)`), as.numeric)) |>
+  mutate(across(c(`lat (dec. deg)`, `long (dec. deg)`), .fns = as.numeric)) |>
   #round to 4 digits of precision or about 10 m https://wiki.openstreetmap.org/wiki/Precision_of_coordinates
   #... many numbers look overly precise and there was likely numerical error
   #....introduced during initial processing (excel/access exports?)
   mutate(across(c(`lat (dec. deg)`, `long (dec. deg)`), 
-                .fns = round, digits = precisions.ls$latLong_digits))
+                .fns = ~ round(.x, digits = precisions.ls$latLong_digits)))
 
 #Define the location clusters if there are finite latitude/longitude reported using clusters on eucludian distances
 site_geocluster <- site_org.df |>
@@ -562,12 +561,13 @@ There are `{r} uniqueSpaceTime` unique geolocation-time pairs reported.
 
 ## Layer processing: constructing identifiers
 
-Processing the layer table 
+Processing the layer table considerations
 
-  1) Layer observations appear to be duplicated for different SOC calculations and entered in under multiple datasets.
-    - *To resolve* add in the clusters developed in the site processing above so that we can better identify duplicate entries of variables when processing each variable type later in the code.
-  2) Identifiers provided under the `.*_name` pattern are not unique leading to issues pivoting the data during processing.
-    - *To resolve* construct a `layer_id` from available zero reference and the upper/lower bounds. Ensure that the upper/lower bounds have a realistic resolution of 1 cm. Also construct a `sample_id` from the `dataset_name`, `site_name`, `profile_name`, and `layer_name`. The sample id is slightly redundent but allows us to consolodate the identifiers.
+  1) Identifiers provided under the `.*_name` pattern are not unique leading to issues pivoting the data during processing.
+    - *To resolve* construct a `layer_id` from available zero reference and the upper/lower bounds. Ensure that the upper/lower bounds have a realistic resolution of `{r} precisions.ls$depth_digits` digits. Also construct a `sample_id` from the `dataset_name`, `site_name`, `profile_name`, and `layer_name`. The sample id is slightly redundent but allows us to consolodate the identifiers.
+  2) Layer observations appear to be duplicated for different SOC calculations and duplications listed under multiple datasets.
+    - *To resolve* add in the clusters developed in the site processing above so that we can better identify duplicate entries of variables when processing each variable type later in the code. Collapse the entry if the values match at the same geolocation-time-depth.
+  
 
 Things to also note here:
   - Removing the NRCS layers reduced row counts from 445 829 to 72 503.
@@ -610,7 +610,9 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   #add in the site information so that we can get the cluster ids
   left_join(site.df,
             by = join_by(dataset_name_sub, dataset_name_soc, site_name, profile_name)) |> 
-  mutate(across(c(`layer_top (cm)`, `layer_bot (cm)`), as.numeric)) |>
+  #enforce precision
+  mutate(across(c(`layer_top (cm)`, `layer_bot (cm)`), 
+                .fns= ~ as.numeric(.x, digits = precisions.ls$depth_digits) )) |>
   #Construct the layer ID from the rounded depths and 
   #...add in the zero reference if it exists
   mutate(layer_id = case_when( 
@@ -618,13 +620,10 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
       !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~
       sprintf('layer (zero-ref:%s) [%d,%d]',
               `profile_zero_ref (profile_zero_ref)`,
-              round(`layer_top (cm)`, digits = precisions.ls$depth_digits),
-              round(`layer_bot (cm)`, digits = precisions.ls$depth_digits)),
+              `layer_top (cm)`,`layer_bot (cm)`),
     is.na(`profile_zero_ref (profile_zero_ref)`) &
       !is.na(`layer_top (cm)` + `layer_bot (cm)`) ~ 
-      sprintf('layer [%d,%d]',
-              round(`layer_top (cm)`, digits = precisions.ls$depth_digits),
-              round(`layer_bot (cm)`, digits = precisions.ls$depth_digits)),
+      sprintf('layer [%d,%d]', `layer_top (cm)`, `layer_bot (cm)`),
     !is.na(`profile_zero_ref (profile_zero_ref)`) &
       is.na(`layer_top (cm)` + `layer_bot (cm)`) ~
       sprintf('layer (zero-ref:%s)',
@@ -641,41 +640,47 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
 
 ## Bulk Density
 
-Round bulk density
-Aggrogate the methods
-Collapse duplicates by merging sample ids
-assign bulk density types in ISCN3 to method notes. note that some of the collapsed values have conflicting methods and coarsen method classification accordingly
+Processing bulk density considerations:
+
+1) Bulk density values generally showed two decimals of precision however several values carried out to over 6 digits with repeated 0's or 9's. Theres are likely Excel export artifacts
+  - *To resolve* round the bulk density values to `{r} precisions.ls$bulkDensity_digits` digits of precision.
+2) Three types of bulk density measurements are identified by ISCN3 `bd_samp`, `bd_tot`, `bd_whole` and a catch all `bd_other`. 
+  - *To resolve* manually code a table of all unique column name and method notes mapping these to a standardized vocabulary. This is then mapped in turn with a `case_when` statement to the SoilDRaH vocabulary. Hopefully, this two step process will make it easier to maintain.
+  - Note that some of the collapsed values have conflicting methods. Keep this conflict noted in the methods section for now
+3) Some layers have multiple bulk density observations making their layer/sample identifiers non-unique for these observations.
+  - *To resolve* create a unique observation identifier.
+4) There are likely duplicate observations (see geolocation).
+  - *To resolve* collapse observations that are numerically the same and share location-time cluster ids.
 
 
 ```{r}
 #| label: ISCN3_bulkDensity
 
-
-
 # Map the methods to column names and bulk density 
-method_map <- tribble(~column_name_bd, ~bd_method, ~bdNRCS_prep_code, ~what, ~how,
-"bd_samp (g cm-3)","bd_samp values are means of multiple observations",NA, 'bulk_density-fine_earth', 'mean',
+bulkDensity_methodMap <- tribble(~column_name_bd, ~bd_method, ~bdNRCS_prep_code, ~what, ~how,
+"bd_samp (g cm-3)","bd_samp values are means of multiple observations",NA, 'bulk_density-fine_earth', 'measured:mean',
 "bd_other (g cm-3)","bd = dry weight/volume",NA, 'bulk_density-unspecified',NA,
-"bd_tot (g cm-3)","G",NA, 'bulk_density-whole_soil', 'NRCS:G',
-"bd_tot (g cm-3)","M",NA, 'bulk_density-whole_soil', 'NRCS:M',
-"bd_other (g cm-3)","G",NA, 'bulk_density-unspecified', 'NRCS:G',
-"bd_other (g cm-3)","M",NA, 'bulk_density-unspecified', 'NRCS:M',
-"bd_samp (g cm-3)","measured as weight per unit volume",NA, 'bulk_density-fine_earth', '',
-"bd_other (g cm-3)","predicted from %C",NA, 'bulk_density-unspecified', 'formula:%C',
+#TODO likely NRCS prep codes, G. and M. seem to be leaders for air dried prep
+"bd_tot (g cm-3)","G",NA, 'bulk_density-whole_soil', NA,
+"bd_tot (g cm-3)","M",NA, 'bulk_density-whole_soil', NA,
+"bd_other (g cm-3)","G",NA, 'bulk_density-unspecified', NA,
+"bd_other (g cm-3)","M",NA, 'bulk_density-unspecified', NA,
+"bd_samp (g cm-3)","measured as weight per unit volume",NA, 'bulk_density-fine_earth', NA,
+"bd_other (g cm-3)","predicted from %C",NA, 'bulk_density-unspecified', 'formula:carbon_fraction',
 "bd_other (g cm-3)","estimated from weight per unit area",NA, 'bulk_density-unspecified', 'estimated:weight per area',
 "bd_other (g cm-3)","gap-filled with value from nearby sample",NA, 'bulk_density-unspecified', 'gap_filled:neighboring_samples',
-"bd_samp (g cm-3)","calculated based on soil texture, rock fragment, and organic matter content",NA, 'bulk_density-fine_earth', 'forumula:soilTexture_rockFragment_organicMatter',
-"bd_tot (g cm-3)","gap-filled value from re-measurement of same plot in 2000",NA, 'bulk_density-whole_soil', 'gap-filled:resampled')
-"bd_tot (g cm-3)","core volume/mass",NA
-"bd_samp (g cm-3)","Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.",NA
-"bd_other (g cm-3)","bd = (1.45*0.111)/((loi/100)*1.45+(1-(loi/100))*0.111)",NA
-"bd_other (g cm-3)","interpolated from adjacent horizons",NA
-"bd_tot (g cm-3)",NA,NA
-"bd_samp (g cm-3)",NA,NA
-"bd_other (g cm-3)","g of <2mm fraction divided by total volume of material (often includes roots)",NA
-"bd_other (g cm-3)","gap-filled from horizon type",NA
-"bd_other (g cm-3)","BD was estimated based on C % using a power-based regression model based on individual soil samples where both C % (x) and DBD (y) were available (n= 831, R2= 0.73): y= 1.2559x-0.6831. In samples with permafrsot, the regression-derived BD was corrected for volumetric ice-content",NA
-"bd_other (g cm-3)","took average of similar horizons types",NA
+"bd_samp (g cm-3)","calculated based on soil texture, rock fragment, and organic matter content",NA, 'bulk_density-fine_earth', 'formula:soil texture, rock fragment, organic matter',
+"bd_tot (g cm-3)","gap-filled value from re-measurement of same plot in 2000",NA, 'bulk_density-whole_soil', 'gap_filled:resampled',
+"bd_tot (g cm-3)","core volume/mass",NA, 'bulk_density-whole_soil', NA,
+"bd_samp (g cm-3)","Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.",NA, 'bulk_density-stock', 'measured:fine dry mass over core volume',
+"bd_other (g cm-3)","bd = (1.45*0.111)/((loi/100)*1.45+(1-(loi/100))*0.111)",NA, 'bulk_density-unspecified', 'formula:organic_matter_fraction',
+"bd_other (g cm-3)","interpolated from adjacent horizons",NA, 'bulk_density-unspecified', 'gap_filled:neighboring horizons',
+"bd_tot (g cm-3)",NA,NA, 'bulk_density-whole_soil', NA,
+"bd_samp (g cm-3)",NA,NA, 'bulk_density-fine_earth', NA,
+"bd_other (g cm-3)","g of <2mm fraction divided by total volume of material (often includes roots)",NA, 'bulk_density-stock', 'measured:fine dry mass over core volume',
+"bd_other (g cm-3)","gap-filled from horizon type",NA, 'bulk_density-unspecified', 'gap_filled:neighboring_horizons',
+"bd_other (g cm-3)","BD was estimated based on C % using a power-based regression model based on individual soil samples where both C % (x) and DBD (y) were available (n= 831, R2= 0.73): y= 1.2559x-0.6831. In samples with permafrsot, the regression-derived BD was corrected for volumetric ice-content",NA, 'bulk_density-unspecified', 'formula:carbon_fraction',
+"bd_other (g cm-3)","took average of similar horizons types",NA, 'bulk_density-unspecified', 'gap_filled:similar horizons')
 
 # Process the data frame
 bulkdensity.df <- layer.df  |>  #72 503 obs
@@ -687,52 +692,34 @@ bulkdensity.df <- layer.df  |>  #72 503 obs
   pivot_longer(cols = ends_with('(g cm-3)'), names_to = 'column_name_bd',
                values_to = 'value_bd', values_drop_na = TRUE) |>
   filter(value_bd >= 0) |> #ensure there are positive values
-  mutate(value_bd = round(value_bd, digits = precisions.ls$bulkDensity_digits)) 
-  #bulkdensity.df |> select(column_name_bd, bd_method, bdNRCS_prep_code) |> unique() |> write_csv(file=stdout()) #generate the table for the method/column keys above
-  #Merge the two methods columns using a key:value pair
-  mutate(method_bd = case_when(
-    !is.na(bd_method) & !is.na(bdNRCS_prep_code) ~ 
-      sprintf('bd_method:%s;bdNRCS_prep_code:%s', bd_method, bdNRCS_prep_code),
-    is.na(bd_method) & !is.na(bdNRCS_prep_code) ~ 
-      sprintf('bdNRCS_prep_code:%s', bdNRCS_prep_code),
-    !is.na(bd_method) & is.na(bdNRCS_prep_code) ~ 
-      sprintf('bd_method:%s', bdNRCS_prep_code),
-    .default = NA_character_)) |> #59 455 obs
+  #impose precision
+  mutate(value_bd = round(value_bd, digits = precisions.ls$bulkDensity_digits)) |>
+  #Join the manual methods map
+  left_join(bulkDensity_methodMap,
+            by = join_by(bd_method, bdNRCS_prep_code, column_name_bd)) |>
+  mutate(of_variable = str_extract(what, pattern = '^\\w+')) |>
+  mutate(method = if_else(is.na(how),str_remove(what, pattern = '^\\w+-'),
+                          paste(str_remove(what, pattern = '^\\w+-'), how, sep = '-'))) |> #59 455 obs
   #For each set of IDs and unique values, if there are multiple samples
   #... collapse the other columns
   reframe(sample_id = paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';')),
          column_name_bd = paste(sort(unique(column_name_bd)), collapse = ';'),
-         #method might be empty/missing so it needs a different pattern
-         method_bd = paste(unique(method_bd[!is.na(method_bd)]), collapse = ';'),
          dataset_name = paste(sort(unique(dataset_name)), collapse = ';'),
+         method = paste(sort(unique(method)), collapse = ';'),
          .by = c(geolocation_id, temporal_id, layer_id, #IDs
-                 value_bd)) |> #49 974, roughly 15% removed as duplicate values
-  #Add the bulk density type from ISCN3 to the method
-  mutate(method_bd = paste(case_when(
-    #Bulk density types taken from metadata states that whole soil bulk density with coarse fraction removed
-    #Nave et al. New Forests. 2019 implies that this is a fine earth bulk density in it's methods description of how ISCN3 was used.
-    column_name_bd %in% c( "bd_samp (g cm-3)",
-                           'bd_other (g cm-3);bd_samp (g cm-3)') ~ 'bulk_density:fine_earth',
-    #yes this bd_whole and bd_tot are correct according to the meta data
-    column_name_bd %in% c("bd_whole (g cm-3)") ~ 'bulk_density:fine_earth:estimated',
-    column_name_bd %in% c( "bd_tot (g cm-3)") ~ 'bulk_density:whole_soil',
-    #contradictory values match, label it as unknown type
-    column_name_bd %in% c("bd_samp (g cm-3);bd_tot (g cm-3)") ~ 'bulk_density:unspecified-contradictory', 
-     column_name_bd %in% c('bd_other (g cm-3)') ~ 'bulk_density:unspecified-contradictory',
-    #values listed as 'other' and something else, assume something esle
-    column_name_bd == c('bd_other (g cm-3);bd_tot (g cm-3)') ~ 'bulk_density:whole_soil',
-    column_name_bd == c('bd_samp (g cm-3);bd_tot (g cm-3)') ~ 'bulk_density:fine_earth',
-    .default = '[bad code]'),
-    method_bd, sep = ';')) |> #add the bulk density type to the method
-  # # Note that roughly 22% of the values share geolocation-time-layer clusters and methods.
-  # # ...keep them in for now but it is a sizable overlap
-  # filter(n() == 1,
-  #        #length(unique(value_bd)) > 1,
-  #        .by = c(geolocation_id, temporal_id, layer_id, method_bd)) |> #nrow 39 679
-  select(ends_with('_id'), 
-         value = value_bd, 
-         method = method_bd, dataset_name) |>
-    mutate(variable = 'bulk_density', unit = 'g cm-3')
+                 of_variable, value_bd)) |> #49 974 obs, roughly 15% removed as duplicate values
+  select(ends_with('_id'),
+         dataset_name, #keep the dataset name for citation cross reference
+         value = value_bd, method) |>
+  mutate(of_variable = 'bulk_density', unit = 'g cm-3') |>
+  #there are some layers with different types of bulk density
+  #...assign an observation ID to preserve grouping before pivoting longer
+  mutate(observation_id = paste(of_variable, 1:n(), sep = ':')) |>
+  #convert thingss to a string and ensure correct precision
+  mutate(value = sprintf(paste0('%.',precisions.ls$bulkDensity_digits,'f'), 
+                         value)) |>
+  pivot_longer(cols = c(value, method, unit), 
+               names_to = 'is_type', values_to = 'with_entry')
 ```
 
 ```{r}
