@@ -638,7 +638,7 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
                              profile_name, layer_name))
 ```
 
-## Bulk Density
+## Bulk Density: map methods, enforce precision, and ensure unique id
 
 Processing bulk density considerations:
 
@@ -721,6 +721,8 @@ bulkdensity.df <- layer.df  |>  #72 503 obs
   pivot_longer(cols = c(value, method, unit), 
                names_to = 'is_type', values_to = 'with_entry')
 ```
+
+
 
 ```{r}
 #| label: ISCN3_soc
