@@ -85,6 +85,12 @@ timelog:
       start: 2026-07-9 T17:30
       end: 2026-07-9 T18:00
       duration: P30M
+    - activity:
+      description: Walk through data frame transformation continuatin (class exercise)
+      who: ktoddbrown
+      start: 2026-07-9 T17:30
+      end: 2026-07-9 T18:00
+      duration: P30M
 ---
 
 
@@ -110,7 +116,7 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-# readsource.file <- '../../../R/readAuthorYYYY.R'
+readsource.file <- '../../../R/readAuthorYYYY.R'
 # source('readsource.file')
 
 #semantic files for level 1
@@ -371,18 +377,18 @@ Broad classes of information that we are looking for include location, duration,
 More specifically:
 
 <!--- Include description of where the data is located in the source.--->
-- Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
- - Duration: 120 days
- - Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
- - Solar exposure: Litter treated with filters (see treatments below)
- - Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
- - Vegetation Coverage: Open Woodland
- - Litter Chemistry: Found via standard acid detergent method:
+ -[x] Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+ -[x] Duration: 120 days
+ -[x] Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+ -[x] Solar exposure: Litter treated with filters (see treatments below)
+ -[x] Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+ -[x] Vegetation Coverage: Open Woodland
+ -[x] Litter Chemistry: Found via standard acid detergent method:
     + cellulose and sugars, 49.1 ± 0.4%
     + hemicellulose, 37.3 ± 0.2%
     + lignin,7.3 ± 0.2%.
- - Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
- - Treatments: 
+ -[x] Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+ -[x] Treatments: 
     + Plastic box placed in chicken wire cage to allow for free flow of air.
     + Rainout shelter
     + No contact with ground; wire cage suspended 30cm above ground.
@@ -408,7 +414,6 @@ The `of_variable` being used here are:
 
 ```{r}
 #| label: createLvl1
-#| eval: true
 
 #### Method-section only data ####
 #Create a table for the data in the method-section that is not directly 
@@ -423,8 +428,23 @@ study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'exposure_duration', 'value', '120', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
                    'exposure_duration', 'unit', 'days', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
                    'soil_contact', 'value', 'none', paste('Method ln8-11:', paste(data.lvl0.ls$method[8:11], collapse = ' ')),
-                   'litter_type', 'value', 'perennial tussock grasses', paste('Method ln5-8:', paste(data.lvl0.ls$method[5:8], collapse = ' ')),
-                   'mass_loss', 'unit', 'mass-percent per day', 'Table 1 column name')
+                   'litter_type', 'value', 'perennial tussock grasses, including *Festuca hieronymi* and *Stipa trichotoma*', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'mass_loss', 'unit', 'mass-percent per day', 'Table 1 column name',
+                   'litter_age_class', 'value', 'previous year', paste('Method ln6-7:', paste(data.lvl0.ls$method[6:7], collapse = ' ')),
+                   'vegitation_class', 'value', 'open woodland vegetation', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+#Initial litter quality measurements for carbon chemistry, made by using a standard acid detergent method (@VanSoest1963), were the following: cellulose and sugars, 49.1 ± 0.4%; hemicellulose, 37.3 ± 0.2%; and lignin,7.3 ± 0.2%.
+'litter_fraction', 'cellulose_and_sugar:mean', '49.1', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'cellulose_and_sugar:sd', '0.4', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'hemicellulose:mean', '37.3', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'hemicellulose:sd', '0.2', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'lignin:mean', '7.3', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'lignin:sd', '0.2', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'unit', 'mass percent', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'method', 'acid digestion', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_deployment', 'value', 'open box', paste('Method ln9-11:', paste(data.lvl0.ls$method[9:11], collapse = ' ')),
+'rain_out', 'value', 'TRUE',paste('Method ln13:', paste(data.lvl0.ls$method[13], collapse = ' ')),
+'mass_loss', 'unit', 'mass-percent per day', 'Table 1 header'
+                   ) #close tibble
 
 treatment.df <- tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
                         'control', 'solar_filter', 'transmission_fraction', '0.95',
@@ -446,63 +466,26 @@ litter_loss.df <- data.lvl0.ls$data$Table1$primary |>
     transmission_wavelengths == '>315' ~ 'UV-B',
     transmission_wavelengths == '>290' ~ 'control',
     .default = '[bad coding. Stop!]'
-  ))
-
-#### Table/Figure N ####
-# Process the primary data from Table/Figure M by maintaining data groups and 
-#...standardizing the variable name so that we can link this to the study 
-#...metadata and data in the other tables when needed. Link in the methods 
-#...and other information from the method-section as needed.
-
-Table1Primary <- data.lvl0.ls$data$Table1$primary |>
-  #Add a row id preserving row grouping -- not unique
-  mutate(row_id = paste0('R', 1:n())) |>
-  #Transform the table to long data by row group and column names.
-  #...This allows us to then create the cross links between the tables.
-  pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE) |> #drop missing values
-  #Link the variable names to the column names using a switch statement
-  mutate(of_variable = case_when(
-           #Soil PH is given as an example below
-           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
-  #Flag the source of this data as Table 1, this table is merged later with
-  #...other data so this keeps track of where the data came from
+  )) |>
+  #discard the grass information
+  #NOTE if you end up pulling the synthetic decompotion you will need to change this code here!
+  select(treatement_id, mass_loss, mass_loss_sem) |>
+  pivot_longer(cols = c(mass_loss, mass_loss_sem),
+               names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(is_type = case_when(str_detect(column_name, 'sem$') ~ 'sem',
+                             column_name == 'mass_loss' ~ 'value',
+                             .default = '[BAD MATCH]'),
+         of_variable = str_extract(column_name, 'mass_loss')) |>
+  select(treatement_id, of_variable, is_type, with_entry) |>
   mutate(from_source = 'Table 1')
-
-## Create the metadata for table one from the header information and cited methods
-Table1Meta <- Table1Primary |>
-  select(column_name, of_variable) |>
-  unique() |>
-  #Grab everything between the parentheses as units and attribute the source as the column names.
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         from_source = 'Table 1 column names.') |>
-  #If there aren't units then drop the row
-  filter(!is.na(unit)) |>
-  #Don't keep the column name now that you have the units, cross link via the variable
-  select(-column_name) |>
-  #Stack into the table the methods for each variable that we can find
-  bind_rows(
-  tribble(~of_variable, ~method, ~from_source,
-            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
-  #Stack onto the tables the controlled vocabulary used
-  bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~from_source,
-            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
-  ) |>
-  # Push the dimensions of the variable into a single column. Making this a long table.
-  pivot_longer(cols = c(unit, method, control_vocabulary),
-               names_to = 'is_type',
-               values_drop_na = TRUE,
-               values_to = 'with_entry')
+  
 
 #### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    arrange(row_id, column_name,
-            of_variable, is_type, with_entry, from_source)
+  meta = study.df,
+  primary = treatment.df |>
+    bind_rows(litter_loss.df)
   )
 
 ```
