@@ -435,7 +435,7 @@ precisions.ls <- list(latLong_digits = 4, #assume lat/lon precision of 0.0001
                       bulkDensity_digits = 2) 
 ```
 
-## Space-time locations: resolution and clusters
+## Space-time pre-processing: resolution and clusters
 
 ISCN3 provides latitude/longitude and observation date.
 We have identified three main issues with the data collection:
@@ -453,6 +453,10 @@ We have identified three main issues with the data collection:
 ```{r}
 #| label: ISCN3_geo
 #| code-summary: 'ISCN3 repeats geolocation, identify clusters by location and observation time. ISCN3 also has inconsistant formating in the observation date; if number below 2015 assume year, otherwise days since origin.'
+
+#> data.lvl0.ls$data$TableProfile$primary$`lat (dec. deg)` |> unique() |> as.numeric() |> sort() |> diff() |> quantile(c(0.01, 0.05, 0.1, 0.2, 0.5))
+#     1%      5%     10%     20%     50% 
+#0.00001 0.00002 0.00004 0.00008 0.00028
 
 #Format numerical values and impose precision
 site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
@@ -492,7 +496,7 @@ site_org.df <- data.lvl0.ls$data$TableProfile$primary |>
 site_geocluster <- site_org.df |>
   select("dataset_name_sub", #ID
          "site_name",  #ID
-         "lat (dec. deg)", "long (dec. deg)") |>
+         "lat (dec. deg)", "long (dec. deg)", 'datum (datum)') |>
   #there is one site in the 'World soil carbon and nitrogen data' that has two
   #... lat-long locations specified. Kick it out.
   unique() |> filter(n() == 1, .by = c(dataset_name_sub, site_name)) |>
@@ -504,10 +508,11 @@ site_geocluster <- site_org.df |>
   #...it looks like the height corresponds to the degree separation of the 
   #...points. Degrees 0.001 will correspond to 100m and is one order of 
   #...magnitude greater then the enforced precision.
-  mutate(geolocation_id = sprintf('geocluster_%05d',
+  mutate(geolocation_id = sprintf('geocluster_%05d_%s',
            dist(matrix(c(`lat (dec. deg)`, `long (dec. deg)`), ncol = 2)) |>
            hclust() |>
-           cutree(h = precisions.ls$geolocationCluster_resolution))) #|> #Using euclidean distance
+           cutree(h = precisions.ls$geolocationCluster_resolution),
+         `datum (datum)`)) #|> #Using euclidean distance
   #filter(n() > 1, .by = geolocation_id) #take a look at the clustered locations
 
 #What happens if we change the tolerance
@@ -549,7 +554,7 @@ site.df <- site_geocluster |>
             by = join_by(dataset_name_sub, site_name)) |>
   full_join(site_org.df,
             by = join_by(dataset_name_sub, site_name,
-                         `lat (dec. deg)`, `long (dec. deg)`,
+                         `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
                          observation_date))
 
 uniqueSpaceTime <- site.df |>
@@ -559,7 +564,7 @@ uniqueSpaceTime <- site.df |>
 
 There are `{r} uniqueSpaceTime` unique geolocation-time pairs reported.
 
-## Layer processing: constructing identifiers
+## Layer pre-processing: constructing identifiers
 
 Processing the layer table considerations
 
@@ -636,6 +641,121 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
   mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s',
                              dataset_name_sub, site_name, 
                              profile_name, layer_name))
+```
+
+## Space-time processing: resolution and replication
+
+Given the geo-location and temporal clusters:
+
+1) Calculate the associated lat/lon, and observation times with each cluster as a `mean` and record the range of values as a `resolution.` 
+2) Collapse the state/country for each geolocation cluster.
+
+```{r}
+#| label: ISCN3_spaceTime
+
+geolocation.df <- layer.df |>
+  select(geolocation_id, `lat (dec. deg)`, `long (dec. deg)`, datum = `datum (datum)`) |>
+  filter(!is.na(geolocation_id)) |>
+  unique() |> #5405
+  #Deal with duplicate values
+  reframe(latitude = mean(`lat (dec. deg)`),
+          longitude = mean(`long (dec. deg)`),
+          resolution = mean(c(diff(range(`lat (dec. deg)`)),
+                              diff(range(`long (dec. deg)`)))),
+          observation_count = n(),
+          .by = c(geolocation_id, datum)) |> #5131
+  mutate(unit = 'decimal degrees',
+         of_variable = 'geolocation',
+         #TODO set precision
+         across(c(latitude, longitude, resolution, observation_count, datum), as.character)) |>
+  pivot_longer(cols = c(latitude, longitude, resolution, observation_count, datum),
+               names_to = 'is_type', values_to = 'with_entry')
+
+region.df <- layer.df |>
+  select(geolocation_id, country = `country (country)`, state = `state (state_province)`) |>
+  pivot_longer(c(country, state),
+               names_to = 'is_type', values_to = 'with_entry',
+                values_drop_na = TRUE) |>
+  filter(with_entry != 'Unknown', !is.na(geolocation_id)) |>
+  unique() |> #7767
+  #Deal with duplicate values
+  reframe(with_entry = paste(sort(unique(with_entry)), collapse = ';'),
+          .by = c(geolocation_id, is_type)) |>
+  #pivot_wider(names_from = is_type, values_from = with_entry) |> #5131
+  mutate(of_variable = 'region') 
+
+temporal.df <- layer.df |> 
+  select(temporal_id, observation_date, `observation_date (YYYY-MM-DD)`, observation_date_formula) |>
+  filter(!is.na(temporal_id)) |>
+  unique() |> #664 obs
+  #Deal with duplicate values
+  reframe(date = mean(decimal_date(observation_date)) |>
+            round(digits = 2),
+          resolution = round(as.numeric(difftime(max(observation_date), min(observation_date), 
+                                           units = 'days'))/365, digits = 2),
+          observation_count = n(),
+         .by = c(temporal_id)) |>
+  mutate(unit = 'decimal year (CE)',
+         of_variable = 'observation_year') |> #44 obs
+  mutate(across(.cols = c(date, resolution, observation_count, unit), as.character)) |>
+  pivot_longer(cols = c(date, resolution, observation_count, unit),
+               names_to = 'is_type', values_to = 'with_entry',
+                 values_drop_na = TRUE)
+
+```
+
+## Depth processing: trim
+
+Most of the layer identifiers for upper and lower bounds were dealt with in the layer pre-processing. Create a depth interval data frame by selecting the layer related columns and transforming it to a data tuple. 
+
+```{r}
+#| label: ISCN3_depth
+depth.df <- layer.df  |>
+  select(layer_id, 
+         upper = `layer_top (cm)`, lower = `layer_bot (cm)`,
+         zero_ref = `profile_zero_ref (profile_zero_ref)`) |> #72 503 obs
+  filter(!is.na(upper + lower)) |> #59 895 obs
+  mutate(of_variable = 'depth_interval',
+         unit = 'cm',
+         across(.cols = c(upper, lower), .fns = as.character)) 
+    pivot_longer(cols = c(upper, lower, zero_ref, unit),
+                 names_to = 'is_type', values_to = 'with_entry',
+                 values_drop_na = TRUE)
+```
+
+## Citations table processing
+
+```{r}
+#| label: ISCN3_corrections_citations
+#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
+
+
+#collection table
+collection.df <- 
+  #### Create cross key for the citation dataset naming to include the double
+  #### citations needed for the Permafrost RCN data sets
+  data.lvl0.ls$data$TableDataset$primary |>
+  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+         #"dataset_type (dataset_type)",
+         "curator_name", "curator_organization", "curator_email", 
+         "contact_name", "contact_email", 
+         "dataset_description"
+  ) |>
+  #expand the Permafrost RCN datasets so we can pull in that citation
+  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
+          .by = everything()) |>
+  full_join(
+    data.lvl0.ls$data$TableCitation$primary |>
+      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
+             "reference", 
+             "citation", "citation_usage", 
+             "acknowledgement", "acknowledgement_usage") |>
+      mutate(source_from = 'Table Citation'),
+    relationship = "many-to-many",
+    by = join_by(dataset_name_citation)) |>
+  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
+  filter(!str_detect(dataset_name, 'NRCS')) 
+  
 ```
 
 ## Bulk Density: map methods, enforce precision, and ensure unique id
@@ -818,102 +938,6 @@ organic_fraction.df <- layer.df  |>
          method = 'loss on ignition')
 ```
 
-```{r}
-#| label: ISCN3_depth
-depth.df <- layer.df  |>
-  select(site_name, #cross with the site dataframe
-         ends_with('_id'), starts_with('layer'), 
-         `profile_zero_ref (profile_zero_ref)`) |> #72 503
-  filter(!is.na(`layer_top (cm)` + `layer_bot (cm)`)) |> #72 503
-  #pick digits based on hist(str_length(soc.df$`loi (percent)`))
-  mutate(upper = round(as.numeric(`layer_top (cm)`), digits = 0),
-         lower = round(as.numeric(`layer_bot (cm)`), digits = 0),
-         zero_ref = `profile_zero_ref (profile_zero_ref)`) |>
-  #Deal with duplicate values
-  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
-                            unique(sample_id), 
-                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
-         .by = c(geolocation_id, temporal_id, layer_id, upper, lower, zero_ref)) |> 
-  unique() |> #54 770
-  select(geolocation_id, temporal_id, layer_id, sample_id, upper, lower, zero_ref) |>
-  mutate(variable = 'depth_interval',
-         unit = 'cm')
-```
-
-```{r}
-#| label: ISCN3_spaceTime
-geolocation.df <- layer.df |>
-  select(geolocation_id, `lat (dec. deg)`, `long (dec. deg)`, datum = `datum (datum)`) |>
-  unique() |> #5408
-  #Deal with duplicate values
-  reframe(latitude = mean(`lat (dec. deg)`),
-          longitude = mean(`long (dec. deg)`),
-          resolution = mean(c(diff(range(`lat (dec. deg)`)),
-                              diff(range(`long (dec. deg)`)))),
-          count = n(),
-          .by = c(geolocation_id, datum)) |> #5133
-  mutate(unit = 'decimal degrees',
-         variable = 'geolocation')
-
-region.df <- layer.df |>
-  select(geolocation_id, country = `country (country)`, state = `state (state_province)`) |>
-  pivot_longer(c(country, state),
-               names_to = 'region', values_to = 'value',
-                values_drop_na = TRUE) |>
-  filter(value != 'Unknown') |>
-  unique() |> #5383
-  #Deal with duplicate values
-  reframe(value = paste(sort(unique(value)), collapse = ';'),
-          .by = c(geolocation_id, region)) |>
-  pivot_wider(names_from = region, values_from = value) |>
-  mutate(variable = 'region')
-
-temporal.df <- layer.df |> 
-  select(temporal_id, observation_date, `observation_date (YYYY-MM-DD)`, observation_date_formula) |>
-  unique() |> #667
-  #Deal with duplicate values
-  reframe(date = mean(observation_date),
-          resolution = as.numeric(difftime(max(observation_date), min(observation_date), 
-                                           units = 'days'))/365,
-          count = n(),
-         .by = c(temporal_id)) |>
-  mutate(unit = 'decimal year (CE)',
-         variable = 'observation_date')
-  
-```
-
-```{r}
-#| label: ISCN3_corrections_citations
-#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
-
-
-#collection table
-collection.df <- 
-  #### Create cross key for the citation dataset naming to include the double
-  #### citations needed for the Permafrost RCN data sets
-  data.lvl0.ls$data$TableDataset$primary |>
-  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
-         #"dataset_type (dataset_type)",
-         "curator_name", "curator_organization", "curator_email", 
-         "contact_name", "contact_email", 
-         "dataset_description"
-  ) |>
-  #expand the Permafrost RCN datasets so we can pull in that citation
-  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
-          .by = everything()) |>
-  full_join(
-    data.lvl0.ls$data$TableCitation$primary |>
-      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
-             "reference", 
-             "citation", "citation_usage", 
-             "acknowledgement", "acknowledgement_usage") |>
-      mutate(source_from = 'Table Citation'),
-    relationship = "many-to-many",
-    by = join_by(dataset_name_citation)) |>
-  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
-  filter(!str_detect(dataset_name, 'NRCS')) 
-  
-```
 
 
 ```{r}
