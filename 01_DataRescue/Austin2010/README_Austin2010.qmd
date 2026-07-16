@@ -116,8 +116,8 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-readsource.file <- '../../../R/readAuthorYYYY.R'
-# source('readsource.file')
+  readsource.file <- '../../02_DataHarmonization/readAustin2010.R'
+source(readsource.file)
 
 #semantic files for level 1
 # of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -356,7 +356,7 @@ Below verifies that the data from the function matches what is coded above.
 #| label: checkReadFunction_lvl0
 
 if(file.exists(readsource.file)){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl0.ls <- readAustin2010(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -551,10 +551,10 @@ Check for an exact match with the read function.
 #| label: checkReadFunction_lvl1
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readAustin2010(dataDir = '.',
                                          dataLevel = 'level1')
   
-  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
     print('Read function output matches ReadMe code for level 1.')
   }else{
     print('There is a mismatch in the level 1 data objects between the code here and the read function.')
