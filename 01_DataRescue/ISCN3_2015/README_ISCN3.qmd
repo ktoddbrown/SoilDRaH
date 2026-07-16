@@ -436,7 +436,9 @@ precisions.ls <- list(latLong_digits = 4, #assume lat/lon precision of 0.0001
                       #assume precision of 0.1% for loss on ignition
                       organicFraction_digits = 1,
                       #assume precision of 0.01% for carbon fraction that is often measured using an elemental analyizer, this could be method specific in the future.
-                      carbonFraction_digits = 2) 
+                      carbonFraction_digits = 2,
+                      #since this is normalized to the layer thickness, use a very high precision here
+                      carbonStock_digits = 10) 
 ```
 
 ## Citations pre-processing: expanding keys
@@ -459,6 +461,7 @@ collection.df <-
          "contact_name", "contact_email", 
          "dataset_description"
   ) |>
+  mutate(source_from = 'Table Dataset') |>
   #expand the Permafrost RCN datasets so we can pull in that citation
   reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
           .by = everything()) |>
@@ -472,7 +475,13 @@ collection.df <-
     relationship = "many-to-many",
     by = join_by(dataset_name_citation)) |>
   #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
-  filter(!str_detect(dataset_name, 'NRCS')) 
+  filter(!str_detect(dataset_name, 'NRCS')) |>
+  reframe(value = paste(sort(unique(citation)), collapse = ';'),
+          from_source = paste(sort(unique(c(source_from.x, source_from.y))), collapse = ';'),
+          .by = dataset_name) |>
+  pivot_longer(cols = c('value', 'from_source'),
+               names_to = 'is_type', values_to = 'with_entry') |>
+  mutate(of_variable = 'bibkey')
   
 ```
 
@@ -597,7 +606,7 @@ site.df <- site_geocluster |>
   full_join(site_org.df,
             by = join_by(dataset_name_sub, site_name,
                          `lat (dec. deg)`, `long (dec. deg)`, `datum (datum)`,
-                         observation_date))
+                         observation_date)) 
 
 uniqueSpaceTime <- site.df |>
   filter(!is.na(temporal_id) & ! is.na(geolocation_id)) |>
@@ -680,9 +689,11 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
     .default = 'missing'
     )) |> 
   #create a sample_id for simplification later from key:value pairs of the names
-  mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s',
+  #and the row number
+  mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s, row:%d',
                              dataset_name_sub, site_name, 
-                             profile_name, layer_name))
+                             profile_name, layer_name,
+                             1:n()))
 ```
 
 ## Space-time processing: resolution and replication
@@ -759,7 +770,7 @@ depth.df <- layer.df  |>
   filter(!is.na(upper + lower)) |> #59 895 obs
   mutate(of_variable = 'depth_interval',
          unit = 'cm',
-         across(.cols = c(upper, lower), .fns = as.character)) 
+         across(.cols = c(upper, lower), .fns = as.character)) |>
     pivot_longer(cols = c(upper, lower, zero_ref, unit),
                  names_to = 'is_type', values_to = 'with_entry',
                  values_drop_na = TRUE)
@@ -784,15 +795,17 @@ organic_fraction.df <- layer.df  |>
   filter(!is.na(`loi (percent)`),  #938 obs
          !is.na(geolocation_id), !is.na(temporal_id)) |> #555 obs
   #remove excel export errors
-  mutate(value = round(as.numeric(`loi (percent)`), 
-                       digits = precisions.ls$organicFraction_digits)) |>
+  mutate(value = sprintf(paste0('%.', precisions.ls$carbonFraction_digits, 'f'),
+                         as.numeric(`loi (percent)`))) |>
   #Deal with duplicate values
   reframe(sample_id = ifelse(n() == 1,
                             unique(sample_id), 
                             paste0('[MultiSourced]',
                                    paste(sort(unique(sample_id)), 
                                          collapse = ';'))),
-         .by = c(geolocation_id, temporal_id, layer_id, value)) |> #553 obs
+         .by = c(geolocation_id, temporal_id, layer_id, 
+                 dataset_name, #track for citation
+                 value)) |> #553 obs
   select(geolocation_id, temporal_id, layer_id, sample_id,
          value, dataset_name) |>
   mutate(of_variable = 'organic_fraction',
@@ -800,7 +813,9 @@ organic_fraction.df <- layer.df  |>
          method = 'loss on ignition from fine earth') |>
   pivot_longer(cols = c(value, unit, method),
                names_to = 'is_type', values_to = 'with_entry',
-               values_drop_na = TRUE) 
+               values_drop_na = TRUE) #|>
+#check that rows are uniquely identified
+#  pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
 ## Carbon fraction: precision, method harmonization, and duplicates
@@ -814,8 +829,6 @@ Processing carbon fraction considerations:
   - Note that some of the collapsed values have conflicting methods. Keep this conflict noted in the methods section for now and deal with in the curation step.
 3) There are likely duplicate observations (see geolocation).
   - *To resolve* collapse observations that are numerically the same and share location-time cluster ids.
-4) Some layers have multiple observations making their layer/sample identifiers non-unique for these observations.
-  - *To resolve* extend the sample_id to include a row index.
 
 Note that in this case fraction does not refer to a ratio but rather a physical or chemical subset of the soil. 
 
@@ -903,6 +916,8 @@ carbon_fraction.df <- layer.df  |>
   pivot_longer(cols = contains('percent'),
                names_to = 'column_name', values_to = 'value', 
                values_drop_na = TRUE) |>
+  #merge in the column names to sample IDs
+  mutate(sample_id = paste0(sample_id, ',column_name:', column_name)) |>
   # apply precision
   mutate(value = sprintf(paste0('%.', precisions.ls$carbonFraction_digits, 'f'),
                          as.numeric(value))
@@ -926,15 +941,10 @@ carbon_fraction.df <- layer.df  |>
          dataset_name = paste(sort(unique(dataset_name)), sep = ';'),
          .by = c(geolocation_id, temporal_id, layer_id, of_variable, value)) |> #44 902 obs
   mutate(unit = 'mass-percent') |>
-  #make sure the sample_id is unique for multiple observations of the same site
-  #filter(n() > 1, .by = c(geolocation_id, temporal_id, layer_id, of_variable))
-  mutate(sample_id = ifelse(n() > 1,
-                            paste0(sample_id, ';row:', 1:n()),
-                            sample_id),
-         .by = c(geolocation_id, temporal_id, layer_id, of_variable)) |>
   pivot_longer(cols = c(unit, value, method),
                names_to = 'is_type', values_to = 'with_entry',
-               values_drop_na = TRUE)
+               values_drop_na = TRUE) #|>
+  #pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
 ## Bulk Density: map methods, enforce precision, and ensure unique id
@@ -999,6 +1009,7 @@ bulkdensity.df <- layer.df  |>  #72 503 obs
   #impose precision
   mutate(value = sprintf(paste0('%.', precisions.ls$carbonFraction_digits, 'f'),
                          value)) |>
+  mutate(sample_id = paste0(sample_id, ',column_name:', column_name)) |>
   #Join the manual methods map
   left_join(bulkDensity_methodMap,
             by = join_by(bd_method, bdNRCS_prep_code, column_name)) |>
@@ -1014,329 +1025,94 @@ bulkdensity.df <- layer.df  |>  #72 503 obs
          method = paste(sort(unique(method)), collapse = ';'),
          .by = c(geolocation_id, temporal_id, layer_id, #IDs
                  of_variable, value)) |> #50 037 obs, roughly 15% removed as duplicate values
-#make sure the sample_id is unique for multiple observations of the same site
-  #filter(n() > 1, .by = c(geolocation_id, temporal_id, layer_id, of_variable))
-  mutate(sample_id = ifelse(n() > 1,
-                            paste0(sample_id, ',row:', 1:n()),
-                            sample_id),
-         .by = c(geolocation_id, temporal_id, layer_id, of_variable)) |>
   mutate(unit = 'g cm-3') |>
   pivot_longer(cols = c(value, method, unit), 
-               names_to = 'is_type', values_to = 'with_entry')
+               names_to = 'is_type', values_to = 'with_entry') #|>
+  #pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
+## Coarse fraction
+
+Processing coarse fraction considerations:
+
+1) Coarse fraction values are integers in the ISCN3 table. No precision needed. 
+3) Some layers have multiple coarse fraction observations making their layer/sample identifiers non-unique for these observations.
+  - *To resolve* create a unique observation identifier.
+4) There are likely duplicate observations (see geolocation).
+  - *To resolve* collapse observations that are numerically the same and share location-time cluster ids.
 
 
 ```{r}
-#| label: ISCN3_soc
-soc.df <- layer.df  |>
-  select(c(ends_with('_id'), starts_with('soc'), dataset_name_soc))  |>
-  filter(!is.na(`soc (g cm-2)`)) |> #46 343
-  #pick digits based on hist(str_length(soc.df$`soc (g cm-2)`))
-  mutate(value = round(as.numeric(`soc (g cm-2)`), digits = 5),
-         method_soc = paste0('dataset_name_soc:', dataset_name_soc, ';', case_when(
-           !is.na(soc_method) & !is.na(soc_carbon_flag) ~ 
-             sprintf('soc_method:%s;soc_carbon_flag:%s',
-                     soc_method, soc_carbon_flag),
-           !is.na(soc_method) & is.na(soc_carbon_flag) ~ 
-             sprintf('soc_method:%s',
-                     soc_method),
-           is.na(soc_method) & !is.na(soc_carbon_flag) ~ 
-             sprintf('soc_carbon_flag:%s',
-                     soc_carbon_flag),
-           .default = 'unspecified'))) |>
-  filter(value >= 0) |> #46 337
+#| label: ISCN3_coarseFraction
+
+coarse_fraction.df <- layer.df  |>
+  select(c(ends_with('_id'), dataset_name = dataset_name_sub,
+           value = `wpg2 (percent)`, `wpg2_method`)) |>
+  filter(!is.na(value)) |> #16 509 obs
+  # # apply precision
+  # mutate(value = sprintf(paste0('%.', precisions.ls$carbonFraction_digits, 'f'),
+  #                        as.numeric(value))
+  # ) |>
+  # standardize methods
+  mutate(of_variable = 'coarse_fraction',
+         method = case_when(
+           is.na(wpg2_method) ~ NA,
+           wpg2_method == 'as observed in profile/field' ~ 'estimated:in field',
+           wpg2_method == 'assumed' ~ 'estimated:assumed',
+           wpg2_method == 'estimated' ~ 'estimated',
+           wpg2_method == 'measured' ~ 'measured',
+           wpg2_method == 'weight of >2mm fraction/weight of total sample' ~ NA,
+           .default = '[bad coding STOP]'
+         )) |> #16 509 obs
   #Deal with duplicate values
-  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+  reframe(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
                             unique(sample_id), 
                             paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
-         method = paste(unique(method_soc[!is.na(method_soc)]), collapse = ';'),
-         dataset_name_soc = paste(unique(dataset_name_soc[!is.na(dataset_name_soc)]), collapse = ';'), #keep seperate for citations later
-         .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
-  unique() |> #41 750
-  select(geolocation_id, temporal_id, layer_id, sample_id, value, method, 
-         dataset_name = dataset_name_soc) |>
-  mutate(variable = 'organic_carbon_stock',
-         unit = 'g cm-2')
+         method = paste(unique(method[!is.na(method)]), collapse = ';'),
+         #observation_count = n(),
+         dataset_name = paste(sort(unique(dataset_name)), sep = ';'),
+         .by = c(geolocation_id, temporal_id, layer_id, of_variable, value)) |> #13 954 obs, roughly 15% removed
+  #make sure the sample_id is unique for multiple observations of the same site
+  #filter(n() > 1, .by = c(geolocation_id, temporal_id, layer_id, of_variable))
+  mutate(unit = 'mass-percent') |>
+  pivot_longer(cols = c(unit, value, method),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) #|>
+#make sure we have unique identifers
+  #pivot_wider(names_from = 'is_type', values_from = 'with_entry')
+
 ```
 
-
-
-
+## Create level 1
 
 ```{r}
-#| label: build_lvl1
-data.lvl1.ls <- list(
-  sample = soc.df |>
-    bind_rows(bulkdensity.df) |>
-    bind_rows(organic_fraction.df) |>
+
+id_key <- bulkdensity.df |>
+    bind_rows(coarse_fraction.df) |>
     bind_rows(carbon_fraction.df) |>
-    rename(citation_id = dataset_name),
-  depth = depth.df,
-  geolocation = geolocation.df |>
-    bind_rows(region.df),
-  temporal = temporal.df,
-  study_bibKey = 'ISCN3'
-)
-
-data.lvl1.ls$citation_key <-   data.lvl1.ls$sample |>
-    select(citation_id) |>
-    unique() |>
-    reframe(dataset_name = str_split(citation_id, patter = ';') |>
-              unlist(),
-            .by = citation_id) |>
-    left_join(
-      collection.df |>
-        pivot_longer(cols = c(citation, reference),
-                     names_to = 'variable',
-                     values_to = 'text', 
-                     values_drop_na = TRUE) |>
-        reframe(bib_key = 
-                  str_extract_all(text,'(?<=@)\\w+') |> unlist(),
-                .by = c(dataset_name, variable)),
-      by = join_by(dataset_name),
-      relationship = "many-to-many")
-
-allKeys <- data.lvl1.ls$citation_key |>
-  filter(is.finite(bib_key))
-data.lvl1.ls$citation <- c(data.lvl0.ls$citation$primary,
-                           data.lvl0.ls$citation$contributed[unique(allKeys$bib_key)])
-```
-
-##DONT RUN BELOW
-
-```{r}
-soc.df |>
   select(geolocation_id, temporal_id, layer_id) |>
-  unique() |> #nrow() #46 354 layers total
-  mutate(has_location = !is.na(geolocation_id),
-         has_time = !is.na(temporal_id),
-         has_depth = str_detect(layer_id, '\\[\\d+,\\d+\\]')) |>
-  reframe(count = n(),
-          .by = starts_with('has_')) |>
-  mutate(fraction = round(count / sum(count), digits = 2)) |>
-  arrange(desc(count))
-```
+  unique()
 
-```{r}
+site.df <- id_key |>
+  left_join(geolocation.df |> 
+              bind_rows(region.df),
+            by = join_by(geolocation_id),
+            relationship = "many-to-many") |>
+  bind_rows(
+    id_key |>
+      left_join(temporal.df,
+                by = join_by(temporal_id),
+                relationship = "many-to-many"))
 
-  
-layer.df <- data.lvl0.ls$data$TableLayer$primary |>
-  select(#"ISCN 1-1 (2015-12-10)", 
-         "dataset_name_sub", "dataset_name_soc", 
-         "site_name", "profile_name", 
-         #"lat (dec. deg)", "long (dec. deg)", "datum (datum)",
-         #"state (state_province)", "country (country)", 
-         #"observation_date (YYYY-MM-DD)",
-         "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
-         #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
-         #"vegclass_local", 
-         #"soil_taxon", "soil_series", 
-         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
-         "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
-         #"n_tot (percent)", 
-         #"c_to_n (mass ratio)", 
-         "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
-         #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
-         "caco3 (percent)", 
-         #"sand_tot_psa (percent)", "silt_tot_psa (percent)", "clay_tot_psa (percent)", 
-         "wpg2_method", "wpg2 (percent)", 
-         #"cat_exch (cmol H+ kg-1)", 
-         #"al_dith (specified by al_fe_units)", "al_ox (specified by al_fe_units)", "al_other (specified by al_fe_units)", "fe_dith (specified by al_fe_units)", "fe_ox (specified by al_fe_units)", "fe_other (specified by al_fe_units)", "mn_dith (specified by al_fe_units)", "mn_ox (specified by al_fe_units)", "mn_other (specified by al_fe_units)", "al_fe_units (extract_units)", "al_fe_method",
-         #"ca_al (specified by bc_units)", "ca_ext (specified by bc_units)", "k_ext (specified by bc_units)", "mg_ext (specified by bc_units)", "na_ext (specified by bc_units)", "bc_units (extract_units)", "bc_method", "base_sum (specified by cec_h_units)", "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
-         #"bs (percent)", "bs_sum (percent)", 
-         #"h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)", "metal_ext_units (extract_units)", "metal_ext_method", 
-         #"p_bray (specified by p_units)", "p_ox (specified by p_units)", "p_meh (specified by p_units)", "p_other (specified by p_units)", "p_units (extract_units)", "p_method", 
-         #"root_quant_size", "root_weight (g)",
-         #"15n (‰)", "13c (‰)", "14c (‰)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", "fraction_modern", "fraction_modern_sigma", 
-         #"textureClass", "locator_parent_alias"
-         ) |>
-  #remove 373 326. Work with the current NRCS data download instead
-  filter(str_detect(dataset_name_sub, 'NRCS')) |>
-  #There are 2434 layers that are not uniquely defined
-  mutate(row_name = paste0('R', 1:n()))
-  
-  #make layer names unique, some were numeric based and got truncated 
-  mutate(layer_name = sprintf('%s (%s to %s)', layer_name, `layer_top (cm)`, `layer_bot (cm)`))
-```
-
-```{r}
-#| label: createLvl1
-#| code-summary: 'Create a level 1 data set with SoilDRaH standard vocabulary and table structures.'
-
-#Site table
-site.df <- data.lvl0.ls$data$TableProfile$primary |>
-  select("dataset_name_sub", "dataset_name_soc", #ID
-         "site_name", "profile_name", #ID
-         "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
-         "state (state_province)", "country (country)", #region
-         "observation_date (YYYY-MM-DD)", #observation_date
-         "profile_zero_ref (profile_zero_ref)") |>  #depth
-  pivot_longer(cols = all_of(c(
-    "lat (dec. deg)", "long (dec. deg)", "datum (datum)", #geolocation
-    "state (state_province)", "country (country)", #region
-    "observation_date (YYYY-MM-DD)", #observation_date
-    "profile_zero_ref (profile_zero_ref)"
-    )),
-    names_to = 'column_header', values_to = 'with_entry',
-    values_drop_na = TRUE) |>
-  mutate(of_variable = case_when(
-    column_header %in% c("lat (dec. deg)", "long (dec. deg)", "datum (datum)") ~ 'geolocation',
-    column_header %in% c("state (state_province)", "country (country)") ~ 'region', #region
-    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'observation_date', #observation_date
-    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'depth',
-      .default = NA_character_),
-  is_type = case_when(
-    column_header %in% c("lat (dec. deg)") ~ 'latitude',
-    column_header %in% c("long (dec. deg)") ~ 'longitude',
-    column_header %in% c("datum (datum)") ~ 'datum',
-    column_header %in% c("state (state_province)") ~ 'state',
-    column_header %in% c("country (country)") ~ 'country',
-    column_header %in% c("observation_date (YYYY-MM-DD)") ~ 'date', #observation_date
-    column_header %in% c("profile_zero_ref (profile_zero_ref)") ~ 'zero_reference',
-      .default = NA_character_)
-    ) |>
-  mutate(from_source = 'Table Profile')
-
-#collection table
-collection.df <- data.lvl0.ls$data$TableDataset$primary |>
-  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
-         #"dataset_type (dataset_type)",
-         "curator_name", "curator_organization", "curator_email", 
-         "contact_name", "contact_email", 
-         "dataset_description") |>
-  mutate(source_from = 'Table Dataset') |>
-  full_join(
-    data.lvl0.ls$data$TableCitation$primary |>
-      select("dataset_name", #matches dataset_name_sub or dataset_name_soc
-             "reference", 
-             "citation", "citation_usage", 
-             "acknowledgement", "acknowledgement_usage") |>
-      mutate(source_from = 'Table Citation'),
-    by = join_by(dataset_name, source_from)) |>
-  pivot_longer(cols = -c(dataset_name, source_from),
-               names_to = 'column_header', values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-  mutate(of_variable = str_extract(column_header, '^[^_]+'),
-         is_type = str_extract(column_header, '[^_]+$')) |>
-  mutate(is_type = if_else(of_variable == is_type, 'value', is_type))
-
-layer.df <- data.lvl0.ls$data$TableLayer$primary |>
-  #make layer names unique, some were numeric based and got truncated 
-  mutate(layer_name = sprintf('%s (%s to %s)', layer_name, `layer_top (cm)`, `layer_bot (cm)`)) |>
-  #There are 2136 layers that are not uniquely defined, looks like rows doubled form NRCS prep codes
-  mutate(row_name = paste0('R', 1:n())) |>
-  select('row_name', 
-         #"ISCN 1-1 (2015-12-10)", 
-         "dataset_name_sub", "dataset_name_soc", 
-         "site_name", "profile_name", 
-         #"lat (dec. deg)", "long (dec. deg)", "datum (datum)",
-         #"state (state_province)", "country (country)", 
-         #"observation_date (YYYY-MM-DD)",
-         "layer_name", "layer_top (cm)", "layer_bot (cm)", "layer_note", 
-         #"hzn_desgn_other", "hzn", "hzn_desgn", "color",
-         #"vegclass_local", 
-         #"soil_taxon", "soil_series", 
-         "bd_method", "bd_samp (g cm-3)", "bd_tot (g cm-3)", "bd_whole (g cm-3)", "bd_other (g cm-3)", "bdNRCS_prep_code", 
-         "cNRCS_prep_code", "c_method", "c_tot (percent)", "oc (percent)", "loi (percent)", 
-         #"n_tot (percent)", 
-         #"c_to_n (mass ratio)", 
-         "soc (g cm-2)", "soc_carbon_flag", "soc_method", 
-         #"ph_method", "ph_cacl", "ph_h2o", "ph_other", 
-         "caco3 (percent)", 
-         #"sand_tot_psa (percent)", "silt_tot_psa (percent)", "clay_tot_psa (percent)", 
-         "wpg2_method", "wpg2 (percent)", 
-         #"cat_exch (cmol H+ kg-1)", 
-         #"al_dith (specified by al_fe_units)", "al_ox (specified by al_fe_units)", "al_other (specified by al_fe_units)", "fe_dith (specified by al_fe_units)", "fe_ox (specified by al_fe_units)", "fe_other (specified by al_fe_units)", "mn_dith (specified by al_fe_units)", "mn_ox (specified by al_fe_units)", "mn_other (specified by al_fe_units)", "al_fe_units (extract_units)", "al_fe_method",
-         #"ca_al (specified by bc_units)", "ca_ext (specified by bc_units)", "k_ext (specified by bc_units)", "mg_ext (specified by bc_units)", "na_ext (specified by bc_units)", "bc_units (extract_units)", "bc_method", "base_sum (specified by cec_h_units)", "cec_sum (specified by cec_h_units)", "ecec (specified by cec_h_units)", "cec_h_units (extract_units)", 
-         #"bs (percent)", "bs_sum (percent)", 
-         #"h_ext (specified by metal_ext_units)", "zn_ext (specified by metal_ext_units)", "metal_ext_units (extract_units)", "metal_ext_method", 
-         #"p_bray (specified by p_units)", "p_ox (specified by p_units)", "p_meh (specified by p_units)", "p_other (specified by p_units)", "p_units (extract_units)", "p_method", 
-         #"root_quant_size", "root_weight (g)",
-         #"15n (‰)", "13c (‰)", "14c (‰)", "14c_sigma (‰)", "14c_age (BP)", "14c_age_sigma (BP)", "fraction_modern", "fraction_modern_sigma", 
-         #"textureClass", "locator_parent_alias"
-         ) |>
-  pivot_longer(cols = -contains('_name'),
-               names_to = 'column_header', values_to = 'with_entry',
-               values_drop_na = TRUE) |>
-  mutate(of_variable = 
-           case_when(
-             column_header %in% c("layer_top (cm)", "layer_bot (cm)", "layer_note") ~ 'layer',
-             #column_header %in% c("color") ~ 'soil_color',
-             #column_header %in% c("hzn_desgn_other", "hzn", "hzn_desgn") ~ 'soil_horizon',
-             #column_header %in% c("soil_taxon", "soil_series") ~ 'soil_classificaction',
-             #Bulk density types taken from metadata states that whole soil bulk density with coarse fraction removed
-             #Nave et al. New Forests. 2019 implies that this is a fine earth bulk density in it's methods description of how ISCN3 was used.
-             column_header %in% c( "bd_samp (g cm-3)") ~ 'bulk_density_fine_earth',
-             #yes this bd_whole and bd_tot are correct according to the meta data
-             column_header %in% c("bd_whole (g cm-3)") ~ 'bulk_density_estimated_fine_earth',
-             column_header %in% c( "bd_tot (g cm-3)") ~ 'bulk_density_whole_soil',
-             column_header %in% c("bd_method", "bd_other (g cm-3)", "bdNRCS_prep_code") ~ 'bulk_density',
-             #And the splitting strategy with soil carbon
-             column_header %in% c("oc (percent)") ~ 'carbon_organic_fraction',
-             column_header %in% c("soc (g cm-2)", "soc_carbon_flag", "soc_method") ~ 'carbon_organic_area_density',
-             column_header %in% c("loi (percent)") ~'loss_on_ignition',
-             #need to associated with other carbon variables later
-             column_header %in% c("cNRCS_prep_code", "c_method") ~'carbon',
-             column_header %in% c("c_tot (percent)") ~ 'carbon_total',
-             column_header %in% c("caco3 (percent)") ~ 'carbon_inorganic',
-             column_header %in% c("wpg2_method", "wpg2 (percent)") ~ 'coarse_fraction',
-             .default = NA_character_
-           ),
-         is_type = 
-           case_when(
-             str_detect(column_header, 'note') ~ 'note',
-             str_detect(column_header, 'method') ~ 'method',
-             str_detect(column_header, 'NRCS_prep_code') ~ 'NRCS_prep_code',
-             str_detect(column_header, 'flag') ~ 'flag',
-             column_header == "layer_top (cm)" ~ 'upper',
-             column_header == "layer_bot (cm)" ~ 'lower',
-             .default = 'value')) |>
-  #Check the classifications of the columns
-#   select(column_header, of_variable, is_type) |> unique() |> view()
-#   Check for uniquenesss
-#  filter(n() > 1, .by =c(contains('_name'), of_variable, is_type))
-  mutate(source_from = 'Table Layer' )
-
-#this is nto exactly clean but I think it's workable
-  layer.meta <- layer.df |>
-    select(column_header, of_variable) |>
-    unique() |>
-    mutate(ISCN_variable = str_extract(column_header, '^\\S+')) |>
-        mutate(across(everything(), str_trim)) |>
-    left_join(data.lvl0.ls$data$TableLayer$meta |>
-        mutate(across(everything(), str_trim)),
-              by = c('ISCN_variable' = 'Variable')) |>
-    select(column_header, of_variable, 
-           ISCN3_vocabulary = ISCN_variable, name = Name, unit = Units, description = Description) |>
-    pivot_longer(cols = c(ISCN3_vocabulary, name, unit, description),
-                 names_to = 'is_type', values_to = 'with_entry',
-                 values_drop_na = TRUE) |>
-    mutate(from_source = 'Meta for Layer (ISCN3_TemplateSubmit_TableLayer.csv)')
-
-  
-
-# What is true across all of ISCN3
-study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'citation', 'value', '@ISCN3', 'EDI download page',
-                   'version', 'value', "ISCN 1-1 (2015-12-10)", 'orginal table header number 1',
-                   'geolocation', 'unit', 'decimal degrees', 'profile and layer table column names',
-                   'observation_date', 'format', 'days since 1900-01-01', 'infered given past history in Excel.') |> 
-  bind_rows(layer.meta)
-
-#### Create level 1 #####
-## Pull everything together
 data.lvl1.ls <- list(
-  study = study.df,
-  collection = collection.df,
   site = site.df,
-  layer = layer.df,
-  citations = c(data.lvl0.ls$citation$primary, data.lvl0.ls$citation$contributed)
-  )
-
-rm(list = setdiff(ls(), c('data.lvl0.ls','data.lvl1.ls', 
-                          'readsource.file', 'readISCN3')))
-
+  layer = bulkdensity.df |>
+    bind_rows(coarse_fraction.df) |>
+    bind_rows(carbon_fraction.df),
+  collection = collection.df,
+  citations = c(data.lvl0.ls$citation$primary,
+                data.lvl0.ls$citation$contributed)
+)
 ```
 
 ## Check semantics
