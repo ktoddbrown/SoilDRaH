@@ -432,8 +432,50 @@ precisions.ls <- list(latLong_digits = 4, #assume lat/lon precision of 0.0001
                       #assume precision of 1cm
                       depth_digits = 0,
                       #assume precision of bulk density at 0.01 g cm-3
-                      bulkDensity_digits = 2) 
+                      bulkDensity_digits = 2,
+                      #assume precision of 0.1% for loss on ignition
+                      organicFraction_digits = 1,
+                      #assume precision of 0.01% for carbon fraction that is often measured using an elemental analyizer, this could be method specific in the future.
+                      carbonFraction_digits = 2) 
 ```
+
+## Citations pre-processing: expanding keys
+
+Citations are keyed to datasets however the Permafrost RCN has seperate citations for the layer and profile level data. We use the site information from the profile and observations from the layer data, and need to expand the citations keyed to those datasets.
+
+```{r}
+#| label: ISCN3_corrections_citations
+#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
+
+
+#collection table
+collection.df <- 
+  #### Create cross key for the citation dataset naming to include the double
+  #### citations needed for the Permafrost RCN data sets
+  data.lvl0.ls$data$TableDataset$primary |>
+  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
+         #"dataset_type (dataset_type)",
+         "curator_name", "curator_organization", "curator_email", 
+         "contact_name", "contact_email", 
+         "dataset_description"
+  ) |>
+  #expand the Permafrost RCN datasets so we can pull in that citation
+  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
+          .by = everything()) |>
+  full_join(
+    data.lvl0.ls$data$TableCitation$primary |>
+      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
+             "reference", 
+             "citation", "citation_usage", 
+             "acknowledgement", "acknowledgement_usage") |>
+      mutate(source_from = 'Table Citation'),
+    relationship = "many-to-many",
+    by = join_by(dataset_name_citation)) |>
+  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
+  filter(!str_detect(dataset_name, 'NRCS')) 
+  
+```
+
 
 ## Space-time pre-processing: resolution and clusters
 
@@ -706,7 +748,7 @@ temporal.df <- layer.df |>
 
 ## Depth processing: trim
 
-Most of the layer identifiers for upper and lower bounds were dealt with in the layer pre-processing. Create a depth interval data frame by selecting the layer related columns and transforming it to a data tuple. 
+Most of the layer identifiers for upper and lower bounds were dealt with in the layer pre-processing. Create a depth interval data frame by selecting the layer related columns. 
 
 ```{r}
 #| label: ISCN3_depth
@@ -723,40 +765,179 @@ depth.df <- layer.df  |>
                  values_drop_na = TRUE)
 ```
 
-## Citations table processing
+
+## Organic fraction: precision and replication
+
+The organic fraction corresponds to a soil fraction that is made up of organic material. Fraction, in this context, is a physiochemical sepearation rather then a proportion.
+
+1) Organic matter fraction values in the data frame generally have one digit of precision however several values carried out to over 6 digits with repeated 0's or 9's. These are likely Excel export artifacts
+  - *To resolve* round the values to `{r} precisions.ls$organicFraction_digits` digits of precision.
+2) There are likely duplicate observations (see geolocation).
+  - *To resolve* collapse observations that are numerically the same and share location-time-layer cluster ids.
 
 ```{r}
-#| label: ISCN3_corrections_citations
-#| code-summary: 'ISCN3 needs expanded citations for the permafrost RCN.'
-
-
-#collection table
-collection.df <- 
-  #### Create cross key for the citation dataset naming to include the double
-  #### citations needed for the Permafrost RCN data sets
-  data.lvl0.ls$data$TableDataset$primary |>
-  select("dataset_name", #matches dataset_name_sub or dataset_name_soc
-         #"dataset_type (dataset_type)",
-         "curator_name", "curator_organization", "curator_email", 
-         "contact_name", "contact_email", 
-         "dataset_description"
-  ) |>
-  #expand the Permafrost RCN datasets so we can pull in that citation
-  reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
-          .by = everything()) |>
-  full_join(
-    data.lvl0.ls$data$TableCitation$primary |>
-      select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
-             "reference", 
-             "citation", "citation_usage", 
-             "acknowledgement", "acknowledgement_usage") |>
-      mutate(source_from = 'Table Citation'),
-    relationship = "many-to-many",
-    by = join_by(dataset_name_citation)) |>
-  #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
-  filter(!str_detect(dataset_name, 'NRCS')) 
-  
+#| label: ISCN3_organicFraction
+#| 
+organic_fraction.df <- layer.df  |>
+  select(ends_with('_id'), dataset_name = dataset_name_sub,
+         `loi (percent)`)  |>
+  filter(!is.na(`loi (percent)`),  #938 obs
+         !is.na(geolocation_id), !is.na(temporal_id)) |> #555 obs
+  #remove excel export errors
+  mutate(value = round(as.numeric(`loi (percent)`), 
+                       digits = precisions.ls$organicFraction_digits)) |>
+  #Deal with duplicate values
+  reframe(sample_id = ifelse(n() == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]',
+                                   paste(sort(unique(sample_id)), 
+                                         collapse = ';'))),
+         .by = c(geolocation_id, temporal_id, layer_id, value)) |> #553 obs
+  select(geolocation_id, temporal_id, layer_id, sample_id,
+         value, dataset_name) |>
+  mutate(of_variable = 'organic_fraction',
+         unit = 'mass-percent',
+         method = 'loss on ignition from fine earth') |>
+  pivot_longer(cols = c(value, unit, method),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) 
 ```
+
+## Carbon fraction: precision, method harmonization, and duplicates
+
+Processing carbon fraction considerations:
+
+1) Carbon fraction values generally showed two decimals of precision however several values carried out to over 6 digits with repeated 0's or 9's. These are likely Excel export artifacts
+  - *To resolve* format the carbon fraction values to `{r} precisions.ls$carbonFraction_digits` digits of precision.
+2) Three types of organci carbon measurements are identified by ISCN3 `oc (percent)`, `c_tot (percent)`, and `caco3 (percent)`. 
+  - *To resolve* manually code a table of all unique column name and method notes mapping these to a standardized vocabulary. This is then mapped in turn with a `case_when` statement to the SoilDRaH vocabulary. Hopefully, this two step process will make it easier to maintain.
+  - Note that some of the collapsed values have conflicting methods. Keep this conflict noted in the methods section for now and deal with in the curation step.
+3) There are likely duplicate observations (see geolocation).
+  - *To resolve* collapse observations that are numerically the same and share location-time cluster ids.
+4) Some layers have multiple observations making their layer/sample identifiers non-unique for these observations.
+  - *To resolve* extend the sample_id to include a row index.
+
+Note that in this case fraction does not refer to a ratio but rather a physical or chemical subset of the soil. 
+
+```{r}
+#|label: ISCN3_carbonfraction
+
+#### Carbon fraction map ####
+#### With the removal of the NRCS data the cNRCS_prep_code is all missing
+#### thus not included here
+carbonFraction_map <- tribble(~column_name,~c_method, ~what, ~how,
+"oc (percent)","MIR", 'carbon_fraction:organic', 'formula:MIR',
+"c_tot (percent)","dry combustion, LECO analyzer", 'carbon_fraction:total', 'dry combustion:elemental analyzer',
+"c_tot (percent)",NA, 'carbon_fraction:total', NA,
+"c_tot (percent)","dry combustion",'carbon_fraction:total', 'dry combustion',
+"c_tot (percent)","Perkin Elmer CHN (model 2400).", 'carbon_fraction:total', 'elemental analyzer',
+"c_tot (percent)","M", 'carbon_fraction:total', NA,
+"c_tot (percent)","G", 'carbon_fraction:total', NA,
+"oc (percent)","L", 'carbon_fraction:organic', NA,
+"oc (percent)","A", 'carbon_fraction:organic', NA,
+"oc (percent)","T", 'carbon_fraction:organic', NA,
+"oc (percent)","wet oxidation", 'carbon_fraction:organic', 'wet oxidation',
+"caco3 (percent)","dry combustion", 'carbon_fraction:inorganic:CaCO3', 'dry combustion',
+"caco3 (percent)",NA, 'carbon_fraction:inorganic:CaCO3', NA,
+"oc (percent)","Determined total %C from high temp combustion + elemental analyzer (on <2mm fine earth fraction)", 'carbon_fraction:organic', 'dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2399",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2400",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2417",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2418",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2401",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2402",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2419",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2420",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2405",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2406",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2423",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2424",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2407",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2408",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2425",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2426",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2411",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2412",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2429",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2430",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2415",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2416",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2433",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2434",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2403",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2404",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2421",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2422",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2409",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2410",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2427",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2428",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2413",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2414",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2431",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"c_tot (percent)","mean of ≥3 samples, dry combustion, Perkin-Elmer 2432",'carbon_fraction:total', 'mean:dry combustion:elemental analyzer',
+"caco3 (percent)","A", 'carbon_fraction:inorganic:CaCO3', NA,
+"c_tot (percent)","Leco TruSpec CHN (model 630-100-400).", 'carbon_fraction:total', 'elemental analyzer',
+"oc (percent)","manometric", 'carbon_fraction:organic', 'manometric',
+"c_tot (percent)","dry combustion (CHN) of oven-dried, root-free sample, <2mm fraction", 'carbon_fraction:total', 'dry combustion:elemental analyzer',
+"c_tot (percent)","Element Analyzer.  Loss of Ignition", 'carbon_fraction:total', 'formula:loss on ignition:elemental analyzer',
+"c_tot (percent)","Carlo Erba CN Elemental Analyzer.", 'carbon_fraction:total', 'elemental analyzer',
+"caco3 (percent)","wet oxidation",'carbon_fraction:inorganic:CaCO3', 'wet oxidation',
+"oc (percent)",NA, 'carbon_fraction:organic', NA,
+"oc (percent)","assumed to have no inorganic carbonate ; Combustion analyser 1200 deg C  (Manies et al, 2006)", 'carbon_fraction:organic', 'dry combustion:elemental analyzer:assumed no inorganics',
+"oc (percent)","Fumigated in 12 M HCl (48 h) to remove carbonates (Hedges and Stern, 1984);.freeze-dried and kept in a desiccator; elemental analyzer (Carlo Erba 2500) used to determine C% and N% content (all samples were we have N% values).", 'carbon_fraction:organic', 'elemental analyzer:acid removal of inorganics',
+"c_tot (percent)","assumed to have no inorganic carbonate ; Combustion analyser 1200 deg C  (Manies et al, 2006)", 'carbon_fraction:total', 'dry combustion:elemental analyzer',
+"c_tot (percent)","all mineral samples fumigated in 12M HCl (48h) to remove carbonates (Hedges and Stern 1984) then run by combustion analyzer re Manies et al, 2006", 'carbon_fraction:total', 'elemental analyzer',
+"oc (percent)","all mineral samples fumigated in 12M HCl (48h) to remove carbonates (Hedges and Stern 1984) then run by combustion analyzer re Manies et al, 2006", 'carbon_fraction:organic', 'elemental analyzer:acid removal of inorganics',
+"oc (percent)","Site vegetation reflects pH; acidic vegetation sites do not have carbonates, but sites with non-tussock vegetation could also contain carbonates within the %C measurement reported here", 'carbon_fraction:total', NA,
+"oc (percent)","8",'carbon_fraction:organic', NA,
+"oc (percent)","Loss on Ignition (LOI, weight %) at 550° C (for 6 h) was used to determine organic content, and at 950° C (for 2h) to determine carbonate content (Dean, 1974; Heiri et al., 2001).  A 3rd order polynomial regression model based on individual soil samples where both LOI and C% (from elemental analyser) were available (n= 171, R2= 0.98) was used to predict C% (y) for the soil samples where only LOI% was available: y= (-0.00005x3)+(0.0059x2)+(0.362x)", 'carbon_fraction:organic', 'formula:loss on ignition')
+
+#### Process carbon fraction data####
+
+carbon_fraction.df <- layer.df  |>
+  select(c(ends_with('_id'), dataset_name = dataset_name_sub,
+           `oc (percent)`, `c_tot (percent)`, `caco3 (percent)`,
+           #cNRCS_prep_code, #empty after the removal of NRCS data
+           c_method))  |>
+  pivot_longer(cols = contains('percent'),
+               names_to = 'column_name', values_to = 'value', 
+               values_drop_na = TRUE) |>
+  # apply precision
+  mutate(value = sprintf(paste0('%.', precisions.ls$carbonFraction_digits, 'f'),
+                         as.numeric(value))
+  ) |>
+  # standardize methods
+  left_join(carbonFraction_map,
+            by = join_by(column_name, c_method)) |>
+  mutate(of_variable = str_extract(what, pattern = '\\w+'),
+         method = if_else(is.na(how),
+                          str_remove(what, pattern = '\\w+:'),
+                          paste(str_remove(what, pattern = '\\w+:'),
+                                how,sep = '-'))) |> #51 059 obs
+  #Deal with duplicate values
+  reframe(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
+                            unique(sample_id), 
+                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
+         method = paste(unique(method[!is.na(method)]), collapse = ';'),
+         #there are a small ammount of layers that share OC, C and/or CaCO3 values
+         #... which is possible, so group on this as well.
+         observation_count = n(),
+         dataset_name = paste(sort(unique(dataset_name)), sep = ';'),
+         .by = c(geolocation_id, temporal_id, layer_id, of_variable, value)) |> #44 902 obs
+  mutate(unit = 'mass-percent') |>
+  #make sure the sample_id is unique for multiple observations of the same site
+  #filter(n() > 1, .by = c(geolocation_id, temporal_id, layer_id, of_variable))
+  mutate(sample_id = ifelse(n() > 1,
+                            paste0(sample_id, ';row:', 1:n()),
+                            sample_id),
+         .by = c(geolocation_id, temporal_id, layer_id, of_variable)) |>
+  pivot_longer(cols = c(unit, value, method),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE)
+```
+
+
 
 ## Bulk Density: map methods, enforce precision, and ensure unique id
 
@@ -877,66 +1058,7 @@ soc.df <- layer.df  |>
          unit = 'g cm-2')
 ```
 
-```{r}
-#|label: ISCN3_carbonfraction
-carbon_fraction.df <- layer.df  |>
-  select(c(ends_with('_id'), dataset_name = dataset_name_sub,
-           `oc (percent)`, `c_tot (percent)`, `caco3 (percent)`,
-           cNRCS_prep_code, c_method))  |>
-  pivot_longer(cols = contains('percent'),
-               names_to = 'column_name', values_to = 'value', 
-               values_drop_na = TRUE) |>
-  mutate(value = as.numeric(value), 
-         method = case_when(
-           !is.na(c_method) & !is.na(cNRCS_prep_code) ~ 
-             sprintf('c_method:%s;cNRCS_prep_code:%s',
-                     c_method, cNRCS_prep_code),
-           !is.na(c_method) & is.na(cNRCS_prep_code) ~ 
-             sprintf('c_method:%s',
-                     c_method),
-           is.na(c_method) & !is.na(cNRCS_prep_code) ~ 
-             sprintf('cNRCS_prep_code:%s',
-                     cNRCS_prep_code),
-           .default = 'unspecified')) |> #51 977 between 0 and 87
-  mutate(method = paste(case_when(column_name == 'oc (percent)' ~ 'carbon_organic',
-                                  column_name == 'c_tot (percent)' ~ 'carbon_total',
-                                  column_name == 'caco3 (percent)' ~ 'carbon_inorganic_CaCO3'),
-                        method, sep = ';')) |>
-  #Deal with duplicate values
-  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
-                            unique(sample_id), 
-                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
-         method = paste(unique(method[!is.na(method)]), collapse = ';'),
-         #there are a small ammount of layers that share OC, C and/or CaCO3 values
-         #... which is possible, so group on this as well.
-         .by = c(geolocation_id, temporal_id, layer_id, column_name, value)) |> 
-  unique() |> #45 278
-  select(geolocation_id, temporal_id, layer_id, sample_id, value, method, dataset_name) |>
-  mutate(variable = 'carbon_fraction',
-         unit = 'mass-percent (carbon to fine earth)')
-```
 
-```{r}
-#| label: ISCN3_organicFraction
-#| 
-organic_fraction.df <- layer.df  |>
-  select(ends_with('_id'), dataset_name = dataset_name_sub,
-         `loi (percent)`)  |>
-  filter(!is.na(`loi (percent)`)) |> #938
-  #pick digits based on hist(str_length(soc.df$`loi (percent)`))
-  mutate(value = round(as.numeric(`loi (percent)`), digits = 5)) |>
-  filter(value >= 0) |>
-  #Deal with duplicate values
-  mutate(sample_id = ifelse(n() == 1 | length(unique(sample_id)) == 1,
-                            unique(sample_id), 
-                            paste0('[MultiSourced]', paste(unique(sample_id), collapse = ';'))),
-         .by = c(geolocation_id, temporal_id, layer_id, value)) |> 
-  unique() |> #936
-  select(geolocation_id, temporal_id, layer_id, sample_id, value, dataset_name) |>
-  mutate(variable = 'organic_matter_fraction',
-         unit = 'mass-percent (organic to fine earth)',
-         method = 'loss on ignition')
-```
 
 
 
