@@ -490,78 +490,58 @@ data.lvl1.ls <- list(
 
 ```
 
-## Check for new variables
+## Check for new variables and types
 
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+`of_variable` and `is_type` in the data files should be defined in the draft vocabulary.
+Update this after 3-6 datasets have been joined together in the initial curation.
 
 ```{r}
 #| label: check_of_variable
 
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
-
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
-
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
+temp <- data.lvl1.ls$meta |>
   select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
+  bind_rows(data.lvl1.ls$primary |>
+              select(of_variable, is_type)
+            ) |>
+  unique() |>
+  mutate(study_id = 'Austin2010')
 
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
+#write_csv(temp, file = '../../02_DataHarmonization/vocabulary_draft.csv')
+ref_draft <- read_csv('../../02_DataHarmonization/vocabulary_draft.csv',
+                      show_col_types = FALSE)
 
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
-}
+newVariables <- anti_join(temp, ref_draft,
+                          by = join_by(of_variable, is_type, study_id))
 
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+if(nrow(newVariables) == 0){
+  print('All variables in draft document')
 }else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+  #add the missing rows to the draft
+  write_csv(temp, file = '../../02_DataHarmonization/vocabulary_draft.csv',
+            append = TRUE, col_names = FALSE)
 }
+
+# #Read in the list of current 'of_variable' entries
+# SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+#                                    show_col_types = FALSE)
+# 
+# #compare the variables in the level 1 tables to the SoilDRaH variables
+# new_variables <- lapply(data.lvl1.ls, function(xx){
+#   setdiff(unique(xx$of_variable), 
+#           unique(SoilDRaH_variable_list$of_variable))
+# }) |>
+#   unlist()
+# 
+# #Check that there are no new variables
+# if(length(new_variables) == 0){
+#   print('All of_variables are in the SoilDRaH variable list. No additions required')
+# }else{
+#   cat(paste('Please start a issue for new variables [',
+#                new_variables, ']', sep = '', collapse = '\n'))
+# }
 ```
+
+
 
 ## Check function match
 
