@@ -18,14 +18,31 @@ library(tidyverse)
 
 ```{r}
 
-directories.ls <- tibble(filenames = list.files(path = '.',
-                      recursive = FALSE)) |>
-  filter(!str_detect(filenames, '^\\w+\\.\\w+$'))
-
-readME.ls <- tibble(filenames = list.files(path = '.',
+all.df <- tibble(filenames = list.files(path = '.',
                       recursive = TRUE)) |>
-  filter(str_detect(filenames, '^\\w+/\\w+\\.\\wmd$')) 
-  filter(str_detect(filenames, '^\\w+/README\\w+\\.\\w+$')) #only look at 
+  filter_out(str_detect(filenames, '[Tt]emp') |
+               str_detect(filenames, '^_') |
+             str_detect(filenames, '_files') |
+               str_detect(filenames, '\\.pdf') |
+               str_detect(filenames, '\\.html')) |>
+  mutate(study_id = str_extract(filenames, '^[\\w\\d]+')) |>
+  mutate(file_classification = case_when(
+    str_detect(filenames, paste0('README_.+\\.[Rq]md$')) ~ 'study readme',
+   str_detect(filenames, paste0('Table.+\\.csv$')) ~ 'table transcription',
+   str_detect(filenames, paste0('Figure.+\\.csv$')) ~ 'figure digitization',
+   str_detect(filenames, 'Methods?\\.md$') ~ 'method transcription',
+   str_detect(filenames, 'Methods?\\.bib$') ~ 'method bibliography',
+   str_detect(filenames, paste0(study_id, '\\.bib$')) ~ 'primary bibliography',
+   .default = 'unknown'
+  )) |>
+  mutate(is_dataDownload = study_id %in% 
+           c('FIA2024', 'ISCN3_2015', 'NCSS2023', 'CPEAT2025'))
+
+all.df |>
+  filter(!is_dataDownload) |>
+  reframe(count = n(),
+    .by = file_classification)
+
 ```
 
 # Template adherence
