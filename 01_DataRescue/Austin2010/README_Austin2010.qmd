@@ -3,7 +3,6 @@ title: "Data Rescue: Austin 2010"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -73,7 +72,30 @@ timelog:
       start: 2026-04-10 T15:45
       end: 2026-04-10 T17:00
       duration: P1H15M
-version: 'vs202512' 
+  - activity:
+      description: Start level 1 as class example
+      who: ktoddbrown
+      start: 2026-07-07 T17:36
+      end: 2026-07-07 T18:00
+      duration: P24M
+  - activity:
+      description: Walk through data frame transformation (class exercise)
+      who: ktoddbrown
+      start: 2026-07-9 T17:30
+      end: 2026-07-9 T18:00
+      duration: P30M
+  - activity:
+      description: Walk through data frame transformation continuatin (class exercise)
+      who: ktoddbrown
+      start: 2026-07-16 T17:30
+      end: 2026-07-16 T18:00
+      duration: P30M
+  - activity:
+      description: Final cleanup for level 1 (class exercise)
+      who: ktoddbrown
+      start: 2026-07-21 T17:30
+      end: 2026-07-21 T18:00
+      duration: P30M
 ---
 
 
@@ -83,7 +105,6 @@ version: 'vs202512'
 #| warning: false
 #| message: false
 #| echo: false
-#| eval: true
 
 
 library(tidyverse) # data processing
@@ -99,8 +120,8 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-# readsource.file <- '../../../R/readAuthorYYYY.R'
-# source('readsource.file')
+  readsource.file <- '../../02_DataHarmonization/readAustin2010.R'
+source(readsource.file)
 
 #semantic files for level 1
 # of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -254,7 +275,7 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure1_LK.c
 
 Any different to the cross check for the methods section will be output after this line.
 
-```{bash eval=FALSE}
+```{bash}
 #| label: compareMethods
 #| eval: false
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
@@ -339,7 +360,7 @@ Below verifies that the data from the function matches what is coded above.
 #| label: checkReadFunction_lvl0
 
 if(file.exists(readsource.file)){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl0.ls <- readAustin2010(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -352,16 +373,32 @@ if(file.exists(readsource.file)){
 }
 ```
 
-# Level 1 data - CURATION PROJECT
+# Level 1 data - DeAD
 
-This data is identified as a data source for the ...
-Broad classes of information that we are looking for include:
+This data is identified as a data source for the DeAD (Decomposition Across Drylands).
+Broad classes of information that we are looking for include location, duration, mass loss, solar exposure and litter chemistry.
+
+More specifically:
 
 <!--- Include description of where the data is located in the source.--->
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+
+  - [X] Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+  - [X] Duration: 120 days
+  - [X] Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+  - [X] Solar exposure: Litter treated with filters (see treatments below)
+  - [X] Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+  - [X] Vegetation Coverage: Open Woodland
+  - [X] Litter Chemistry: Found via standard acid detergent method:
+      + cellulose and sugars, 49.1 ± 0.4%
+      + hemicellulose, 37.3 ± 0.2%
+      + lignin,7.3 ± 0.2%.
+  - [X] Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+  - [X] Treatments: 
+      + Plastic box placed in chicken wire cage to allow for free flow of air.
+      + Rainout shelter
+      + No contact with ground; wire cage suspended 30cm above ground.
+      + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
 This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
@@ -382,146 +419,134 @@ The `of_variable` being used here are:
 
 ```{r}
 #| label: createLvl1
-#| eval: false
 
 #### Method-section only data ####
 #Create a table for the data in the method-section that is not directly 
 #...associated with any table. Often this is study level information.
 
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'country', 'Argentina', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'region', 'province', 'Córdoba', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'latitude', as.character(-1*(31 + 4/60)), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'longitude', as.character(64 + 31/60), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'geolocation', 'unit', 'decimal degrees', paste('Converted from method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+                   'exposure_duration', 'value', '120', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
+                   'exposure_duration', 'unit', 'days', paste('Method ln4:', paste(data.lvl0.ls$method[14], collapse = ' ')),
+                   'soil_contact', 'value', 'none', paste('Method ln8-11:', paste(data.lvl0.ls$method[8:11], collapse = ' ')),
+                   'litter_type', 'value', 'perennial tussock grasses, including *Festuca hieronymi* and *Stipa trichotoma*', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'mass_loss', 'unit', 'mass-percent per day', 'Table 1 column name',
+                   'litter_age_class', 'value', 'previous year', paste('Method ln6-7:', paste(data.lvl0.ls$method[6:7], collapse = ' ')),
+                   'vegitation_class', 'value', 'open woodland vegetation', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
+#Initial litter quality measurements for carbon chemistry, made by using a standard acid detergent method (@VanSoest1963), were the following: cellulose and sugars, 49.1 ± 0.4%; hemicellulose, 37.3 ± 0.2%; and lignin,7.3 ± 0.2%.
+'litter_fraction', 'cellulose_and_sugar:mean', '49.1', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'cellulose_and_sugar:sd', '0.4', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'hemicellulose:mean', '37.3', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'hemicellulose:sd', '0.2', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'lignin:mean', '7.3', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'lignin:sd', '0.2', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'unit', 'mass percent', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_fraction', 'method', 'acid digestion', paste('Method ln16:', paste(data.lvl0.ls$method[16], collapse = ' ')),
+'litter_deployment', 'value', 'open box', paste('Method ln9-11:', paste(data.lvl0.ls$method[9:11], collapse = ' ')),
+'rain_out', 'value', 'TRUE',paste('Method ln13:', paste(data.lvl0.ls$method[13], collapse = ' ')),
+'mass_loss', 'unit', 'mass-percent per day', 'Table 1 header'
+                   ) #close tibble
 
-#### Table/Figure N ####
-# Process the primary data from Table/Figure M by maintaining data groups and 
-#...standardizing the variable name so that we can link this to the study 
-#...metadata and data in the other tables when needed. Link in the methods 
-#...and other information from the method-section as needed.
+treatment.df <- tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
+                        'control', 'solar_filter', 'transmission_fraction', '0.95',
+                        'control', 'solar_filter', 'transmission_wavelength', 'all',
+                        'UV-B', 'solar_filter', 'attenuation', '280-315 nm',
+                        'UV', 'solar_filter', 'attenuation', '280-400 nm',
+                        'UV and blue', 'solar_filter', 'attenuation', '280-450 nm'
+                        ) |>
+  mutate(from_source = paste('Method ln4:', paste(data.lvl0.ls$method[12], collapse = ' ')))
 
-Table1Primary <- data.lvl0.ls$data$Table1$primary |>
-  #Add a row id preserving row grouping -- not unique
-  mutate(row_id = paste0('R', 1:n())) |>
-  #Transform the table to long data by row group and column names.
-  #...This allows us to then create the cross links between the tables.
-  pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE) |> #drop missing values
-  #Link the variable names to the column names using a switch statement
-  mutate(of_variable = case_when(
-           #Soil PH is given as an example below
-           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
-  #Flag the source of this data as Table 1, this table is merged later with
-  #...other data so this keeps track of where the data came from
+litter_loss.df <- data.lvl0.ls$data$Table1$primary |>
+  select(litter_type = Substrate, transmission_wavelengths = `Transmitted Wavelengths (nm)`,
+         mass_loss = `Mass loss (% per day)`, mass_loss_sem = `Mass loss (% per day) SEM`) |>
+  #pull in the grass litter but not the artificial substrate  
+  filter(str_detect(litter_type, '[Gg]rass.*')) |>
+  mutate(treatement_id = case_when(
+    transmission_wavelengths == '>450' ~ 'UV and blue',
+    transmission_wavelengths == '>400' ~ 'UV',
+    transmission_wavelengths == '>315' ~ 'UV-B',
+    transmission_wavelengths == '>290' ~ 'control',
+    .default = '[bad coding. Stop!]'
+  )) |>
+  #discard the grass information
+  #NOTE if you end up pulling the synthetic decompotion you will need to change this code here!
+  select(treatement_id, mass_loss, mass_loss_sem) |>
+  pivot_longer(cols = c(mass_loss, mass_loss_sem),
+               names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(is_type = case_when(str_detect(column_name, 'sem$') ~ 'sem',
+                             column_name == 'mass_loss' ~ 'value',
+                             .default = '[BAD MATCH]'),
+         of_variable = str_extract(column_name, 'mass_loss')) |>
+  select(treatement_id, of_variable, is_type, with_entry) |>
   mutate(from_source = 'Table 1')
-
-## Create the metadata for table one from the header information and cited methods
-Table1Meta <- Table1Primary |>
-  select(column_name, of_variable) |>
-  unique() |>
-  #Grab everything between the parentheses as units and attribute the source as the column names.
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         from_source = 'Table 1 column names.') |>
-  #If there aren't units then drop the row
-  filter(!is.na(unit)) |>
-  #Don't keep the column name now that you have the units, cross link via the variable
-  select(-column_name) |>
-  #Stack into the table the methods for each variable that we can find
-  bind_rows(
-  tribble(~of_variable, ~method, ~from_source,
-            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
-  #Stack onto the tables the controlled vocabulary used
-  bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~from_source,
-            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
-  ) |>
-  # Push the dimensions of the variable into a single column. Making this a long table.
-  pivot_longer(cols = c(unit, method, control_vocabulary),
-               names_to = 'is_type',
-               values_drop_na = TRUE,
-               values_to = 'with_entry')
+  
 
 #### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    arrange(row_id, column_name,
-            of_variable, is_type, with_entry, from_source)
+  meta = study.df,
+  primary = treatment.df |>
+    bind_rows(litter_loss.df)
   )
 
 ```
 
-## Check for new variables
+## Check for new variables and types
 
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+`of_variable` and `is_type` in the data files should be defined in the draft vocabulary.
+Update this after 3-6 datasets have been joined together in the initial curation.
 
 ```{r}
 #| label: check_of_variable
 
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
-
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
-
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
+temp <- data.lvl1.ls$meta |>
   select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
+  bind_rows(data.lvl1.ls$primary |>
+              select(of_variable, is_type)
+            ) |>
+  unique() |>
+  mutate(study_id = 'Austin2010')
 
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
+#write_csv(temp, file = '../../03_DataCuration/DeAD/vocabulary_draft.csv')
+ref_draft <- read_csv('../../03_DataCuration/DeAD/vocabulary_draft.csv',
+                      show_col_types = FALSE)
 
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
-}
+newVariables <- anti_join(temp, ref_draft,
+                          by = join_by(of_variable, is_type, study_id))
 
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+if(nrow(newVariables) == 0){
+  print('All variables in draft document')
 }else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+  #add the missing rows to the draft
+  write_csv(temp, file = '../../03_DataCuration/DeAD/vocabulary_draft.csv',
+            append = TRUE, col_names = FALSE)
 }
+
+# #Read in the list of current 'of_variable' entries
+# SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+#                                    show_col_types = FALSE)
+# 
+# #compare the variables in the level 1 tables to the SoilDRaH variables
+# new_variables <- lapply(data.lvl1.ls, function(xx){
+#   setdiff(unique(xx$of_variable), 
+#           unique(SoilDRaH_variable_list$of_variable))
+# }) |>
+#   unlist()
+# 
+# #Check that there are no new variables
+# if(length(new_variables) == 0){
+#   print('All of_variables are in the SoilDRaH variable list. No additions required')
+# }else{
+#   cat(paste('Please start a issue for new variables [',
+#                new_variables, ']', sep = '', collapse = '\n'))
+# }
 ```
+
+
 
 ## Check function match
 
@@ -531,10 +556,10 @@ Check for an exact match with the read function.
 #| label: checkReadFunction_lvl1
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readAustin2010(dataDir = '.',
                                          dataLevel = 'level1')
   
-  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
     print('Read function output matches ReadMe code for level 1.')
   }else{
     print('There is a mismatch in the level 1 data objects between the code here and the read function.')
