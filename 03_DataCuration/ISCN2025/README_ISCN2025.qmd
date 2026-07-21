@@ -320,8 +320,20 @@ ggplot(CPEAT_site.df) +
 
 ## ISCN3
 
+
 ```{r}
 #| label: ISCN3_level2
+# 
+layer_ISCN3.df <- ISCN3.ls$layer |>
+  mutate(across(.cols = ends_with('value'), as.numeric)) |>
+  #how many geo-time clusters share more then one bulk density?
+  filter(str_detect(of_variable, 'bulk_density')) |>
+  pivot_wider(names_from = is_type, values_from = with_entry)
+
+```
+
+```{r}
+#| label: ISCN3_level2OLD
 
 ISCN_layer.df <- ISCN3.ls$layer |>
   filter(
