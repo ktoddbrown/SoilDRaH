@@ -3,7 +3,6 @@ title: "Data Rescue: Austin 2010"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -85,11 +84,17 @@ timelog:
       start: 2026-07-9 T17:30
       end: 2026-07-9 T18:00
       duration: P30M
-    - activity:
+  - activity:
       description: Walk through data frame transformation continuatin (class exercise)
       who: ktoddbrown
-      start: 2026-07-9 T17:30
-      end: 2026-07-9 T18:00
+      start: 2026-07-16 T17:30
+      end: 2026-07-16 T18:00
+      duration: P30M
+  - activity:
+      description: Final cleanup for level 1 (class exercise)
+      who: ktoddbrown
+      start: 2026-07-21 T17:30
+      end: 2026-07-21 T18:00
       duration: P30M
 ---
 
@@ -100,7 +105,6 @@ timelog:
 #| warning: false
 #| message: false
 #| echo: false
-#| eval: true
 
 
 library(tidyverse) # data processing
@@ -271,7 +275,7 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure1_LK.c
 
 Any different to the cross check for the methods section will be output after this line.
 
-```{bash eval=FALSE}
+```{bash}
 #| label: compareMethods
 #| eval: false
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
@@ -372,27 +376,28 @@ if(file.exists(readsource.file)){
 # Level 1 data - DeAD
 
 This data is identified as a data source for the DeAD (Decomposition Across Drylands).
-Broad classes of information that we are looking for include location, duration, mass loss, solar exposure and litter chemsitry.
+Broad classes of information that we are looking for include location, duration, mass loss, solar exposure and litter chemistry.
 
 More specifically:
 
 <!--- Include description of where the data is located in the source.--->
- -[x] Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
- -[x] Duration: 120 days
- -[x] Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
- -[x] Solar exposure: Litter treated with filters (see treatments below)
- -[x] Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
- -[x] Vegetation Coverage: Open Woodland
- -[x] Litter Chemistry: Found via standard acid detergent method:
-    + cellulose and sugars, 49.1 ± 0.4%
-    + hemicellulose, 37.3 ± 0.2%
-    + lignin,7.3 ± 0.2%.
- -[x] Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
- -[x] Treatments: 
-    + Plastic box placed in chicken wire cage to allow for free flow of air.
-    + Rainout shelter
-    + No contact with ground; wire cage suspended 30cm above ground.
-    + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+
+  - [X] Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+  - [X] Duration: 120 days
+  - [X] Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
+  - [X] Solar exposure: Litter treated with filters (see treatments below)
+  - [X] Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+  - [X] Vegetation Coverage: Open Woodland
+  - [X] Litter Chemistry: Found via standard acid detergent method:
+      + cellulose and sugars, 49.1 ± 0.4%
+      + hemicellulose, 37.3 ± 0.2%
+      + lignin,7.3 ± 0.2%.
+  - [X] Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+  - [X] Treatments: 
+      + Plastic box placed in chicken wire cage to allow for free flow of air.
+      + Rainout shelter
+      + No contact with ground; wire cage suspended 30cm above ground.
+      + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
 
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
