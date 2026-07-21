@@ -83,12 +83,13 @@ dataDownload.dir <- 'temp'
 
 # Control vocabulary transcribed from EDI file `TemplateCVs.pdf`
 controlVocabulary <- 'ISCN3_TemplateCVs.csv'
+controlVocabulary_header <- 'ISCN3_TemplateCV_preamble.md'
 
 ## Files from the `TemplateSubmit.pdf` document include a formatted header
 ##... and the table discriptions
 
 # Transcription of the header from the EDI file `TemplateSubmit.pdf`
-readME_templateSubmit <- 'README_TemplateSubmit.md'
+readME_templateSubmit <- 'ISCN3_TemplateSubmit_preamble.md'
 
 # Rescued transcriptions of individual table meta data from the 
 #... EDI file `TemplateSubmit.pdf` for the layer, profile, site
@@ -162,9 +163,9 @@ These files are in the ISCN3 data rescue.
 - [ISCN3_2015.bib](ISCN3_2015.bib) citation for project website and primary journal article transcribed
 - [ISCN3_Contributors.bib](ISCN3_Contributors.bib) citations for the contributed datasets to ISCN
 - [ISCN3_ISCN3_citation.csv](ISCN3_ISCN3_citation.csv) Rescued citations where the citations were replaced with bib references
-- [README_TemplateCV.md](README_TemplateCV.md) control vocabulary text information
+- [ISCN3_TemplateCV_preamble.md](ISCN3_TemplateCV_preamble.md) control vocabulary text information
 - [ISCN3_TemplateCVs.csv](ISCN3_TemplateCVs.csv) control vocabulary tables
-- [README_TemplateSubmit.md](README_TemplateSubmit.md)  submission guidance header
+- [ISCN3_TemplateSubmit_preamble.md](ISCN3_TemplateSubmit_preamble.md)  submission guidance header
 - [ISCN3_TemplateSubmit_TableSite.csv](ISCN3_TemplateSubmit_TableSite.csv) submission guidence that has meta data for the site table
 - [ISCN3_TemplateSubmit_TableProfile.csv](ISCN3_TemplateSubmit_TableProfile.csv) submission guidance that has meta data for the profile table
 - [ISCN3_TemplateSubmit_TableLayer.csv](ISCN3_TemplateSubmit_TableLayer.csv) submission guidance that has meta data for the layer table
@@ -365,7 +366,7 @@ data.lvl0.ls <- list(
     ), # end data list
   #### General control vocabulary that is not broke down by table ####
   control_vocabulary = list(
-    readme = read_lines(file = 'README_TemplateCV.md'),
+    readme = read_lines(file = 'ISCN3_TemplateCV_preamble.md'),
     caption = readr::read_delim( file = 'ISCN3_TemplateCVs.csv', 
                        n_max = 1,
                        col_names = FALSE,
@@ -480,7 +481,8 @@ collection.df <-
           from_source = paste(sort(unique(c(source_from.x, source_from.y))), collapse = ';'),
           .by = dataset_name) |>
   pivot_longer(cols = c('value', 'from_source'),
-               names_to = 'is_type', values_to = 'with_entry') |>
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
   mutate(of_variable = 'bibkey')
   
 ```
@@ -721,8 +723,9 @@ geolocation.df <- layer.df |>
          of_variable = 'geolocation',
          #TODO set precision
          across(c(latitude, longitude, resolution, observation_count, datum), as.character)) |>
-  pivot_longer(cols = c(latitude, longitude, resolution, observation_count, datum),
-               names_to = 'is_type', values_to = 'with_entry')
+  pivot_longer(cols = c(latitude, longitude, unit, resolution, observation_count, datum),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE)
 
 region.df <- layer.df |>
   select(geolocation_id, country = `country (country)`, state = `state (state_province)`) |>
@@ -937,7 +940,7 @@ carbon_fraction.df <- layer.df  |>
          method = paste(unique(method[!is.na(method)]), collapse = ';'),
          #there are a small ammount of layers that share OC, C and/or CaCO3 values
          #... which is possible, so group on this as well.
-         observation_count = n(),
+         #observation_count = n(),
          dataset_name = paste(sort(unique(dataset_name)), sep = ';'),
          .by = c(geolocation_id, temporal_id, layer_id, of_variable, value)) |> #44 902 obs
   mutate(unit = 'mass-percent') |>
@@ -1027,7 +1030,8 @@ bulkdensity.df <- layer.df  |>  #72 503 obs
                  of_variable, value)) |> #50 037 obs, roughly 15% removed as duplicate values
   mutate(unit = 'g cm-3') |>
   pivot_longer(cols = c(value, method, unit), 
-               names_to = 'is_type', values_to = 'with_entry') #|>
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) #|>
   #pivot_wider(names_from = 'is_type', values_from = 'with_entry')
 ```
 
@@ -1094,13 +1098,13 @@ id_key <- bulkdensity.df |>
   unique()
 
 site.df <- id_key |>
-  left_join(geolocation.df |> 
+  right_join(geolocation.df |> 
               bind_rows(region.df),
             by = join_by(geolocation_id),
             relationship = "many-to-many") |>
   bind_rows(
     id_key |>
-      left_join(temporal.df,
+      right_join(temporal.df,
                 by = join_by(temporal_id),
                 relationship = "many-to-many"))
 
@@ -1116,6 +1120,41 @@ data.lvl1.ls <- list(
 ```
 
 ## Check semantics
+
+```{r}
+#| label: ISCN4SemanticProposal
+
+proposedSemantics.filename <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
+
+semantics.df <- data.lvl1.ls$site |>
+  select(of_variable, is_type) |>
+  unique() |>
+  bind_rows(
+    data.lvl1.ls$layer |>
+      select(of_variable, is_type) |>
+      unique()
+  ) |>
+  bind_rows(
+    data.lvl1.ls$collection |>
+      select(of_variable, is_type) |>
+      unique()
+  ) |>
+  mutate(site_id = 'ISCN3_2015') |>
+  arrange(of_variable) 
+
+#Write things the first time and then just check
+#write_csv(semantics.df, file = proposedSemantics.filename)
+
+ISCN4Semantics <- read_csv(proposedSemantics.filename)
+
+if(anti_join(semantics.df, ISCN4Semantics,
+             by = join_by(of_variable, is_type, site_id)) |> nrow() > 0){
+  stop('new variables')
+}else{
+  print('Proposed semantics are included.')
+}
+
+```
 
 ```{r}
 #| label: buildSemanticYAML
