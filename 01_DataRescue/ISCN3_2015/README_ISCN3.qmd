@@ -1099,6 +1099,7 @@ Create the level 1 data frame using the id combinations that have soil observati
 id_key <- bulkdensity.df |>
     bind_rows(coarse_fraction.df) |>
     bind_rows(carbon_fraction.df) |>
+    bind_rows(organic_fraction.df) |>
   select(geolocation_id, temporal_id, layer_id) |>
   unique()
 
@@ -1117,7 +1118,8 @@ data.lvl1.ls <- list(
   site = site.df,
   layer = bulkdensity.df |>
     bind_rows(coarse_fraction.df) |>
-    bind_rows(carbon_fraction.df),
+    bind_rows(carbon_fraction.df) |>
+    bind_rows(organic_fraction.df),
   collection = collection.df,
   citations = c(data.lvl0.ls$citation$primary,
                 data.lvl0.ls$citation$contributed)
@@ -1152,9 +1154,14 @@ semantics.df <- data.lvl1.ls$site |>
 
 ISCN4Semantics <- read_csv(proposedSemantics.filename)
 
-if(anti_join(semantics.df, ISCN4Semantics,
-             by = join_by(of_variable, is_type, site_id)) |> nrow() > 0){
+newSematnics <- anti_join(semantics.df, ISCN4Semantics,
+             by = join_by(of_variable, is_type, study_id)) 
+
+if(nrow(newSematnics) > 0){
   stop('new variables')
+  #Consider what new variable-types are 'new' (is it a mistake?) and if you want to add them uncomment the line below.
+  #write_csv(newSematnics, file = proposedSemantics.filename, 
+  #          append = TRUE, col_names = FALSE)
 }else{
   print('Proposed semantics are included.')
 }

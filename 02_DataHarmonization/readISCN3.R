@@ -764,6 +764,7 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   id_key <- bulkdensity.df |>
     bind_rows(coarse_fraction.df) |>
     bind_rows(carbon_fraction.df) |>
+    bind_rows(organic_fraction.df) |>
     select(geolocation_id, temporal_id, layer_id) |>
     unique()
   
@@ -782,7 +783,8 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     site = site.df,
     layer = bulkdensity.df |>
       bind_rows(coarse_fraction.df) |>
-      bind_rows(carbon_fraction.df),
+      bind_rows(carbon_fraction.df) |>
+      bind_rows(organic_fraction.df),
     collection = collection.df,
     citations = c(data.lvl0.ls$citation$primary,
                   data.lvl0.ls$citation$contributed)

@@ -92,3 +92,6 @@ total_carbon_percent,unit,CPEAT2025
 total_carbon_percent,comment,CPEAT2025
 total_carbon_percent,method,CPEAT2025
 total_carbon_percent,value,CPEAT2025
+organic_fraction,value,ISCN3_2015
+organic_fraction,unit,ISCN3_2015
+organic_fraction,method,ISCN3_2015
