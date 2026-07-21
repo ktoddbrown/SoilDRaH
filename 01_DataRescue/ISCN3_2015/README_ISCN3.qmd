@@ -444,7 +444,8 @@ precisions.ls <- list(latLong_digits = 4, #assume lat/lon precision of 0.0001
 
 ## Citations pre-processing: expanding keys
 
-Citations are keyed to datasets however the Permafrost RCN has seperate citations for the layer and profile level data. We use the site information from the profile and observations from the layer data, and need to expand the citations keyed to those datasets.
+Citations are keyed to datasets however the Permafrost RCN has separate citations for the layer and profile level data.
+We use the site information from the profile and observations from the layer data, and need to expand the citations keyed to those datasets.
 
 ```{r}
 #| label: ISCN3_corrections_citations
@@ -466,6 +467,7 @@ collection.df <-
   #expand the Permafrost RCN datasets so we can pull in that citation
   reframe(dataset_name_citation = c('Permafrost_RCN', dataset_name)[c(str_detect(dataset_name, '^Permafrost RCN_'), TRUE)],
           .by = everything()) |>
+  #cross reference with citation table to pull the bibkey from the 'citation' field
   full_join(
     data.lvl0.ls$data$TableCitation$primary |>
       select(dataset_name_citation = "dataset_name", #matches dataset_name_sub or dataset_name_soc
@@ -477,6 +479,7 @@ collection.df <-
     by = join_by(dataset_name_citation)) |>
   #### Trim NRCS, remove 2 collection. Work with the current NRCS data download instead
   filter(!str_detect(dataset_name, 'NRCS')) |>
+  #merge multiple citations for each dataset name (for example if it was a permafrost RCN study this will have both the RCN citation and original source)
   reframe(value = paste(sort(unique(citation)), collapse = ';'),
           from_source = paste(sort(unique(c(source_from.x, source_from.y))), collapse = ';'),
           .by = dataset_name) |>
@@ -623,7 +626,7 @@ Processing the layer table considerations
 
   1) Identifiers provided under the `.*_name` pattern are not unique leading to issues pivoting the data during processing.
     - *To resolve* construct a `layer_id` from available zero reference and the upper/lower bounds. Ensure that the upper/lower bounds have a realistic resolution of `{r} precisions.ls$depth_digits` digits. Also construct a `sample_id` from the `dataset_name`, `site_name`, `profile_name`, and `layer_name`. The sample id is slightly redundent but allows us to consolodate the identifiers.
-  2) Layer observations appear to be duplicated for different SOC calculations and duplications listed under multiple datasets.
+  2) Layer observations appear to be duplicated for different SOC calculations and duplication listed under multiple datasets.
     - *To resolve* add in the clusters developed in the site processing above so that we can better identify duplicate entries of variables when processing each variable type later in the code. Collapse the entry if the values match at the same geolocation-time-depth.
   
 
@@ -692,7 +695,7 @@ layer.df <- data.lvl0.ls$data$TableLayer$primary |>
     )) |> 
   #create a sample_id for simplification later from key:value pairs of the names
   #and the row number
-  mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s, row:%d',
+  mutate(sample_id = sprintf('dataset:%s,site:%s,profile:%s,layer:%s,row:%d',
                              dataset_name_sub, site_name, 
                              profile_name, layer_name,
                              1:n()))
@@ -1088,6 +1091,8 @@ coarse_fraction.df <- layer.df  |>
 ```
 
 ## Create level 1
+
+Create the level 1 data frame using the id combinations that have soil observations recorded and bind the long data tuples into a colleciton, site, and layer tables with a bib list.
 
 ```{r}
 
