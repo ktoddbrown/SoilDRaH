@@ -1144,7 +1144,7 @@ semantics.df <- data.lvl1.ls$site |>
       select(of_variable, is_type) |>
       unique()
   ) |>
-  mutate(site_id = 'ISCN3_2015') |>
+  mutate(study_id = 'ISCN3_2015') |>
   arrange(of_variable) 
 
 #Write things the first time and then just check
