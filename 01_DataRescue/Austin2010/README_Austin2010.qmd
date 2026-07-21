@@ -506,8 +506,8 @@ temp <- data.lvl1.ls$meta |>
   unique() |>
   mutate(study_id = 'Austin2010')
 
-#write_csv(temp, file = '../../02_DataHarmonization/vocabulary_draft.csv')
-ref_draft <- read_csv('../../02_DataHarmonization/vocabulary_draft.csv',
+#write_csv(temp, file = '../../03_DataCuration/DeAD/vocabulary_draft.csv')
+ref_draft <- read_csv('../../03_DataCuration/DeAD/vocabulary_draft.csv',
                       show_col_types = FALSE)
 
 newVariables <- anti_join(temp, ref_draft,
@@ -517,7 +517,7 @@ if(nrow(newVariables) == 0){
   print('All variables in draft document')
 }else{
   #add the missing rows to the draft
-  write_csv(temp, file = '../../02_DataHarmonization/vocabulary_draft.csv',
+  write_csv(temp, file = '../../03_DataCuration/DeAD/vocabulary_draft.csv',
             append = TRUE, col_names = FALSE)
 }
 
