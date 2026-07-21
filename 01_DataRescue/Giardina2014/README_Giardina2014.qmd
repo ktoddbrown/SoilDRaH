@@ -3,11 +3,11 @@
 format:
   html:
   toc: true
-eval: ture #default to not evaluating the chunks, override this the template is completed
+eval: true #default to not evaluating the chunks, override this the template is completed
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - Giardina2014_Methods.bib 
+  - Giardina2014_Methods.bib
 - Giardina2014.bib 
 authors: 
   - id: ktoddbrown
