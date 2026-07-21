@@ -339,15 +339,15 @@ method = read_lines(file = methods.file),
 #Read in the results as tables or figure transcriptions. This includes
 #...the caption as well as the tables themselves
 data = list(
-  Table1 = list(
+  Figure2 = list(
     #Read the caption as a text string. Captions are the first cell on 
     #...the first row.
-    caption = read_csv(file = tableN.file,
+    caption = read_csv(file = figure2.file,
                        col_types = cols(.default = col_character()),
                        n_max = 1, col_names = FALSE)$X1[1],
     #Read in all the data, skipping the first row with the caption and read
     #...in the table as character. This element is a tibble (data.frame).
-    primary = read_csv(file = tableN.file,
+    primary = read_csv(file = figure2.file,
                        col_types = cols(.default = col_character()),
                        skip = 1)
   ) #End 'Table1' element

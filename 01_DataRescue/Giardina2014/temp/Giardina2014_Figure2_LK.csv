@@ -36,38 +36,38 @@ x,y,y value SE difference,x value unit,y value unit,graph label,depth (cm)
 16.70,10048,,MAT (°C),Mean Residence Time (yr),d,50-91.5
 17.30,3867,,MAT (°C),Mean Residence Time (yr),d,50-91.5
 18.20,13192,,MAT (°C),Mean Residence Time (yr),d,50-91.5
-12.98,4083,485.477,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-13.80,3083,346.993,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-15.08,3709,406.747,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-15.52,3666,344.796,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-16.10,2333,297.933,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-16.10,4166,330.65,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-16.70,3250,398.25,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-17.29,4333,695.116,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-18.15,2816,441.023,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),e,0-10
-12.97,7633,1833.335,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-13.83,6916,916.66,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-15.08,5833,583.334,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-15.51,7023,668.699,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-16.10,6166,816.665,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-16.10,6916,733.332,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-16.70,8276,1249.998,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-17.30,6681,649.99,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-18.15,5416,833.333,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),f,10-30
-12.97,5622,660.55,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-13.83,5519,1486.239,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-15.10,5394,412.844,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-15.50,6345,577.977,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-16.10,6220.182,495.415,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-16.70,5807,247.709,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-17.248,5889,660.544,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-18.15,4105,330.27,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),g,30-50
-12.97,7918,837.205,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-13.83,6612,1360.469,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-15.08,10220,627.906,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-15.5,11581,509.499,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-16.10,10744,1263.867,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-16.10,11476,2036.782,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-16.70,9772,1377.307,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-17.25,10953,1054.568,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
-18.15,7190,575.257,MAT (°C),Soil Organic Carbon (g C $m^{-2}$),h,50-91.5
+12.98,4083,485.477,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+13.80,3083,346.993,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+15.08,3709,406.747,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+15.52,3666,344.796,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+16.10,2333,297.933,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+16.10,4166,330.65,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+16.70,3250,398.25,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+17.29,4333,695.116,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+18.15,2816,441.023,MAT (°C),Soil Organic Carbon (g Cm^-2),e,0-10
+12.97,7633,1833.335,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+13.83,6916,916.66,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+15.08,5833,583.334,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+15.51,7023,668.699,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+16.10,6166,816.665,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+16.10,6916,733.332,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+16.70,8276,1249.998,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+17.30,6681,649.99,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+18.15,5416,833.333,MAT (°C),Soil Organic Carbon (g Cm^-2),f,10-30
+12.97,5622,660.55,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+13.83,5519,1486.239,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+15.10,5394,412.844,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+15.50,6345,577.977,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+16.10,6220.182,495.415,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+16.70,5807,247.709,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+17.248,5889,660.544,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+18.15,4105,330.27,MAT (°C),Soil Organic Carbon (g Cm^-2),g,30-50
+12.97,7918,837.205,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+13.83,6612,1360.469,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+15.08,10220,627.906,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+15.5,11581,509.499,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+16.10,10744,1263.867,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+16.10,11476,2036.782,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+16.70,9772,1377.307,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+17.25,10953,1054.568,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
+18.15,7190,575.257,MAT (°C),Soil Organic Carbon (g Cm^-2),h,50-91.5
