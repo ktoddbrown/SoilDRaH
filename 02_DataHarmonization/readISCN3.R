@@ -39,10 +39,10 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   ##... and the table discriptions
   
   # Transcription of the submission guidelines from the EDI file `TemplateSubmit.pdf`
-  readME_templateSubmit <- file.path(dataDir, 'README_TemplateSubmit.md')
+  readME_templateSubmit <- file.path(dataDir, 'ISCN3_TemplateSubmit_preamble.md')
   
   #Transcription of the control vocabulary pdf from EDI TemplateCVs.pdf
-  readme_templateCV <- file.path(dataDir, 'README_TemplateCV.md')
+  readme_templateCV <- file.path(dataDir, 'ISCN3_TemplateCV_preamble.md')
   ISCN3_controlVocab <- file.path(dataDir, 'ISCN3_TemplateCVs.csv')
   
   # Rescued transcriptions of individual table meta data from the 
