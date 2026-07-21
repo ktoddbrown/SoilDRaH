@@ -1,0 +1,761 @@
+---
+title: "Data Rescue: Lyons 2010"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Lyons2010_Methods.bib #contains the citations in the methods section
+  - Lyons2010.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  #remove ktoddbrown if they did not work on the rescue directly
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: review
+   #   - standardization: #review
+    #  - curation: lead #review
+
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+   #   - standardization: #review
+    #  - curation: lead #review
+
+  - id: sierrav-droid
+    name:
+      given: Sierra
+      family: Velazquez
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+   #   - standardization: #review
+    #  - curation: lead #review
+      
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+    
+timelog:
+  #remove activites below and add activites for the data rescue. Include one activity for developing the data rescue plan, each data element (table, figures, methods, bibliography), readme write-up, and anything else related to the data rescue.
+  - activity: 
+      description: Developing the data rescue plan and ReadMe write-up
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-06-08 
+      duration: PT1H
+  - activity: 
+      description: First Tran Methods
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-06-08 
+      duration: PT1H
+  - activity: 
+      description: First Tran Figure 1
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-07-02 
+      duration: PT1H15M
+  - activity: 
+      description: First Tran Figure 2
+      who: SavaScott
+      end: 2026-07-02
+      start: 2026-07-02 
+      duration: PT45M
+  - activity: 
+      description: First Tran Figure 3
+      who: SavaScott
+      end: 2026-07-07
+      start: 2026-07-07 
+      duration: PT1H30M
+  - activity: 
+      description: Bibliography files
+      who: SavaScott
+      end: 2026-07-01
+      start: 2026-07-01 
+      duration: PT45M
+  - activity: 
+      description: Coding of Figures
+      who: SavaScott
+      end: 2026-07-08
+      start: 2026-07-08 
+      duration: PT1H15M
+  - activity:
+      description: Second Transcription
+      who: sierrav-droid
+      end: 2026-07-09
+      start: 2026-07-08
+      duration: PT1H10M
+  - activity:
+      description: CC and Final ReadMe Update
+      who: SavaScott
+      end: 2026-07-09
+      start: 2026-07-13
+      duration: PT2H40M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Lyons2010_Methods.md"
+figure1.file <- 'Lyons2010_Figure1.csv'
+figure2.file <- 'Lyons2010_Figure2.csv'
+figure3.file <- 'Lyons2010_Figure3.csv'
+
+# Bibliography files
+primaryCitation.file <- 'Lyons2010.bib'
+methodsCitation.file <- 'Lyons2010_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../02_DataHarmonization/readLyons2010.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Lyons, K. G., & McCarthy, W. A. (2010). Early decomposition of Ashe juniper (Juniperus ashei) wood in open and shaded habitat. Rangeland Ecology & Management, 63(3), 359-365. https://doi.org/10.2111/REM-D-09-00077.1
+
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/267.
+
+@Lyons2010 primarily measures the decomposition rate and elemental composition of Ashe juniper wood collected from a grassland in the Edwards Plateau. They used open and shaded habitats with the litterbags. They used this data to determine there was no change in the wood decomposition between the open and shaded habitats during low rainfall periods. 
+
+## Tables and Figures
+- Tables
+  1) This paper has no tables
+  
+- Figures 
+  1) Figure 1: Ashe juniper wood percent biomass reaming as a function time and SHADE vs. OPEN treatments, with total seasonal precipitation charted as well.
+  2) Figure 2: Ashe juniper wood change in percent nitrogen through time. 
+  3) Figure 3: Ashe juniper wood change in C:N through time
+
+## Fit for purpose: DeAD
+
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
+
+### Main Variables of Interest
+
+  - Location: The experiment was conducted along a 26-ha area within the C.L. Browning Ranch in Blanco County, Texas. The coordinates are lat 30°15′53″N; long 98°19′43″W.
+  - Duration: Ashe juniper wood was collected in February 2005, mulched, passively dried and sifted through. The litterbags were put out in April 2005 and the last litterbag was collected in November 2007. 
+  - Mass loss: The Ashe juniper wood percent biomass remaining between the two treatments are charted in Figure 1. 
+  - Solar exposure: This experiment had two treatments, that determined the solar exposure on the litterbags. 
+  - Soil carbon stock: The change in the C:N ratio of the Ashe juniper wood is found in Figure 3
+
+### Other Relevant Variables
+
+  - Litter species: Ashe juniper (*Juniperus ashei*)
+  - Microsite data: The vegetation of the site is isolated tree/shrub complexes, with plateau live oak and open native grasslands
+  - Microclimate relative humidity: The climate of the Edwards Plateau is subtropical-subhumid.  
+  - Litter chemical composition: The C:N ratio of the decomposing wood is found within Figure 3. 
+  - Litter bag materials and method: 110 fiberglass mesh litterbags (16 $\times$ 16) were constructed for the experiment, with each bag having 20 grams of wood. The mesh openings was 1.0-mm. Procedure for the creation of the litterbags was taken from @Robertson1999.
+  - Treatments: The experiment had two treatements, OPEN and SHADED. The OPEN treatment was the transect that was in an open habitat. The SHADE treatment was the transect under a closed canopy. 
+  - Land management: The site chosen had been cleared of Ashe juniper in June-September 2004 and the felled wood was left behind. The cattle was removed from the ranch property in 2003, before it had a history of moderate to intense grazing. 
+
+
+## Files
+
+These files are in the @Lyons2010 data rescue.
+
+- [Readme](README_Lyons2010.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Lyons2010.bib](Lyons2010.bib)
+  + citation for article transcribed
+- [Lyons2010_Methods.bib](Lyons2010_Methods.bib)
+  + citations for the methods section of the article
+- [Lyons2010_Methods.md](Lyons2010_Methods.md)
+  + methods transcribed from primary article
+- [Lyons2010_Figure1.csv](Lyons2010_Figure1.csv)
+  + figure 1 from primary article with Ashe juniper wood percent biomass remaining (circles) as a function time as well as monthly and seasonal precipitation.
+- [Lyons2010_Figure2.csv](Lyons2010_Figure2.csv)
+  + figure 2 from primary article with Ashe juniper wood change in percent nitrogen
+- [Lyons2010_Figure3.csv](Lyons2010_Figure3.csv)
+  + figure 3 from primary article with Ashe juniper wood change in carbon:nitrogen (C∶N) through tim
+- [temp/](temp/)
+    + folder that will include the second transcriptions
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [x] Create a copy of this template folder and rename it to AuthorYYYY
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Extract points from Figure 1-3 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for figures and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Figure 1
+
+Figure 1 was modified to seperate the two different y variables into different graphs. It was also motified to combine the two footnotes into one text box per variable. Dashes were added to indicate NA's in the data.
+
+```{r}
+#| label: figure1Check
+#| code-fold: true
+#| message: false
+#| eval: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig1Caption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig1Data <- read_csv(file = figure1.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig1DataPrecip <- fig1Data %>% filter(`y label` == "Precipitation (mm)")
+fig1DataBiomass <- fig1Data %>% filter(`y label` == "Biomass remaining (%)")
+
+fig1DataBiomass <- fig1DataBiomass %>% mutate(
+  `y value` = as.numeric(`y value`),
+  `y value upper SE` = as.numeric(`y value upper SE`)
+)
+
+fig1DataBiomass <- fig1DataBiomass %>%
+  mutate(error_var = `y value upper SE` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+# Precipitation graph - Combined Bar and Line Graph
+
+ggplot(fig1DataPrecip, aes(x = `x value`, y = `y value`)) +
+geom_bar(data = fig1DataPrecip %>% filter(`graph type` == "bar graph"), stat = "identity", fill = "azure4", width = 0.13) +
+ geom_point(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), size = 1.5,
+  stroke = 1,
+  color = "black") + geom_line(data = fig1DataPrecip %>% filter(`graph type` == "line graph"), color = "black") + scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 600)) + geom_text(
+    data = fig1DataPrecip %>% filter(footnotes != "-" & !is.na(footnotes)), 
+    aes(label = footnotes),
+    vjust = -0.5,
+    size = 3,
+    color = "black") + labs(
+       x = "Time (year)",
+       y = "Precipitation (mm)",
+       caption = fig1Caption)
+
+# Biomass remaining - Double Line Graph
+
+ggplot(fig1DataBiomass, aes(x = `x value`, y = `y value`, shape = treatment, fill = treatment)) + geom_point(size = 1.5, stroke = 1) +
+scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100)) +
+geom_errorbar(aes(ymin = ymin, ymax = ymax, color = treatment), width = 0.1) + 
+  scale_color_manual(values = c(
+    "biomass OPEN" = "azure4",
+     "biomass SHADE" = "black")) + 
+  labs(x = "Time (year)",
+y = "Biomass remaining (%)",
+caption = fig1Caption) 
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure1
+#| eval: true
+
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template should not have a conflict here.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure1_SV.csv Lyons2010_Figure1.csv
+```
+
+
+
+## Figure 2
+
+Figure 2 was modified to drop the trendline and the line connecting the points together. The caption was also modified to include markdown notation. 
+
+```{r}
+#| label: figure2Check
+#| code-fold: true
+#| message: false
+#| eval: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig2Data <- fig2Data %>%
+  mutate(error_var = `y upper SE value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+
+ggplot(fig2Data, aes(x = `x value`, y = `y value`)) + 
+  geom_point(size = 1.5,
+  stroke = 1,
+  color = "black") +
+  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), position = position_dodge(width = 0.01), width = 0.05) +
+labs(
+  x = "Time (year)",
+  y = "Nitrogen (%)",
+  caption = fig2Caption
+)
+
+
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure2
+#| eval: true
+
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure2_SV.csv Lyons2010_Figure2.csv
+```
+
+
+## Figure 3
+
+Figure 3 was modified to drop the trendline and the line connecting the points together. The caption was also modified to include markdown notation. 
+
+```{r}
+#| label: figure3Check
+#| code-fold: true
+#| message: false
+#| eval: true
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig3Caption <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig3Data <- read_csv(file = figure3.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig3Data <- fig3Data %>%
+  mutate(error_var = `y SE high value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+ggplot(fig3Data, aes(x = `x value`, y = `y value`)) + 
+  geom_point(size = 1.5,
+  stroke = 1,
+  color = "black") +
+  scale_x_continuous(breaks = c(0.0, 0.5, 1.0, 1.5, 2.0, 2.5)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), position = position_dodge(width = 0.01), width = 0.05) +
+labs(
+  x = "Time (year)",
+  y = "C:N ratio",
+  caption = fig2Caption
+)
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure3
+#| eval: true
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template has an example of an unresolved conflict.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Figure3_SV.csv Lyons2010_Figure3.csv
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note the template example does NOT have a conflict.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Lyons2010_Methods_SV.md Lyons2010_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#| eval: true
+
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  citation = list(
+    primary = read.bib(file = primaryCitation.file), 
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  method = read_lines(file = methods.file),
+  data = list(
+    Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+   )
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: false
+
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+#| eval: false
+
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+#| eval: false
+
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+#| eval: false
+
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
