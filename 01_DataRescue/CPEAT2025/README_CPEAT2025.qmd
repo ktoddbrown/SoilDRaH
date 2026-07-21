@@ -708,6 +708,45 @@ if(isTRUE(all.equal(datafunction.lvl1.ls, lvl1_data.ls))){
 ```
 
 ```{r}
+#| label: ISCN4SemanticProposal
+
+proposedSemantics.filename <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
+
+semantics.df <- datafunction.lvl1.ls$data$core |>
+  select(of_variable = of_variable_DRaH, is_type) |>
+  unique() |>
+  filter_out(is.na(of_variable) | is.na(is_type)) |>
+  bind_rows(
+    datafunction.lvl1.ls$data$variable |>
+      select(of_variable = of_variable_DRaH, is_type) |>
+      unique() |>
+      filter_out(is.na(of_variable) | is.na(is_type))
+  ) |>
+  bind_rows(
+    datafunction.lvl1.ls$data$primary |>
+      select(of_variable = of_variable_DRaH, is_type) |>
+      unique() |>
+      filter_out(is.na(of_variable) | is.na(is_type))
+  ) |>
+  mutate(site_id = 'CPEAT2025') |>
+  arrange(of_variable) 
+
+#Write things the first time and then just check
+#write_csv(semantics.df, file = proposedSemantics.filename,
+#  append = TRUE, col_names = FALSE)
+
+ISCN4Semantics <- read_csv(proposedSemantics.filename)
+
+if(anti_join(semantics.df, ISCN4Semantics,
+             by = join_by(of_variable, is_type, site_id)) |> nrow() > 0){
+  stop('new variables')
+}else{
+  print('Proposed semantics are included.')
+}
+```
+
+
+```{r}
 #| label: updateVocab
 
 SoilDRaH_isType <- read_csv(is_type.file) |>
