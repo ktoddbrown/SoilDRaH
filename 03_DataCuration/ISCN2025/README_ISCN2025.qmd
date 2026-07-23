@@ -325,10 +325,80 @@ ggplot(CPEAT_site.df) +
 #| label: ISCN3_level2
 # 
 layer_ISCN3.df <- ISCN3.ls$layer |>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '::',
+              values_from = with_entry) |> #114 446 obs
+  #check that we have the needed bulk density and carbon fraction values
+  filter_out(all(is.na(`bulk_density::value`)),
+             .by = c(geolocation_id, temporal_id, layer_id)) |> #107 704 obs
+  filter_out(all(is.na(`carbon_fraction::value`)) &
+               all(is.na(`organic_fraction::value`)),
+             .by = c(geolocation_id, temporal_id, layer_id)) |> #103 634 obs
+  mutate(
+    #sample_id
+    `bulk_density::sample_id` = if_else(is.na(`bulk_density::value`), NA, sample_id),
+    `carbon_fraction::sample_id` = if_else(is.na(`carbon_fraction::value`), NA, sample_id),
+    `organic_fraction::sample_id` = if_else(is.na(`organic_fraction::value`), NA, sample_id),
+    `coarse_fraction::sample_id` = if_else(is.na(`coarse_fraction::value`), NA, sample_id),
+    #dataset_name
+    `bulk_density::dataset_name` = if_else(is.na(`bulk_density::value`), NA, dataset_name),
+    `carbon_fraction::dataset_name` = if_else(is.na(`carbon_fraction::value`), NA, dataset_name),
+    `organic_fraction::dataset_name` = if_else(is.na(`organic_fraction::value`), NA, dataset_name),
+    `coarse_fraction::dataset_name` = if_else(is.na(`coarse_fraction::value`), NA, dataset_name)
+  ) |>
+  select(-c(dataset_name, sample_id) ) |>
+  mutate(`bulk_density::method` = if_else(is.na(`bulk_density::method`), '', `bulk_density::method`)) |>
+  #for each space-time-depth group, pick the 'best' method
+  mutate(`bulk_density::soc_priority` = 
+            case_when(str_detect(`bulk_density::method`, 'stock') ~ 1 ,
+                    str_detect(`bulk_density::method`, 'whole_soil') ~ 2,
+                    str_detect(`bulk_density::method`, 'fine_earth') ~ 3,
+                    str_detect(`bulk_density::method`, 'unspecified') ~ 4,
+                      .default = NA),
+          `carbon_fraction::soc_priority` =
+            case_when(str_detect(`carbon_fraction::method`, 'organic') ~ 1,
+                      str_detect(`carbon_fraction::method`, 'total') ~ 2,
+                      .default = NA),
+         `organic_fraction::soc_priority` =
+           case_when(!is.na(`organic_fraction::method`) ~ 1,
+                      .default = NA),
+         `coarse_fraction::soc_priority` =
+            case_when(str_detect(`coarse_fraction::method`, 'measured') ~ 1,
+                      str_detect(`coarse_fraction::method`, 'estimated') ~ 2,
+                      .default = NA)
+          ) |>
+  reframe(bulk_density = 
+            mean(as.numeric(
+              `bulk_density::value`[
+                min(`bulk_density::soc_priority`) == `bulk_density::soc_priority`]),
+              na.rm=TRUE),
+          `bulk_density::count` =
+            length(
+              `bulk_density::value`[
+                min(`bulk_density::soc_priority`) == `bulk_density::soc_priority`]
+              ),
+          organic_fraction =
+            mean( as.numeric(
+              `carbon_fraction::value`[
+                which.min(`carbon_fraction::soc_priority`)]))/100,
+          .by = c(geolocation_id, temporal_id, layer_id))
+  
+  #layer_ISCN3.df |> reframe(count = n(), .by = c(`bulk_density::soc_priority`, `carbon_fraction::soc_method`, `coarse_fraction::soc_method`))
+  pivot_longer(cols = c(ends_with('value'), ends_with('method'), 
+                        ends_with('unit'), ends_with('sample_id'), 
+                        ends_with('dataset_name')),
+              names_to = 'of_variable::is_type', values_to = 'with_entry',
+              values_drop_na = TRUE) |> #725 438
+  filter(n() > 1,
+         .by = c(geolocation_id, temporal_id, layer_id, `of_variable::is_type`)) |> #266 790
+  unique() |> #171 386
+    arrange(geolocation_id, temporal_id, layer_id, `of_variable::is_type`)
+  
+
   mutate(across(.cols = ends_with('value'), as.numeric)) |>
   #how many geo-time clusters share more then one bulk density?
   filter(str_detect(of_variable, 'bulk_density')) |>
-  pivot_wider(names_from = is_type, values_from = with_entry)
+  pivot_wider(names_from = c(of_variable, is_type), 
+              values_from = with_entry)
 
 ```
 
