@@ -63,6 +63,11 @@ timelog:
       start: 2026-06-18 T04:10
       end: 2026-06-18 T04:45
       
+  - activity: 
+      description: Updating status of rescues and harmonization
+      who: AshBonner310
+      start: 2026-07-24 T12:00
+      end: 2026-07-24 T12:30
 ---
 
 
@@ -126,7 +131,8 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 <!---- Move to this table when the data tuple harmonization is complete. --->
 
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link | Data Harmonization - GitHub Issue |
-|------------|-----------|----------|----------|--------|
+|------------|----------|-----------|----------|----------|
+| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | [Austin 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Austin2010) | [277](https://github.com/ktoddbrown/SoilDRaH/issues/277) |
 
 ## Data Rescue - digitized
 
@@ -135,7 +141,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | AuthorYYYY | citation | Data Rescue - GitHub Issue | Folder link |
 |------------|----------|-----------|----------|
 | Lin2015 | @Lin2015 | [185](https://github.com/ktoddbrown/SoilDRaH/issues/185) | [Lin 2015](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Lin2015) |
-| Austin2010 | @Austin2010 | [119](https://github.com/ktoddbrown/SoilDRaH/issues/119) | [Austin 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Austin2010) |
 | Dimitrakopoulos 2010 | @Dimitrakopoulos2010 | [219](https://github.com/ktoddbrown/SoilDRaH/issues/219) | [Dimitrakopoulos 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/(https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Dimitrakopoulos2010)) |
 | Gaxiola 2015 | @Gaxiola2015 | [187](https://github.com/ktoddbrown/SoilDRaH/issues/187) | [Gaxiola 2015](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Gaxiola2015) |
 | Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | [Kavvadias 2001](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Kavvadias2001) |
@@ -203,7 +208,10 @@ List from collaborator (to be added soon)
 
 ```{r}
 #Source and append all the level 1 tuples
+source('../../02_DataHarmonization/readAustin2010.R')
 
+# Austin2010_tuples <- readAustin2010(dataDir = '../../01_DataRescue/Austin2010/',
+#               dataLevel = 'level1')
 ```
 
 # Data Level 2
