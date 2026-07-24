@@ -1,3 +1,26 @@
+#' Read Austin and Ballaré 2010
+#'
+#' Read in the rescued data from Austin and Ballaré 2010 that was ingested for the DeAD project in 2026. 
+#' Austin and Ballaré 2010 was interested in photodegredation rates of litter decomposition based on litter chemistry (specifically based on the levels of lignin and cellulose). 
+#' They also used wavelength-specific light attenuation filters to determine what wavelengths of light contribute to abiotic mass loss.
+#' 
+#' A.T. Austin, & C.L. Ballaré, Dual role of lignin in plant litter decomposition in terrestrial ecosystems, Proceedings of the National Academy of Sciences. U.S.A. 107 (10) 4618-4622, https://doi.org/10.1073/pnas.0909396107 (2010).
+#'
+#' @param dataDir string with the directory address for where the data rescue files are located
+#' @param dataLevel level of data product to be returned
+#' @param verbose print out messages as processing data, currently not used
+#'
+#' @returns a list of data frames and bib-entries
+#' @export
+#' 
+#' @importFrom bibtex read.bib
+#' @importFrom readr read_lines read_csv cols col_character
+#' @importFrom tibble tribble
+#' @importFrom dplyr mutate select filter case_when bind_rows
+#' @importFrom stringr str_detect str_extract
+#' @importFrom tidyr pivot_longer
+#'
+#' @examples
 readAustin2010 <- function(dataDir,
                          dataLevel = c('level0', 'level1')[1],
                          verbose = TRUE){
@@ -23,25 +46,25 @@ readAustin2010 <- function(dataDir,
   #Read in a list of all the bib files
   citation = list(
     #Citation for the article transcriptions are pulled from
-    primary = read.bib(file = primaryCitation.file), 
+    primary = bibtex::read.bib(file = primaryCitation.file), 
     #Citations for all referenced articles
-    methods = read.bib(file = methodsCitation.file)
+    methods = bibtex::read.bib(file = methodsCitation.file)
   ),
   #Read in the text transcription of the article's methods section
-  method = read_lines(file = methods.file),
+  method = readr::read_lines(file = methods.file),
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = figure1.file,
-                         col_types = cols(.default = col_character()),
+      caption = readr::read_csv(file = figure1.file,
+                         col_types = readr::cols(.default = readr::col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = figure1.file,
-                         col_types = cols(.default = col_character()),
+      primary = readr::read_csv(file = figure1.file,
+                         col_types = readr::cols(.default = readr::col_character()),
                          skip = 1)
     ) #End 'Table1' element
     #Repeat for all tables and figures...
@@ -58,7 +81,7 @@ readAustin2010 <- function(dataDir,
   #Create a table for the data in the method-section that is not directly 
   #...associated with any table. Often this is study level information.
   
-  study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+  study.df <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                       'region', 'country', 'Argentina', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
                       'region', 'province', 'Córdoba', paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
                       'geolocation', 'latitude', as.character(-1*(31 + 4/60)), paste('Method ln4:', paste(data.lvl0.ls$method[4], collapse = ' ')),
@@ -85,21 +108,21 @@ readAustin2010 <- function(dataDir,
                       'mass_loss', 'unit', 'mass-percent per day', 'Table 1 header'
   ) #close tibble
   
-  treatment.df <- tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
+  treatment.df <- tibble::tribble(~treatement_id, ~of_variable, ~is_type, ~with_entry,
                           'control', 'solar_filter', 'transmission_fraction', '0.95',
                           'control', 'solar_filter', 'transmission_wavelength', 'all',
                           'UV-B', 'solar_filter', 'attenuation', '280-315 nm',
                           'UV', 'solar_filter', 'attenuation', '280-400 nm',
                           'UV and blue', 'solar_filter', 'attenuation', '280-450 nm'
   ) |>
-    mutate(from_source = paste('Method ln4:', paste(data.lvl0.ls$method[12], collapse = ' ')))
+    dplyr::mutate(from_source = paste('Method ln4:', paste(data.lvl0.ls$method[12], collapse = ' ')))
   
   litter_loss.df <- data.lvl0.ls$data$Table1$primary |>
-    select(litter_type = Substrate, transmission_wavelengths = `Transmitted Wavelengths (nm)`,
+    dplyr::select(litter_type = Substrate, transmission_wavelengths = `Transmitted Wavelengths (nm)`,
            mass_loss = `Mass loss (% per day)`, mass_loss_sem = `Mass loss (% per day) SEM`) |>
     #pull in the grass litter but not the artificial substrate  
-    filter(str_detect(litter_type, '[Gg]rass.*')) |>
-    mutate(treatement_id = case_when(
+    dplyr::filter(stringr::str_detect(litter_type, '[Gg]rass.*')) |>
+    dplyr::mutate(treatement_id = dplyr::case_when(
       transmission_wavelengths == '>450' ~ 'UV and blue',
       transmission_wavelengths == '>400' ~ 'UV',
       transmission_wavelengths == '>315' ~ 'UV-B',
@@ -108,22 +131,22 @@ readAustin2010 <- function(dataDir,
     )) |>
     #discard the grass information
     #NOTE if you end up pulling the synthetic decompotion you will need to change this code here!
-    select(treatement_id, mass_loss, mass_loss_sem) |>
-    pivot_longer(cols = c(mass_loss, mass_loss_sem),
+    dplyr::select(treatement_id, mass_loss, mass_loss_sem) |>
+    tidyr::pivot_longer(cols = c(mass_loss, mass_loss_sem),
                  names_to = 'column_name', values_to = 'with_entry') |>
-    mutate(is_type = case_when(str_detect(column_name, 'sem$') ~ 'sem',
+    dplyr::mutate(is_type = dplyr::case_when(stringr::str_detect(column_name, 'sem$') ~ 'sem',
                                column_name == 'mass_loss' ~ 'value',
                                .default = '[BAD MATCH]'),
-           of_variable = str_extract(column_name, 'mass_loss')) |>
-    select(treatement_id, of_variable, is_type, with_entry) |>
-    mutate(from_source = 'Table 1')
+           of_variable = stringr::str_extract(column_name, 'mass_loss')) |>
+    dplyr::select(treatement_id, of_variable, is_type, with_entry) |>
+    dplyr::mutate(from_source = 'Table 1')
   
 
   ## Pull everything together into by stacking the meta and primary data tables
   data.lvl1.ls <- list(
     meta = study.df,
     primary = treatment.df |>
-      bind_rows(litter_loss.df)
+      dplyr::bind_rows(litter_loss.df)
   )
   
   if(dataLevel == 'level1'){
