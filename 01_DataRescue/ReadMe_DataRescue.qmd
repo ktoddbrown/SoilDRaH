@@ -74,7 +74,7 @@ startProjects <- fileGitTouches |>
 ## YAML
 
 ```{r}
-tempFilename <- 'Ares2001/README_Ares2001.qmd'
+
 readME.ls <- setNames(as.list(readME.df$filenames), readME.df$studyID)
 studyID_exclude <- c('CPEAT2025', 'FIA2024', 'NCSS2023') #
 allYAML <- lapply(readME.ls[setdiff(names(readME.ls), studyID_exclude)], function(myfilename){
@@ -116,7 +116,18 @@ author.df <- plyr::ldply(allYAML, .id = 'studyID',
      select(author_order, author_id = id, `name.family`, `name.given`) #|>
     # mutate(studyID = str_extract(tempFilename, pattern = '^[[:alnum:]_]+'))
   return(ans)
-}) 
+}) |>
+  mutate(student_status = case_when(
+    name.family %in% c("Marupaka", "Whitehead", "Bonner") ~ 'PhD Student',
+    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen", "Walder", "Saxour", "Velazquez", "Anegondi") ~ 'BS Student',
+    .default = 'Other'
+  ), 
+  UG_cohort = case_when(
+    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen") ~ ym('2025-1'),
+    name.family %in% c("Saxour", "Walder") ~ ym('2025-09'),
+    name.family %in% c("Green", "Velazquez", "Anegondi") ~ ym('2026-1'),
+    .default = NA
+  ))
 
 ```
 
@@ -125,19 +136,44 @@ author.df <- plyr::ldply(allYAML, .id = 'studyID',
 
 # People and time
 
-
-
 ```{r}
 plot.df <- author.df |>
   left_join(startProjects, by = join_by(studyID)) |>
+  filter(author_id != 'ktoddbrown',
+         firstCommit > ymd('2025-01-01')) |>
   arrange(name.family, firstCommit) |>
   mutate(cumulative_count = 1:n(),
          time_since_first = firstCommit - min(firstCommit),
          .by = name.family)
 
 ggplot(plot.df) +
+  geom_point(aes(x=time_since_first/(60*60*24),
+                y = cumulative_count)) +
   geom_line(aes(x=time_since_first/(60*60*24),
-                y = cumulative_count, group = name.family))
+                y = cumulative_count, group = name.family)) +
+  labs(x= 'Days since first commit', y = 'Cumulative study count',
+       title = 'Data rescuer productivity over time')
+
+ggplot(plot.df |>
+         filter(cumulative_count == max(cumulative_count),
+                .by = name.family)) +
+  geom_histogram(aes(x =  cumulative_count), binwidth = 1) +
+  labs(x = 'Cumulative study count', title = 'Data rescuer productivity')
+
+ggplot(plot.df |>
+         filter(cumulative_count == max(cumulative_count),
+                .by = name.family),
+       mapping = aes(x = time_since_first/(60*60*24*365), y = cumulative_count,
+                     color = student_status)) +
+  geom_jitter() +
+  labs(x= 'Years since first commit', y = 'Cumulative study count',
+       title = 'Total data rescuer productivity')
+
+# lm(data = plot.df |>
+#          filter(cumulative_count == max(cumulative_count),
+#                 .by = name.family),
+#   formula =  cumulative_count ~ I(time_since_first/(60*60*24*365)) ) |>
+#   summary()
 ```
 
 ```{r}
@@ -147,7 +183,10 @@ ggplot(fileGitTouches |>
          filter(studyID != 'ReadMe_DataRescue.qmd')) +
   geom_line(aes(y=startingRank, x = timestamp_date, group = studyID, color = sourceType)) +
   geom_point(aes(y = startingRank, x = timestamp_date, color = sourceType)) +
-  geom_line(aes(x=firstCommit, y = startingRank), linetype = 3)
+  geom_line(aes(x=firstCommit, y = startingRank), linetype = 3) +
+  labs(x = "Date",
+       y = 'Cumulative study count',
+       title = 'Data rescue study commits (any change)')
 ```
 
 # Level 1
