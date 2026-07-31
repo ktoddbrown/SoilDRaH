@@ -5,6 +5,31 @@ format:
     toc: true
 date: last-modified
 date-format: YYYY-MMMM
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  #remove ktoddbrown if they did not work on the rescue directly
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity:
+      description: Parse YAML and Git logs for authorship and repo contribution timeline. Fixed formatting in many of the README qmd files.
+      who: ktoddbrown
+      start: 2027-07-30
+      duration: P2H
 ---
 
 ```{r}
@@ -146,13 +171,20 @@ plot.df <- author.df |>
          time_since_first = firstCommit - min(firstCommit),
          .by = name.family)
 
+ggplot(plot.df, aes(x=difftime(firstCommit, UG_cohort),
+                y = cumulative_count, group = name.family)) +
+  geom_point() +
+  geom_line() +
+  labs(x= 'Days project start', y = 'Cumulative study count',
+       title = 'Undergraduate study submits over time')
+
 ggplot(plot.df) +
   geom_point(aes(x=time_since_first/(60*60*24),
                 y = cumulative_count)) +
   geom_line(aes(x=time_since_first/(60*60*24),
                 y = cumulative_count, group = name.family)) +
   labs(x= 'Days since first commit', y = 'Cumulative study count',
-       title = 'Data rescuer productivity over time')
+       title = 'Data rescuer study submits over time')
 
 ggplot(plot.df |>
          filter(cumulative_count == max(cumulative_count),
