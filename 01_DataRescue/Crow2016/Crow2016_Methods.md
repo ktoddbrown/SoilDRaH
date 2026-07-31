@@ -24,7 +24,7 @@ Estimates of forage production at the pasture sites were derived using the Hawai
 Monthly forage supply for each plot (Mg dry matter ha$^{-1}$) was calculated based on monthly average rainfall values [@Giambelluca2013] (Table 1).
 Production values were then used to estimate the aboveground and belowground biomass C and annual root input.
 First, annual biomass production was multiplied by 0.50 to convert biomass to C.
-When these pastures undergo grazing, the cattle generally remove approximately 50% of the standing biomass [@ThorneUnpublished]; therefore, aboveground biomass C of grazed pastureland was estimated by taking 50% of the production values.
+When these pastures undergo grazing, the cattle generally remove approximately 50% of the standing biomass [Thorne M, State Range Extention Specialists in Kamuela Extension Office in the Island of Hawaii, Personal Communication]; therefore, aboveground biomass C of grazed pastureland was estimated by taking 50% of the production values.
 Root mass C was calculated as 80% of C in aboveground biomass [@Chapin1987.
 Grasses typically turn over 30% of their root mass annually [@Chapin1987], which may be compounded by grazing.
 Here, grazing was considered to be 50%; therefore, an additional 2% loss was added to the natural die-off estimate of 30%, then multiplied by the root mass to get root litter input [@Thorne2013].
@@ -40,8 +40,8 @@ $$ ABG_{total} = 0.069413 \cdot DBH^{2.1472} \cdot H^{0.3129} $$  (1)
 
 where ABG$_{total}$  is the total dry weight of aboveground biomass in kg; DBH is diameter at breast height (1.4 m) in cm; and H is height in meters [@Schukrt1988].
 This equation was developed in Hawaii from the destructive harvest of *E. grandis* on the islands of Hawaii and Kauai.
-To convert to C, the ABG was multiplied by 51.1%, the C content of the eucalyptus trunk [@Turn2005).
-Belowground C (i.e., root biomass C) was calculated as 20% of ABG biomass C [@Giardina2002; @Misra1998; @Saint-Andre2005].
+To convert to C, the ABG was multiplied by 51.1%, the C content of the eucalyptus trunk [@Turn2005].
+Belowground C (i.e., root biomass C) was calculated as 20% of ABG biomass C [@Giardina2002; @Misra1998; @SaintAndre2005].
 No shrubs and little to no ground cover other than sparse invading grasses were present.
 
 ## Soil C stock
@@ -56,7 +56,7 @@ Soils were oven-dried at 105 °C, sub-sampled, homogenized, ground to pass throu
 Soil C stock (g cm$^{-2}$) was computed by two methods.
 The ﬁrst method (see Equation 2) multiplied the C concentration by bulk density:
 
-$$ C stock = \sum_{i=1}^{n}(D_b*L_{core}*\%C/100)_i    $$  (2)
+$$ C stock = \sum_{i=1}^{n}(D_b*L_{core}*\%C/100)_i $$  (2)
 
 where D$_b$ is the bulk density (g soil cm$^{-3}$ on a dry weight basis); L$_{core}$ is the length of the core (18 cm per section of the proﬁle); %C is the concentration of C (g C 100 g soil$^{-1}$), and n is the number of soil cores.
 The C stocks calculated from the ﬁve sample cores in each plot were averaged and used to calculate one value for the amount of soil C per hectare for each site.
