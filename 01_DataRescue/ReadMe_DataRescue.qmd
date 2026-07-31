@@ -11,7 +11,7 @@ date-format: YYYY-MMMM
 #| label: setup
 
 library(tidyverse)
-
+library(yaml)
 ```
 
 # Counts: Studies, tables, and figures
@@ -22,19 +22,133 @@ directories.ls <- tibble(filenames = list.files(path = '.',
                       recursive = FALSE)) |>
   filter(!str_detect(filenames, '^\\w+\\.\\w+$'))
 
-readME.ls <- tibble(filenames = list.files(path = '.',
+readME.df <- tibble(filenames = list.files(path = '.',
                       recursive = TRUE)) |>
-  filter(str_detect(filenames, '^\\w+/\\w+\\.\\wmd$')) 
-  filter(str_detect(filenames, '^\\w+/README\\w+\\.\\w+$')) #only look at 
+  filter(str_detect(filenames, regex('^\\w+/README_\\w+\\.\\wmd$', dotall = TRUE, ignore_case = TRUE))) |>
+  mutate(studyID = str_extract(filenames, '[[:alnum:]_]*'))
+  #filter(str_detect(filenames, '^\\w+/README\\w+\\.\\w+$')) #only look at 
+
 ```
+
+```{r}
+
+fileGitTouches <- tibble(filenames = list.files(path = '.',
+                      recursive = TRUE)) |>
+  filter_out(str_detect(filenames, '/t|Temp/') |
+             str_detect(filenames, '_files')) |>
+  #slice_sample(n=10) |>
+  mutate(gitLogStr = paste0(system(paste0('git log -- ', filenames),
+                            intern = TRUE), collapse = '\\n'),
+         .by = filenames) |>
+  reframe(timestamp_str = str_extract_all(gitLogStr, '(?<=Date:)[[:alnum:]\\s\\-\\:]+') |> unlist(),
+         author = str_extract_all(gitLogStr, '(?<=Author:\\s)[^<]*(?=\\s<)') |> unlist(),
+         .by = c(filenames, gitLogStr)) |>
+  mutate(entries = n(),
+         timestamp_date = parse_date_time(timestamp_str, 
+                                     orders = '%a %b %d %H:%M:%S %Y %z',
+                                     truncated = 1),
+         studyID = str_extract(filenames, '[[:alnum:]_]*'),
+         .by = c(filenames, gitLogStr)) 
+  
+startProjects <- fileGitTouches |>
+  select(timestamp_date, studyID) |>
+  unique() |>
+  reframe(firstCommit = min(timestamp_date),
+          lastCommit = max(timestamp_date),
+         .by = studyID) |>
+  arrange(firstCommit, studyID) |>
+  mutate(startingRank = 1:n()) |>
+         mutate(sourceType = 
+                  case_when(studyID == '_TemplateYYYY' ~ 'template',
+                            studyID %in% c('FIA2024', 'NCSS2023') ~ 'monitoring data',
+                            studyID %in% c('CPEAT2025', "ISCN3_2015") ~ 'data repository',
+                            .default = 'primary literature'
+           
+         ))
+
+```
+
 
 # Template adherence
 
 ## YAML
 
+```{r}
+tempFilename <- 'Ares2001/README_Ares2001.qmd'
+readME.ls <- setNames(as.list(readME.df$filenames), readME.df$studyID)
+studyID_exclude <- c('CPEAT2025', 'FIA2024', 'NCSS2023') #
+allYAML <- lapply(readME.ls[setdiff(names(readME.ls), studyID_exclude)], function(myfilename){
+#allYAML <- lapply(readME.ls['Nusslein1999'], function(myfilename){
+  fileLines <- read_lines(file = myfilename) 
+  
+  yamlStartEnd <- which(str_detect(fileLines, '^---\\s*$'))
+  
+  fileHeader <- fileLines[(yamlStartEnd[1]+1):(yamlStartEnd[2]-1)]
+  
+  yamlHeader <- read_yaml(text = fileHeader)
+  
+})
+
+```
+
+```{r}
+author.df <- plyr::ldply(allYAML, .id = 'studyID',
+                         .fun = function(yamlHeader){
+ #yamlHeader <- allYAML[[27]]
+  #TODO Standardize this across the project
+  if('authors' %in% names(yamlHeader)){
+    author_str <-'authors'
+  }else if('author' %in% names(yamlHeader)){
+    author_str <-'author'
+  }else{
+    stop('bad author key')
+  }
+  
+  ans <- as.data.frame(yamlHeader[[author_str]]) |>
+    select(starts_with('id'),
+           starts_with('name.given'), starts_with('name.family')) |>
+    unique() |>
+    pivot_longer(cols = everything()) |>
+    mutate(author_order = str_extract(name, '\\d+$')) |>
+    mutate(author_order = if_else(is.na(author_order), '0', author_order),
+           name = str_remove(name, '\\.\\d+$')) |>
+    pivot_wider(names_from = 'name', values_from = 'value') |>
+     select(author_order, author_id = id, `name.family`, `name.given`) #|>
+    # mutate(studyID = str_extract(tempFilename, pattern = '^[[:alnum:]_]+'))
+  return(ans)
+}) 
+
+```
+
+
 ## Sections
 
 # People and time
+
+
+
+```{r}
+plot.df <- author.df |>
+  left_join(startProjects, by = join_by(studyID)) |>
+  arrange(name.family, firstCommit) |>
+  mutate(cumulative_count = 1:n(),
+         time_since_first = firstCommit - min(firstCommit),
+         .by = name.family)
+
+ggplot(plot.df) +
+  geom_line(aes(x=time_since_first/(60*60*24),
+                y = cumulative_count, group = name.family))
+```
+
+```{r}
+ggplot(fileGitTouches |>
+         full_join(startProjects,
+                   by = join_by(studyID)) |>
+         filter(studyID != 'ReadMe_DataRescue.qmd')) +
+  geom_line(aes(y=startingRank, x = timestamp_date, group = studyID, color = sourceType)) +
+  geom_point(aes(y = startingRank, x = timestamp_date, color = sourceType)) +
+  geom_line(aes(x=firstCommit, y = startingRank), linetype = 3)
+```
 
 # Level 1
 
