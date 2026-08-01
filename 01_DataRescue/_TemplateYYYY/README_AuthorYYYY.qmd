@@ -56,7 +56,7 @@ timelog:
       description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/262. Changes include more details in the commented guidence, additional table and figure examples.
       who: ktoddbrown
       start: 2026-06-18 T1430
-      duration: P45M
+      duration: PT45M
   - activity: 
       description: add general UF affilation
       who: ktoddbrown #github username
@@ -64,7 +64,7 @@ timelog:
       start: 2026-01-29 T1530
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P05M
+      duration: PT05M
   - activity: 
       description: revised execute with only provided files
       who: ktoddbrown #github username
@@ -72,16 +72,18 @@ timelog:
       start: 2025-01-22 T1400
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
-  - activity: 
+      duration: PT45M
+  - activity: #Suggested that you log each day's activity here
       description: Revise based on feedback
       who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
+      #when you started or ended your work? Use
+      #... https://en.wikipedia.org/wiki/ISO_8601#Dates format
       end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P30M
-version: 'vs202512' #template version, remove before use
+      #start: YYYY-MM-DD
+      #Estimate how long this took you, below is an example of 30 minutes. Use
+      #... https://en.wikipedia.org/wiki/ISO_8601#Durations
+      duration: PT30M
+version: 'vs20270801' #template version, remove before use
 ---
 
 
