@@ -76,7 +76,7 @@ timelog:
       who: Misheph
       end: 2026-1-31
       start: 2025-10-25
-      duration: P10H
+      duration: PT10H
 ---
 
 

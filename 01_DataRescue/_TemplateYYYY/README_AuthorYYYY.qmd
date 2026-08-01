@@ -76,10 +76,10 @@ timelog:
   - activity: #Suggested that you log each day's activity here
       description: Revise based on feedback
       who: ktoddbrown #github username
-      #when you started or ended your work? Use
-      #... https://en.wikipedia.org/wiki/ISO_8601#Dates format
+      #Over what days did you work on this? Use
+      #... https://en.wikipedia.org/wiki/ISO_8601#Dates format.
+      start: 2025-11-21
       end: 2025-11-26
-      #start: YYYY-MM-DD
       #Estimate how long this took you, below is an example of 30 minutes. Use
       #... https://en.wikipedia.org/wiki/ISO_8601#Durations
       duration: PT30M

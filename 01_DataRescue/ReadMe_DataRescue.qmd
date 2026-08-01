@@ -29,7 +29,7 @@ timelog:
       description: Parse YAML and Git logs for authorship and repo contribution timeline. Fixed formatting in many of the README qmd files.
       who: ktoddbrown
       start: 2027-07-30
-      duration: P2H
+      duration: P3H
 ---
 
 ```{r}
@@ -156,6 +156,20 @@ author.df <- plyr::ldply(allYAML, .id = 'studyID',
 
 ```
 
+```{r}
+
+loggedTime.df <- plyr::ldply(allYAML, function(list_item){
+  plyr::ldply(list_item[['timelog']], function(activity_item){
+  return(as.data.frame(activity_item$activity))
+}) }, .id = 'studyID') |>
+  mutate(duration = lubridate::duration(duration)) 
+
+loggedTime.df |>
+  reframe(totalTime = sum(duration)/(60*60),
+          description = paste(description, collapse = '; '),
+          .by = studyID) |>
+  filter(str_detect(description, 'T|transcrip'))
+```
 
 ## Sections
 
@@ -171,18 +185,22 @@ plot.df <- author.df |>
          time_since_first = firstCommit - min(firstCommit),
          .by = name.family)
 
-ggplot(plot.df, aes(x=difftime(firstCommit, UG_cohort),
-                y = cumulative_count, group = name.family)) +
+ggplot(plot.df |>
+         filter(firstCommit > min(firstCommit) ), 
+       aes(x=difftime(firstCommit, UG_cohort)/365,
+                y = cumulative_count, color = name.family)) +
+  guides(color = 'none') +
   geom_point() +
   geom_line() +
-  labs(x= 'Days project start', y = 'Cumulative study count',
+  labs(x= 'Years project start', y = 'Cumulative study count',
        title = 'Undergraduate study submits over time')
 
 ggplot(plot.df) +
   geom_point(aes(x=time_since_first/(60*60*24),
                 y = cumulative_count)) +
   geom_line(aes(x=time_since_first/(60*60*24),
-                y = cumulative_count, group = name.family)) +
+                y = cumulative_count, color = name.family)) +
+  guides(color = 'none') +
   labs(x= 'Days since first commit', y = 'Cumulative study count',
        title = 'Data rescuer study submits over time')
 

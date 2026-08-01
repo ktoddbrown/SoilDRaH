@@ -63,27 +63,27 @@ timelog:
       description: updated methods citation notes and author contributions
       who: ashbonner310 
       start: 2026-04-13 T1515
-      duration: P30M
+      duration: PT30M
   - activity:
       description: transcriptions (Table 1, Figure 1, methods)
       who: Misheph
       start: 2026-05-01
-      duration: P3H30M    
+      duration: PT3H30M    
   - activity:
       description: transcriptions (Table 1, methods)
       who: anegondia
       start: 2026-04-01
-      duration: P1H
+      duration: PT1H
   - activity: 
       description: coding in file names, updating rescue plan and rescue info, cross checking tables and figure 
       who: ashbonner310
       start: 2026-05-14 T18:45
-      duration: P2H45M
+      duration: PT2H45M
   - activity: 
       description: finish methods cross check and final edits 
       who: ashbonner310
       start: 2026-05-15 T17:00
-      duration: P2H30min
+      duration: PT2H30M
 ---
 
 

@@ -57,7 +57,7 @@ timelog:
       description: Revise readme
       who: ktoddbrown
       end: 2026-06-02T16:28
-      start: 2026-06-02
+      duration: PT30H
 ---
 
 ```{r}

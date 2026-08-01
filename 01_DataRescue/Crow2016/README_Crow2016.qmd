@@ -70,7 +70,12 @@ timelog:
       who: waldera #github username
       start: 2025-09-30
       end: 2026-4-02
-      duration: 20H
+      duration: PT20H
+  - activity:
+      description: fixed render errors in YAML and beyond
+      who: ktoddbrown
+      start: 2027-07-28
+      duration: PT1H
 ---
 
 ```{r}

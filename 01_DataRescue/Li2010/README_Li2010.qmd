@@ -41,8 +41,6 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: lead
       #- standardization: 
       #- curation: 
-
-
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -62,14 +60,13 @@ affiliations:
     address: "P.O Box 116250"
     postal-code: 32611
     url: https://mae.ufl.edu/
-    
 timelog:
   - activity: 
       description: Revise based on feedback
       who: Misheph #github username
       start: 2025-11-01
       end: 2026-3-01
-      duration: 15H
+      duration: PT15H
 ---
 
 
