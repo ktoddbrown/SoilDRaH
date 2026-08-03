@@ -1,80 +1,80 @@
 ---
-  title: "Data Rescue: Giardina 2014"
+title: "Data Rescue: Giardina 2014"
 format:
   html:
-  toc: true
-eval: true #default to not evaluating the chunks, override this the template is completed
+    toc: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - Giardina2014_Methods.bib
-- Giardina2014.bib 
+  - Giardina2014.bib 
 authors: 
   - id: ktoddbrown
-name:
-  given: Katherine
-family: Todd-Brown
-orcid: 0000-0002-3109-8130
-affiliation:
-  - ref: uf-ees
-role: 
-  - transcription: review #secondary, review
-#- standardization: lead #review
-#- curation: lead #review
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review #secondary, review
+    #- standardization: lead #review
+    #- curation: lead #review
   - id: ChaseSaxour
-name:
-  given: Chase
-family: Saxour
-affiliation:
-  - ref: uf-ees
-role: 
-  - transcription: Primary #secondary, review
-#- standardization: lead #review
-#- curation: lead #review
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: Primary #secondary, review
+    #- standardization: lead #review
+    #- curation: lead #review
   - id: laylakalandjian
-name:
-  given: Layla
-family: Kalandjian
-affiliation:
-  - ref: uf-ees
-role: 
-  - transcription: secondary #secondary, review
-#- standardization: lead #review
-#- curation: lead #review
-
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary #secondary, review
+    #- standardization: lead #review
+    #- curation: lead #review
 affiliations:
   - id: uf-ees
-name: University of Florida
-department: Environmental Engineering Sciences
-city: Gainesville
-state: Florida
-country: USA
-address: "365 Weil Hall \nP.O. Box 116580"
-postal-code: 32611
-url: https://essie.ufl.edu/ees/
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
   - id: uf
-name: University of Florida
-city: Gainesville
-state: Florida
-country: USA
-postal-code: 32611
-url: https://www.ufl.edu/
-  
-  timelog:
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+timelog:
   - activity: 
-  description: Primary Transcription and PR Finalization
-who: ChaseSaxour 
-start: 2026-01-15 
-end: 
-duration: PT7H30M
-
-- activity: 
-  description: Secondary Transcription
-who: laylakalndjian
-start: 2026-03-05 
-end: 2026-03-06
-duration: Pt45M
-
+      description: Primary Transcription and PR Finalization
+      who: ChaseSaxour 
+      start: 2026-01-15 
+      duration: PT7H30M
+  - activity: 
+      description: Secondary Transcription
+      who: laylakalandjian
+      start: 2026-03-05 
+      end: 2026-03-06
+      duration: PT45M
+  - activity: 
+      description: fixed formatting errors
+      who: ktoddbrown
+      start: 2026-08-03
+      end: 2026-08-03
+      duration: PT1H
 ---
 
 
@@ -84,7 +84,6 @@ duration: Pt45M
 #| warning: false
 #| message: false
 #| echo: false
-#| eval: true
 
 
 library(tidyverse) # data processing
@@ -202,18 +201,18 @@ The land use description can be found in the methods section. The main vegetatio
 #| eval: true #remove when you have the file transcribed
 
 
-read_csv(file = figure2.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = figure2.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-  )$caption #and take it out of the table
-  )
+# read_csv(file = figure2.file, #read in the specific file
+#          skip = 1, #skip the first line with the caption
+#          #read everything as a character, don't worry about formatting yet
+#          col_types = cols(.default = col_character())) |>
+#   kable(caption = read_csv(file = figure2.file, #read in that file again but...
+#                            n_max = 1, #only read the first line
+#                            col_names = 'caption', #call it the caption
+#                            #read everything as a character
+#                            col_types = cols(.default = col_character()),
+#                            show_col_types = FALSE #do not return messages
+#   )$caption #and take it out of the table
+#   )
 
 figure2dataframe<-read_csv(file = figure2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -245,7 +244,6 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: comparefigure2
-#| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -259,13 +257,11 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 diff --strip-trailing-cr --suppress-common-lines -y temp/Giardina2014_Methods_LK.md Giardina2014_Methods.md
 ```
-{{< include Giardina2014_Methods.md >}}
 
 
 ### Methods  - Text
@@ -273,7 +269,7 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/Giardina2014_Methods_LK
 The final text transcription from the Methods section is rendered below.
 
 ```{r}
-#| label: compareMethods
+#| label: printMethods
 #| output: asis
 #| eval: true
 
@@ -405,7 +401,7 @@ The `of_variable` being used here are:
 
 <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
   
-  ```{r}
+```{r}
 #| label: createLvl1
 #| eval: false
 
@@ -481,6 +477,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -508,7 +505,8 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
-
+#| eval: false
+#| 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
                                show_col_types = FALSE) |>
@@ -554,7 +552,7 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
-
+#| eval: false
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
                                          dataLevel = 'level1')
