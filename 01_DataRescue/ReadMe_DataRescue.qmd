@@ -266,12 +266,20 @@ loggedTime.df <- plyr::ldply(allYAML, function(list_item){
 }) }, .id = 'studyID') |>
   mutate(duration = lubridate::duration(duration)) 
 
-loggedTime.df |>
+studyTotals <- loggedTime.df |>
   reframe(totalTime = sum(duration)/(60*60),
           description = paste(description, collapse = '; '),
           .by = studyID) |>
   mutate(level1_included = str_detect(description, 'T|transcrip')) |>
   arrange(desc(level1_included), totalTime)
+
+authorTotals <- loggedTime.df |>
+  #only look at studies that have transcriptions logged
+  filter(studyID %in% studyTotals$studyID) |>
+  reframe(totalTime = sum(duration)/(60*60),
+          description = paste(description, collapse = '; '),
+          .by = who) |>
+  arrange(totalTime)
 ```
 
 
