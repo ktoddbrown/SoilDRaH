@@ -10,7 +10,7 @@ bibliography:
   - Kramer2012.bib
   - Kramer2012_Table1.bib
 metadata-files:
-  - ../../../contributors/ktodd-brown.yml
+  - ../../../contributors/ktodd-brown.yml #role: Transcription, Review, Standardization, Harmonization
   - ../../../contributors/sscott.yml
   - ../../../contributors/bwhitehead.yml
 ---

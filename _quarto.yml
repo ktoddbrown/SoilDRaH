@@ -1,0 +1,17 @@
+project:
+  type: default
+
+# Define your global affiliations here
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: FL
+    country: USA
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: FL
+    country: USA
