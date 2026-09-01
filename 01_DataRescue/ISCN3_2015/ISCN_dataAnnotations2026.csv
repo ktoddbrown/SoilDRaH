@@ -1,0 +1,402 @@
+table_id,column_id,of_variable,is_type,with_entry
+layer,site_name,Site Name,units,free text
+layer,site_name,Site Name,description,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”"
+layer,profile_name,Profile/Plot Name,units,free text
+layer,profile_name,Profile/Plot Name,description,"A unique name for a single profile. This can be the same as the site name if there is only one profile at the site. For NRCS data it is the same as “Pedon ID”.
+Examples include: “BZBS4”, “99P0544”, “Profile 1”"
+layer,layer_name,Layer Name,units,free text
+layer,layer_name,Layer Name,description,"A unique name for a single sampled layer. This can be a name that denotes depth, sequence, etc.
+Examples include: “0-10”, “10-20”, “40A04456”, “BZBS4.1”"
+layer,layer_number,Laboratory Layer Number,units,free text
+layer,layer_number,Laboratory Layer Number,description,Laboratory layer sample identifier if different than the Layer Name (data contributor’s own identifier).
+layer,labeled_addition,Labeled Addition,control vocabulary,CV
+layer,labeled_addition,Labeled Addition,description,"Was this layer/gas/fraction/sample isotopically labeled? Answer yes or leave blank.
+Controlled vocabulary: yes_blank"
+layer,layer_top,Layer Top,units,cm
+layer,layer_top,Layer Top,description,The top (upper) depth of the layer. The surface of the non-green (i.e. non-living) surface layer is “0”. The top of the O-horizon should be 0.
+layer,layer_bot,Layer Bottom,units,cm
+layer,layer_bot,Layer Bottom,description,"The bottom (lower) depth of the layer. If it is uncertain that the bottom of the designated horizon was reached, enter the depth to the bottom of the sampled layer. Note that this is the same as ""hzn_bot"" in the NRCS database."
+layer,hzn_desgn,Horizon Designation,units,free text
+layer,hzn_desgn,Horizon Designation,description,"Follow conventions of the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 2-2 through 2-4). Note that datasets originally using another convention will be modified for this column. If a different convention was used it can be entered in Horizon Designation Other.
+Examples include: “Oi”, “A”, “AE”, “A/E”, “Bwf”, “Bhs”"
+layer,hzn_desgn_other,Horizon Designation Other,units,free text
+layer,hzn_desgn_other,Horizon Designation Other,description,"Horizon designation following a convention other than NRCS. Please document the convention in the associated Horizon Designation Other Note.
+Examples include: “L”, “F”, “M”, “H”, “OF”, “OM”, “OH”"
+layer,hzn_desgn_other_note,Horizon Designation Other Note,units,free text
+layer,hzn_desgn_other_note,Horizon Designation Other Note,description,Provide a reference for the horizon designations employed if they differ from NRCS standards in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002).
+layer,layer_note,Soil Layer Notes,units,free text
+layer,layer_note,Soil Layer Notes,description,"A description of the sampled layer. For example, a full NRCS horizon description.
+Examples include: “2-5 cm; brown (10YR 4/3) silt loam; moderate very fine platy structure; very friable; many roots; many fine vesicular pores; brown (10YR 5/3) on plate faces; many very thin bands of finer material similar to B't (below) throughout the horizon; abrupt wavy boundary”, “Denser, darker fabrics with white fungus and larger roots”"
+layer,c_method,Bulk Layer Carbon Analysis Method,units,free text
+layer,c_method,Bulk Layer Carbon Analysis Method,description,"Provide reference or describe the sample preparation and analysis methods used to determine carbon concentrations, whether Total Carbon, organic C, or Loss on Ignition.
+Examples include: “Determined total %C from CHN analysis of air dried <2mm fraction”"
+layer,color,Moist Munsell Color,units,free text
+layer,color,Moist Munsell Color,description,"Color of moist soil based on the Munsell soil color chart.
+Examples include: “10YR 3/3”"
+layer,burn_ev,Evidence of Burning,control vocabulary,CV
+layer,burn_ev,Evidence of Burning,description,"Descriptive information indicating evidence of burning within the layer.
+Examples include: “charcoal”, “burned organic matter”, “ash”"
+layer,bd_method,Bulk Density Method,units,free text
+layer,bd_method,Bulk Density Method,description,"Please reference or describe the methods used to determine bulk density.
+Examples include: “Determined BD_sample from core volume and dry weight of <2mm fraction”, “Strahm et al. 2005 Soil Solution…”"
+layer,bd_samp,"Bulk Density, Coarse Fragments Removed",units,g cm-3
+layer,bd_samp,"Bulk Density, Coarse Fragments Removed",description,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter removed."
+layer,bd_tot,Bulk Density With Coarse Fragments,units,g cm-3
+layer,bd_tot,Bulk Density With Coarse Fragments,description,"Grams of oven-dried soil per cubic centimeter, with soil particles greater than 2 mm and roots greater that 1 cm diameter included."
+layer,bd_whole,Bulk Density Minus Estimated Coarse Fragments,units,g cm-3
+layer,bd_whole,Bulk Density Minus Estimated Coarse Fragments,description,"Grams of oven-dried soil per cubic centimeter, with the content of soil particles >2mm and roots >1cm diameter estimated and subtracted."
+layer,bd_other,Bulk Density Other,units,g cm-3
+layer,bd_other,Bulk Density Other,description,Grams of oven-dried soil per cubic centimeter. Please document the method used in the associated Bulk Density Method including the soil particle fraction used.
+layer,ph_method,pH Method,units,free text
+layer,ph_method,pH Method,description,Provide reference or describe the sample preparation and analysis methods used for determinations of pH if not 1:1 soil and distilled water paste or in CaCl2.
+layer,ph_cacl,Soil pH CaCl2,units,free text
+layer,ph_cacl,Soil pH CaCl2,description,1:2 soil-CaCl2 is the pH of a sample measured in 0.01M CaCl2 at a 1:2 soil:solution ratio.
+layer,ph_h2o,Soil pH 1:1,units,free text
+layer,ph_h2o,Soil pH 1:1,description,"1:1 distilled water and soil paste. If pH was done by a different method, then enter it into one of the other soil pH fields."
+layer,ph_other,Soil pH Other,units,free text
+layer,ph_other,Soil pH Other,description,pH measurements other than 1:1 soil and distilled water paste or in CaCl2. Please document the method in the associated pH Method.
+layer,caco3,CaCO3,units,%
+layer,caco3,CaCO3,description,Inorganic carbon concentration as measured or estimated by the contributor. Please document the method in the associated Processed Site Organic Carbon Content Method.
+layer,sand_tot_psa,Percent Sand,units,%
+layer,sand_tot_psa,Percent Sand,description,"Percent by weight of soil particles greater than 0.05 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+layer,silt_tot_psa,Percent Silt,units,%
+layer,silt_tot_psa,Percent Silt,description,"Percent by weight of soil particles in the size range from 0.002 to 0.050 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+layer,clay_tot_psa,Percent Clay,units,%
+layer,clay_tot_psa,Percent Clay,description,"Percent by weight of soil particles less than 0.002 mm in the sample remaining after removal of particles greater than 2 mm and roots greater than 1 cm diameter. See Gee, G.W. & Bauder, J.W. 1986."
+layer,wpg2_method,Coarse Fragments Method,units,free text
+layer,wpg2_method,Coarse Fragments Method,description,Provide a reference for or describe the methods used to determine coarse fragment content.
+layer,wpg2,Coarse Fragments,units,%
+layer,wpg2,Coarse Fragments,description,The weight fraction of particles with >2 mm diameter is reported as a gravimetric percent on a whole soil base. Please include metadata in the Coarse Fragments Method column (e.g. estimate or quantitative).
+layer,cat_exch,Cation Exchange Capacity,units,cmol H+ kg-1
+layer,cat_exch,Cation Exchange Capacity,description,"Cation Exchange Capacity. Document the extractant solution in the metadata worksheet, Lab Analysis Method."
+layer,gwc,Gravimentric % Moisture,units,%
+layer,gwc,Gravimentric % Moisture,description,Gravimetric water content of the sampled layer.
+layer,vwc,Volumetric % Moisture,units,%
+layer,vwc,Volumetric % Moisture,description,Water content of the soil sample expressed as a percent of total sample volume.
+layer,al_dith,Dithionate extractable [Al],units,"specified by
+al_fe_units"
+layer,al_ox,Oxalate extractable [Al],units,"specified by
+al_fe_units"
+layer,al_other,Other extractable [Al],units,"specified by
+al_fe_units"
+layer,fe_dith,Dithionate extractable [Fe],units,"specified by
+al_fe_units"
+layer,fe_ox,Oxalate extractable [Fe],units,"specified by
+al_fe_units"
+layer,fe_other,Other extractable [Fe],units,"specified by
+al_fe_units"
+layer,mn_dith,Dithionate extractable [Mn],units,specified by al_fe_units
+layer,mn_ox,Oxalate extractable [Mn],units,"specified by
+al_fe_units"
+layer,mn_other,Other extractable [Mn],units,"specified by
+al_fe_units"
+layer,al_fe_units,"Extractable Al, Fe, Mn units",description,Controlled vocabulary: extract_units
+layer,al_fe_method,"Al, Fe, Mn extraction methods",units,free text
+layer,ca_al,Ca:Al (molar),units,specified by bc_units
+layer,ca_ext,Extractable [Ca],units,specified by bc_units
+layer,k_ext,Extractable [K],units,specified by bc_units
+layer,mg_ext,Extractable [Mg],units,specified by bc_units
+layer,na_ext,Extractable [Na],units,specified by bc_units
+layer,bc_units,Base cation extraction units,description,Controlled vocabulary: extract_units
+layer,bc_method,Base cation extraction methods,units,free text
+layer,base_sum,"CEC, sum of bases",units,specified by cec_h_units
+layer,cec_sum,"CEC, sum of cations",units,specified by cec_h_units
+layer,ecec,Effective CEC,units,specified by cec_h_units
+layer,cec_h_units,CEC and acidity units,description,Controlled vocabulary: extract_units
+layer,bs,Base saturation,units,%
+layer,bs_sum,"Base saturation, sum of cations",units,%
+layer,h_ext,extractable acidity,units,specified by metal_ext_units
+layer,zn_ext,extractable [Zn],units,specified by metal_ext_units
+layer,metal_ext_units,Extractable metals units,description,Controlled vocabulary: extract_units
+layer,metal_ext_method,Extractable metals methods,units,free text
+layer,p_bray,Extractable [P] (Bray),units,specified by p_units
+layer,p_ox,Extractable [P] (Oxalate),units,specified by p_units
+layer,p_meh,Extractable [P] (NZ),units,specified by p_units
+layer,p_other,Extractable [P] (Other),units,specified by p_units
+layer,p_units,Extractable P units,description,Controlled vocabulary: extract_units
+layer,p_method,Extractable P methods,units,free text
+layer,soc,Bulk Layer Calculated Soil Organic Carbon Stock,units,g cm-2
+layer,soc,Bulk Layer Calculated Soil Organic Carbon Stock,description,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+layer,soc_type,Bulk Layer Calculated Soil Organic Carbon Stock Type,control vocabulary,CV
+layer,soc_type,Bulk Layer Calculated Soil Organic Carbon Stock Type,description,"An indication of which portion of the profile (organic, mineral, organic + mineral) is described by the contributor's calculated soil organic carbon stock at the site, cluster, profile or layer level.
+Controlled vocabulary: ccon_type"
+layer,soc_sigma,Bulk Layer Calculated Soil Organic Carbon Stock Standard Deviation,units,g cm-2
+layer,soc_sigma,Bulk Layer Calculated Soil Organic Carbon Stock Standard Deviation,description,"The standard deviation of the site, cluster, profile, or layer-level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements)."
+layer,soc_method,Bulk Layer Calculated Soil Organic Carbon Stock Method,units,free text
+layer,soc_method,Bulk Layer Calculated Soil Organic Carbon Stock Method,description,"A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks."
+layer,c_tot,Bulk Layer Total Carbon,units,%
+layer,c_tot,Bulk Layer Total Carbon,description,"Percent by weight of carbon in the dried, milled soil sample. This measurement will typically correspond to analytical results from an elemental analyzer."
+layer,oc,Bulk Layer Organic Carbon,units,%
+layer,oc,Bulk Layer Organic Carbon,description,"Percent by weight of carbon in a dried soil sample after acidification with HCl, OR organic carbon as estimated by Walkley-Black Modified Acid-Dichromate (e.g. ‘Organic Carbon’ in the NRCS database). Please document the method in the associated Carbon Analysis Methods."
+layer,n_tot,Bulk Layer Total Nitrogen,units,%
+layer,n_tot,Bulk Layer Total Nitrogen,description,Percent by weight of nitrogen (organic and inorganic) in an oven-dried sample (the laboratory analytical concentration).
+layer,c_to_n,Bulk Layer C:N,units,mass %
+layer,c_to_n,Bulk Layer C:N,description,"Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type."
+layer,loi,Bulk Layer Loss on Ignition,units,%
+layer,loi,Bulk Layer Loss on Ignition,description,Percent by weight of the organic content of the <2mm fraction is the organic material lost after ignition. It is reported on a <2 mm base. Please document the method in the associated Carbon Analysis Method.
+layer,root_quant_size,Root Quantity and Size,units,free text
+layer,root_quant_size,Root Quantity and Size,description,"Use USDA NRCS conventions from the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p.2-56): Record the average quantity from 3 to 5 representative unit areas. Size classes of roots being considered: very fine, < 1mm; fine, 1 – 2mm diameter.
+Examples include: ""few very fine"", ""Common very fine”, ""fine"""
+layer,root_weight,<2mm Root Mass,units,g
+layer,root_weight,<2mm Root Mass,description,Dry weight of roots ≤2 mm in diameter in the sample.
+layer,15n,Bulk Layer δ15N,units,‰
+layer,15n,Bulk Layer δ15N,description,Per mille signature of δ15N relative to air (international standard).
+layer,13c,Bulk Layer δ13C,units,‰
+layer,13c,Bulk Layer δ13C,description,Per mille signature of δ13C relative to Pee Dee Belemnite.
+layer,rc_lab,Radiocarbon Laboratory ID,units,free text
+layer,rc_lab,Radiocarbon Laboratory ID,description,Laboratory code for radiocarbon laboratory. Complete list of past and present laboratory codes can found published in Radiocarbon in November 2011 (http://www.radiocarbon.org/Info/labcodes.html).
+layer,rc_lab_number,Radiocarbon Laboratory Sample Number,units,free text
+layer,rc_lab_number,Radiocarbon Laboratory Sample Number,description,Layer sample identifier as designated by the radiocarbon laboratory.
+layer,rc_year,Radiocarbon Analysis Year,units,YYYY
+layer,rc_year,Radiocarbon Analysis Year,description,Year in which radiocarbon analysis was performed on the sample.
+layer,14c,Bulk Layer Δ14C,units,‰
+layer,14c,Bulk Layer Δ14C,description,Per mille signature of Δ14C relative to NBS Oxalic Acid standard.
+layer,14c_sigma,Bulk Layer Δ14C Standard Deviation,units,‰
+layer,14c_sigma,Bulk Layer Δ14C Standard Deviation,description,Error estimate for the fraction (eg. standard deviation of analytical reps).
+layer,14c_age,Bulk Layer Uncalibrated Radiocarbon Age,units,BP
+layer,14c_age,Bulk Layer Uncalibrated Radiocarbon Age,description,"Uncalibrated radiocarbon age of bulk soil in layer, as calculated from corrected fraction modern, using the Libby half-life value of 5568 years."
+layer,14c_age_sigma,Bulk Layer Uncalibrated Radiocarbon Age Standard Deviation,units,BP
+layer,14c_age_sigma,Bulk Layer Uncalibrated Radiocarbon Age Standard Deviation,description,Error estimate for the fraction (eg. standard deviation of analytical reps).
+layer,fraction_modern,Bulk Layer Fraction Modern,units,free text
+layer,fraction_modern,Bulk Layer Fraction Modern,description,"Deviation of the bulk sample or fraction from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+layer,fraction_modern_sigma,Bulk Layer Fraction Modern Standard Deviation,units,free text
+layer,fraction_modern_sigma,Bulk Layer Fraction Modern Standard Deviation,description,Error estimate for an individual layer (eg. standard deviation of analytical reps).
+layer,textureClass,Texture Class,units,free text
+layer,textureClass,Texture Class,description,"Soil texture classification. If no information is provided, this will be automatically generated from %sand, %silt, %clay data (coarse = ≥50% sand; fine = <50% sand)."
+profile,site_name,Site Name,units,free text
+profile,site_name,Site Name,description,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”"
+profile,profile_name,Profile/Plot Name,units,free text
+profile,profile_name,Profile/Plot Name,description,"A unique name for a single profile. This can be the same as the site name if there is only one profile at the site. For NRCS data it is the same as “Pedon ID”.
+Examples include: “BZBS4”, “99P0544”, “Profile 1”"
+profile,profile_note,Profile Notes,units,free text
+profile,profile_note,Profile Notes,description,Additional notes about the profile
+profile,layer_method,Layer Sampling Method,units,free text
+profile,layer_method,Layer Sampling Method,description,"Description of how the individual layers of the soil profile were sampled as genetic horizons, fixed depth intervals, some combination or other."
+profile,profile_method,Profile Sampling Method,units,free text
+profile,profile_method,Profile Sampling Method,description,"Description of the methods used to sample the soil profile, e.g., quantitative pit, core, bucket auger, etc."
+profile,observation_date,Observation Date,units,YYYY-MM-DD or MM/DD/YYYY
+profile,observation_date,Observation Date,description,"The date at which the profile was taken at the site.
+Examples include: “2001-08-20”"
+profile,observation_date_acc,Observation Date Accuracy,units,free text
+profile,observation_date_acc,Observation Date Accuracy,description,Estimated accuracy of the observation date.
+profile,transect_flag,Part of a Transect Flag,control vocabulary,CV
+profile,transect_flag,Part of a Transect Flag,description,"Indicate whether this profile was part of a transect by entering ""yes"" or leaving the field blank.
+Controlled vocabulary: yes_blank"
+profile,surface_veg,Surface Vegetation,units,free text
+profile,surface_veg,Surface Vegetation,description,"Describe the dominant vegetation at the exact location of the profile.
+Examples include: “Forest with canopy dominanted by Pinus spp., Quercus dominant in understory, and ground layer of Pteridium aquilinum and Vaccinium spp.”, “Andropogon- Sorghastrum prairie with invading Juniperus virginiana”"
+profile,soil_taxon,Soil Taxonomy,units,free text
+profile,soil_taxon,Soil Taxonomy,description,"The taxonomic classification of the soil profile following NRCS convention (http://soils.usda.gov/technical/classification/taxonomy/).
+Examples include: “Coarse-silty, mixed, active, subgelic Typic Dystrocryepts”, “Sandy, mixed, frigid Entic Haplorthods”"
+profile,soil_series,Soil Series,units,free text
+profile,soil_series,Soil Series,description,"The NRCS soil series of the profile (http://soils.usda.gov/technical/classification/taxonomy/).
+Examples include: ""Cowboy"", ""Rubicon"", ""Tawas"""
+profile,add_taxon_flag,Complete Taxonomy Flag,control vocabulary,CV
+profile,add_taxon_flag,Complete Taxonomy Flag,description,"Indicate whether there is more taxonomic information for this profile by entering “yes”, otherwise leave the field blank.
+Controlled vocabulary: yes_blank"
+profile,thaw_depth_profile,Thaw Depth of the Profile,units,cm
+profile,thaw_depth_profile,Thaw Depth of the Profile,description,"The depth to the frozen surface of the profile. For Alaska sites, this applies only if sampled after August 15 and should be left blank if sampled before."
+profile,profile_properties_note,Profile Properties Notes,units,free text
+profile,profile_properties_note,Profile Properties Notes,description,Additional notes about the soil and surface vegetation profile properties
+profile,sampler_names,Sampler Names,units,free text
+profile,sampler_names,Sampler Names,description,"The names of the persons who described and sampled the profile.
+Examples include: “Johnson, Kris”, “Nave, Luke”"
+profile,soc,Profile Calculated Soil Organic Carbon Stock,units,g cm-2
+profile,soc,Profile Calculated Soil Organic Carbon Stock,description,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+profile,soc_type,Profile Calculated Soil Organic Carbon Stock Type,control vocabulary,CV
+profile,soc_type,Profile Calculated Soil Organic Carbon Stock Type,description,"An indication of which portion of the profile (organic, mineral, organic + mineral) is described by the contributor's calculated soil organic carbon stock at the site, cluster, profile or layer level.
+Controlled vocabulary: ccon_type"
+profile,soc_lcount,Profile Calculated Soil Organic Carbon Stock Layer Count,units,free text
+profile,soc_lcount,Profile Calculated Soil Organic Carbon Stock Layer Count,description,The number of layer soil organic carbon stock values summed to produce the profile total soil organic carbon stock.
+profile,soc_depth,Profile Calculated Soil Organic Carbon Stock Depth,units,cm
+profile,soc_depth,Profile Calculated Soil Organic Carbon Stock Depth,description,"The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks."
+profile,soc_sigma,Profile Calculated Soil Organic Carbon Stock Standard Deviation,units,g cm-2
+profile,soc_sigma,Profile Calculated Soil Organic Carbon Stock Standard Deviation,description,"The standard deviation of the site, cluster, profile, or layer- level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements)."
+profile,soc_method,Profile Calculated Soil Organic Carbon Stock Method,units,free text
+profile,soc_method,Profile Calculated Soil Organic Carbon Stock Method,description,"A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks."
+site,site_name,Site Name,units,free text
+site,site_name,Site Name,description,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: “101”,“DFTC”, “Site 1”, “99AK180003”"
+site,site_note,Site Notes,units,free text
+site,site_note,Site Notes,description,"Various notes on and descriptions of the site other than C flux, climate, photo or vegetation. May include local names for physiographic features, which may or may not appear on USGS Topographic Quadrangles.
+Examples include: ""Biliau Hill"", ""Warner Valley"", ""Mudsock"""
+site,country,Country,units,free text
+site,country,Country,description,"Nation of origin of the data.
+Controlled vocabulary: country"
+site,province,Province,units,free text
+site,province,Province,description,"A politically defined sub-region of a country, for any country that does not describe these sub-divisions as ""states""."
+site,state,State,control vocabulary,CV
+site,state,State,description,"State or territory. At output, may also include province for any contry that does not describe political subdivision as ""states"".
+Controlled vocabulary: state_province"
+site,county,County,units,free text
+site,county,County,description,"For data collected in the U.S., the county of origin within a U.S. State."
+site,lat,Latitude,units,dec. deg
+site,lat,Latitude,description,"The latitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred).
+Examples include: “64.67083”"
+site,long,Longitude,units,dec. deg
+site,long,Longitude,description,"The longitudinal coordinate, in decimal degrees, to the appropriate level of spatial accuracy (up to five decimal degrees; WGS84 Latitude/Longitude datum preferred).
+Examples include: “-148.32683”"
+site,datum,Latitude/Longitude Datum,control vocabulary,CV
+site,datum,Latitude/Longitude Datum,description,"Latitude/Longitude datum against which Latitude and Longitude are reported. If left blank, WGS84 will be assumed.
+Controlled vocabulary: datum"
+site,location_acc,Location Accuracy,units,m
+site,location_acc,Location Accuracy,description,"Estimated accuracy of the location of the site. Site origin has a 95% or greater probability of being within this many meters of the reported location.
+Examples include: “100”, “2”"
+site,elevation,Elevation,units,m
+site,elevation,Elevation,description,"The elevation at the site as determined by topo map, GPS, altimeter, etc. Contributed value is assumed accurate within several meters regardless of method used."
+site,vegclass_nat,US National Vegetation Classification Standard,units,free text
+site,vegclass_nat,US National Vegetation Classification Standard,description,"The type of vegetation at the site, described according to the Federal Geographic Data Committee’s classification scheme (http://www.fgdc.gov/standards/projects/FGDC-standards-projects/vegetation/NVCS_V2_FINAL_2008-02.pdf). Classify the site according to the four uppermost descriptive levels (Class, Subclass, Formation, Division).
+Examples include: “1.C.2”, “3.A.1”, “4.C.1”"
+site,vegclass,Vegetation Classification Code,units,free text
+site,vegclass,Vegetation Classification Code,description,"The type of vegetation at the site, described according to a TBD international classification scheme."
+site,vegclass_local,Local Vegetation Classification Code,units,free text
+site,vegclass_local,Local Vegetation Classification Code,description,"The type of vegetation at the site, described according to the classification scheme commonly used at the site. Indicate the scheme in the Local Vegetation Classification Type. Leave blank if unknown or no local classification applies.
+Examples include: For Alaska, level IV or V is preferred, but when this is not possible, use Level II or III. Examples include “1.C.2”, “3.A.1”, “4.C.1”."
+site,vegclass_local_type,Local Vegetation Classification Type,units,free text
+site,vegclass_local_type,Local Vegetation Classification Type,description,"Indicate the local classification scheme used at this site.
+Examples include: For Alaska, The Alaska vegetation classification http://www.treesearch.fs.fed.us/pubs/6941"
+site,veg_note,Additional Vegetation Data Notes,units,free text
+site,veg_note,Additional Vegetation Data Notes,description,"Provide references or links here if additional site-level vegetation data are available (e.g. species composition, basal area, aboveground biomass).
+Examples include: “DBH and tree heights available for this site. See Bonanza Creek LTER online database (http://www.lter.uaf.edu/site_search.cfm).”"
+site,landscape,Landscape,control vocabulary,CV
+site,landscape,Landscape,description,"The type of Landscape on which the site occurs, according to USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 3-11) This information can be arranged in hierarchy above Landform and 2D Position to describe the geographic setting of the site.
+Examples include: “alluvial plain”, “river valley”, “mountain range”, “shore complex”
+Controlled vocabulary: landscape"
+site,landform,Landform,control vocabulary,CV
+site,landform,Landform,description,"The type of Landform on which the site is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-12 through 3-16). This information can be nested between Landscape and 2D Position to describe the setting of the site.
+Examples include: “alluvial fan”, “beach”, “escarpment”, “flood plain”, “hill”, “mountain”, “plain”, “sea cliff”, “terrace”, “tidal flat”
+Controlled vocabulary: landform"
+site,2d_position,2D Position,control vocabulary,CV
+site,2d_position,2D Position,description,"2-dimensional position of the site on the Landform on which it is located. See USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; pp. 3-38 through 3-41). This information supplements Landscape and Landform to describe the geographic setting of the site.
+Examples include: “summit”, “shoulder”, “backslope”, “toeslope”, “base slope”, “riser”, “mountainflank”, “dip”
+Controlled vocabulary: 2d_position"
+site,landform_note,Landform Notes,units,free text
+site,landform_note,Landform Notes,description,Additional notes about the Landform (e.g. microtopography) in this site.
+site,parent,Parent Material,units,free text
+site,parent,Parent Material,description,"The geologic or organic precursors to the soil at the site.
+Examples include: “loess”, “glacial till”, “dolomite residuum”"
+site,aspect_deg,Site Aspect,units,degree
+site,aspect_deg,Site Aspect,description,"The numerical observation of aspect at the site. The compass bearing (corrected for declination) that a slope faces, looking downslope. If the site has no slope leave blank.
+Examples include: A numerical value between 0 and 360, or ""no slope"""
+site,aspect_cl,Site Aspect Class,control vocabulary,CV
+site,aspect_cl,Site Aspect Class,description,"The cardinal direction that the slope faces at a site. Use this field if only if you do not provide the azimuth of the Site Aspect in compass degrees.
+Controlled vocabulary: direction"
+site,slope,Slope,units,%
+site,slope,Slope,description,The angle of the ground surface through the site and in the direction that overland water would flow. Make observations facing downslope to avoid errors associated with some brands of clinometers. If the site has no slope leave blank.
+site,stand_age,Maximum Stand Age,units,years
+site,stand_age,Maximum Stand Age,description,The maximum stand age at the site in years.
+site,stand_maturity,Stand Maturity,control vocabulary,CV
+site,stand_maturity,Stand Maturity,description,"If the site is forested, how mature was the stand at the time of sampling? The class may be determined by tree cores if available. If stand age is known, then 0-4 years: “young, regenerative”, 4-79 years: “even-aged, aggrading, and 80+ years: “mature even-age” or “mature, uneven-age”. Choose “not applicable” for grassland or agricultural areas. If unknown, leave blank.
+Controlled vocabulary: stand_age"
+site,successional_status,Successional Status,units,free text
+site,successional_status,Successional Status,description,Description of the assumed successional status at the site. This description is of necessity hihgly subjective
+site,drainagecl,Drainage Class,control vocabulary,CV
+site,drainagecl,Drainage Class,description,"The drainage class of the soil sampled at the site according to the specific terminology employed in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002; p. 1-10).
+Controlled vocabulary: drainage"
+site,depth_water,Depth to Water Table,units,cm
+site,depth_water,Depth to Water Table,description,Measure or estimate the depth from the ground surface to the stabilized contact with free- standing water in an open bore-hole or well at the time of sampling.
+site,thaw_depth_site,Thaw Depth of the Site,units,cm
+site,thaw_depth_site,Thaw Depth of the Site,description,The depth at which permafrost will usually thaw each summer for the site. Usually an average of many measurements over the site. This may or may not be from the thaw depth measured from individual profiles and hence may be different from Thaw Depth of the profile.
+site,bedrock_depth,Depth to Bedrock,units,cm
+site,bedrock_depth,Depth to Bedrock,description,The observed depth to the top of the bedrock layer.
+site,climate_station,Meterological Station,units,free text
+site,climate_station,Meterological Station,description,"Name of nearest climate station.
+Examples include: ""Van Riper State Park"", ""Bald Mtn. SNOTEL"", ""Grayson 3SW"", ""DTW"""
+site,ffdays,Frost Free Days,units,days
+site,ffdays,Frost Free Days,description,The expected number of days between the last freezing temperature (0 degrees Celsius) in spring and the first freezing in fall.
+site,flood_freq,Flooding Frequency,control vocabulary,CV
+site,flood_freq,Flooding Frequency,description,"The annual probability of a flood event expressed as a class according to the terminology employed in the USDA-NRCS-NSSC Field Book for Describing and Sampling Soils (Staff 2002, pg. 1-11).
+Controlled vocabulary: flood_freq"
+site,geo_form,Geologic Formation,units,free text
+site,geo_form,Geologic Formation,description,"The basic lithostratigraphic unit used to describe, delimit, and interpret sedimentary, extrusive igneous, metavolvanic, and metasedimentary or sediment bodies (excludes metamorphic and intrusive igneous rocks), based on lithic characteristics and stratigraphic position. A formation is commonly, but not necessarily, tabular and stratified and is of sufficient extent to be mappable at the earth's surface or traceable in the subsurface at convenient map scales.
+Examples include: ""Mount Spokane Gneiss"", ""Martinsburg Shale"", ""Jacobsville Sandstone"""
+site,map,Mean Annual Precipitation,units,mm
+site,map,Mean Annual Precipitation,description,"The arithmetic average of the total annual (liquid) precipitation , preferably taken over the standard ""normal"" period, 1961-1990."
+site,mat,Mean Annual Temperature,units,°C
+site,mat,Mean Annual Temperature,description,"The arithmetic average of the daily maximum and minimum temperatures for a calendar year, preferably taken over the standard ""normal"" period, 1961."
+site,mast,Mean Annual Soil Temperature,units,°C
+site,mast,Mean Annual Soil Temperature,description,"The mean annual soil temperature, preferably measured at a depth of 50 cm below the soil surface, or at the upper boundary of a root-limiting layer."
+site,pond_freq,Ponding Frequency,control vocabulary,CV
+site,pond_freq,Ponding Frequency,description,"The number of times ponding occurs over a period of time.
+Controlled vocabulary: pond_freq"
+site,runoff,Local Runoff Class,control vocabulary,CV
+site,runoff,Local Runoff Class,description,"Runoff potential class for the soil, assigned based on local/state/MLRA criteria.
+Controlled vocabulary: runoff"
+site,site_perm,Site Permeability,control vocabulary,CV
+site,site_perm,Site Permeability,description,"A class rating of the overall ability of air and water to move through the soil profile. The class limits are as defined in the National Soil Survey Handbook.
+Controlled vocabulary: site_perm"
+site,water_table_duration,Wet Soil Moisture Duration,units,days
+site,water_table_duration,Wet Soil Moisture Duration,description,The cumulative annual duration that a water table can be expected to exist in the soil.
+site,cflux_note,C Flux Notes,units,free text
+site,cflux_note,C Flux Notes,description,"Provide references or links to carbon flux measurements that have been conducted at the site.
+Examples include: “http://www.fluxdata.org/Data%20Browsing/Documents%20Free/FluxMetSummary.aspx”, “Gough et al. 2007 Legacy of harvest…”"
+site,climate_note,Climate Notes,units,free text
+site,climate_note,Climate Notes,description,"Provide references or links to climate data for the site.
+Examples include: “http://www.lternet.edu/sites/hbr/”, “Nave et al. 2009 Contribution of atmospheric deposition…”"
+site,eco_note,Ecoregion Note,units,free text
+site,eco_note,Ecoregion Note,description,Special information about the site that makes it anomalous from the USDA Omernik ecoregion in which it is located.
+site,photo_note,Photo Notes,units,free text
+site,photo_note,Photo Notes,description,"References or links to photos from the site.
+Examples include: “Available at http://lter.kbs.msu.edu/photos/index.php”"
+site,soiltemp_note,Soil Temperature Notes,units,free text
+site,soiltemp_note,Soil Temperature Notes,description,Indicate information about additional soil temperature data available about this site. Please include references and links if possible.
+site,add_note,Additional Data Note,units,free text
+site,add_note,Additional Data Note,description,"Add links or publication references for any additional belowground data available for the site (soil chemistry, microbial measurements)."
+site,soc,Site Calculated Soil Organic Carbon Stock,units,g cm-2
+site,soc,Site Calculated Soil Organic Carbon Stock,description,"The data contributor's calculated soil organic carbon stock value for the site, cluster, profile or layer."
+site,soc_type,Site Calculated Soil Organic Carbon Stock Type,control vocabulary,CV
+site,soc_type,Site Calculated Soil Organic Carbon Stock Type,description,"An indication of which portion of the profile (organic, mineral, organic + mineral) is described by the contributor's calculated soil organic carbon stock at the site, cluster, profile or layer level.
+Controlled vocabulary: ccon_type"
+site,soc_pcount,Site Calculated Soil Organic Carbon Stock Profile Count,units,free text
+site,soc_pcount,Site Calculated Soil Organic Carbon Stock Profile Count,description,The number of profiles used in the calculation of the mean site or cluster-level soil organic carbon stocks.
+site,soc_depth,Site Calculated Soil Organic Carbon Stock Depth,units,cm
+site,soc_depth,Site Calculated Soil Organic Carbon Stock Depth,description,"The depth to which profiles were sampled to quantify the mean site, cluster, or profile calculated soil organic carbon stocks."
+site,soc_sigma,Site Calculated Soil Organic Carbon Stock Standard Deviation,units,g cm-2
+site,soc_sigma,Site Calculated Soil Organic Carbon Stock Standard Deviation,description,"The standard deviation of the site, cluster, profile, or layer-level calculated soil organic carbon stock. (For layer soil organic carbon stocks, this may be based on analytical or sampling replicates of %C or bulk density measurements)."
+site,soc_method,Site Calculated Soil Organic Carbon Stock Method,units,free text
+site,soc_method,Site Calculated Soil Organic Carbon Stock Method,description,"A description of the methods used to calculate (including any gap-filling) site, cluster, profile or layer soil organic carbon stocks."
+citation,curator_name,Curator Name,units,free text
+citation,curator_name,Curator Name,description,Curator Name
+citation,curator_organization,Curator Organization,units,free text
+citation,curator_organization,Curator Organization,description,Curator Organization
+citation,curator_email,Curator Email,units,free text
+citation,curator_email,Curator Email,description,Curator Email
+citation,modification_date,Template Modification Date,units,YYYY-MM-DD or MM/DD/YYYY
+citation,modification_date,Template Modification Date,description,Template Modification Date
+citation,contact_name,Additional Contact Name,units,free text
+citation,contact_name,Additional Contact Name,description,Additional Contact Name
+citation,contact_email,Additional Contact Email,units,free text
+citation,contact_email,Additional Contact Email,description,Additional Contact Email
+citation,dataset_name,Dataset Name,units,free text
+citation,dataset_name,Dataset Name,description,Dataset Name
+citation,dataset_description,Dataset Description,units,free text
+citation,dataset_description,Dataset Description,description,Dataset Description
+citation,reference,Reference,units,free text
+citation,reference,Reference,description,Reference
+citation,citation,Citation text,units,free text
+citation,citation,Citation text,description,Citation text
+citation,citation_usage,Citation usage,units,free text
+citation,citation_usage,Citation usage,description,Citation usage
+citation,acknowledgement,Acknowlegement text,units,free text
+citation,acknowledgement,Acknowlegement text,description,Acknowlegement text
+citation,acknowledgement_usage,Acknowlegement usage,units,free text
+citation,acknowledgement_usage,Acknowlegement usage,description,Acknowlegement usage
+citation,metadata_general,General Metadata,units,free text
+citation,metadata_general,General Metadata,description,General Metadata
+citation,missdata_param,Parameters for Missing Data Equations,units,free text
+citation,missdata_param,Parameters for Missing Data Equations,description,Parameters for Missing Data Equations
+citation,resample,Resample Metadata,units,free text
+citation,resample,Resample Metadata,description,Resample Metadata
+citation,funding_organization,Funding Organization(s),units,free text
+citation,funding_organization,Funding Organization(s),description,Funding Organization(s)
+layer,c_method,Bulk Layer Carbon Analysis Method,method,Bulk Layer Carbon Analysis Method
+layer,bd_method,Bulk Density Method,method,Bulk Density Method
+layer,ph_method,pH Method,method,pH Method
+layer,wpg2_method,Coarse Fragments Method,method,Coarse Fragments Method
+layer,soc_method,Bulk Layer Calculated Soil Organic Carbon Stock Method,method,Bulk Layer Calculated Soil Organic Carbon Stock Method
+profile,layer_method,Layer Sampling Method,method,Layer Sampling Method
+profile,profile_method,Profile Sampling Method,method,Profile Sampling Method
+profile,soc_method,Profile Calculated Soil Organic Carbon Stock Method,method,Profile Calculated Soil Organic Carbon Stock Method
+site,soc_method,Site Calculated Soil Organic Carbon Stock Method,method,Site Calculated Soil Organic Carbon Stock Method

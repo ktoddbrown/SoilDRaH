@@ -1,0 +1,23 @@
+﻿Variable,Name,Units,Description
+site_name,Site Name,free text,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: ""101"", ""DFTC"", ""Site 1"", ""99AK180003"""
+dm_agriculture,Crop management such as harvest or crop residue management,,Controlled vocabulary: dm_agriculture
+dm_encroach,Encroachment such as invasive species or woody enroachment,,Controlled vocabulary: dm_encroach
+dm_ext_weather,"Extreme weather such as hurricane, frost, or drought",,Controlled vocabulary: dm_ext_weather
+dm_fert_m,Mineral fertilization including liming,,Controlled vocabulary: dm_fert_m
+dm_fert_o,Organic fertilization,,Controlled vocabulary: dm_fert_o
+dm_fire,Fires including underburn,,Controlled vocabulary: dm_fire
+dm_forestry,Forestry management such as clearcutting or thinning,,Controlled vocabulary: dm_forestry
+dm_graze,Grazing,,Controlled vocabulary: dm_graze
+dm_ins_path,"Substantial insect, pathogen attack, or disease event",,Controlled vocabulary: dm_ins_path
+dm_pesticide,"Application of pesticide, insecticide, or fungicide",,Controlled vocabulary: dm_pesticide
+dm_planting,Planting of live plants or seeds,,Controlled vocabulary: dm_planting
+dm_till,Tillage or site preparation including scarification and plowing,,Controlled vocabulary: dm_till
+dm_water,"Water management such as irrigation, flooding, or drainage",,Controlled vocabulary: dm_water
+dm_general,General disturbance or management event not covered by other disturbance or management type,,Controlled vocabulary: dm_general
+dm_surf,Percentage of the footprint area affected by the event,percent,
+dm_date,Date of site disturbance,YYYY-MM-DD or MM/DD/YYYY,
+dm_date_start,Start date of site disturbance,YYYY-MM-DD or MM/DD/YYYY,
+dm_date_end,End date of site disturbance,YYYY-MM-DD or MM/DD/YYYY,
+dm_date_unc,Uncertainty in the End date of site disturbance,days,
+dm_note,Site disturbance note,free text,
