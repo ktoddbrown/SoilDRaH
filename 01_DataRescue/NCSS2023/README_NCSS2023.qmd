@@ -3,8 +3,6 @@ title: "Data Rescue: NCSS Soil Characterization Data (Lab Data)"
 format:
   html:
     toc: true
-execute:
-  eval: false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -58,6 +56,12 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P50M
+  - activity: 
+      description: Continue NCSS level 0 processing
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-09-01
+      duration: P30M
 ---
 
 
@@ -66,7 +70,6 @@ timelog:
 #| include: true
 #| warning: false
 #| message: false
-#| eval: true
 
 library(tidyverse) # data processing
 library(kableExtra) # pretty tables
@@ -74,7 +77,7 @@ library(bibtex) # reading in BibTex files to R
 
 library(RSQLite) #read in the sqlite file that holds the sample data
 
-##### data files for level 0 ####
+## data files for level 0
 
 # these files were manually pulled 26 Feb 2026 and committed to the repo
 #...and need to be updated periodically
@@ -98,8 +101,8 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
-is_type.file <- '../../02_DataHarmonization/is_type.csv'
+#of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+#is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
 ```
 
@@ -117,8 +120,9 @@ measured and what the data was used for in. This should be <250 words.--->
 
 The National Cooperative Soil Survey Soil Characterization Database is the USDA federal database for soil measurements, primarily taken at the KSSL (@NCSS_SCD2026).
 They used a suite of classical soil measurements to characterize soil properties (@SSIR42) and have provided a complete manual for the use and interpretation (@SSIR45).
+Further information for this data can be found at [https://catalog.data.gov/dataset/ncss-soil-characterization-database](https://catalog.data.gov/dataset/ncss-soil-characterization-database) (Last accessed 1 September 2026).
 
-Since this is a large database which is served from the goverment website we duplicate the metadata here but do not include the primary date.
+Since this is a large database which is served from the government website we duplicate the metadata here but do not include the primary date.
 Please go to the website and download the "Tabular and Spatial" SQLite database, this script is designed to run on the unzip-ed download placed in the `temp` subfolder.
 
 ## Tables
@@ -174,22 +178,33 @@ The location and samples are cross linked using `lab_pedon`.
 <!--- Include a brief explanation to all the files in the folder--->
 
 These files are in the NCSS2023 data rescue.
+Note here that we have downloaded some of the provided metadata and duplicated it in the repository.
+This was done primarily for convenience so that the user only needed to download a single Sqlite file rather then multiple files across the website.
 
-- [README_NCSS2023](README_NCSS2023.qmd)
+- [README_NCSS2023.qmd](README_NCSS2023.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
 - [NCSS_SCD.bib](NCSS_SCD.bib)
-  + citation for article transcribed
-- [AuthorYYYY_Methods.bib](AuthorYYYY_Methods.bib)
-  + citations for the methods section of the article
-- [AuthorYYYY_Methods.md](AuthorYYYY_Methods.md)
-  + methods transcribed from primary article
-- [AuthorYYYY_TableN.csv](AuthorYYYY_TableN.csv)
-  + table N from primary article with ...
-- [temp/](temp/)
-    + 
+  + primary citation for the National Coorperative Soil Survey, Soil Characterization Database
+- [NCSS_SCD_Methods.bib](NCSS_SCD_Methods.bib)
+  + citations for the National Coorperative Soil Survey, Soil Characterization Database method references
+- [NCSS Table Description.csv](NCSS Table Description.csv)
+  + Table descriptions downloaded from web site, duplicated here for convenience
+- [NCSS Columns Description.csv](NCSS Columns Description.csv)
+  + Columns descriptions downloaded from web site, duplicated here for convenience
+- [Relationships.csv](Relationships.csv)
+  + Relationships between tables downloaded from web site, duplicated here for convenience
+- [Unique Constraints.csv](Unique Constraints.csv)
+  + Constraints across tables downloaded from web site, duplicated here for convenience
+- [NCSSCharacterization_ER_20260226.png](NCSSCharacterization_ER_20260226.png)
+  + Figure showing table relationships downloaded from web site, duplicated here for convenience
+  
+Old files that need to be removed
+
+- NCSS_Annocations.csv : orginal metadata file before table downloads
+- README_NCSS_OLD.qmd : old readme file
 
 # Data Rescue working notes 
-
+<!----
 ## Data Rescue Plan
 
 + Lead
@@ -211,12 +226,14 @@ These files are in the NCSS2023 data rescue.
   - [ ] push to repository and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
+---->
 
-## Read Database
+## Read database and constructed metadata
+
 
 ```{r}
 #| label: readSQLiteDB
-#| 
+
   myconnect <- RSQLite::dbConnect(drv = RSQLite::SQLite(), 
                                   dbname = sqlDownload)
 
@@ -241,133 +258,34 @@ lvl0.primary <- plyr::llply(
   })
 
 RSQLite::dbDisconnect(myconnect)
-```
-
-## Table N
-
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table N was modified ....
-
-```{r}
-#| label: table1Check
-#| eval: false #remove when you have the file transcribed
 
 
-read_csv(file = tableN.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
-```
-
-And is crosschecked with the secondary transcription
-
-```{bash}
-#| label: compareTableN
-#| eval: false
-
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_ABC.md AuthorYYYY_TableN.md
-```
-
-## Methods
-
-Any different to the cross check for the methods section will be output after this line.
-
-```{bash}
-#| label: compareMethods
-#| eval: false
-# You will want to repeat the line below to cross check each csv and md file in the
-#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
-```
-
-### Methods  - Text
-
-The final text transcription from the Methods section is rendered below.
-
-```{r}
-#| label: readMethods
-#| output: asis
-
-# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
-
-methodsLines <- readLines(methods.file) |>
-  str_replace_all(pattern = '^#', replacement = '####')
-
-cat(paste0(methodsLines, collapse = '\n'))
-
-```
-
-<!----
-## Citation notes from Methods
-
-Below are the citation notes from the methods section.
-This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
-Some citations are missing, those are noted here and how best guess were generated.
-Think of this as a lab notebook documenting how you found each citation.
-
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
----->
-
-# Level 0 Data rescue
-
-This level 0 data read parses the transcribed files with minimal cleaning or transformations.
-
-```{r}
-#| label: readLevel0
-#This chunk has two purposes. 
-#...1) Check the formatting by reading in everything 
-#...2) Create a list of everything to process later in level 1
-
-data.lvl0.ls <- list(
-  #Read in a list of all the bib files
-  citation = list(
-    #Citation for the article transcriptions are pulled from
-    primary = read.bib(file = primaryCitation.file), 
-    #Citations for all referenced articles
-    methods = read.bib(file = methodsCitation.file)
-  ),
-  #Read in the text transcription of the article's methods section
-  method = read_lines(file = methods.file),
-  #Read in the results as tables or figure transcriptions. This includes
-  #...the caption as well as the tables themselves
-  data = list(
-    Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
-                         col_types = cols(.default = col_character()),
-                         n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
-                         col_types = cols(.default = col_character()),
-                         skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
-   ) #end 'data' element
+#constructed manually from documentation
+lvl0.meta <- list(
+  table = read_csv(file = tableDesc.file,
+                       col_types = cols(.default = col_character())),
+  columns = read_csv(file = columnDesc.file,
+                       col_types = cols(.default = col_character())),
+  relationships = read_csv(file = relationships.file,
+                       col_types = cols(.default = col_character())),
+  uniqueID = read_csv(file = uniqueID.file,
+                       col_types = cols(.default = col_character()))
 )
 
+data.lvl0.ls <- list(
+  data = lvl0.primary,
+  meta = lvl0.meta
+)
 ```
+
+
 
 The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
 Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
@@ -487,6 +405,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -514,6 +433,7 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -560,6 +480,7 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
