@@ -28,8 +28,6 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
-
-
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -40,62 +38,61 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
-    
 timelog:
   - activity: 
       description: Start moving rescue from old template to new template, particularly the README.
       who: ashbonner310 
       start: 2026-01-29 T16:45
       end: 2026-01-29 T17:15
-      duration: P30M
+      duration: PT30M
   - activity: 
       description: Continue moving rescue from old template to new template, particularly moving files other than README.
       who: ashbonner310 
       start: 2026-01-30 T15:02
       end: 2026-01-30 T15:34
-      duration: P32M
+      duration: PT32M
   - activity: 
       description: Finish moving rescue from old template to new template.
       who: ashbonner310 
       start: 2026-01-30 T17:51
       end: 2026-01-30 T18:45
-      duration: P54M
+      duration: PT54M
   - activity: 
       description: Fixing some old errors, starting the cross-check.
       who: ashbonner310 
       start: 2026-04-10 T15:45
       end: 2026-04-10 T17:00
-      duration: P1H15M
+      duration: PT1H15M
   - activity: 
       description: Finishing cross-check, rebuilding plot from paper.
       who: ashbonner310 
       start: 2026-04-10 T15:45
       end: 2026-04-10 T17:00
-      duration: P1H15M
+      duration: PT1H15M
   - activity:
       description: Start level 1 as class example
       who: ktoddbrown
       start: 2026-07-07 T17:36
       end: 2026-07-07 T18:00
-      duration: P24M
+      duration: PT24M
   - activity:
       description: Walk through data frame transformation (class exercise)
       who: ktoddbrown
       start: 2026-07-9 T17:30
       end: 2026-07-9 T18:00
-      duration: P30M
+      duration: PT30M
   - activity:
       description: Walk through data frame transformation continuatin (class exercise)
       who: ktoddbrown
       start: 2026-07-16 T17:30
       end: 2026-07-16 T18:00
-      duration: P30M
+      duration: PT30M
   - activity:
       description: Final cleanup for level 1 (class exercise)
       who: ktoddbrown
       start: 2026-07-21 T17:30
       end: 2026-07-21 T18:00
-      duration: P30M
+      duration: PT30M
 ---
 
 

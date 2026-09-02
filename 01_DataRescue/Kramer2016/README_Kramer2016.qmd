@@ -64,7 +64,7 @@ timelog:
       who: laylakalandjian #github username
       end: 2026-03-05
       start: 2025-12-15
-      duration: 13H
+      duration: PT13H
 ---
 
 

@@ -1,86 +1,95 @@
 ---
-title: "Data Rescue: Tirado-Corbala2015"
+title: "Data Rescue: TiradoCorbala2015"
 format:
   html:
     toc: true
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
-  - Tirado-Corbala2015_Methods.bib
-  - Tirado-Corbala2015.bib
+  - TiradoCorbala2015_Methods.bib
+  - TiradoCorbala2015.bib
 author:
-  - name:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Review"
-  - name:
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliations:
+      - id: ESS UF
+        name: University of Florida
+        department: Environmental Engineering Sciences
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Review"
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role:
-        - "Transcription"
-        - "Lead"
-      note: https://github.com/SavaScott
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role:
+      - "Transcription"
+      - "Lead"
+    note: https://github.com/SavaScott
+  - id: Misheph
+    name:
       given: Mirah
       family: Blanchard
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/Misheph
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/Misheph
+  - id: vaasukimarupaka
+    name:
       given: Vaasuki
       family: Marupaka
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-         - "Transcription"
-         - "Review"
-      note: https://github.com/vaasukimarupaka
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: 
+       - "Transcription"
+       - "Review"
+    note: https://github.com/vaasukimarupaka
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+```{r}
+#| lable: setup
+#| include: true
+#| warning: false
+#| message: false
+
 library(tidyverse)
 library(kableExtra)
 library(bibtex)
 
-methods.file <- 'Tirado-Corbala2015_Methods.md'
-table2.file <- 'Tirado-Corbala2015_Table2.csv'
-table3.file <- 'Tirado-Corbala2015_Table3.csv'
-table4.file <- 'Tirado-Corbala2015_Table4.csv'
-figure1.file <- 'Tirado-Corbala2015_Figure1.csv'
-figure2.file <- 'Tirado-Corbala2015_Figure2.csv'
-figure3.file <- 'Tirado-Corbala2015_Figure3.csv'
-figure4.file <- 'Tirado-Corbala2015_Figure4.csv'
-figure9.file <- 'Tirado-Corbala2015_Figure9.csv'
-figure10.file <- 'Tirado-Corbala2015_Figure10.csv'
-primaryCitation.file <- 'Tirado-Corbala2015.bib'
-methodsCitation.file <- 'Tirado-Corbala2015_Methods.bib'
+methods.file <- 'TiradoCorbala2015_Methods.md'
+table2.file <- 'TiradoCorbala2015_Table2.csv'
+table3.file <- 'TiradoCorbala2015_Table3.csv'
+table4.file <- 'TiradoCorbala2015_Table4.csv'
+figure1.file <- 'TiradoCorbala2015_Figure1.csv'
+figure2.file <- 'TiradoCorbala2015_Figure2.csv'
+figure3.file <- 'TiradoCorbala2015_Figure3.csv'
+figure4.file <- 'TiradoCorbala2015_Figure4.csv'
+figure9.file <- 'TiradoCorbala2015_Figure9.csv'
+figure10.file <- 'TiradoCorbala2015_Figure10.csv'
+primaryCitation.file <- 'TiradoCorbala2015.bib'
+methodsCitation.file <- 'TiradoCorbala2015_Methods.bib'
 ```
 
-This documents the data transcription for @Tirado-Corbala2015.
+This documents the data transcription for @TiradoCorbala2015.
 For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/110.
 
 > Tirado-Corbalá, R., Anderson, R. G., Wang, D., & Ayars, J. E. (2015). Soil Carbon and Nitrogen Stocks of Different Hawaiian Sugarcane Cultivars. Agronomy, 5(2), 239-261. https://doi.org/10.3390/agronomy5020239
@@ -208,18 +217,16 @@ ggplot(figData) +
 
 Figure 2 was adapted to switch the yellow-black columns and the green-black columns on each subset of the figures. It was also adapted to switch the black section of the column with the blue/green/yellow section.
 
-```{r figure2}
+```{r}
+#| label: figure2
 #| code-fold: true
 #| message: false
 
-library(ggplot2)
-library(readr)
-library(dplyr) 
-library(tidyverse)
-library(kableExtra)
+# TODO this figure is broken now that the figure2 csv was fixed. Need to revise.
 
-figure2.file <- 'Tirado-Corbala2015_Figure2.csv'
-caption_data2 <- "Figure 2.\n Total organic (OC) and inorganic (IC) carbon for the four sugarcane\n cultivars growing in Molokai soils. Black (solid) portion\n of the bars represent the IC and color portion represent OC for each soil depth\n and sugarcane growing stages (i.e., blue\n (open arrows)-tillering, yellow (irregular shape)-grand growth, \ngreen (light circles)-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each Soil depth are not \nsignificantly different Tukey’s test at Pr < 0.05."
+caption_data2 <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
  #Fixed caption format issues - SRS
 
@@ -321,7 +328,7 @@ ggplot(long.df,
   #            color = "red", linewidth = 0.3) +
   labs(title = "Total organic (OC) and inorganic (IC) carbon for the four sugarcane cultivars
 grown in Pulehu soils.",
-     caption = caption_data2,
+     caption = str_wrap(caption_data2, width = 60),
      y = expression("Total Carbon (kg "  *m^-2*")"),
      x = "Soil depth (in cm)",
   position = position_dodge(width = 0.9)) + geom_text(
@@ -343,14 +350,11 @@ Figure 3 was modified to create a title from the site label and dashes were adde
 #| code-fold: true
 #| message: false
 
-library(ggplot2)
-library(readr)
-library(dplyr)
+caption_data3 <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-filename <- figure3.file
-caption_data3 <- "Figure 3.\n Dissolved organic carbon (DOC) in Pulehu soils.\n Color represents sugarcane growing stages (i.e., blue-tillering, \nyellow-grand growth, green-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each soil depth\n are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
-
-data3 <- read_csv(file = filename,
+data3 <- read_csv(file = figure3.file,
                    skip = 1)
 data3$y <- factor(data3$y,
                  levels = unique(data3$y))
@@ -363,7 +367,7 @@ ggplot(data3, aes(x = y, y = x, fill = `growing stage`)) + scale_y_continuous(br
                "grand growth" = "darkgoldenrod2",
                "maturity" = "chartreuse4")) +
   labs(title = "Dissolved organic carbon in Pulehu soils",
-     caption = caption_data3,
+     caption = str_wrap(caption_data3, width = 60),
      x = unique(data3$`y axis label`),
      y = unique(data3$`x axis label`)) + geom_text(aes(y = x + 2, label = footnote),
   position = position_dodge(width = 0.9),
@@ -380,14 +384,12 @@ Figure 4 was modified to create a title from the site label and dashes were adde
 #| code-fold: true
 #| message: false
 
-library(ggplot2)
-library(readr)
-library(dplyr)
+caption_data4 <- read_csv(file = figure4.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-filename <- figure4.file
-caption_data4 <- "Figure 4.\n Dissolved organic carbon (DOC) in Molokai soils.\n Color represents sugarcane growing stages (i.e., blue-tillering, \nyellow-grand growth, green-maturity) when the soil samples were collected.\n Means followed by the same letter or no letters for the bars in each soil depth\n are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
 
-data4 <- read_csv(file = filename,
+data4 <- read_csv(file = figure4.file,
                    skip = 1)
 data4$x <- as.numeric(data4$x)
 data4$y <- factor(data4$y,
@@ -401,7 +403,7 @@ ggplot(data4, aes(x = y, y = x, fill = `growing stage`)) + scale_y_continuous(br
                "grand growth" = "darkgoldenrod2",
                "maturity" = "chartreuse4")) +
   labs(title = "Dissolved organic carbon in Molokai soils",
-     caption = caption_data4,
+     caption = str_wrap(caption_data4, width = 60),
      x = unique(data4$`y axis label`),
      y = unique(data4$`x axis label`)) + geom_text(aes(y = x + 2, label = footnote),
   position = position_dodge(width = 0.9),
@@ -418,14 +420,11 @@ Figure 9 was modified to create a title from the site label.
 #| code-fold: true
 #| message: false
 
-library(ggplot2)
-library(readr)
-library(dplyr) 
+caption_data9 <-read_csv(file = figure9.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
-filename <- figure9.file
-caption_data9 <- "Figure 9.\n Total Carbon (kg*m^-2) in the first 120 cm of soil accumulation\n in the different sugarcane cultivars over the sugarcane growing stages." #Fixed caption format issues
-
-data9 <- read.csv(file = filename,
+data9 <- read.csv(file = figure9.file,
                  skip = 1)
 data9$graph.label <- factor(data9$graph.label,
                     levels = c("Pulehu", "Molokai"))
@@ -442,7 +441,7 @@ ggplot(data9, aes(x = site.label, y = y, fill = `growing.stage`)) +
   ) + scale_x_discrete(expand = c(0.1,0.1)) +
   labs(
   title = "Total carbon in the first 120 cm of soil accumulation",
-  caption = caption_data9,
+  caption = str_wrap(caption_data9, width = 60),
   x = unique(data9$`x.axis.label`),
   y = unique(data9$`y.axis.label`)
   )
@@ -453,19 +452,19 @@ ggplot(data9, aes(x = site.label, y = y, fill = `growing.stage`)) +
 
 Figure 10 was modified to create a title from the site label and dashes were added in where no letter was provided. It was also modified to drop the pattern key for a color key.
 
-```{r figure10}
+```{r}
+#| label: figure10
 #| message: false
 #| code-fold: true
 
-library(ggplot2)
-library(readr)
-library(dplyr) 
 
 filename <- figure10.file
-caption_data10 <- "Figure 10.\n Root carbon (kg·m^−2) from sugarcane cultivars collected less than two weeks prior harvest date.\n Means from sugarcane cultivars bars followed by the same letter\n or no letters are not significantly different Tukey’s test at Pr < 0.05." #Fixed caption format issues
+caption_data10 <-read_csv(file = figure10.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
 
 
-data10 <- read_csv(file = filename,
+data10 <- read_csv(file = figure10.file,
                    skip = 1)
 data10$`site label` <- factor(data10$`site label`,
       levels = c("H-87-4319", "H-86-3792", "H-78-3567", "H-65-7052"))
@@ -485,72 +484,69 @@ ggplot(data10, aes(x = y, y = x, fill = `site label`)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
   facet_wrap(~ `graph label`, scales = "free_x")  +
   labs(title = "Root carbon from sugarcane cultivars (2 weeks before harvest)",
-     caption = caption_data10,
+     caption = str_wrap(caption_data10, width = 60),
      x = unique(data10$`y axis label`),
      y = unique(data10$`x axis label`)) + geom_text(aes(y = x + 0.15, label = footnote),
   position = position_dodge(width = 0.9),
   hjust = 0,
   size = 2
 )
-
-
-                                
 ```
-{{< include Tirado-Corbala2015_Methods.md >}}
+{{< include TiradoCorbala2015_Methods.md >}}
 
 # Transcription comparison
 
 ```{bash eval=FALSE, echo=FALSE}
-diff --strip-trailing-cr Tirado-Corbala2015_Methods.md Tirado-Corbala2015_Methods_MB.md
+diff --strip-trailing-cr TiradoCorbala2015_Methods.md TiradoCorbala2015_Methods_MB.md
 
-diff Tirado-Corbala2015_Table4_MB.csv Tirado-Corbala2015_Table4.csv
+diff TiradoCorbala2015_Table4_MB.csv TiradoCorbala2015_Table4.csv
 
-diff Tirado-Corbala2015_Table3_MB.csv Tirado-Corbala2015_Table3.csv 
+diff TiradoCorbala2015_Table3_MB.csv TiradoCorbala2015_Table3.csv 
 
-diff Tirado-Corbala2015_Table2_MB.csv Tirado-Corbala2015_Table2.csv
+diff TiradoCorbala2015_Table2_MB.csv TiradoCorbala2015_Table2.csv
 
-diff Tirado-Corbala2015_Figure1_MB.csv Tirado-Corbala2015_Figure1.csv
+diff TiradoCorbala2015_Figure1_MB.csv TiradoCorbala2015_Figure1.csv
 
-diff Tirado-Corbala2015_Figure2_MB.csv Tirado-Corbala2015_Figure2.csv
+diff TiradoCorbala2015_Figure2_MB.csv TiradoCorbala2015_Figure2.csv
 
-diff Tirado-Corbala2015_Figure3_MB.csv Tirado-Corbala2015_Figure3.csv 
+diff TiradoCorbala2015_Figure3_MB.csv TiradoCorbala2015_Figure3.csv 
 
-diff Tirado-Corbala2015_Figure4_MB.csv Tirado-Corbala2015_Figure4.csv
+diff TiradoCorbala2015_Figure4_MB.csv TiradoCorbala2015_Figure4.csv
 
-diff Tirado-Corbala2015_Figure9_MB.csv Tirado-Corbala2015_Figure9.csv
+diff TiradoCorbala2015_Figure9_MB.csv TiradoCorbala2015_Figure9.csv
 
-diff Tirado-Corbala2015_Figure10_MB.csv Tirado-Corbala2015_Figure10.csv
+diff TiradoCorbala2015_Figure10_MB.csv TiradoCorbala2015_Figure10.csv
 ```
 
 # Files
 
-These files are in the @Tirado-Corbala2015 data rescue.
+These files are in the @TiradoCorbala2015 data rescue.
 
 - [ReadMe](README_Tirado-Corbala.qmd)
   + This is the primary file that documents the transcriptions and decision made during data rescue.
-- [Tirado-Corbala2015.bib](Tirado-Corbala2015.bib)
+- [TiradoCorbala2015.bib](TiradoCorbala2015.bib)
   + citation for article transcribed
-- [Tirado-Corbala2015_Methods.bib](Tirado-Corbala2015_Methods.bib)
+- [TiradoCorbala2015_Methods.bib](TiradoCorbala2015_Methods.bib)
   + citations for the methods section of the article
-- [Tirado-Corbala_Methods.md](Tirado-Corbala2015_Methods.md)
+- [Tirado-Corbala_Methods.md](TiradoCorbala2015_Methods.md)
   + methods transcribed from primary article
-- [Tirado-Corbala2015_Table2.csv](Tirado-Corbala2015_Table1.csv)
+- [TiradoCorbala2015_Table2.csv](TiradoCorbala2015_Table1.csv)
   + table 2 from primary article with the soil total carbon and soil properties of the sites
-- [Tirado-Corbala2015_Table3.csv](Tirado-Corbala2015_Table2.csv)
+- [TiradoCorbala2015_Table3.csv](TiradoCorbala2015_Table2.csv)
   + table 3 from primary article with the total carbon two weeks before harvest
-- [Tirado-Corbala2015_Table4.csv](Tirado-Corbala2015_Table3.csv)
+- [TiradoCorbala2015_Table4.csv](TiradoCorbala2015_Table3.csv)
   + figure 1 from primary article with soil organic carbon accumulation from tillering to maturity
-- [Tirado-Corbala2015_Figure1.csv](Tirado-Corbala2015_Figure1.csv)
+- [TiradoCorbala2015_Figure1.csv](TiradoCorbala2015_Figure1.csv)
   + figure 1 from primary article with total organic and inorganic carbon for the four sugarcane cultivars in Pulehu soils
-- [Tirado-Corbala2015_Figure2.csv](Tirado-Corbala2015_Figure2.csv)
+- [TiradoCorbala2015_Figure2.csv](TiradoCorbala2015_Figure2.csv)
   + figure 2 from primary article with total organic and inorganic carbon for the four sugarcane cultivars in Molokai soils
-- [Tirado-Corbala2015_Figure3.csv](Tirado-Corbala2015_Figure3.csv)
+- [TiradoCorbala2015_Figure3.csv](TiradoCorbala2015_Figure3.csv)
   + figure 3 from primary article with dissolved organic carbon in Pulehu soils
-- [Tirado-Corbala2015_Figure4.csv](Tirado-Corbala2015_Figure4.csv)
+- [TiradoCorbala2015_Figure4.csv](TiradoCorbala2015_Figure4.csv)
   + figure 4 from primary article with dissolved organic carbon in Molokai soils
-- [Tirado-Corbala2015_Figure9.csv](Tirado-Corbala2015_Figure9.csv)
+- [TiradoCorbala2015_Figure9.csv](TiradoCorbala2015_Figure9.csv)
   + figure 9 from primary article with total carbon in the first 120 cm cultivars of sugarcane over different growing stages
-- [Tirado-Corbala2015_Figure10.csv](Tirado-Corbala2015_Figure10.csv)
+- [TiradoCorbala2015_Figure10.csv](TiradoCorbala2015_Figure10.csv)
   + figure 10 from primary article with root carbon from sugarcane cultivars collected less than two weeks
 
 # Working notes 

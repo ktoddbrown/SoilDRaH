@@ -90,9 +90,9 @@ x,footnote,y,site label,x axis label,y axis label,color portion label,bar color
 4.1,b,30,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),grand growth - yellow,black-yellow
 0.4,c,30,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-blue
 2.3,c,30,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),tillering - blue,black-blue
-0.9,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-green
-3.9,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),maturity - green,black-green
-1.1,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-yellow
-3.8,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),grand growth - yellow,black-yellow
-0.8,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-blue
-3.3,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),tillering - blue,black-blue
+0.9,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-green
+3.9,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),maturity - green,black-green
+1.1,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-yellow
+3.8,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),grand growth - yellow,black-yellow
+0.8,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),inorganic carbon - black,black-blue
+3.3,,10,H-87-4319 Molokai,Total carbon (kg*m^-2),Soil depth (cm),tillering - blue,black-blue

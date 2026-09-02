@@ -29,8 +29,8 @@ library(RSQLite) #read in the sqlite file that holds the sample data
 library(knitr) #make pretty reports
 library(kableExtra) #make pretty scrollable tables
 
-source('../../R/checkAnnotations.R') #load in the check function for annotations
-source('../../R/readNCSS.R') #load in the read function
+#source('../../R/checkAnnotations.R') #load in the check function for annotations
+source('../../02_DataHarmonization/readNCSS.R') #load in the read function
 
 dataDirectory <- '../../temp/NRCS_NCSS_20230922'
 
@@ -38,15 +38,15 @@ dataDirectory <- '../../temp/NRCS_NCSS_20230922'
 ```
 
 ```{r echo=FALSE}
-dataDirectory <- '~/Dropbox (UFL)/Research/Datasets/NRCS_NCSS_20230922'
+dataDirectory <- '~/UF Dropbox/Kathe Todd-Brown/Research/Datasets/NRCS_NCSS_20230922/'
 ```
 
 Read in the appropriate NCSS data bases for later use. The readNCSS function is shown and described in detail in the Read Script section of this document.
 ```{r ncss_data_frame, warning=FALSE, message=FALSE}
 ncss.df <- readNCSS(dataDir = dataDirectory,
-                    annotationFilename = '../../data/NCSS_Annotations.csv',
-                    format = 'long')
-#                    format = 'original')
+                    annotationFilename = 'NCSS_Annotations.csv',
+                    #format = 'long')
+                    format = 'original')
 
 ```
 
