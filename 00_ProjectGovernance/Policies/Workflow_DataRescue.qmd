@@ -31,20 +31,26 @@ timelog:
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       end: 2025-12-07
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
+      duration: PT2H
+    - activity: 
+      description: revise based on lab feedback
+      who: ktoddbrown
+      start: 2026-09-03
       duration: P2H
 version: 
+  - id: 'vs202609'
+    description: lab revisions
   - id: 'vs202512'
     description: inital draft moved over from wiki
 ---
 
 This workflow provides guidance for moving data out of a pdf manuscript, report, or other non-machine readable format into a machine readable format.
-See the data rescue template at `01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd` for detailed checklist.
+The data rescue is the first stage in the rescue-harmonize-curate process that elevates data from a non-machine readable format (rescue) to inter-operable data collection (harmonize) to a analysis-ready data product (curate).
+This workflow document is meant to supplement the data rescue template `01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd`.
 
 Data rescue is the transformation of information from a non-machine readable format to a machine readable one.
 This can include scanning paper copies of reports or records, transcribing scanned records into flat text documents, or extracting x-y values from a scanned graph.
-Generally this stage should be as close to the original information as practical for specific purpose, and should be extendable for future purpose.
+Generally this stage should be as close to the original information as practical.
 Information here may be primary or meta data.
 This stage must maintain provenance of the data including links to the original source, how the data was made machine readable, what data was not rescued, and who did this work.
 
