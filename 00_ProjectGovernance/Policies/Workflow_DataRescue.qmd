@@ -32,7 +32,7 @@ timelog:
       #when you started and ended, can be just a year or down to the minute
       end: 2025-12-07
       duration: PT2H
-    - activity: 
+  - activity: 
       description: revise based on lab feedback
       who: ktoddbrown
       start: 2026-09-03
@@ -56,23 +56,24 @@ This stage must maintain provenance of the data including links to the original 
 
 Data Rescue | Lead | Do | Measure 
  -- | -- | -- | -- 
-Input: Understand data source @sec-UndertandingDataSource | Identify, find, and read the paper | Summarize the data in paper and identify relevant components | _Expert Review_: Does the summary reflect the paper? is it shorter then the paper itself? 
-Transformation: Transcribe the data @sec-TranscribingData | Prep the spreadsheets and any figure capture software | Transcribe data from text, tables, and figures | Compare and reconcile data from second transcriber 
-Output: Push rescue to github @sec-ReviewingTranscripts | Prep transcription package | Pull request to incorporate the data rescue into the repository | _Expert Review_: Does the pull request have the documentation identified below? Does the ReadMe render?
+Input: Understand data source @sec-UndertandingDataSource | Identify, find, and read the paper | Summarize the data in paper and identify relevant components | _Expert Review_: Are the relevant data elements identified? 
+Transformation: Transcribe the data @sec-TranscribingData | Prep the spreadsheet and figure capture software | Transcribe data from text, tables, and figures | Cross check - Compare and reconcile data from second transcriber 
+Output: Push rescue to github @sec-ReviewingTranscripts | Prep transcription package and render ReadMe | Pull request to incorporate the data rescue into the repository | _Expert Review_: Does the pull request have the documentation identified below? Are there obvious errors that would cause the code not to render?
 
 This process should result in the following documentation:
 
-  - A ReadMe file with (qmd or Rmd)
-    * human readable summary of data source with context for data rescue 
-    * specific plan for fit-for-purpose data rescue
-    * all contributors identified in the metadata
-  - A data transcription(s) that have been reconciled from two independent data transcriptions. Data transcriptions may include,
-    * transcriptions of tables with fit for purpose information
-    * x-y extracted data points from figures
-    * transcription of methods section with paired BibTex formatted reference
-  - BibTex formatted file with reference to
-    1) the original the data source(s)
-    2) citations from the methods section
+  - A ReadMe file with (qmd-format)
+    * human readable summary of data source with context for data rescue
+    * all contributors identified in the metadata and their time log
+    * code chunks that read in the transcribed data and displays it in a way that allows comparison with the original document
+    * code that cross checks at least two transcriptions and displays any results
+  - Data elements that have been reconciled from two independent transcriptions. Data elements may include,
+    * tables (csv-format)
+    * x-y extracted data points from figures (csv-format)
+    * methods (md-format) with paired BibTex formatted reference (bib-format)
+  - Two bibTex formatted file with reference to
+    * the original the data source(s)
+    * citations from the data elements transcription
     
 ## Understanding data source {#sec-UndertandingDataSource}
 
