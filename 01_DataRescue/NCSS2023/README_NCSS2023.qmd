@@ -276,6 +276,8 @@ data.lvl0.ls <- list(
   data = lvl0.primary,
   meta = lvl0.meta
 )
+
+rm(lvl0.primary) #remove large file
 ```
 
 
@@ -301,16 +303,18 @@ if(file.exists(readsource.file)){
 }
 ```
 
-# Level 1 data - CURATION PROJECT
 
-This data is identified as a data source for the ...
+
+
+# Level 1 data - ISCN2025
+
+This data is identified as a data source for the ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
 Broad classes of information that we are looking for include:
 
-<!--- Include description of where the data is located in the source.--->
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
 This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
@@ -339,6 +343,61 @@ The `of_variable` being used here are:
 
 studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+
+bulk_density <- data.lvl0.ls$data$lab_method_code$lab_method_code |>
+  filter(str_detect(requested_anal_name, '[Bb]ulk [Dd]ensity')) |>
+  filter_out(str_detect(requested_anal_name, '[Bb]ar') |
+               str_detect(requested_anal_name, '[Mm]oist') |
+               str_detect(requested_anal_name, 'Rewet'))
+
+#pull bulk density and coarse fraction
+physical.df <- data.lvl0.ls$data$lab_physical_properties$lab_physical_properties |>
+  select(layer_key, #key across tables, lab_layer
+         #result_source_key, row_id = objectid_1, duplicate of layer_key
+         labsampnum, #unique id for sample
+         prep_code, #lab_prep table
+         bulk_density_oven_dry,
+         bulk_density_oven_dry_method, #*_method go to lab_method_code
+         'bulk_density_lt_2_mm_air_dry',
+         'bulk_density_air_dry_method',
+         total_frag_wt_pct_gt_2_mm_ws) |> 
+  filter(is.finite(bulk_density_oven_dry) |
+           is.finite(bulk_density_lt_2_mm_air_dry) |
+           total_frag_wt_pct_gt_2_mm_ws)
+
+chemical.df <- data.lvl0.ls$data$lab_chemical_properties$lab_chemical_properties |>
+  select(layer_key, #key across tables, lab_layer
+         #result_source_key, row_id = objectid_1, duplicate of layer_key
+         labsampnum, #unique id for sample
+         prep_code, #lab_prep table
+         total_carbon_ncs, total_carbon_ncs_method,
+         organic_carbon_walkley_black, oc_walkley_black_method,
+         caco3_lt_2_mm, caco3_lt_2_mm_method,
+         estimated_organic_carbon) |>
+  filter(is.finite(total_carbon_ncs-caco3_lt_2_mm) |
+           is.finite(estimated_organic_carbon) |
+           is.finite(organic_carbon_walkley_black))
+
+layer.df <- data.lvl0.ls$data$lab_layer$lab_layer |>
+  select(site_key, pedon_key, layer_key, 
+         labsampnum,
+         layer_type, hzn_top, hzn_bot) |>
+  filter(layer_key %in% c(chemical.df$layer_key, physical.df$layer_key))
+
+pedon.df <- data.lvl0.ls$data$lab_pedon$lab_pedon |>
+  select(pedon_key, site_key, pedlabsampnum,
+         observation_date) |>
+  filter(is.finite(observation_date)) |>
+  filter(pedon_key %in% layer.df$pedon_key) |>
+  mutate(observation_date = 
+           lubridate::as_date(observation_date,
+                              origin = lubridate::ymd('1900-01-01'))) 
+
+location.df <- data.lvl0.ls$data$lab_site$lab_site |> 
+  select(site_key, user_site_id, horizontal_datum_name,
+         latitude_std_decimal_degrees, longitude_std_decimal_degrees) |>
+  filter(site_key %in% c(pedon.df$site_key, layer.df$site_key))
 
 #### Table/Figure N ####
 # Process the primary data from Table/Figure M by maintaining data groups and 
@@ -399,80 +458,6 @@ data.lvl1.ls <- list(
 
 ```
 
-## Check for new variables
-
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_of_variable
-#| eval: false
-
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
-
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
-
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-#| eval: false
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
-  select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
-
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
-
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
-}
-
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
-}else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
-}
-```
 
 ## Check function match
 
@@ -496,7 +481,6 @@ if(file.exists(readsource.file)){
 }
 
 ```
-
 
 # References
 
