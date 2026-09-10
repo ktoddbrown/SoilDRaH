@@ -252,8 +252,8 @@ if(length(setdiff(table_names, actualTableNames)) != 0){
 lvl0.primary <- plyr::llply(
   setNames(as.list(table_names), table_names),
   .fun = function(xx){
-    ans.ls <- list( RSQLite::dbReadTable(myconnect, xx))
-    names(ans.ls) <- xx
+    ans.ls <- RSQLite::dbReadTable(myconnect, xx)
+    #names(ans.ls) <- xx
     return(ans.ls)
   })
 
@@ -341,18 +341,18 @@ The `of_variable` being used here are:
 #Create a table for the data in the method-section that is not directly 
 #...associated with any table. Often this is study level information.
 
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+# studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+#                    'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
 
 
-bulk_density <- data.lvl0.ls$data$lab_method_code$lab_method_code |>
-  filter(str_detect(requested_anal_name, '[Bb]ulk [Dd]ensity')) |>
-  filter_out(str_detect(requested_anal_name, '[Bb]ar') |
-               str_detect(requested_anal_name, '[Mm]oist') |
-               str_detect(requested_anal_name, 'Rewet'))
+# bulk_density <- data.lvl0.ls$data$lab_method_code |>
+#   filter(str_detect(requested_anal_name, '[Bb]ulk [Dd]ensity')) |>
+#   filter_out(str_detect(requested_anal_name, '[Bb]ar') |
+#                str_detect(requested_anal_name, '[Mm]oist') |
+#                str_detect(requested_anal_name, 'Rewet'))
 
 #pull bulk density and coarse fraction
-physical.df <- data.lvl0.ls$data$lab_physical_properties$lab_physical_properties |>
+physical.df <- data.lvl0.ls$data$lab_physical_properties |>
   select(layer_key, #key across tables, lab_layer
          #result_source_key, row_id = objectid_1, duplicate of layer_key
          labsampnum, #unique id for sample
@@ -366,7 +366,7 @@ physical.df <- data.lvl0.ls$data$lab_physical_properties$lab_physical_properties
            is.finite(bulk_density_lt_2_mm_air_dry) |
            total_frag_wt_pct_gt_2_mm_ws)
 
-chemical.df <- data.lvl0.ls$data$lab_chemical_properties$lab_chemical_properties |>
+chemical.df <- data.lvl0.ls$data$lab_chemical_properties |>
   select(layer_key, #key across tables, lab_layer
          #result_source_key, row_id = objectid_1, duplicate of layer_key
          labsampnum, #unique id for sample
@@ -377,15 +377,15 @@ chemical.df <- data.lvl0.ls$data$lab_chemical_properties$lab_chemical_properties
          estimated_organic_carbon) |>
   filter(is.finite(total_carbon_ncs-caco3_lt_2_mm) |
            is.finite(estimated_organic_carbon) |
-           is.finite(organic_carbon_walkley_black))
+           is.finite(organic_carbon_walkley_black)) 
 
-layer.df <- data.lvl0.ls$data$lab_layer$lab_layer |>
+layer.df <- data.lvl0.ls$data$lab_layer |>
   select(site_key, pedon_key, layer_key, 
          labsampnum,
          layer_type, hzn_top, hzn_bot) |>
   filter(layer_key %in% c(chemical.df$layer_key, physical.df$layer_key))
 
-pedon.df <- data.lvl0.ls$data$lab_pedon$lab_pedon |>
+pedon.df <- data.lvl0.ls$data$lab_pedon |>
   select(pedon_key, site_key, pedlabsampnum,
          observation_date) |>
   filter(is.finite(observation_date)) |>
@@ -394,10 +394,14 @@ pedon.df <- data.lvl0.ls$data$lab_pedon$lab_pedon |>
            lubridate::as_date(observation_date,
                               origin = lubridate::ymd('1900-01-01'))) 
 
-location.df <- data.lvl0.ls$data$lab_site$lab_site |> 
+location.df <- data.lvl0.ls$data$lab_site |> 
   select(site_key, user_site_id, horizontal_datum_name,
          latitude_std_decimal_degrees, longitude_std_decimal_degrees) |>
-  filter(site_key %in% c(pedon.df$site_key, layer.df$site_key))
+  filter(site_key %in% c(pedon.df$site_key, layer.df$site_key)) |> #53603 obs
+  full_join(pedon.df, by = join_by(site_key)) #53662 obs
+
+soilObs.df <- layer.df |>
+  full_join(chemical.df)
 
 #### Table/Figure N ####
 # Process the primary data from Table/Figure M by maintaining data groups and 
