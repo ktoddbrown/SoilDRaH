@@ -3,24 +3,13 @@ title: "Data Rescue: Santos 1984"
 format:
   html:
     toc: true
-    eval: false #default to not evaluating the chunks, override this the template is completed
+    eval: true 
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - Santos1984_Methods.bib #contains the citations in the methods section
   - Santos1984.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
-  - id: ktoddbrown #use the github name as an id
-    name:
-      given: Katherine
-      family: Todd-Brown
-    orcid: 0000-0002-3109-8130
-    affiliation:
-      - ref: uf-ees
-    role: #TODO define these roles and add reference
-      - transcription: lead #secondary, review
-      - standardization: lead #review
-      - curation: lead #review
   - id: vaasukimarupaka #use the github name as an id
     name:
       given: Vaasuki
@@ -101,6 +90,11 @@ timelog:
       start: 2026-05-18
       #alternatively duration can be combined with a being/end
       duration: PT120M
+  - activity:
+      description: fixed pull request changes
+      who: laylakalandjian
+      start: 2026-09-11
+      duration: PT30M
 ---
 
 
@@ -253,13 +247,13 @@ read_csv(file = table1.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTableN
-#| eval: false
+#| label: compareTable1
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y 01_DataRescue/Santos1984/Santos1984_Table1.csv 01_DataRescue/Santos1984/Santos1984_Table_1_MA.csv
+diff --strip-trailing-cr --suppress-common-lines -y Santos1984_Table1.csv temp/Santos1984_Table_1_MA.csv
 ```
 
 ## Figure 1
@@ -323,10 +317,10 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_ABC.md AuthorYYYY_Methods.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Santos1984_Methods_VM.md Santos1984_Methods.md
 ```
 
 ### Methods  - Text
@@ -355,9 +349,8 @@ This generally doesn't read well in the final report so commenting it out here b
 Some citations are missing, those are noted here and how best guess were generated.
 Think of this as a lab notebook documenting how you found each citation.
 
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
+- [ ] NationalOceanic1979
+  + manually created from paper bibliography, no BibTex citation found online.
 ---->
 
 # Level 0 Data rescue

@@ -21,4 +21,4 @@ Organic matter loss was calculated using the equation developed by Santos and Wh
 Data were analyzed for each collection date by ANOVA and Tukey's Q.
 Because some marking tags were lost, we did not recover all litter bags placed in the field.
 Where there were insufficient bags for the minimal sample sizes described above, the reduced sample sizes are noted on the summary tables.
-Climate data were obtained from National Oceanic and Atmospheric Administration (**1979_MISSING BIB**).
+Climate data were obtained from National Oceanic and Atmospheric Administration (@NationalOceanic1979).
