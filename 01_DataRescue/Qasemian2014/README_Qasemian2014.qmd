@@ -42,6 +42,16 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: secondary
     #  - standardization: lead #review
      # - curation: lead #review
+  - id: sierrav-droid
+    name:
+      given: Sierra
+      family: Velazquez
+    affiliation:
+      - ref: uf
+    role:
+      - transcription: secondary
+    #  - standardization: lead #review
+     # - curation: lead #review
     
 affiliations:
   - id: uf-ees
@@ -80,16 +90,30 @@ timelog:
       description: Coding of Figures and Methods CC
       who: SavaScott #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-08-24
-      start: 2026-08-24
+      end: 2026-09-12
+      start: 2026-09-01
       duration: PT2H30M
   - activity: 
-      description: Coding of Figures and Methods CC
+      description: Figures and and Tables CC
       who: SavaScott #github username
       #when you started and ended, can be just a year or down to the minute
       end: 2026-09-12
       start: 2026-09-12
-      duration: PT1H15M
+      duration: PT1H
+  - activity: 
+      description: Second Transcription of Figures and Tables
+      who: JennavieveK #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-11
+      start: 2026-09-1
+      duration: PT3H
+  - activity: 
+      description: Second Transcription of Methods
+      who: sierrav-droid #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-07-24
+      start: 2026-07-21
+      duration: PT45M
 ---
 
 
