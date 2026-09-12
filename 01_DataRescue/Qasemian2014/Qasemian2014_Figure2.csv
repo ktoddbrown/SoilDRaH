@@ -1,0 +1,26 @@
+"Fig. 2. C:N ratio (a) and Aromaticity ratio (b) calculated from litterbags after 2 (June), 5 (September), and 13 (May) months in litterbags. Litterbags C10/C10 (black) and C10/C300 (white) are litters from area C10 placed in area C10 or C300, respectively. Litterbags C300/C300 (gray) and C300/C10 (dash) are litters from area C300 placed in area C300 or C10, respectively. Different letters show the means of each sampling time which are significantly different (p < 0.05) following Kruskal–Wallis non parametric comparison of means. Values at t0 for C:N ratio were 27 (±1) and 33 (±4) for C10 and C300, and for Aromaticity ratio were 0.30 (±0.02) and 0.32 (±0.01) for C10 and C300, respectively.",,,,,,
+y value,y high SE value,x label,y label,graph label,litterbag type,footnotes
+22.9,23.3,June 2009,C:N ratio,a,C10/C10,a
+24.0,24.7,June 2009,C:N ratio,a,C10/C300,b
+24.2,24.4,June 2009,C:N ratio,a,C300/C300,b
+24.5,25.0,June 2009,C:N ratio,a,C300/C10,b
+24.8,25.1,September 2009,C:N ratio,a,C10/C10,a
+26.6,28.1,September 2009,C:N ratio,a,C10/C300,c
+25.7,26.1,September 2009,C:N ratio,a,C300/C300,bc
+25.3,26.2,September 2009,C:N ratio,a,C300/C10,ab
+19.7,20.3,May 2010,C:N ratio,a,C10/C10,a
+18.9,19.6,May 2010,C:N ratio,a,C10/C300,a
+22.2,23.0,May 2010,C:N ratio,a,C300/C300,b
+21.7,22.3,May 2010,C:N ratio,a,C300/C10,b
+0.235,0.244,June 2009,Aromaticity Ratio,b,C10/C10,a
+0.245,0.258,June 2009,Aromaticity Ratio,b,C10/C300,a
+0.241,0.256,June 2009,Aromaticity Ratio,b,C300/C300,a
+0.243,0.254,June 2009,Aromaticity Ratio,b,C300/C10,a
+0.238,0.242,September 2009,Aromaticity Ratio,b,C10/C10,b
+0.232,0.242,September 2009,Aromaticity Ratio,b,C10/C300,ab
+0.227,0.233,September 2009,Aromaticity Ratio,b,C300/C300,a
+0.240,0.241,September 2009,Aromaticity Ratio,b,C300/C10,b
+0.251,0.258,May 2010,Aromaticity Ratio,b,C10/C10,b
+0.235,0.237,May 2010,Aromaticity Ratio,b,C10/C300,a
+0.236,0.251,May 2010,Aromaticity Ratio,b,C300/C300,a
+0.241,0.247,May 2010,Aromaticity Ratio,b,C300/C10,ab

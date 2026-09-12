@@ -1,0 +1,968 @@
+---
+title: "Data Rescue: Qasemian 2014"
+format:
+  html:
+    toc: true
+    eval: true 
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Qasemian2014_Methods.bib #contains the citations in the methods section
+  - Qasemian2014.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  #remove ktoddbrown if they did not work on the rescue directly
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: review
+    #  - standardization: lead #review
+     # - curation: lead #review
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead
+    #  - standardization: lead #review
+     # - curation: lead #review
+  - id: JennavieveK
+    name:
+      given: Jenna
+      family: Keefer
+    affiliation:
+      - ref: uf
+    role:
+      - transcription: secondary
+    #  - standardization: lead #review
+     # - curation: lead #review
+  - id: sierrav-droid
+    name:
+      given: Sierra
+      family: Velazquez
+    affiliation:
+      - ref: uf
+    role:
+      - transcription: secondary
+    #  - standardization: lead #review
+     # - curation: lead #review
+    
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+    
+timelog:
+  - activity: 
+      description: First Transcription
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-08-21
+      start: 2026-07-16
+      duration: PT3H
+  - activity: 
+      description: ReadMe Update and Bib files
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-12
+      start: 2026-08-21
+      duration: PT1H30M
+  - activity: 
+      description: Coding of Figures and Methods CC
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-12
+      start: 2026-09-01
+      duration: PT2H30M
+  - activity: 
+      description: Figures and and Tables CC
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-12
+      start: 2026-09-12
+      duration: PT1H
+  - activity: 
+      description: Second Transcription of Figures and Tables
+      who: JennavieveK #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-11
+      start: 2026-09-1
+      duration: PT3H
+  - activity: 
+      description: Second Transcription of Methods
+      who: sierrav-droid #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-07-24
+      start: 2026-07-21
+      duration: PT45M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Qasemian2014_Methods.md"
+table1.file <- 'Qasemian2014_Table1.csv'
+figure2.file <- 'Qasemian2014_Figure2.csv'
+figure3.file <- 'Qasemian2014_Figure3.csv'
+figure4.file <- 'Qasemian2014_Figure4.csv'
+
+# Bibliography files
+primaryCitation.file <- 'Qasemian2014.bib'
+methodsCitation.file <- 'Qasemian2014_Methods.bib'
+
+readsource.file <- '../../02_DataHarmonization/readQasemian2014.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Qasemian, L., Guiral, D., & Farnet, A. M. (2014). How do microlocal environmental variations affect microbial activities of a Pinus halepensis litter in a Mediterranean coastal area?. Science of the Total Environment, 496, 198-205. https://doi.org/10.1016/j.scitotenv.2014.07.054
+
+
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/280.
+
+@Qasemian2014 primarily measures microbial activities that occurred in a *Pinus halepensis* litter collected from two areas on the French Mediterranean coast.
+They use this data to look at how the microbial indicators changed due to proximity to the sea, finding that they intensified when they were moved closer to the coast.
+
+## Tables and figures
+
+- Tables 
+  1) Minimum and maximum of the environmental parameters monitored in litters over a one-year period in C10 (10 m from the sea shore) and C300 (300 m from the sea shore) areas
+  2) Three-way ANOVA test on enzyme activities
+
+- Figures 
+  1) Difference in i) temperature (°C), ii) humidity (percentage), iii) electrical conductivity (μS cm$^{−1}$) and iv) chloride concentration (ppm) measured in *P. halepensis* litters
+  2) C:N ratio (a) and Aromaticity ratio (b) calculated from litterbags after 2 (June), 5 (September), and 13 (May) months in litterbags
+  3) Temporal variations in microbial enzyme activities in Pinus halepensis litters measured after 2 (June), 5 (September), and 13 (May) months in litterbags.
+  4) Basal Respiration (a), Metabolic quotient qCO$_2$ (b) and AWCD calculated from Biolog after 45 h after 2 (June), 5 (September), and 13 (May) months.
+  5) PCA from Eco plate substrate utilization profile of litterbags after 2, 5 and 13 months. 
+  6) PCA on microbial markers measured in litterbags after 2, 5 and 13 months. 
+
+## Fit for purpose: DeAD
+
+This data is identified as a data source for DeAD
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies.
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems. 
+
+### Main Variables of Interest
+
+- Location: Study sites were from the French Mediterranean coast (Massif de Marseilleveyre, Marseille; 43° 12′ 34″ N, 5° 21′ 36″ E), 10 m and 300 m from the coast. This information is found with 2.1. Litter sampling.
+- Soil carbon stock: The C:N ratio and the aromaticity ratio is found within Figure 2. 
+- Duration: The litterbags were tested after 2 months (June 2009), 5 months (September 2009), and 13 (May 2010) months after being placed in situ
+- Mass loss: 2.1. Litter Sampling mentions that they measured the litter mass loss, but I cannot determine if or where it is recorded in the paper.
+- Solar exposure: Solar exposure was not measured in this paper.
+
+### Other Relevant Variables 
+
+  - Litter species: *Pinus halepensis*
+  - Microsite data: Maximum and minimum of the environmental parameters that the litters were exposed to are found within Table 1, including temperature and EC. 
+  - Litter chemical composition: Figure 2 has the C:N and Aromaticity ratio calculated from the litterbags. Figure 4 may also have some litter chemical compositions needed.
+  - Extracellular enzyme: Figure 3 has data on the microbial enzyme activities of the litterbags.
+  - Microclimate relative humidity: Humidity percentage (max and min) were included in Table 1. 
+  - Litter bag materials and method: The litter was sieved through a >2 mm mesh size before being placed in litterbags, 40 g per bag. The litterbags were 20 $\times$ 25 cm, made of polypropylene with a 1 mm mesh size. 
+  - Treatments: No treatments were mentioned in the methods section
+
+## Files
+
+These files are in the Qasemian2014 data rescue.
+
+- [Readme](README_Qasemian2014.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Qasemian2014.bib](Qasemian2014.bib)
+  + citation for article transcribed
+- [Qasemian2014_Methods.bib](Qasemian2014_Methods.bib)
+  + citations for the methods section of the article
+- [Qasemian2014_Methods.md](Qasemian2014_Methods.md)
+  + methods transcribed from primary article
+- [Qasemian2014_Table1.csv](Qasemian2014_Table1.csv)
+  + table 1 from primary article with minimum and maximum of the site conditions
+- [Qasemian2014_Figure2.csv](Qasemian2014_Figure2.csv)
+  + figure 2 from primary article with C:N ratio and Aromaticity ratio
+- [Qasemian2014_Figure3.csv](Qasemian2014_Figure3.csv)
+  + figure 3 from primary article with temporal variations in the microbial enzyme activities
+- [Qasemian2014_Figure4.csv](Qasemian2014_Figure4.csv)
+  + figure 4 from primary article with basal respiration, metabolic quotient and AWCD
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Qasemian2014'
+  - [x] Create a copy of this template folder and rename it to Qasemian2014
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and export it to csv
+  - [x] Extract points from Figure2-4 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Figure 2
+
+Figure 2 was modified during transcription to include "Months surveyed" as a x-axis title.
+
+```{r}
+#| label: figure2Check
+#| code-fold: true
+#| eval: true
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig2DataCN <- fig2Data %>% filter(`y label` == "C:N ratio")
+fig2DataAromaticity <- fig2Data %>% filter(`y label` == "Aromaticity Ratio")
+
+# C:N ratio column graph
+
+fig2DataCN$`x label` <- factor(fig2DataCN$`x label`,
+                                  level = c("June 2009", "September 2009", "May 2010"))
+fig2DataCN$`litterbag type` <- factor(fig2DataCN$`litterbag type`,
+                                  level = c("C10/C10", "C10/C300", "C300/C300", "C300/C10"))
+
+fig2DataCN$`y high SE value` <- as.numeric(fig2DataCN$`y high SE value`)
+fig2DataCN <- fig2DataCN %>%
+  mutate(error_var = `y high SE value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+ggplot(fig2DataCN, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.9),
+    vjust = -1.95, size = 2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "C:N ratio",
+       caption = fig2Caption)
+  
+# Aromaticity Ratio column graph
+
+fig2DataAromaticity$`x label` <- factor(fig2DataAromaticity$`x label`,
+                                  level = c("June 2009", "September 2009", "May 2010"))
+fig2DataAromaticity$`litterbag type` <- factor(fig2DataAromaticity$`litterbag type`,
+                                  level = c("C10/C10", "C10/C300", "C300/C300", "C300/C10"))
+
+fig2DataAromaticity$`y high SE value` <- as.numeric(fig2DataAromaticity$`y high SE value`)
+fig2DataAromaticity <- fig2DataAromaticity %>%
+  mutate(error_var = `y high SE value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+ggplot(fig2DataAromaticity, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+  scale_y_continuous(breaks = c(0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.30)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 1),
+    vjust = -1.75, size = 2.5, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.25) + labs(
+       x = "Month Surveyed",
+       y = "Aromaticity Ratio",
+       caption = fig2Caption)
+  
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template should not have a conflict here.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure2_JK.csv Qasemian2014_Figure2.csv
+```
+
+
+## Figure 3
+
+Figure 3 was modified during transcription to include "Months surveyed" as a x-axis title.
+
+```{r}
+#| label: figure3Check
+#| code-fold: true
+#| eval: true
+
+fig3Caption <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig3Data <- read_csv(file = figure3.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig3Data$`x label` <- factor(fig3Data$`x label`,
+                                  level = c("June 2009", "September 2009", "May 2010"))
+fig3Data$`litterbag type` <- factor(fig3Data$`litterbag type`,
+                                  level = c("C10/C10", "C10/C300", "C300/C300", "C300/C10"))
+
+fig3Data$`high SE y value` <- as.numeric(fig3Data$`high SE y value`)
+fig3Data <- fig3Data %>%
+  mutate(error_var = `high SE y value` - `U gdW$^{-1}$`,
+         ymin = `U gdW$^{-1}$` - error_var,
+         ymax = `U gdW$^{-1}$` + error_var)
+
+fig3DataLaccase <- fig3Data %>% filter(`graph label` == "a) Laccase")
+fig3DataCellulase <- fig3Data %>% filter(`graph label` == "b) Cellulase")
+fig3DataBgluc <- fig3Data %>% filter(`graph label` == "c) β-glucosidase")
+fig3DataPhos <- fig3Data %>% filter(`graph label` == "d) Phosphatase")
+
+# Figure a) Laccase
+
+ggplot(fig3DataLaccase, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.70),
+    vjust = -1.4, size = 2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "U gdW${-1}$",
+       caption = fig3Caption,
+       title = "a) Laccase")
+
+# Figure b) Cellulase 
+
+ggplot(fig3DataCellulase, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.75),
+    vjust = -2.0, size = 2.2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "U gdW${-1}$",
+       caption = fig3Caption,
+       title = "b) Cellulase")
+
+# Figure c) β-glucosidase
+
+ggplot(fig3DataBgluc, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.75),
+    vjust = -2.5, size = 2.4, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "U gdW${-1}$",
+       caption = fig3Caption,
+       title = "c) β-glucosidase")
+
+# Figure d) Phosphatase
+
+ggplot(fig3DataBgluc, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 0.5, 1, 1.5, 2, 2.5)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.75),
+    vjust = -2.5, size = 2.4, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "U gdW${-1}$",
+       caption = fig3Caption,
+       title = "d) Phosphatase")
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure3
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template should not have a conflict here.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure3_JK.csv Qasemian2014_Figure3.csv
+```
+
+
+## Figure 4
+
+Figure 4 was modified during transcription to include "Months surveyed" as a x-axis title.
+
+```{r}
+#| label: figure4Check
+#| code-fold: true
+#| eval: true
+
+#need to fix, y-axis labels are different for each graph
+
+fig4Caption <- read_csv(file = figure4.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig4Data <- read_csv(file = figure4.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig4Data$`x label` <- factor(fig4Data$`x label`,
+                                  level = c("June 2009", "September 2009", "May 2010"))
+fig4Data$`litterbag type` <- factor(fig4Data$`litterbag type`,
+                                  level = c("C10/C10", "C10/C300", "C300/C300", "C300/C10"))
+
+fig4Data$`SE high y value` <- as.numeric(fig4Data$`SE high y value`)
+fig4Data <- fig4Data %>%
+  mutate(error_var = `SE high y value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+fig4DataA <- fig4Data %>% filter(`graph label` == "a")
+fig4DataB <- fig4Data %>% filter(`graph label` == "b")
+fig4DataC <- fig4Data %>% filter(`graph label` == "c")
+
+# Figure a
+
+ggplot(fig4DataA, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.70),
+    vjust = -1.4, size = 2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "μg CO2-C gdw$^{-1}$",
+       caption = fig4Caption,
+       title = "a")
+
+# Figure b
+
+ggplot(fig4DataB, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.70),
+    vjust = -1.9, size = 2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "μg CO2-C gdw$^{-1}$",
+       caption = fig4Caption,
+       title = "b")
+
+# Figure c
+
+ggplot(fig4DataC, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
+  theme_classic() + 
+  scale_y_continuous(breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2)) +
+  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  geom_text(aes(label = footnotes),
+    position = position_dodge(width = 0.70),
+    vjust = -2.2, size = 2, color = "black") +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.3) + labs(
+       x = "Month Surveyed",
+       y = "μg CO2-C gdw$^{-1}$",
+       caption = fig4Caption,
+       title = "c")
+
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareFigure4
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template should not have a conflict here.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure4_JK.csv Qasemian2014_Figure4.csv
+```
+
+
+## Table 1
+
+<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
+
+Table 1 was modified by adding in dashes into empty columns and combining a subcolumn into the main column headers. 
+
+```{r}
+#| label: table1Check
+#| code-fold: false
+#| eval: true
+
+
+read_csv(file = table1.file, 
+         skip = 1, 
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, 
+                           n_max = 1, 
+                           col_names = 'caption',
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE
+                           )$caption
+  )
+```
+
+And is crosschecked with the secondary transcription (expected to be empty)
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note that the template has an example of an unresolved conflict.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Table1_JK.csv Qasemian2014_Table1.csv
+```
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+#... Note the template example does NOT have a conflict.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Methods_SV.md Qasemian2014_Methods.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+  
+- [x] Beare, M. H., Neely, C. L., Coleman, D. C., & Hargrove, W. L. (1990). A substrate-induced respiration (SIR) method for measurement of fungal and bacterial biomass on plant residues. Soil Biology and Biochemistry, 22(5), 585-594.
+  + copy from bib
+
+- [x] Anderson, T. H., & Domsch, K. H. (1985). Determination of ecophysiological maintenance carbon requirements of soil microorganisms in a dormant state. Biology and fertility of soils, 1(2), 81-89.
+  + copy from bib
+
+- [x] Criquet, S., Tagger, S., Vogt, G., Iacazio, G., & Le Petit, J. (1999). Laccase activity of forest litter. Soil Biology and Biochemistry, 31(9), 1239-1244.
+  + copy from bib
+
+- [x] Farnet, A. M., Qasemian, L., Guiral, D., & Ferré, E. (2010). A modified method based on arsenomolybdate complex to quantify cellulase activities: application to litters. Pedobiologia, 53(2), 159-160.
+  + copy from bib
+  
+- [x] Garland, J. L. (1997). Analysis and interpretation of community-level physiological profiles in microbial ecology. FEMS microbiology ecology, 24(4), 289-300.
+  + copy from bib
+  
+- [x] Mathers, N. J., Jalota, R. K., Dalal, R. C., & Boyd, S. E. (2007). 13C-NMR analysis of decomposing litter and fine roots in the semi-arid Mulga Lands of southern Queensland. Soil Biology and Biochemistry, 39(5), 993-1006.
+  + copy from bib
+  
+- [x] Massiot, D., Fayon, F., Capron, M., King, I., Le Calvé, S., Alonso, B., ... & Hoatson, G. (2002). Modelling one‐and two‐dimensional solid‐state NMR spectra. Magnetic resonance in chemistry, 40(1), 70-76.
+  + copy from bib
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#| eval: true
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), #End 'Table1' element
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+        Figure4 = list(
+      caption = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+    #Repeat for all tables and figures...
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: true
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+#| eval: false
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+#| eval: false
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
