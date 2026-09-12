@@ -3,7 +3,7 @@ title: "Data Rescue: Qasemian 2014"
 format:
   html:
     toc: true
-    eval: true #if you want to not evaluate the chunks and just check the rendering, switch this to false
+    eval: true 
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -22,7 +22,7 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: review
     #  - standardization: lead #review
      # - curation: lead #review
-  - id: ktoddbrown #use the github name as an id
+  - id: SavaScott
     name:
       given: Savannah
       family: Scott
@@ -32,7 +32,17 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: lead
     #  - standardization: lead #review
      # - curation: lead #review
-      
+  - id: JennavieveK
+    name:
+      given: Jenna
+      family: Keefer
+    affiliation:
+      - ref: uf
+    role:
+      - transcription: secondary
+    #  - standardization: lead #review
+     # - curation: lead #review
+    
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -63,16 +73,23 @@ timelog:
       description: ReadMe Update and Bib files
       who: SavaScott #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-08-22
-      start: 2026-8-21
-      duration: PT1H
+      end: 2026-09-12
+      start: 2026-08-21
+      duration: PT1H30M
   - activity: 
       description: Coding of Figures and Methods CC
       who: SavaScott #github username
       #when you started and ended, can be just a year or down to the minute
       end: 2026-08-24
-      start: 2026-8-24
+      start: 2026-08-24
       duration: PT2H30M
+  - activity: 
+      description: Coding of Figures and Methods CC
+      who: SavaScott #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-09-12
+      start: 2026-09-12
+      duration: PT1H15M
 ---
 
 
@@ -174,13 +191,13 @@ These files are in the Qasemian2014 data rescue.
 - [Qasemian2014_Methods.md](Qasemian2014_Methods.md)
   + methods transcribed from primary article
 - [Qasemian2014_Table1.csv](Qasemian2014_Table1.csv)
-  + table 1 from primary article with ...
+  + table 1 from primary article with minimum and maximum of the site conditions
 - [Qasemian2014_Figure2.csv](Qasemian2014_Figure2.csv)
-  + figure 2 from primary article with ...
+  + figure 2 from primary article with C:N ratio and Aromaticity ratio
 - [Qasemian2014_Figure3.csv](Qasemian2014_Figure3.csv)
-  + figure 3 from primary article with ...
+  + figure 3 from primary article with temporal variations in the microbial enzyme activities
 - [Qasemian2014_Figure4.csv](Qasemian2014_Figure4.csv)
-  + figure 4 from primary article with ...
+  + figure 4 from primary article with basal respiration, metabolic quotient and AWCD
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
@@ -203,10 +220,10 @@ These files are in the Qasemian2014 data rescue.
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
   - [x] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
@@ -218,6 +235,7 @@ Figure 2 was modified during transcription to include "Months surveyed" as a x-a
 ```{r}
 #| label: figure2Check
 #| code-fold: true
+#| eval: true
 
 fig2Caption <- read_csv(file = figure2.file, 
                                  n_max = 1, col_names = 'caption', 
@@ -300,7 +318,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_FigureM_AC.csv Qasemian2014_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure2_JK.csv Qasemian2014_Figure2.csv
 ```
 
 
@@ -311,6 +329,7 @@ Figure 3 was modified during transcription to include "Months surveyed" as a x-a
 ```{r}
 #| label: figure3Check
 #| code-fold: true
+#| eval: true
 
 fig3Caption <- read_csv(file = figure3.file, 
                                  n_max = 1, col_names = 'caption', 
@@ -424,7 +443,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_FigureM_AC.csv Qasemian2014_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure3_JK.csv Qasemian2014_Figure3.csv
 ```
 
 
@@ -435,6 +454,7 @@ Figure 4 was modified during transcription to include "Months surveyed" as a x-a
 ```{r}
 #| label: figure4Check
 #| code-fold: true
+#| eval: true
 
 #need to fix, y-axis labels are different for each graph
 
@@ -477,7 +497,7 @@ ggplot(fig4DataA, aes(x = `x label`, y = `y value`, fill = `litterbag type`, gro
     linewidth = 0.3) + labs(
        x = "Month Surveyed",
        y = "μg CO2-C gdw$^{-1}$",
-       caption = fig3Caption,
+       caption = fig4Caption,
        title = "a")
 
 # Figure b
@@ -496,7 +516,7 @@ ggplot(fig4DataB, aes(x = `x label`, y = `y value`, fill = `litterbag type`, gro
     linewidth = 0.3) + labs(
        x = "Month Surveyed",
        y = "μg CO2-C gdw$^{-1}$",
-       caption = fig3Caption,
+       caption = fig4Caption,
        title = "b")
 
 # Figure c
@@ -515,7 +535,7 @@ ggplot(fig4DataC, aes(x = `x label`, y = `y value`, fill = `litterbag type`, gro
     linewidth = 0.3) + labs(
        x = "Month Surveyed",
        y = "μg CO2-C gdw$^{-1}$",
-       caption = fig3Caption,
+       caption = fig4Caption,
        title = "c")
 
 ```
@@ -530,7 +550,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_FigureM_AC.csv Qasemian2014_FigureM.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure4_JK.csv Qasemian2014_Figure4.csv
 ```
 
 
@@ -543,6 +563,7 @@ Table 1 was modified by adding in dashes into empty columns and combining a subc
 ```{r}
 #| label: table1Check
 #| code-fold: false
+#| eval: true
 
 
 read_csv(file = table1.file, 
@@ -567,7 +588,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template has an example of an unresolved conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Table1_SV.csv Qasemian2014_Table1.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Table1_JK.csv Qasemian2014_Table1.csv
 ```
 
 ## Methods
@@ -641,7 +662,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
-#| eval: false
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -659,30 +680,42 @@ data.lvl0.ls <- list(
   #Read in the results as tables or figure transcriptions. This includes
   #...the caption as well as the tables themselves
   data = list(
-    TableN = list(
+    Table1 = list(
       #Read the caption as a text string. Captions are the first cell on 
       #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = table1.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
     ), #End 'Table1' element
-    FigureM = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = figureM.file,
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
-      #Read in all the data, skipping the first row with the caption and read
-      #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = figureM.file,
+      primary = read_csv(file = figure2.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
+    ), 
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+        Figure4 = list(
+      caption = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
     #Repeat for all tables and figures...
    ) #end 'data' element
 )
@@ -694,6 +727,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: true
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
