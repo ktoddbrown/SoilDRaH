@@ -40,11 +40,11 @@ For the 10th (day 711) and 11th (day 787) collections, the DOC was extracted usi
 The DOC concentration of the extract was analysed with a total carbon analyser (Multi N/C 3100; Analytik, Jena, Germany).
 Specific UV absorbance (SUVA<sub>254</sub>) of the DOC solution was measured by using a UV-Vis spectrometer (Cary 60 UV-Vis; Agilent Technologies, Santa Clara, CA, USA).
 SUVA<sub>254</sub> was calculated as the absorbance at 254 nm L<sup>-1</sup> mg$\cdot$C<sup>-1</sup> m<sup>-1</sup>.
-SUVA<sub>254</sub> served as an indicator of aromatic carbon content [@KALBITZ2003273][@fellman2008fluorescence].
+SUVA<sub>254</sub> served as an indicator of aromatic carbon content [@Kalbitz2003][@Fellman2008].
 Values of litter DOC concentration and litter remaining mass were corrected for litter moisture and ash content.
 
 A subsample of freeze-dried litter collected in summer of 2014 (day 409, the 8th collection) and 2015 (day 787, the 11th collection) was used to assess the microbial community composition under different position treatments.
-The phospholipid fatty acids (PLFAs) in litter samples were extracted using the conventional methods as described in [@WILKINSON2002189], with 250-mg grounded litter for the 8th collection and 80-mg for the 11th collection because of insufficient remaining litter mass.
+The phospholipid fatty acids (PLFAs) in litter samples were extracted using the conventional methods as described in [@Wilkinson2002], with 250-mg grounded litter for the 8th collection and 80-mg for the 11th collection because of insufficient remaining litter mass.
 Individual fatty acid methyl esters were identified and quantified using the MIDI Sherlock Microbial Identification System (MIDI, Newark, DE, USA) and gas chromatograph (Agilent 6850).
 The fatty acids used in the analysis of microbial community composition are listed in Table S1.
 The PLFA values were also corrected for litter moisture and ash content.
@@ -98,7 +98,7 @@ New C stored in soil was calculated from the distinct $\delta^{13}$C values of l
 
 $$\mathrm{C}_4 = \mathrm{C}_t \frac{\delta_t - \delta_3}{\delta_4-\delta_3}$$
 
-where $\mathrm{C}_4$ is the amount of soil C derived from C4 litter, $\mathrm{C}_t$ is the final total organic soil C pool (C3 + C4), and $\delta_t, \delta_3$ and $\delta_4$ are the $\delta^{13}$C values of the final total organic soil C pool, old C3 soil and C4 litter, respectively [@cheng1996measurement].
+where $\mathrm{C}_4$ is the amount of soil C derived from C4 litter, $\mathrm{C}_t$ is the final total organic soil C pool (C3 + C4), and $\delta_t, \delta_3$ and $\delta_4$ are the $\delta^{13}$C values of the final total organic soil C pool, old C3 soil and C4 litter, respectively [@Cheng1996].
 Litter SOC formation efficiency was calculated as the ratio of litter-derived soil C to the total litter C loss during the 192-day laboratory incubation.
 
 Statistical analysis of variance (ANOVA) and linear regressions were conducted using R software (2.14.2).

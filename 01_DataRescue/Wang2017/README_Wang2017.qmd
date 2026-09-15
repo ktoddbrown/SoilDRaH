@@ -82,6 +82,14 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P120M
+  - activity: 
+      description: fixed pull-request changes
+      who: JennavieveK 
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-09-06 T1200
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P90M
 version: 'vs202512' #template version, remove before use
 ---
 
@@ -101,8 +109,8 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Wang2017_Methods.md"
-figure2.file <- 'Wang2017_Figure2_al.csv'
-figure3.file <- 'Wang2017_Figure3_al.csv'
+figure2.file <- 'Wang2017_Figure2.csv'
+figure3.file <- 'Wang2017_Figure3.csv'
 
 # Bibliography files
 primaryCitation.file <- 'Wang2017.bib'
@@ -186,9 +194,9 @@ These files are in the @Wang2017 data rescue.
   + citations for the methods section of the article
 - [Wang2017_Methods.md](Wang2017_Methods.md)
   + methods transcribed from primary article
-- [Wang2017_Figure2_al.csv](Wang2017_Figure2_al.csv)
+- [Wang2017_Figure2.csv](Wang2017_Figure2.csv)
   + Figure 2 from primary article
-- [Wang2017_Figure3_al.csv](Wang2017_Figure3_al.csv)
+- [Wang2017_Figure3.csv](Wang2017_Figure3.csv)
   + Figure 3 from primary article
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
@@ -202,21 +210,21 @@ These files are in the @Wang2017 data rescue.
   - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Wang2017'
   - [x] Create a copy of this template folder and rename it to Wang2017
   - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [ ] Add the reviewer to the author list in the yml
 + Do
   - [x] Extract points from Figure2 and export it to csv
   - [x] Extract points from Figure3 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
-  - [ ] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
-  - [ ] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
@@ -224,11 +232,15 @@ These files are in the @Wang2017 data rescue.
 
 <!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
 
-Figure 2 was modified ....
+Figure 2 was modified by removing the error bars, statistical significance marker, and inset plot. 
 
 ```{r}
 #| label: Figure2Check
 
+figure2_raw <- read_csv(file = figure2.file, col_types = cols(.default = col_character())
+)
+
+caption_text <- colnames(figure2_raw)[1]
 
 figure2.df <- read_csv(file = figure2.file, #read in the specific file
          skip = 1, #skip the first line with the caption
@@ -240,14 +252,7 @@ ggplot(data = figure2.df,
        mapping = aes(x = `Time (days)`, y = `Litter mass remaining (%)`, group = `Litter type`, color = `Litter type`)) +
   geom_line() +
   geom_point() +
-    labs(caption = read_csv(file = figure2.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
-  )
+    labs(caption = caption_text)
 
 ```
 
@@ -260,57 +265,125 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Wang2017_Figure2_JK.csv Wang2017_Figure2_al.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Wang2017_Figure2_JK.csv Wang2017_Figure2.csv
 ```
 
 ## Figure 3
 
 <!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
 
-Figure 3 was modified ....
+Figure 3 was modified in graph a where the times period 400-500 days is highlighted as 2014 and 700-800 days is highlighted as 2015. 
 
 ```{r}
 #| label: figure3Check
+#| fig-height: 9
+#| fig-width: 6.5
 
+library(ggplot2)
+library(dplyr)
+library(grid)
 
-figure3.df <- read_csv(file = figure3.file, #read in the specific file
-         skip = 1, #skip the first line with the caption
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) |>
-  mutate(across(c(`x value`,`DOC (mg g^-1)`),
-                as.numeric)) #make things numbers
-         
-ggplot(data = figure3.df |>
-         filter(`graph label` == "a"), 
-       mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, group = `litter type`, color = `litter type`)) +
-  geom_line() +
-  geom_point() +
-    labs(x = "Time (days)",
-      caption = read_csv(file = figure3.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table
+# 1. Load Data & Clean Labels
+figure3.df <- read_csv(
+  file = figure3.file, 
+  skip = 1, 
+  col_types = cols(.default = col_character())
+) |>
+  mutate(
+    `litter type` = trimws(`litter type`),
+    `litter type` = case_when(
+      grepl("surf", `litter type`, ignore.case = TRUE) ~ "Surface",
+      grepl("stand", `litter type`, ignore.case = TRUE) ~ "Standing",
+      TRUE ~ `litter type`
+    ),
+    panel_letter = trimws(tolower(gsub("[^a-zA-Z]", "", `graph label`))),
+    panel_letter = substr(panel_letter, 1, 1),
+    `x value` = as.numeric(`x value`),
+    `DOC (mg g^-1)` = as.numeric(`DOC (mg g^-1)`)
   )
 
+color_palette <- c("Surface" = "black", "Standing" = "grey50")
 
-ggplot(data = figure3.df |>
-         filter(`graph label` != "a"), 
-       mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`)) +
-  geom_point() +
-    labs(caption = read_csv(file = figure3.file, #read in that file again but...
-                           n_max = 1, #only read the first line
-                           col_names = 'caption', #call it the caption
-                           #read everything as a character
-                           col_types = cols(.default = col_character()),
-                           show_col_types = FALSE #do not return messages
-                           )$caption #and take it out of the table 
-    ) +
-  facet_wrap(~`graph label`,
-             scales = "free")
+# 2. Panel (a): Top Plot
+plot_a <- ggplot(
+  data = figure3.df |> filter(panel_letter == "a"),
+  mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`, group = `litter type`)
+) +
+  geom_line() +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 22)) + 
+  labs(x = "Time (days)", y = expression(DOC~(mg~g^-1)), title = "(a)") +
+  theme_classic() +
+  theme(
+    legend.position = "right",
+    legend.title = element_blank()
+  )
 
+# 3. Middle Row: Panels (b) and (c) with Shared Y-Axis (0 to 8)
+plot_b <- ggplot(
+  data = figure3.df |> filter(panel_letter == "b"),
+  mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`)
+) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 8)) +
+  labs(x = NULL, y = expression(DOC~(mg~g^-1)), title = "(b) 2014") +
+  theme_classic() +
+  theme(legend.position = "none")
+
+plot_c <- ggplot(
+  data = figure3.df |> filter(panel_letter == "c"),
+  mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`)
+) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0, 8)) +
+  labs(x = NULL, y = NULL, title = "(c) 2014") +
+  theme_classic() +
+  theme(legend.position = "none")
+
+# 4. Bottom Row: Panels (d) and (e) with Custom X-Axis Labels & Shared Y-Axis (0.5 to 2.5)
+plot_d <- ggplot(
+  data = figure3.df |> filter(panel_letter == "d"),
+  mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`)
+) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0.5, 2.5)) +
+  labs(x = "CV of temperature", y = expression(DOC~(mg~g^-1)), title = "(d) 2015") +
+  theme_classic() +
+  theme(legend.position = "none")
+
+plot_e <- ggplot(
+  data = figure3.df |> filter(panel_letter == "e"),
+  mapping = aes(x = `x value`, y = `DOC (mg g^-1)`, color = `litter type`)
+) +
+  geom_point(size = 2.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  scale_color_manual(values = color_palette) +
+  scale_y_continuous(limits = c(0.5, 2.5)) +
+  labs(x = "CV of RH", y = NULL, title = "(e) 2015") +
+  theme_classic() +
+  theme(legend.position = "none")
+
+# 5. Render exact 3-row layout grid
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(3, 2, heights = grid::unit(c(1, 0.8, 0.8), "null"))))
+
+# Row 1: Plot (a) spanning both columns
+print(plot_a, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1:2))
+
+# Row 2: Plots (b) and (c)
+print(plot_b, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
+print(plot_c, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 2))
+
+# Row 3: Plots (d) and (e) with distinct CV titles
+print(plot_d, vp = grid::viewport(layout.pos.row = 3, layout.pos.col = 1))
+print(plot_e, vp = grid::viewport(layout.pos.row = 3, layout.pos.col = 2))
 
 ```
 
@@ -323,7 +396,7 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Wang2017_Figure3_JK.csv Wang2017_Figure3_al.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Wang2017_Figure3_JK.csv Wang2017_Figure3.csv
 ```
 
 ## Methods
