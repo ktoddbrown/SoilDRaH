@@ -1,6 +1,6 @@
 # Data Rescue Workflow
 Katherine Todd-Brown
-2026-January
+2026-September
 
 - [Understanding data source](#sec-UndertandingDataSource)
   - [Identify, find, and read data
@@ -9,46 +9,52 @@ Katherine Todd-Brown
   - [Expert review](#expert-review)
 - [Transcribing data](#sec-TranscribingData)
   - [Prep documents](#prep-documents)
+  - [Transcribe](#transcribe)
 - [Reviewing transcripts](#sec-ReviewingTranscripts)
 
 This workflow provides guidance for moving data out of a pdf manuscript,
 report, or other non-machine readable format into a machine readable
-format. See the data rescue template at
-`01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd` for detailed
-checklist.
+format. The data rescue is the first stage in the
+rescue-harmonize-curate process that elevates data from a non-machine
+readable format (rescue) to inter-operable data collection (harmonize)
+to a analysis-ready data product (curate). This workflow document is
+meant to supplement the data rescue template
+`01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd`.
 
 Data rescue is the transformation of information from a non-machine
 readable format to a machine readable one. This can include scanning
 paper copies of reports or records, transcribing scanned records into
 flat text documents, or extracting x-y values from a scanned graph.
 Generally this stage should be as close to the original information as
-practical for specific purpose, and should be extendable for future
-purpose. Information here may be primary or meta data. This stage must
+practical. Information here may be primary or meta data. This stage must
 maintain provenance of the data including links to the original source,
 how the data was made machine readable, what data was not rescued, and
 who did this work.
 
 | Data Rescue | Lead | Do | Measure |
 |----|----|----|----|
-| Input: Understand data source <a href="#sec-UndertandingDataSource" class="quarto-xref">Section 1</a> | Identify, find, and read the paper | Summarize the data in paper and identify relevant components | *Expert Review*: Does the summary reflect the paper? is it shorter then the paper itself? |
-| Transformation: Transcribe the data <a href="#sec-TranscribingData" class="quarto-xref">Section 2</a> | Prep the spreadsheets and any figure capture software | Transcribe data from text, tables, and figures | Compare and reconcile data from second transcriber |
-| Output: Push rescue to github <a href="#sec-ReviewingTranscripts" class="quarto-xref">Section 3</a> | Prep transcription package | Pull request to incorporate the data rescue into the repository | *Expert Review*: Does the pull request have the documentation identified below? Does the ReadMe render? |
+| Input: Understand data source <a href="#sec-UndertandingDataSource" class="quarto-xref">Section 1</a> | Identify, find, and read the paper | Summarize the data in paper and identify relevant components | *Expert Review*: Are the relevant data elements identified? |
+| Transformation: Transcribe the data <a href="#sec-TranscribingData" class="quarto-xref">Section 2</a> | Prep the spreadsheet and figure capture software | Transcribe data from text, tables, and figures | Cross check - Compare and reconcile data from second transcriber |
+| Output: Push rescue to github <a href="#sec-ReviewingTranscripts" class="quarto-xref">Section 3</a> | Prep transcription package and render ReadMe | Pull request to incorporate the data rescue into the repository | *Expert Review*: Does the pull request have the documentation identified below? Are there obvious errors that would cause the code not to render? |
 
 This process should result in the following documentation:
 
-- A ReadMe file with (qmd or Rmd)
+- A ReadMe file with (qmd-format)
   - human readable summary of data source with context for data rescue
-  - specific plan for fit-for-purpose data rescue
-  - all contributors identified in the metadata
-- A data transcription(s) that have been reconciled from two independent
-  data transcriptions. Data transcriptions may include,
-  - transcriptions of tables with fit for purpose information
-  - x-y extracted data points from figures
-  - transcription of methods section with paired BibTex formatted
-    reference
-- BibTex formatted file with reference to
-  1)  the original the data source(s)
-  2)  citations from the methods section
+  - all contributors identified in the metadata and their time log
+  - code chunks that read in the transcribed data and displays it in a
+    way that allows comparison with the original document
+  - code that cross checks at least two transcriptions and displays any
+    results
+- Data elements that have been reconciled from two independent
+  transcriptions. Data elements may include,
+  - tables (csv-format)
+  - x-y extracted data points from figures (csv-format)
+  - methods (md-format) with paired BibTex formatted reference
+    (bib-format)
+- Two bibTex formatted file with reference to
+  - the original the data source(s)
+  - citations from the data elements transcription
 
 ## Understanding data source
 
@@ -56,41 +62,70 @@ This process should result in the following documentation:
 
 Data sources can be identified in a number of different ways but will
 generally be nominated by an expert in the field in connection for a
-specific desired re-analysis. Reading the data source can include
-reviewing manuscripts from the primary literature and their supplemental
-information, or published agency reports. Specific attention should be
-paid to the methods section, and any tables or figures. Generally there
-will be a specific re-analysis identified and understanding should be
-targeted towards this purpose.
+specific desired re-analysis. Once a set of papers is identified a
+curation file will be created that will generally hold a list or table
+of files to be rescued (for example:
+https://github.com/ktoddbrown/SoilDRaH/blob/main/03_DataCuration/HiCSC/HiCSC2025.qmd)
+Most people start their data rescue working from the identified sources
+in the data curation file.
 
-*Example:*
+Once the data source as been selected create a github issue using the
+Data Rescue template that identifies the citation, working branch (this
+can be updated later) and any people you expect to be working on this
+with you (also something that can be created later). This will allow
+other people to see that the data source is being worked on and prevent
+duplicative efforts.
 
-> Townsend, A.R., Vitousek, P.M. and Trumbore, S.E. (1995), Soil Organic
-> Matter Dynamics Along Gradients in Temperature and Land Use on the
-> Island of Hawaii. Ecology, 76: 721-733.
-> <https://doi.org/10.2307/1939339> is identified as a data source for
-> the Hawai’i Soil Organic Carbon Database <https://osf.io/hmtv6/> as
-> part of the
-> [HiCSC](https://github.com/ktoddbrown/SoilDRaH/wiki/Hawaii-SOC).
+Finally the data source must be read in it’s entirety to understand the
+context for that data. Generally there will be a specific re-analysis
+identified and understanding should be targeted towards this purpose.
+Reading the data source can include reviewing manuscripts from the
+primary literature and their supplemental information, or published
+agency reports. Specific attention should be paid to the methods
+section, and any tables or figures.
 
 ### Summarize and propose plan
 
-Write a short summary of the data in the data source. This should
-include an overview of all the data in the source and highlight specific
-sections or components for fit-for-purpose rescue. You should identify
-key information in the methods section, individual tables and figures.
-This summary is intended to provide a proposal for the data rescue plan
-to be reviewed by an expert.
+At this point you are ready to propose a plan to rescue specific data
+elements of your source. Copy the
+`https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/_TemplateYYYY`
+and rename this new folder by the last name of the first author followed
+by year of publication. Follow the template and add your name and
+affiliation in the YAML header as well as any known team members. Then
+describe the data source you are working with and the curation that this
+is associated with including an overview of all the data in the source
+and highlight specific sections or components for fit-for-purpose
+rescue. You should identify key information in the methods section,
+individual tables and figures under the `Fit for purpose` section as
+well as list the figures and tables you plan to rescue in the
+`Data rescue plan` list. Push this new folder with the modified readme
+file to a new branch on your fork.
 
 ### Expert review
 
-Pass the summary and proposed plan to a reviewer. This reviewer should
+Pass the summary and proposed plan to a reviewer by tagging them in your
+original issue, be sure to update the fork and branch link to reflect
+where your readme with the data rescue plan is located (for example:
+https://github.com/ktoddbrown/SoilDRaH/issues/304). This reviewer should
 have some degree of familiarity of the methodologies used in the study
-and the proposed reanalysis. The reviewer should consider check that:
+and the proposed reanalysis. The reviewer should:
 
--\[ \] Does the summary reflect the paper while being shorter then the
-paper itself? -\[ \] Does the identified elements in the data rescue
-plan serve the purpose of the reanalysis?
+1)  Pull source paper and skim
+2)  Check for ‘extra’ data identified in plan
+3)  Check that the location of target data in the source document is
+    included in the rescue plan and correct
+4)  Skim for additional data that got missed, often looking for
+    components (e.g. bulk density, organic fraction, coarse fraction …)
+5)  Access for unusual rescue methods that require follow up
+    guidance/training - high number of points in figures (\>50,
+    requiring OCR code or more people) - very large tables (\>2 pages,
+    PDF table read code or more people) - information in archived data
+    files (download rather then transcribe) - information in proprietary
+    format (export rather then transcribe)
+
+Finally comment on the issue with guidance on any need modifications.
+For example, can a table be dropped or does a figure need to be added to
+the data rescue.
 
 ## Transcribing data
 
@@ -104,7 +139,8 @@ format into a more structured machine readable format. Yes, technically
 a PDF is machine readable in many cases however there are several issues
 with PDFs that make this a non-ideal format. In the end it’s often more
 work to try to automate this portion then it is to go in and transcribe
-the data via manual entry.
+the data via manual entry, edge cases where this is not the case should
+be caught by your expert review in the prior step.
 
 Issues around optical character recognition, special characters, common
 formatting (like supper/sub scripts), header/footer information, table
@@ -116,15 +152,28 @@ modern PDFs will often have special characters or formatting which may
 or may not be correctly read by scripts. Information like page number or
 headers/footers will also be read in sequentially with the primary text.
 Tables will often have unclear column splits (as far as a text reader is
-concerned) and sub-tables may require additional considerations. Finally
-figures like graphs are completely cryptic to text readers.
+concerned) and sub-tables may require additional considerations.
+Finally, figures like graphs are completely cryptic to text readers.
 
 ### Prep documents
 
-Generally you will have three types of data capture files: a
+Generally, you will have three types of data capture files: a
 [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 for the methods section, a spreadsheet for the table and figure
-captures, and software for the figure x-y captures.
+captures, and software for the figure x-y captures. RStudio is a pretty
+good markdown editor, although you will need to ensure that the YAML
+header is removed. There are other markdown editors out there and you
+are encouraged to explore your options here. A spreadsheet software that
+allows you to enter tablular data (for example Excel or Numbers) is
+recommended rather then directly transcribing into a text-based csv
+file. Finally, figure x-y capture software like
+[PlotDigitizer](https://plotdigitizer.com/app) will capture mouse click
+locations allowing you to translate figures into a set of coordinates.
+If you have never worked with these files or software you may wish to
+look up online tutorials and familarize yourself with them before moving
+on.
+
+### Transcribe
 
 #### Methods
 
@@ -192,6 +241,8 @@ With this in mind, here are some general practices:
     export nicely to csv tables. You should strive to preserve the
     structure of the data by repeating entries either in the header or
     as a new column.
+
+#### Compare transcriptions
 
 ## Reviewing transcripts
 
