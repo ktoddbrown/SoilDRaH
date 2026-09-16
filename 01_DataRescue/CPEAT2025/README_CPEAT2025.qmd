@@ -562,8 +562,8 @@ doi_core <- datafunction.lvl0.ls$data$study |>
 ### Also check to make sure we have their replacements
 replaced_core <- datafunction.lvl0.ls$data$study |>
   #remove 112 dois that have been replaced
-  filter(of_variable %in% 'replaced_by') #|>
-mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
+  filter(of_variable %in% 'replaced_by') |>
+  mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
 
 if(all(replaced_core$replacement_doi %in% doi_core$doi)){
   if(verbose) message('Replacement cores present in dataset')
@@ -706,6 +706,45 @@ if(isTRUE(all.equal(datafunction.lvl1.ls, lvl1_data.ls))){
   print('There is a mismatch in the data objects between the code and the read function at level 1.')
 }
 ```
+
+```{r}
+#| label: ISCN4SemanticProposal
+
+proposedSemantics.filename <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
+
+semantics.df <- datafunction.lvl1.ls$data$core |>
+  select(of_variable = of_variable_DRaH, is_type) |>
+  unique() |>
+  filter_out(is.na(of_variable) | is.na(is_type)) |>
+  bind_rows(
+    datafunction.lvl1.ls$data$variable |>
+      select(of_variable = of_variable_DRaH, is_type) |>
+      unique() |>
+      filter_out(is.na(of_variable) | is.na(is_type))
+  ) |>
+  bind_rows(
+    datafunction.lvl1.ls$data$primary |>
+      select(of_variable = of_variable_DRaH, is_type) |>
+      unique() |>
+      filter_out(is.na(of_variable) | is.na(is_type))
+  ) |>
+  mutate(site_id = 'CPEAT2025') |>
+  arrange(of_variable) 
+
+#Write things the first time and then just check
+#write_csv(semantics.df, file = proposedSemantics.filename,
+#  append = TRUE, col_names = FALSE)
+
+ISCN4Semantics <- read_csv(proposedSemantics.filename)
+
+if(anti_join(semantics.df, ISCN4Semantics,
+             by = join_by(of_variable, is_type, site_id)) |> nrow() > 0){
+  stop('new variables')
+}else{
+  print('Proposed semantics are included.')
+}
+```
+
 
 ```{r}
 #| label: updateVocab

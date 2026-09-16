@@ -1,0 +1,26 @@
+name: 02_DataHarmonization
+title: "[AuthorLastYYYY or ShortNameYYYY] Level 1"
+labels: "Data Harmonization"
+description: "This issue tracks a data contribution as it moves from a level 0 data rescue to a level 1 data harmonization."
+body:
+  - type: input
+    attributes:
+      label: "Data rescue issue"
+      description: "What was the data rescue issue?"
+      placeholder: "#102"
+  - type: textarea
+    attributes:
+      label: Citation
+      description: "What is the orginal source citation?"
+      placeholder: "Austin, A., Vitousek, P. Nutrient dynamics on a precipitation gradient in Hawai'i. Oecologia 113, 519–529 (1998). https://doi.org/10.1007/s004420050405"
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: "Working branch"
+      description: "Link to data rescue branch which is likely on a different fork then this primary repository."
+  - type: input
+    attributes:
+      label: Team
+      description: "Who are you working with on this issue you would like to tag in? List their GitHub usernames here"
+      placeholder: "@ktoddbrown"

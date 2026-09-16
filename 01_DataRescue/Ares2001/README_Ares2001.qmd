@@ -62,7 +62,7 @@ timelog:
       start: 2025-01-22 T1530
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P25M
+      duration: PT25M
 ---
 
 ```{r}

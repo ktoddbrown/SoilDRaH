@@ -83,7 +83,7 @@ timelog:
       start: 2026-02-26 T1400
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P15M
+      duration: PT15M
   - activity: 
       description: Lead Transcription and ReadMe Update
       who: SavaScott #github username

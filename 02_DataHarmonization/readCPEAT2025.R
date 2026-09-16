@@ -17,6 +17,7 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   
   #### Process the download URLs from bib citation ####
   allMethodCitations <- bibtex::read.bib(file = methodsCitation.file)
+  primaryCitation <- bibtex::read.bib(file = primaryCitation.file)
   
   allURLs.df <- plyr::ldply(allMethodCitations, 
                             .fun = function(xx){
@@ -104,9 +105,12 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     #"10.1594_PANGAEA.928439" has an extra 3 at the end of the 
     #file randomly, this throws a warning but does not affect how the 
     #data is read in
-    primary.df <- file.str |> #all.text[388] |> #
-      stringr::str_extract(regex('(?<=\\*/\\n).*', multiline=TRUE, dotall=TRUE)) |>
-      readr::read_tsv(col_types = readr::cols(.default = readr::col_character()),
+    primary.df <- #all.text[388] |> #
+      readr::read_tsv(I(
+        stringr::str_extract(file.str, regex('(?<=\\*/\\n).*', 
+                                             multiline=TRUE, dotall=TRUE))
+      ),
+        col_types = readr::cols(.default = readr::col_character()),
                       skip = 1, col_names = FALSE) |>
       dplyr::mutate(across(.cols = tidyselect::everything(), .fns = trimws)) |>
       dplyr::mutate(row_id = paste0('R',1:n())) |>
@@ -348,9 +352,9 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     #Read in a list of all the bib files
     citation = list(
       #Citation for the article transcriptions are pulled from
-      primary = bibtex::read.bib(file = primaryCitation.file), 
+      primary = primaryCitation, 
       #Citations for all referenced articles
-      methods = bibtex::read.bib(file = methodsCitation.file)
+      methods = allMethodCitations
     ),
     #Read in the text transcription of the primary website
     method = readr::read_lines(file = methods.file),
@@ -455,9 +459,9 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
     #Read in a list of all the bib files
     citation = list(
       #Citation for the article transcriptions are pulled from
-      primary = bibtex::read.bib(file = primaryCitation.file), 
+      primary = primaryCitation, 
       #Citations for all referenced articles
-      methods = bibtex::read.bib(file = methodsCitation.file)
+      methods = allMethodCitations
     ),
     #Read in the text transcription of the primary website
     method = readr::read_lines(file = methods.file),
