@@ -29,6 +29,14 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role:
       - transcription: Table 1, Figure 1
+  - id: mbalvarez72
+    name:
+      given: Matthew
+      family: Alvarez
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: Methods.md, Figure 1
   - id: angelacanini-a11y
     name:
       given: Angela
@@ -161,8 +169,7 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P120M
-     
-duration: P10M      duration: P10Mversion: 'vs202512' #template version, remove before use
+version: 'vs202512' #template version, remove before use
 ---
 
 
