@@ -86,7 +86,6 @@ affiliations:
 library(tidyverse)
 library(kableExtra)
 library(bibtex)
-library(formula.tools)
 
 # data files for level 0
 methods.file <- "Binkley1999_Methods.md"
