@@ -301,11 +301,18 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                 'soil_sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.ls$method[22]),
                 'soil_sampling', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.ls$method[12]),
                 'stand_type', 'value', 'E. saligna', paste('Method ln3:', data.lvl0.ls$method[3]),
-              'current_land_use', 'description', '4-ha plantation of *E. saligna*', paste('Method ln1:', data.lvl0.ls$method[1]),
-              'site_history', 'description', 'Sugarcane was cropped on this site for more than 80 yr.', paste('Method ln3:', data.lvl0.ls$method[3]),
                  'citation', 'value', format(data.lvl0.ls$citation$primary), 
                 'journal_citation', 'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
-    
+
+land_use.df <- tibble(~land_use_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
+                      #Group the two different land use descriptions, LU1 is the current
+                      'LU1', 'land_use', 'description', '4-ha plantation of *E. saligna*', paste('Method ln1:', data.lvl0.ls$method[1]),
+              'LU1', 'land_use', 'time_period', '1994/1997', paste('Method ln11,23:', paste(data.lvl0.ls$method[11], data.lvl0.ls[23], collapse = '...')),
+              #LU2 is the historical land use
+              'LU2', 'land_use', 'description', 'Sugarcane', paste('Method ln3:', data.lvl0.ls$method[3]),
+              'LU2', 'land_use', 'duration', 'P80Y', paste('Method ln3:', data.lvl0.ls$method[3])
+)
+
 #### Table 1 ####
                 
 Table1Primary <- data.lvl0.ls$data$Table1$primary |>
