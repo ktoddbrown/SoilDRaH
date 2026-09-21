@@ -117,7 +117,7 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-readsource.file <- '../../../02_DataHarmonization/readAustin2010.R'
+readsource.file <- '../../02_DataHarmonization/readAustin2010.R'
 source(readsource.file)
 
 #semantic files for level 1
@@ -139,7 +139,6 @@ They also used wavelength-specific light attenuation filters to determine what w
 ## Tables and figures
 
 - Table
-
 This paper contains no tables.
 
 - Figure 
