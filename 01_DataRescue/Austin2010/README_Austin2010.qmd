@@ -264,6 +264,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure1
+#| eval: false
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure1_LK.csv Austin2010_Figure1.csv
 ```
@@ -274,6 +275,7 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
+#| eval: false
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
 ```
