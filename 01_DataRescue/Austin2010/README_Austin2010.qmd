@@ -3,7 +3,6 @@ title: "Data Rescue: Austin 2010"
 format:
   html:
     toc: true
-=======
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -29,7 +28,6 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
-      
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -40,7 +38,6 @@ affiliations:
     address: "365 Weil Hall \nP.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
-
 timelog:
   - activity: 
       description: Start moving rescue from old template to new template, particularly the README.
@@ -120,8 +117,8 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-readsource.file <- '../../../R/readAustin2010.R'
-source('readsource.file')
+readsource.file <- '../../../02_DataHarmonization/readAustin2010.R'
+source(readsource.file)
 
 #semantic files for level 1
 of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
@@ -143,7 +140,7 @@ They also used wavelength-specific light attenuation filters to determine what w
 
 - Table
 
-<!-- This paper contains no tables --->
+This paper contains no tables.
 
 - Figure 
   1) Mass loss over experimental attenuation of specific regions of the solar spectrum; panel A covers mass loss of litter and panel B covers mass loss of a synthetic cellulose-lignin substrate.
@@ -215,12 +212,11 @@ These files are in the Austin2010 data rescue.
   - [X] Create a bib file with the citations from the methods section (note: none included in this paper's methods section.)
   - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
-
   - [X] cross check with second transcriber for tables and methods, and resolve any differences
   - [X] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions suggested in your pull request review
-  - [ ] celebrate!
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
+  - [X] address any revisions suggested in your pull request review
+  - [X] celebrate!
 
 ## Figure 1
 
@@ -319,7 +315,6 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
->>>>>>> 5e184f9c7925ddcadcd5c6f469fb2023ad808b1f
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1

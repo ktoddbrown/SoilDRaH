@@ -152,7 +152,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Day 2007 | @Day2007 | [227](https://github.com/ktoddbrown/SoilDRaH/issues/227) | angelacanini-a11y |
 | Bravo-Oviedo 2017 | @BravoOviedo2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
 | Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
-| Day 2007 | @Day2007 | [227](https://github.com/ktoddbrown/SoilDRaH/issues/227) | angelacanini-a11y |
 | Santos 1984 | @Santos1984 | [241](https://github.com/ktoddbrown/SoilDRaH/issues/241) | laylakalandjian |
 | Wang 2017 | @Wang2017 | [251](https://github.com/ktoddbrown/SoilDRaH/issues/251) | JennavieveK |
 | Barba 2016 | @Barba2016 | [252](https://github.com/ktoddbrown/SoilDRaH/issues/252) | semantic-nomad |
