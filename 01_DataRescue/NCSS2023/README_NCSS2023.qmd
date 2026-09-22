@@ -67,7 +67,7 @@ timelog:
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       start: "2026-09-22"
-      duration: PT3H
+      duration: PT4H
 ---
 
 
@@ -110,6 +110,7 @@ if(file.exists(readsource.file)){
 #of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
 #is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
+keepVars <- c(ls(), 'keepVars')
 ```
 
 
@@ -283,7 +284,9 @@ data.lvl0.ls <- list(
   meta = lvl0.meta
 )
 
-rm(lvl0.primary) #remove large file
+keepVars <- c(keepVars, 'data.lvl0.ls')
+
+rm(list = setdiff(ls(), keepVars)) #remove large file
 ```
 
 
@@ -440,13 +443,13 @@ lab_chemical_properties.names <- c(
 #'gypsum_lt_20_mm', 
 #'ca_to_mg_ratio', 'total_estimated_salts_satx', 'exchangeable_sodium', 'sodium_absorption_ratio', 'phosphorus_anion_resin_capacity')
 
-#### Layer property names ####
+### Layer property names ####
 #cat(paste0("'", names(data.lvl0.ls$data$lab_layer), "'", collapse = ', '))
 
 lab_layer.names <- c(
   #'OBJECTID', 'objectid_1', 
   'layer_key', #'labsampnum', 
-  'project_key', 
+  #'project_key', 
   'site_key', 'pedon_key', 
   'layer_sequence', 
   'layer_type', 
@@ -458,7 +461,7 @@ lab_layer.names <- c(
   #'stratified_textures_flag', 
   #'texture_description')
 
-#####Pedon names ####
+###Pedon names ####
 #cat(paste0("'", names(data.lvl0.ls$data$lab_pedon), "'", collapse = ', '))
 lab_pedon.names <- c(#'OBJECTID', 'objectid_1', 
                      'pedon_key', #'pedlabsampnum', 
@@ -468,7 +471,7 @@ lab_pedon.names <- c(#'OBJECTID', 'objectid_1',
                      #'fldsyb', 'mapsyb', 
                      'site_key')
 
-#####Site names ####
+###Site names ####
 #cat(paste0("'", names(data.lvl0.ls$data$lab_site), "'", collapse = ', '))
 lab_site.names <- c(
   #'OBJECTID', 'objectid_1', 
@@ -486,11 +489,7 @@ lab_site.names <- c(
 #| label: createLvl1
 
 
-# bulk_density <- data.lvl0.ls$data$lab_method_code |>
-#   filter(str_detect(requested_anal_name, '[Bb]ulk [Dd]ensity')) |>
-#   filter_out(str_detect(requested_anal_name, '[Bb]ar') |
-#                str_detect(requested_anal_name, '[Mm]oist') |
-#                str_detect(requested_anal_name, 'Rewet'))
+###Physical table####
 
 #pull bulk density, coarse fraction, and LOI
 physical.df <- data.lvl0.ls$data$lab_physical_properties |>
@@ -526,6 +525,7 @@ physical.df <- data.lvl0.ls$data$lab_physical_properties |>
 #check for unknowns with this code
 #physical.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
 
+###Chemistry table####
 chemical.df <- data.lvl0.ls$data$lab_chemical_properties |>
   select(all_of(lab_chemical_properties.names)) |> #325 740 obs
   filter(is.finite(total_carbon_ncs - caco3_lt_2_mm) |
@@ -562,7 +562,7 @@ chemical.df <- data.lvl0.ls$data$lab_chemical_properties |>
 #chemical.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
 
 
-
+###Layer table####
 #select => filter => mutate - character/table/source => pivot => mutate - types/varibles
 layer.df <- data.lvl0.ls$data$lab_layer |>
   select(all_of(lab_layer.names)) |>
@@ -583,6 +583,7 @@ layer.df <- data.lvl0.ls$data$lab_layer |>
                             .default = 'unknown')) 
   # layer.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
 
+###Pedon table####
 #select => filter => mutate - character/table/source => pivot => mutate - types/varibles
 pedon.df <- data.lvl0.ls$data$lab_pedon |>
   select(all_of(lab_pedon.names)) |>
@@ -607,6 +608,7 @@ pedon.df <- data.lvl0.ls$data$lab_pedon |>
 
 #pedon.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
 
+###Site table####
 #select => filter => mutate - character/table/source => pivot => mutate - types/varibles
 site.df <- data.lvl0.ls$data$lab_site |> 
   select(all_of(lab_site.names)) |>
@@ -636,15 +638,45 @@ site.df <- data.lvl0.ls$data$lab_site |>
     )
   )
 
-#TODO 1) pull column descriptions and 2) deal with merging tables w/ different keys
+###Merge keys ####
 
-#join the soil observations
+key.df <- layer.df |> 
+  select(site_key, pedon_key, layer_key) |>
+  unique() |> #1 194 008 obs
+  filter(!is.na(site_key),
+         !is.na(pedon_key),
+         !is.na(layer_key)) #299 323 obs
 
-soilObs.df <- physical.df |>
-  bind_rows(chemical.df)
+soilObs.df <- key.df |>
+  left_join(layer.df,
+            by = join_by(site_key, pedon_key, layer_key)) |>
+  bind_rows( key.df |>
+               left_join(bind_rows(physical.df, chemical.df),
+                         by = join_by(layer_key)))
 
+key.df <- layer.df |> 
+  select(site_key, pedon_key) |>
+  unique() |> #50 986 obs
+  filter(!is.na(site_key),
+         !is.na(pedon_key)) #50 985 obs
+
+geoObs.df <- key.df  |>
+  left_join(pedon.df,
+            by = join_by(site_key, pedon_key)) |>
+  bind_rows(key.df |>
+              left_join(site.df,
+                        by = join_by(site_key),
+                        #some locations are observed many times
+                        relationship = 'many-to-many') )
+# names(physical.df) #layer_key
+# names(chemical.df) #layer_key
+# names(pedon.df) #pedon_key, site_key
+# names(layer.df) #layer_key, site_key, pedon_key
+# names(site.df) #site_key
+
+###Pull metadata from column discriptions####
 meta.df <- data.lvl0.ls$meta$columns |>
-  semi_join(soilObs.df,
+  semi_join(bind_rows(geoObs.df, soilObs.df),
             by = join_by(table_name, column_name)) |>
   filter_out(str_detect(column_name, 'method$')) |> #remove method columns
   mutate(from_source = 'Web site table: NCSS Columns Description') |>
@@ -657,19 +689,37 @@ meta.df <- data.lvl0.ls$meta$columns |>
     column_description == "The oven dry weight of the less than 2 mm soil material per unit volume of soil exclusive of the desiccation cracks, measured on a coated clod." ~ 'fine-earth g per whole-soil cm3', #expert interpretation
     column_description == 'Bulk density, <2mm fraction, air-dry is the weight per unit volume of the <2 mm fraction, with volume measured after air drying.  It is reported as grams per cubic centimeter on a <2 mm base.' ~ 'fine-earth g per fine-earth cm3',
     column_description == "The best estimate of the total horizon fragment weight, in percent, on a whole soil basis." ~ 'whole-soil mass percent',
+    column_name %in% c('hzn_top', 'hzn_bot') ~ 'cm',
+    column_name %in% c('layer_sequence', 'layer_type',
+                       'observation_date',
+                       'horizontal_datum_name',
+                       'latitude_direction', 'longitude_direction') ~ NA_character_,
+    column_name %in% c('latitude_std_decimal_degrees', 'longitude_std_decimal_degrees') ~ 'decimal degrees',
     .default = 'unknown'
-  ))
+  )) |>
+  select(table_name, column_name, from_source, description = column_description, unit) |>
+  pivot_longer(cols = c(description, unit),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  left_join(
+    bind_rows(
+      select(soilObs.df, table_name, column_name, of_variable) 
+      |> unique(),
+      select(geoObs.df, table_name, column_name, of_variable) 
+      |> unique()),
+    by = join_by(table_name, column_name))
 
 
-#### Create level 1 #####
+### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
-# data.lvl1.ls <- list(
-#   meta = bind_rows(studyMeta, Table1Meta),
-#   primary = bind_rows(Table1Primary)|>
-#     arrange(row_id, column_name,
-#             of_variable, is_type, with_entry, from_source)
-#   )
+data.lvl1.ls <- list(
+  meta = meta.df,
+  layer = soilObs.df,
+  geolocation = geoObs.df
+  )
 
+keepVars <- c(keepVars, 'data.lvl1.ls')
+rm(list = setdiff(ls(), keepVars)) #remove large file
 ```
 
 
