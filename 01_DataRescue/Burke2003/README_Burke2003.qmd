@@ -39,15 +39,38 @@ author:
     note: https://github.com/Misheph
 ---
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
-library(tidyverse)
-library(kableExtra)
-library(bibtex) #read in the bib file to dataframe
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
 
-methods.file <- 'Burke2003_Methods.md'
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Burke2003_Methods.md"
 table1.file <- 'Burke2003_Table1.csv'
+
+# Bibliography files
 primaryCitation.file <- 'Burke2003.bib'
 methodsCitation.file <- 'Burke2003_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../02_DataHarmonization/readBurke2003.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
 ```
 
 This documents the data transcription for @Burke2003.
@@ -143,7 +166,7 @@ These files are in the @Burke2003 data rescue.
 - [x] submit to independent review
 - [ ] archive on SoilDRaH
 
-
+<!----
 ## Citation notes from Methods
 
 Below are the citation notes from the methods section.
@@ -199,7 +222,7 @@ Some citations are missing, those are noted here and how best guess were generat
   + Rieley, G. Derivatization of organic compounds prior to gas chromatographic–combustion–isotope ratio mass spectrometric analysis: Identification of isotope fractionation processes. Analyst 1994 119 915–919.
   + direct export
 
-
+---->
 # Level 0 Data
 
 ```{r readLevel0}
@@ -223,4 +246,62 @@ data.lvl0.df <- list(citation =
                                 )))
 ```
 
+# Level 1
+
+```{r Level1}
+
+#### Methods section only ####
+
+studyMeta <- tribble(~site_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
+  # Hawaii
+  'Hawaii', 'region', 'site', 'Hamakua Coast, Hawaii, northeast flank of Mauna Kea', paste('Method ln7:', data.lvl0.df$method[7]),
+  'Hawaii', 'region', 'state', 'HI', paste('Method ln7:', data.lvl0.df$method[7]),
+  'Hawaii', 'elevation', 'value', '700', paste('Method ln7:', data.lvl0.df$method[7]),
+  'Hawaii', 'elevation', 'unit', 'm', paste('Method ln7:', data.lvl0.df$method[7]),
+  'Hawaii', 'soil_class', 'value', 'Typic Distrandepts', paste('Method ln8:', data.lvl0.df$method[8]),
+  'Hawaii', 'soil_age', 'maximum', '15000', paste('Method ln8:', data.lvl0.df$method[8]),
+  'Hawaii', 'soil_age', 'minimum', '20000', paste('Method ln8:', data.lvl0.df$method[8]),
+  'Hawaii', 'soil_age', 'unit', 'yr', paste('Method ln8:', data.lvl0.df$method[8]),
+  'Hawaii', 'rainfall', 'maximum', '2500', paste('Method ln9:', data.lvl0.df$method[9]),
+  'Hawaii', 'rainfall', 'minimum', '4000', paste('Method ln9:', data.lvl0.df$method[9]),
+  'Hawaii', 'rainfall', 'unit', 'mm', paste('Method ln9:', data.lvl0.df$method[9]),
+  'Hawaii', 'air_temperature', 'value', '22', paste('Method ln10:', data.lvl0.df$method[10]),
+  'Hawaii', 'air_temperature', 'unit', '°C', paste('Method ln10:', data.lvl0.df$method[10]),
+  'Hawaii', 'stand_age', 'value', '90', paste('Method ln12:', data.lvl0.df$method[12]),
+  'Hawaii', 'stand_age', 'unit', 'yr', paste('Method ln12:', data.lvl0.df$method[12]),
+  'Hawaii', 'observation_time', 'value', '1997', paste('Method ln17:', data.lvl0.df$method[17]),
+
+  # Brazil
+  'Brazil', 'region', 'municiplaity', 'Piracicaba', paste('Method ln23:', data.lvl0.df$method[23]),
+  'Brazil', 'region', 'city', 'São Paulo', paste('Method ln23:', data.lvl0.df$method[23]),
+  'Brazil', 'region', 'country', 'Brazil', paste('Method ln23:', data.lvl0.df$method[23]),
+  'Brazil', 'elevation', 'value', '575', paste('Method ln23:', data.lvl0.df$method[23]),
+  'Brazil', 'elevation', 'unit', 'm', paste('Method ln23:', data.lvl0.df$method[23]),
+  'Brazil', 'rainfall', 'value', '1400', paste('Method ln24:', data.lvl0.df$method[24]),
+  'Brazil', 'rainfall', 'unit', 'mm', paste('Method ln24:', data.lvl0.df$method[24]),
+  'Brazil', 'air_temperature', 'value', '20', paste('Method ln24:', data.lvl0.df$method[24]),
+  'Brazil', 'air_temperature', 'unit', '°C', paste('Method ln24:', data.lvl0.df$method[24]),
+  'Brazil', 'soil_class', 'value', 'isothermic Typic Haplorthox', paste('Method ln25:', data.lvl0.df$method[25]),
+  'Brazil', 'stand_age', 'value', '27', paste('Method ln28:', data.lvl0.df$method[28]),
+  'Brazil', 'stand_age', 'value', '65', paste('Method ln28:', data.lvl0.df$method[28]),
+  'Brazil', 'stand_age', 'unit', 'yr', paste('Method ln28:', data.lvl0.df$method[28]),
+  'Brazil', 'observation_time', 'value', '1998', paste('Method ln28:', data.lvl0.df$method[28]),
+  'Brazil', 'mineralogy', 'clayey, kalonitic', paste('Method ln25:', data.lvl0.df$method[25]),
+
+  # Ecuador
+  'Ecuador', 'region', 'value', 'Western slope of Ecuadorian Andes', paste('Method ln38:', data.lvl0.df$method[38]),
+  'Ecuador', 'elevation', 'value', '1400', paste('Method ln38:', data.lvl0.df$method[38]),
+  'Ecuador', 'elevation', 'unit', 'm', paste('Method ln38:', data.lvl0.df$method[38]),
+  'Ecuador', 'total_rainfall', 'value', '3200', paste('Method ln39:', data.lvl0.df$method[39]),
+  'Ecuador', 'total_rainfall', 'unit', 'mm', paste('Method ln39:', data.lvl0.df$method[39]),
+  'Ecuador', 'mean_air_temperature', 'min', '17', paste('Method ln39:', data.lvl0.df$method[39]),
+  'Ecuador', 'mean_air_temperature', 'max', '26', paste('Method ln39:', data.lvl0.df$method[39]),
+  'Ecuador', 'mean_air_temperature', 'unit', '°C', paste('Method ln39:', data.lvl0.df$method[39]),
+  'Ecuador', 'soil_class', 'value', 'Andic Humitropepts', paste('Method ln40:', data.lvl0.df$method[40]),
+  'Ecuador', 'soil_age', 'value', '2500', paste('Method ln40:', data.lvl0.df$method[40]),
+  'Ecuador', 'soil_age', 'unit', 'yr', paste('Method ln40:', data.lvl0.df$method[40]),
+  'Ecuador', 'stand_age', 'value', '25', paste('Method ln43:', data.lvl0.df$method[43]),
+  'Ecuador', 'stand_age', 'unit', 'yr', paste('Method ln43:', data.lvl0.df$method[43]),
+)
+```
 
