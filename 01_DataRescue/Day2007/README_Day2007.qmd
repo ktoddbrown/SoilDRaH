@@ -118,7 +118,7 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P40M
-        - activity: 
+  - activity: 
       description: transcribed table 3
       who: bcheser #github username
       #when you started and ended, can be just a year or down to the minute
@@ -126,7 +126,7 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P2H30M
-     activity: 
+  - activity: 
       description: secondary transcription for table 2
       who: bcheser #github username
       #when you started and ended, can be just a year or down to the minute
@@ -134,7 +134,7 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P1H30M
-     activity: 
+  - activity: 
       description: created citations section
       who: bcheser #github username
       #when you started and ended, can be just a year or down to the minute
@@ -142,7 +142,7 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P1H00M
-   - activity: 
+  - activity: 
       description: edited activity section
       who: bcheser #github username
       #when you started and ended, can be just a year or down to the minute
@@ -210,30 +210,23 @@ This paper assessed whether exposure to solar ultraviolet-B radiation (UV-B) aff
 
 ## Fit for purpose: DeAD
 
-Main Variables of Interest: DeAD
+This data is identified as a data source for DeAD Project
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
-Location: Phoenix metropolitan area of central Arizona, USA (33.5 ° N, 111.8 ° W). The balcony site was an open, unshaded, second-story balcony (3.6 m x 2.0 m) on the southeast corner of a house in Scottsdale, AZ. The desert site was conducted in the L. tridentata desert at the Desert Botanical Gardens, Phoenix, AZ, 21 km from the balcony site.
 
-Duration: Stated in Materials and methods section under Experiments: balcony site was September 16, 2003 – February 22, 2004 (21 weeks) and desert site was December 22, 2003 – April 16, 2004 (16 weeks).
-
-Mass loss: Mass loss reported in table 1 as percent loss of initial mass.
-
-Solar exposure: Biologically effective solar UV-B dose was 85% of ambient in “near-ambient” treatment and 15% of ambient in “reduced” treatment.
+  + Location: Phoenix metropolitan area of central Arizona, USA (33.5 ° N, 111.8 ° W). The balcony site was an open, unshaded, second-story balcony (3.6 m x 2.0 m) on the southeast corner of a house in Scottsdale, AZ. The desert site was conducted in the L. tridentata desert at the Desert Botanical Gardens, Phoenix, AZ, 21 km from the balcony site.
+  + Duration: Stated in Materials and methods section under Experiments: balcony site was September 16, 2003 – February 22, 2004 (21 weeks) and desert site was December 22, 2003 – April 16, 2004 (16 weeks).
+  + Mass loss: Mass loss reported in table 1 as percent loss of initial mass.
+  + Solar exposure: Biologically effective solar UV-B dose was 85% of ambient in “near-ambient” treatment and 15% of ambient in “reduced” treatment.
 
 Other Variables of Interest:
 
-Litter species: L. tridentata litter sorted into three litter types stated in Materials and methods section under Litter source and preparation: (1) unaltered mixture of the leaves, twigs, and seeds, (2) twigs (<2mm diameter) only, and (3) leaves only.
+  + Litter species: L. tridentata litter sorted into three litter types stated in Materials and methods section under Litter source and preparation: (1) unaltered mixture of the leaves, twigs, and seeds, (2) twigs (<2mm diameter) only, and (3) leaves only.
+  + Microsite data: Reported in Materials and methods under Study sites section.
+  + Litter chemical composition: Reported in table 2 on a percent dry-mass basis.
+  + Litter bag materials: Reported in Materials and methods under the Litterbags section: 10 x 10 cm bags or envelopes constructed of either 125 uM-thick UVB-transparent film (transmission >90% through the UV-B and UV-A (315 - 400 nm) wavebands) or 125 uM-thick UV-B opaque film (sharp transmission cut-off below 325 nm). Holes of 2-mm diameter were drilled 1 cm apart throughout the top and bottom pieces of the film.
+  + Land management: Reported in Materials and methods under Experiments: at the balcony site, envelopes were placed in square, black plastic greenhouse trays (42 cm x 43.5 cm x 5.5 cm high sidewalls) with lattice bottom that allowed water to freely drain. Trays were anchored on top of wooden frames which were secured to the balcony floor. At the desert site, envelopes were placed directly on the ground 8 cm apart and secured to the ground by 13 cm long nails attached to 2-cm long flaps of Aclar.
 
-Microsite data: Reported in Materials and methods under Study sites section.
-
-Litter chemical composition: Reported in table 2 on a percent dry-mass basis.
-
-Litter bag materials: Reported in Materials and methods under the Litterbags section: 10 x 10 cm bags or envelopes constructed of either 125 uM-thick UVB-transparent film (transmission >90% through the UV-B and UV-A (315 - 400 nm) wavebands) or 125 uM-thick UV-B opaque film (sharp transmission cut-off below 325 nm). Holes of 2-mm diameter were drilled 1 cm apart throughout the top and bottom pieces of the film.
-
-Land management: Reported in Materials and methods under Experiments: at the balcony site, envelopes were placed in square, black plastic greenhouse trays (42 cm x 43.5 cm x 5.5 cm high sidewalls) with lattice bottom that allowed water to freely drain. Trays were anchored on top of wooden frames which were secured to the balcony floor. At the desert site, envelopes were placed directly on the ground 8 cm apart and secured to the ground by 13 cm long nails attached to 2-cm long flaps of Aclar.
-
-This data is identified as a data source for DeAD Project
-The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies. The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
 
 ## Files
 
@@ -255,8 +248,8 @@ These files are in the Day2007 data rescue.
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
-# Data Rescue working notes 
-
+# Level 0 - Data Rescue
+<!----
 ## Data Rescue Plan
 
 + Lead
@@ -281,6 +274,7 @@ These files are in the Day2007 data rescue.
   - [x] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
+---->
 
 ## Table 1
 
@@ -345,7 +339,7 @@ read_csv(file = table2.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTable1
+#| label: compareTable2
 #| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
@@ -380,7 +374,7 @@ read_csv(file = table3.file, #read in the specific file
 And is crosschecked with the secondary transcription
 
 ```{bash}
-#| label: compareTable1
+#| label: compareTable3
 #| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
@@ -436,7 +430,7 @@ Think of this as a lab notebook documenting how you found each citation.
   + manually entered or direct export
 ---->
 
-# Level 0 Data rescue
+## Construction
 
 This level 0 data read parses the transcribed files with minimal cleaning or transformations.
 
@@ -626,6 +620,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -653,6 +648,7 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -699,6 +695,7 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
