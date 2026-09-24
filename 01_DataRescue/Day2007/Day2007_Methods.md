@@ -3,14 +3,14 @@
 ## Study sites
 
 The experiment was conducted in the Phoenix metropolitan area of central Arizona, USA (33.5° N, 111.8° W).
-The climate of the region is hot and arid with a mean annual temperature of 22.5°C and total precipitation of 19.5 cm (@cervany1996climate).
+The climate of the region is hot and arid with a mean annual temperature of 22.5°C and total precipitation of 19.5 cm (@Cerveny1996).
 Visible and UV irradiance are relatively high in central Arizona because of its low latitude and the prevalence of clear, dry skies for much of the year.
-For example, Phoenix receives on average 85% of the annual total possible sunshine (@cervany1996climate).
+For example, Phoenix receives on average 85% of the annual total possible sunshine (@Cerveny1996).
 
 The first study site was an open, unshaded, second-story balcony ($3.6  \text{m} \times 2.0  \text{m}$) on the southeast corner of a house in Scottsdale, AZ, a suburb of Phoenix, referred to as the ‘balcony’ site. 
 In order to better mimic the natural conditions under which *L. tridentata* litter decomposes, we repeated the experiment at a second site in native *L. tridentata* desert at the Desert Botanical Gardens, Phoenix, AZ, 21 km from the first site.
 We refer to this as the ‘desert’ site.
-This site is in a native desert conservation area and consists of scattered *L. tridentata* shrubs (0.05 individuals/$m^2$, 18% foliar cover) with bare ground between shrubs (@day2002temporal).
+This site is in a native desert conservation area and consists of scattered *L. tridentata* shrubs (0.05 individuals/$m^2$, 18% foliar cover) with bare ground between shrubs (@Day2002).
 Our rationale for conducting the first experiment at the balcony site was:
 (1) This site was easily accessed on a daily basis which allowed us to work out treatment protocols in preliminary trials.
 An optimal design for litterbags was developed during initial trials here.
@@ -33,11 +33,11 @@ Just prior to placement in litterbags, litter was air dried again for 2 weeks, o
 
 Litter was placed in $10 \times 10 \text{cm}$ bags or envelopes constructed of either 125 $\mu$m-thick UVB-transparent film (Aclar Type 22A film, Proplastics, Linden, NJ; transmission >90% through the UV-B and UV-A (315–400 nm) wavebands) or 125 $\mu$m-thick UV-B-opaque film (Mylar-type Cadco clear polyester film, Cadillac Plastic and Chemical, Phoenix, AZ; sharp transmission cut-off below 325 nm).
 The Aclar envelopes represented a ‘near-ambient UV-B’ treatment while the Mylar-type envelopes represented a ‘reduced UV-B’ treatment.
-To our knowledge, neither of these film materials have the unintended and potentially toxic effect that cellulose acetate film has on some organisms (@krizek2004evidence).
+To our knowledge, neither of these film materials have the unintended and potentially toxic effect that cellulose acetate film has on some organisms (@Krizek2004).
 Each envelope was comprised of a top and bottom piece of the appropriate film, with the edges of the envelopes sealed with UV-B transparent tape (Scotch Multitask tape, transmission >90% through the UVB and UVA wavebands, 3M, St. Paul, MN).
 To allow water and microbes to reach the litter, we drilled 2-mm diameter holes, spaced 1 cm apart, throughout the top and bottom pieces of the film.
 We measured UV-B irradiance directly under the top film of envelopes under clear skies at midday in January with a UV-scanning spectroradiometer (OL 754, Optronic Laboratories, Orlando, FL).
-Biologically effective solar UV-B dose (based on the generalized plant damage action spectrum normalized to 300 nm, @caldwell1971solar), was 85% of ambient in Aclar envelopes (near-ambient treatment) and 15% of ambient in Mylar-type envelopes (reduced treatment).
+Biologically effective solar UV-B dose (based on the generalized plant damage action spectrum normalized to 300 nm, @Caldwell1971), was 85% of ambient in Aclar envelopes (near-ambient treatment) and 15% of ambient in Mylar-type envelopes (reduced treatment).
 To prevent smaller pieces of litter from falling through the holes on the bottom side of the envelope, a $10 \text{cm} \times 10 \text{cm}$ piece of white nylon fabric (athletic jersey mesh) was taped on the inside bottom.
 We placed 1.80 (±0.05) g of oven dried litter of a particular type in each envelope on top of the nylon fabric.
 
@@ -74,7 +74,7 @@ We did not assess the composition of the other litter types from the balcony sit
 We attempted to assess the composition of litter from the desert site, but suspect that slight contamination with dust prevented us from obtaining reliable results.
 Hence, only chemical composition of the balcony leaf litter is reported.
 
-We modified the techniques of Allen (@allen1974chemical) for isolation and quantification of fats and lipids, lignin and holocellulose.
+We modified the techniques of Allen (@Allen1989) for isolation and quantification of fats and lipids, lignin and holocellulose.
 Dried litter was ground to a fine powder using a ball-mill grinder and weighed with an analytical balance and samples were further divided for analysis of fats and lipids, lignin, holocellulose, total organic C and N, and ash.
 For fats and lipids, and lignin, litter samples (≈0.75 g) were placed on glass–fiber filter paper and tied into bundles using nylon thread, and extracted in diethyl ether for 6 h using a Soxhlet apparatus.
 Samples were dried (30°C) overnight, cooled and weighed for fat and lipid content.
