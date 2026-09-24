@@ -77,7 +77,7 @@ timelog:
       start: 2026-04-03 T1530
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P30M
+      duration: PT30M
   - activity: 
       description: worked on readme file
       who: vaasukimarupaka #github username
@@ -85,7 +85,7 @@ timelog:
       start: 2026-04-10 T1600
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P20M
+      duration: PT20M
   - activity: 
       description: Revise based on feedback from pull request
       who: vaasukimarupaka #github username
@@ -93,7 +93,7 @@ timelog:
       end: 2026-09-02
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P30M
+      duration: PT30M
   - activity: 
       description: Transcribed table 1, table 2, and citations
       who: JennavieveK #github username
@@ -101,7 +101,7 @@ timelog:
       end: 2026-04-10
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P120
+      duration: PT120M
   - activity: 
       description: Transcribed table 1
       who: angelacanini-a11y #github username
@@ -109,7 +109,7 @@ timelog:
       end: 2026-04-02
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P55M
+      duration: PT55M
   - activity: 
       description: secondary transcription for methods
       who: angelacanini-a11y #github username
@@ -117,7 +117,7 @@ timelog:
       end: 2026-04-04
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P40M
+      duration: PT40M
   - activity: 
       description: transcribed table 3
       who: bcheser #github username
@@ -125,7 +125,7 @@ timelog:
       start: 2026-04-03 T1530
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P2H30M
+      duration: PT2H30M
   - activity: 
       description: secondary transcription for table 2
       who: bcheser #github username
@@ -133,7 +133,7 @@ timelog:
       start: 2026-04-04
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P1H30M
+      duration: PT1H30M
   - activity: 
       description: created citations section
       who: bcheser #github username
@@ -141,7 +141,7 @@ timelog:
       start: 2026-04-10
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P1H00M
+      duration: PT1H00M
   - activity: 
       description: edited activity section
       who: bcheser #github username
@@ -149,7 +149,13 @@ timelog:
       start: 2026-09-03 T1600
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P10M
+      duration: PT10M
+  - activity: 
+      description: fix bibtex and other formatting issues
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: 2026-09-24
+      duration: PT1H
 version: 'vs202512' #template version, remove before use
 ---
 
