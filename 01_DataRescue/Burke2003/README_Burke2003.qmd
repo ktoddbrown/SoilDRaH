@@ -347,12 +347,96 @@ land_use.df <- tribble(~land_use_id, ~region_id, ~site_id, ~of_variable, ~is_typ
 
 Table1Primary <- data.lvl0.df$data$Table1$primary |>
  mutate(row_id = paste0('R', 1:n())) |>
-   pivot_longer(cols = -c(row_id, `Stock or change`),
+   pivot_longer(cols = -c(row_id),
                names_to = 'column_name', values_to = 'with_entry',
                values_drop_na = TRUE) |>
     mutate(of_variable = case_when(
-      
-      
+      column_name == 'Location' ~ 'region',
+      column_name == 'Land use' ~ 'site_id',
+      column_name == 'Soil depth (cm)' ~ 'layer',
+      column_name == 'PFLA (mg kg-1)' ~ 'phospholipid_acid_content',
+      column_name == 'Organic C content (%)' ~ 'organic_carbon',
+      column_name == 'δ13C-SOM (per mil)' ~ 'delta_13_carbon',
+      .default = 'Bad Match'
+    )) |>
+    
+ 
+mutate(
+  value = case_when(
+    column_name == "Location" ~ with_entry,
+    column_name == "Land use" ~ with_entry,
+    column_name == "PFLA (mg kg-1)" & str_detect(with_entry, '^\\d+(\\.\\d+)?$') ~ with_entry,
+    TRUE ~ NA_character_
+     ),
+  lowerbound = case_when(
+    str_detect(with_entry, '^\\d+\\s*-\\s*\\d+') ~ str_extract(with_entry, "\\d+(?=-)"),
+    TRUE ~ NA_character_
+),
+  upperbound = case_when(
+   str_detect(with_entry, '^\\d+\\s*-\\s*\\d+') ~ str_extract(with_entry, "(?<=-)\\d+"),
+     TRUE ~ NA_character_
+    ),
+  mean = as.character(
+      str_extract(with_entry, '^-?\\d*\\.?\\d+(?=\\s*±)')),
+  `standard error` = as.character(
+    str_extract(with_entry, '(?<=\\±)\\s*\\d*\\.?\\d+')),
+    ) |>
+  select(-with_entry) |>
+  
+  pivot_longer(cols = c('lowerbound','upperbound','mean','standard error', 'value'),
+               names_to = 'is_type',
+               values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+
+  mutate(from_source = 'Table 1')
+
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         species = case_when(
+           str_detect(column_name, 'sugarcane') ~ 'Saccharum spp.', 
+           TRUE ~ NA_character_
+         ),
+      from_source = 'Table 1 column names.') |>
+  filter(!is.na(unit) | !is.na(species))
+
+bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+  'region', paste0(data.lvl0.df$method[c(7,24,38)], collapse = ' '), 'Methods ln7;24;28',
+  'site_id', paste0(data.lvl0.df$method[c(11:13,28,41:42)], collapse = ' '), 'Methods ln11-13,28,41-42',
+  'layer', paste0(data.lvl0.df$method[c(17:19,34,47)], collapse = ' '), 'Methods ln17-19,34,47',
+  'phospholipid_acid_content', paste0(data.lvl0.df$method[51:67], collapse = ' '), 'Methods ln51-67',
+  'delta_13_carbon', paste0(data.lvl0.df$method[c(89:90,103)], collapse = ' '), 'Methods ln89-90,103'
     )
+  ) |>
+bind_rows(
+  tribble(~of_variable, ~control_vocabulary, ~from_source,
+    #struggling to find info on the USDA soil classification
+    'stand_type', '*Saccharum spp.*: sugarcane', 'Abstract ln2')
+ |>
+         left_join(Table1Primary |>
+                  select(column_name, of_variable) |>
+                  unique(),
+                by = join_by(of_variable))) |>
+  pivot_longer(cols = c(unit, species, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+
+#### Create level 1
+
+data.lvl1.ls <- list(
+  study = studyMeta,
+  primary_meta = dplyr::bind_rows(Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    mutate(age_id = with_entry[of_variable == 'stand_age'],
+           is_type = 'value',
+           .by = row_id) |>
+    arrange(row_id, age_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
 ```
 
