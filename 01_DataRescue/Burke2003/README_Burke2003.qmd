@@ -69,7 +69,7 @@ timelog:
       description: Lev1
       who: SavaScott
       start: 2026-06-23
-      duration: PT4H30M
+      duration: PT5H30M
 ---
 
 ```{r}
@@ -96,13 +96,11 @@ methodsCitation.file <- 'Burke2003_Methods.bib'
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
 readsource.file <- '../../02_DataHarmonization/readBurke2003.R'
-if(file.exists(readsource.file)){
-  source(readsource.file)
-}
+source(readsource.file)
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+#of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -260,23 +258,33 @@ Some citations are missing, those are noted here and how best guess were generat
 
 ```{r readLevel0}
 
-data.lvl0.df <- list(citation = 
-                    list(primary = 
-                           read.bib(file = primaryCitation.file), 
-                         methods = 
-                           read.bib(file = methodsCitation.file)
-                    ),
-                  method = read_lines(file = methods.file),
-                  data = list(Table1 = 
-                                list(caption = 
-                                       read_csv(file = table1.file,
-                                                col_types = cols(.default = col_character()),
-                                                n_max = 1, col_names = FALSE)$X1[1],
-                                     primary = 
-                                       read_csv(file = table1.file,
-                                                col_types = cols(.default = col_character()),
-                                                skip = 1)
-                                )))
+data.lvl0.df <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = bibtex::read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = bibtex::read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = readr::read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      #Read the caption as a text string. Captions are the first cell on 
+      #...the first row.
+      caption = readr::read_csv(file = table1.file,
+                                col_types = readr::cols(.default = readr::col_character()),
+                                n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = readr::read_csv(file = table1.file,
+                                col_types = readr::cols(.default = readr::col_character()),
+                                skip = 1)
+    ) 
+    
+    ))
 ```
 
 # Level 1
@@ -492,4 +500,85 @@ data.lvl1.ls <- list(
             of_variable, is_type, with_entry, from_source)
   )
 ```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+
+temp <- data.lvl1.ls$study |>
+  select(of_variable, is_type) |>
+  bind_rows(data.lvl1.ls$primary_meta) |>
+              select(of_variable, is_type) |>
+  bind_rows(data.lvl1.ls$primary |>
+              select(of_variable, is_type)
+            ) |>
+  unique() |>
+  mutate(study_id = 'Burke2003')
+
+#write_csv(temp, file = '../../03_DataCuration/HiCSC/vocabulary_draft.csv')
+ref_draft <- read_csv('../../03_DataCuration/HiCSC/vocabulary_draft.csv',
+                      show_col_types = FALSE)
+
+newVariables <- anti_join(temp, ref_draft,
+                          by = join_by(of_variable, is_type, study_id))
+
+if(nrow(newVariables) == 0){
+  print('All variables in draft document')
+}else{
+  #add the missing rows to the draft
+  write_csv(temp, file = '../../03_DataCuration/HiCSC/vocabulary_draft.csv',
+            append = TRUE, col_names = FALSE)
+}
+
+ #Read in the list of current 'of_variable' entries
+# SoilDRaH_variable_list <- read_csv(file = '..//../02_DataHarmonization/of_variable.csv',
+ #                                   show_col_types = FALSE)
+ 
+ #compare the variables in the level 1 tables to the SoilDRaH variables
+# new_variables <- lapply(data.lvl1.ls, function(xx){
+ #  setdiff(unique(xx$of_variable), 
+  #         unique(SoilDRaH_variable_list$of_variable))
+# }) |>
+ #  unlist()
+ 
+# #Check that there are no new variables
+# if(length(new_variables) == 0){
+ #  print('All of_variables are in the SoilDRaH variable list. No additions required')
+ #}else{
+  # cat(paste('Please start a issue for new variables [',
+   #             new_variables, ']', sep = '', collapse = '\n'))
+# }
+```
+
+
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readBurke2003(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
 
