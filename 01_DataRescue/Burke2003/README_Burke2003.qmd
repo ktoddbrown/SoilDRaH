@@ -9,34 +9,67 @@ bibliography:
   - Burke2003_Methods.bib
   - Burke2003.bib
 author:
-  - id: ktoddbrown
+  - id: ktoddbrown #use the github name as an id
     name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
-    note: https://github.com/ktoddbrown
-    affiliations:
-      - id: ESS UF
-        name: University of Florida
-        department: Environmental Engineering Sciences
-        city: Gainesville
-        state: FL
-        country: USA
-    role: 
-      - "Transcription"
-      - "Review"
-  - id: Misheph
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: secondary #secondary, review
+      - standardization: review #review
+   #   - curation: lead #review
+  - id: Misheph #use the github name as an id
     name:
       given: Mirah
       family: Blanchard
     affiliation:
-      - id: UF
-        name: University of Florida
-        city: Gainesville
-        state: FL
-        country: USA
-    role: "Transcription"
-    note: https://github.com/Misheph
+      - ref: uf
+    role: #TODO define these roles and add reference
+      - transcription: primary #secondary, review
+      - standardization: primary 
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf
+    role: #TODO define these roles and add reference
+    #  - transcription:  #secondary, review
+      - standardization: primary #taking over for Mirah
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    postal-code: 32611
+    url: https://www.ufl.edu/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "P.O Box 116250"
+    postal-code: 32611
+    url: https://mae.ufl.edu/
+timelog:
+  - activity:
+      description: Lev1
+      who: SavaScott
+      start: 2026-06-23
+      duration: PT4H30M
 ---
 
 ```{r}
@@ -248,6 +281,31 @@ data.lvl0.df <- list(citation =
 
 # Level 1
 
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+- Location: Sites from Hawaii, Brazil, and Ecuador are included, with two of them being in Hawaii. No latitude and longitude coordinates are listed, but regional descriptions are given in methods section. Information about mean annual precipitation, temperature, and sampling depth at sites given.
+- Soil carbon stock: SOM stock presented in Table 1, with depth-specific organic carbon values.
+- Soil type: Classification and extra soil history information is given in the methods section (Typic Distrandepts). Additional soil properties such as pH, organic matter content, and microbial biomass are reported in figures and tables.
+- Land use: Hawaii Sites include sugarcane and pasture, further description and history is provided in the methods section.
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+
 ```{r Level1}
 
 #### Methods section only ####
@@ -408,6 +466,7 @@ bind_rows(
   'delta_13_carbon', paste0(data.lvl0.df$method[c(89:90,103)], collapse = ' '), 'Methods ln89-90,103') |> 
 bind_rows(
   tribble(~of_variable, ~control_vocabulary, ~from_source,
+          #struggled to find info on the soil types
     'stand_type', '*Saccharum spp.*: sugarcane', 'Abstract ln2')
   ) |>
          left_join(Table1Primary |>
