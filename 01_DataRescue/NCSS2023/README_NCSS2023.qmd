@@ -47,7 +47,7 @@ timelog:
       start: 2026-04-02 T1500
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P50M
+      duration: PT50M
   - activity: 
       description: Restart the NCSS data processing
       who: ktoddbrown #github username
@@ -55,13 +55,19 @@ timelog:
       start: 2026-02-26 T1500
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P50M
+      duration: PT50M
   - activity: 
       description: Continue NCSS level 0 processing
       who: ktoddbrown #github username
       #when you started and ended, can be just a year or down to the minute
       start: 2026-09-01
-      duration: P30M
+      duration: PT30M
+  - activity: 
+      description: Level 1 processing draft
+      who: ktoddbrown #github username
+      #when you started and ended, can be just a year or down to the minute
+      start: "2026-09-22"
+      duration: PT4H
 ---
 
 
@@ -95,7 +101,7 @@ methodsCitation.file <- 'NCSS_SCD_Methods.bib'
 
 # read function; you will need to create this function after you have your data
 #... rescue reviewed and before you finish your data harmonization.
-readsource.file <- '../../02_DataHarmonization/readAuthorYYYY.R'
+readsource.file <- '../../02_DataHarmonization/readNCSS.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -104,6 +110,7 @@ if(file.exists(readsource.file)){
 #of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
 #is_type.file <- '../../02_DataHarmonization/is_type.csv'
 
+keepVars <- c(ls(), 'keepVars')
 ```
 
 
@@ -203,7 +210,7 @@ Old files that need to be removed
 - NCSS_Annocations.csv : orginal metadata file before table downloads
 - README_NCSS_OLD.qmd : old readme file
 
-# Data Rescue working notes 
+# Level 0 data
 <!----
 ## Data Rescue Plan
 
@@ -228,13 +235,10 @@ Old files that need to be removed
   - [ ] celebrate!
 ---->
 
-## Read database and constructed metadata
-
-
 ```{r}
 #| label: readSQLiteDB
 
-  myconnect <- RSQLite::dbConnect(drv = RSQLite::SQLite(), 
+myconnect <- RSQLite::dbConnect(drv = RSQLite::SQLite(), 
                                   dbname = sqlDownload)
 
 actualTableNames <- dbListTables(myconnect)
@@ -252,8 +256,8 @@ if(length(setdiff(table_names, actualTableNames)) != 0){
 lvl0.primary <- plyr::llply(
   setNames(as.list(table_names), table_names),
   .fun = function(xx){
-    ans.ls <- list( RSQLite::dbReadTable(myconnect, xx))
-    names(ans.ls) <- xx
+    ans.ls <- RSQLite::dbReadTable(myconnect, xx)
+    #names(ans.ls) <- xx
     return(ans.ls)
   })
 
@@ -274,8 +278,14 @@ lvl0.meta <- list(
 
 data.lvl0.ls <- list(
   data = lvl0.primary,
-  meta = lvl0.meta
+  meta = lvl0.meta,
+  citations = list(primary = read.bib(file = primaryCitation.file),
+                   methods = read.bib(file = methodsCitation.file))
 )
+
+keepVars <- c(keepVars, 'data.lvl0.ls')
+
+rm(list = setdiff(ls(), keepVars)) #remove large file
 ```
 
 
@@ -285,10 +295,9 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
-#| eval: false
 
 if(file.exists(readsource.file)){
-  datafunction.lvl0.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl0.ls <- readNCSS(dataDir = '.',
                                          dataLevel = 'level0')
   
   if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
@@ -301,16 +310,18 @@ if(file.exists(readsource.file)){
 }
 ```
 
-# Level 1 data - CURATION PROJECT
 
-This data is identified as a data source for the ...
+
+
+# Level 1 data - ISCN2025
+
+This data is identified as a data source for the ISCN2025.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
 Broad classes of information that we are looking for include:
 
-<!--- Include description of where the data is located in the source.--->
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
 This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
@@ -330,149 +341,386 @@ The `of_variable` being used here are:
  <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
 
 ```{r}
+#| label: propertyNames
+#| code-fold: TRUE
+#| code-summary: 'Listed names of all variables with variables of interest uncommented. This is LONG.'
+
+#generate the names in the tables of interest below and comment out the names
+#...we are not interested for the current curation purpose. This is here
+#...so that in the future we can add more observations from this rich dataset
+
+#### Physical property names ####
+#### cat(paste0("'", names(data.lvl0.ls$data$lab_physical_properties), "'", collapse = ', 
+#'))
+#
+lab_physical_properties.names <- c(
+  #'OBJECTID', 'objectid_1', 
+  'layer_key', #'labsampnum', 'result_source_key', 
+  #'prep_code', #not uniquely defined for direct cross reference, TODO figure out indirect cross reference
+  #'texture_lab', 
+  'particle_size_method',
+#  'clay_total', 'silt_total', 'sand_total', 'clay_fine', 
+#  'clay_caco3', 'silt_fine', 'silt_coarse', 'sand_very_fine', 'sand_fine', 
+#  'sand_medium', 'sand_coarse', 'sand_very_coarse', 
+#  'frag_2_5_mm_wt_pct_lt_75', 'frag__2_20_mm_wt_pct_lt_75', 
+#  'frag_5_20_mm_wt_pct_lt_75', 'frag_20_75_mm_wt_pct_lt_75', 
+  'total_frag_wt_pct_gt_2_mm_ws', 
+  #'wt_pct_1_tenth_to_75_mm', 
+  #'bulk_density_tenth_bar', 'bulk_density_tenth_bar_method', 
+  #'bulk_density_third_bar', 'bulk_density_third_bar_method', 
+  'bulk_density_oven_dry', 'bulk_density_oven_dry_method', 
+  'bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method', 
+  #'bd_third_bar_lt2_reconstituted', 'bd_thirdbar_reconstituted_method', 
+  #'bulk_den_ovendry_reconstituted', 'bulk_density_odreconstituted_method', 
+  #'bulk_density_field_moist', 'bulk_density_field_moist_method', 
+  #'particle_density_less_than_2mm', 'particle_density_lt_2mm_method', 
+  #'particle_density_gt_2_mm', 'particle_density_gt_2mm_method', 
+  #'cole_whole_soil', 'cole_whole_soil_method', 
+  #'le_third_fifteen_lt2_mm', 'le_third_fifteen_lt2_method', 
+  #'le_third_ovendry_lt_2_mm', 'le_third_ovendry_lt_2_mm_method', 
+  #'le_field_moist_to_oben_dry', 'le_fm_to_od_method', 
+  #'water_retention_0_bar_sieve', 'water_retention_0_bar_method', 
+  #'water_retention_6_hundredths', 'water_retention_6_hund_method', 
+  #'water_retention_10th_bar', 'water_retention_10th_bar_method', 
+  #'water_retention_third_bar', 'water_retention_thirdbar_method', 
+  #'water_retention_1_bar', 'water_retention_1_bar_method', 
+  #'water_retention_2_bar', 'water_retention_2_bar_method', 
+  # 'water_retention_3_bar_sieve', 'water_retention_3_bar_method', 
+  #'water_retention_5_bar_sieve', 'water_retention_5_bar_method', 
+  #'water_retention_15_bar', 'water_retention_15_bar_method', 
+  #'water_retention_field_state', 'water_retention_field_state_me', 
+  # 'airdry_ovendry_ratio', 
+  #'atterberg_liquid_limit', 'atterberg_liquid_limit_method', 
+  #'atterberg_plasticity_index', 
+  #'plastic_limit', 'plastic_limit_method', 
+  #'aggregate_stability_05_2_mm', 'aggregate_stability_05_2_method', 
+  #'le_to_clay_third_bar_to_ovendry', 
+  #'water_15_bar_to_clay_ratio', 
+  #'cec7_clay_ratio', 
+  #'effective_cec_to_clay_ratio', 
+  #'psda_ethanol_dispersion_method', 'sand_total_ethanol_dispersible',  'silt_total_ethanol_dispersible', 'clay_total_ethanol_dispersible', 'sand_very_fine_ethanol_dispersible', 'sand_fine_ethanol_dispersible', 'sand_medium_ethanol_dispersible', 'sand_coarse_ethanol_dispersible', 'sand_very_coarse_ethanol_dispersible', 
+  #'water_dispersible_fraction_method', 'clay_tot_h2o_dispersible', 'clay_fine_h2o_dispersible', 'clay_co3_h2o_dispersible', 'silt_total_h2o_dispersible', 'silt_fine_h2o_dispersible', 'silt_coarse_h2o_dispersible', 'sand_total_h2o_dispersible', 'sand_vf_h2o_dispersible', 'sand_fine_h2o_dispersible', 'sand_medium_h2o_dispersible', 'sand_coarse_h2o_dispersible', 'sand_vc_h2o_dispersible', 
+  # 'color_pyrophosphate_extractable', 'color_pyrophosphate_method', 
+  #'bd_thirdbar_before_rewet_organ', 'bd_before_rewet_organic_method',  'bd_thirdbar_rewet_organic_soil', 'bd_third_rewet_organic_method', 'bulk_den_rewet_oven_dry', 'bulk_density_rewet_oven_dry_method', 
+  'mineral_content_loss_on_ignition', 'mineral_content_loss_ignition_method'#, 
+  #'estimated_organic_matter'#, 'estimated_om_plus_mineral', 
+  # 'fiber_analysis_method','fiber_unrubbed', 'fiber_rubbed', 'decomposition_state', 'limnic_material_type'
+)
+
+#### Chemical property names ####
+####cat(paste0("'", names(data.lvl0.ls$data$lab_chemical_properties), "'", collapse = ', 
+####'))
+#
+lab_chemical_properties.names <- c(
+#  'OBJECTID', 'objectid_1', 
+  'layer_key', #'labsampnum', 
+  #'result_source_key', 
+  #'prep_code', #not uniquely defined for direct cross reference, TODO figure out indirect cross reference
+#  'ca_nh4_ph_7', 'ca_nh4_ph_7_method', 'mg_nh4_ph_7', 'mg_nh4_ph_7_method', 'na_nh4_ph_7', 'na_nh4_ph_7_method', 'k_nh4_ph_7', 'k_nh4_ph_7_method', 'acidity_bacl2_tea_ph_8_2', 'acidity_bacl2_tea_ph_82_method', 'aluminum_kcl_extractable', 'aluminum_kcl_extract_method', 'manganese_kcl_extractable', 'manganese_kcl_extract_method', 'iron_kcl_extractable', 'iron_kcl_extractable_method', 'cec_nh4_ph_7', 'cec_nh4_ph_7_method', 
+  'total_carbon_ncs', 'total_carbon_ncs_method', 
+#  'total_nitrogen_ncs', 'total_nitrogen_ncs_method', 
+#  'total_sulfur_ncs', 'total_sulfur_ncs_method', 
+  'organic_carbon_walkley_black', 'oc_walkley_black_method', 
+#  'fe_dithionite_citrate_extractable', 'iron_dc_extract_method', 'aluminum_dithionite_citrate', 'aluminum_dc_extract_method', 'manganese_dithionite_citrate', 'manganese_dc_extract_method', 'ammoniumoxalate_opticaldensity', 'ammonium_ox_opt_dens_method', 'fe_ammoniumoxalate_extractable', 'iron_ammonium_oxalate_method', 'aluminum_ammonium_oxalate', 'al_ammonium_oxalate_method', 'silica_ammonium_oxalate', 'silica_ammonium_oxalate_method', 'manganese_ammonium_oxalate', 'mn_ammonium_oxalate_method', 'carbon_sodium_pyro_phosphate', 'c_na_pyro_phosphate_method', 'iron_sodium_pyro_phosphate', 'iron_na_pyro_phosphate_method', 'aluminum_na_pyro_phosphate', 'aluminum_na_pyro_phosphate_method', 'manganese_na_pyro_phosphate', 'mn_na_pyro_phosphate_method', 
+#  'ph_kcl', 'ph_kcl_method', 'ph_cacl2', 'ph_cacl2_method', 'ph_h2o', 'ph_h2o_method', 'ph_saturated_paste', 'ph_saturated_paste_method', 'ph_oxidized', 'ph_oxidized_initial', 'ph_oxidized_method', 'ph_naf', 'ph_naf_method', 'ph_water_extractable', 'ph_water_extract_method', 
+  'caco3_lt_2_mm', 'caco3_lt_2_mm_method', 
+#  'corrected_gypsum_lt_2_mm', 'corrected_gyp_lt_2_mm_method', 
+#  'resistivity_saturated_paste', 'resistivity_sp_method', 
+#  'ca_satx', 'ca_satx_method', 'mg_satx', 'mg_satx_method', 'ca_plus_mg_satx', 'ca_plus_mg_satx_method', 'na_satx', 'na_satx_method', 'k_satx', 'k_satx_method', 'co3_satx', 'co3_satx_method', 'hco3_satx', 'hco3_satx_method', 'co3_plus_hco3_satx', 'co3_plus_hco3_satx_method', 'cl_satx', 'cl_satx_method', 'f_satx', 'f_satx_method', 'po4_satx', 'po4_satx_method', 'br_satx', 'br_satx_method', 'oac_satx', 'oac_satx_method', 'so4_satx', 'so4_satx_method', 'no2_satx', 'no2_satx_method', 'no3_satx', 'no3_satx_method', 'h20_satx', 'h20_satx_method', 'electrical_conductivity_satx', 'electrical_cond_satx_method', 
+#  'ec_predict_one_to_two', 'ec_predict_one_to_two_method',
+#  'melanic_index', 'melanic_index_method', 
+#  'new_zealand_phosphorus_retent', 'new_zealand_phos_retent_method', 'phosphorus_ammonium_oxalate', 'phosphorus_ammonium_oxalate_method', 'phosphorus_anion_resin_one_hr', 'phosphorus_anion_resin_24_hr', 'phosphorus_anion_resin_method', 'phosphorus_bray1', 'phosphorus_bray1_method', 'phosphorus_bray2', 'phosphorus_bray2_method', 'phosphorus_citric_acid', 'phosphorus_citric_acid_method', 'phosphorus_mehlich_3', 'phosphorus_mehlich_3_method', 'phosphorus_olsen', 'phosphorus_olsen_method', 'phosphorus_water', 'phosphorus_water_method', 
+#  'nitrate_1m_kcl', 'nitrate_1m_kcl_method', 
+#  'water_extract_method', 'acetate_water_extractable', 'aluminum_water_extractable', 'arsenic_water_extractable', 'barium_water_extractable', 'boron_water_extractable', 'bromide_water_extractable', 'cadmium_water_extractable', 'calcium_water_extractable', 'chloride_water_extractable', 'chromium_water_extractable', 'cobalt_water_extractable', 'copper_water_extractable', 'ec_water_extractable', 'fluoride_water_extractable', 'iron_water_extractable', 'lead_water_extractable', 'magnesium_water_extractable', 'manganese_water_extractable', 'molybdenum_water_extractable', 'nickel_water_extractable', 'nitrate_n_water_extractable', 'nitrate_water_extractable', 'nitrite_water_extractable', 'phosphorus_water_extractable', 'phosphate_water_extractable', 'potassium_water_extractable', 'selenium_water_extractable', 'silicon_water_extractable', 'sodium_water_extractable', 'strontium_water_extractable', 'sulfate_water_extractable', 'vanadium_water_extractable', 'zinc_water_extractable', 
+#  'mehlich_3_extractable_method', 'aluminum_mehlich3_extractable', 'arsenic_mehlich3_extractable', 'barium_mehlich3_extractable', 'cadmium_mehlich3_extractable', 'calcium_mehlich3_extractable', 'chromium_mehlich3_extractable', 'cobalt_mehlich3_extractable', 'copper_mehlich3_extractable', 'iron_mehlich3_extractable', 'lead_mehlich3_extractable', 'magnesium_mehlich3_extractable', 'manganese_mehlich3_extractable', 'molybdenum_mehlich3_extractable', 'nickel_mehlich3_extractable', 'phosphorus_mehlich3_extractable', 'potassium_mehlich3_extractable', 'selenium_mehlich3_extractable', 'silicon_mehlich3_extractable', 'sodium_mehlich3_extractable', 'strontium_mehlich3_extractable', 'zinc_mehlich3_extractable', 
+#'sum_of_nh4_ph_7_Ext_bases', 'sum_of_cations_cec_pH_8_2', 'ecec_base_plus_aluminum', 'aluminum_saturation', 'base_sat_sum_of_cations_ph_8_2', 'base_sat_nh4oac_ph_7', 
+  'estimated_organic_carbon')#, 
+#'carbon_to_nitrogen_ratio', 
+#'aluminum_plus_half_iron_oxalate', 
+#  'caco3_lt_20_mm')
+#'gypsum_lt_20_mm', 
+#'ca_to_mg_ratio', 'total_estimated_salts_satx', 'exchangeable_sodium', 'sodium_absorption_ratio', 'phosphorus_anion_resin_capacity')
+
+### Layer property names ####
+#cat(paste0("'", names(data.lvl0.ls$data$lab_layer), "'", collapse = ', '))
+
+lab_layer.names <- c(
+  #'OBJECTID', 'objectid_1', 
+  'layer_key', #'labsampnum', 
+  #'project_key', 
+  'site_key', 'pedon_key', 
+  'layer_sequence', 
+  'layer_type', 
+  #'layer_field_label_1', 'layer_field_label_2', 'layer_field_label_3', 
+  'hzn_top', 'hzn_bot')#,
+  #'hzn_desgn_old', 'hzn_desgn', 'hzn_discontinuity', 
+  #'hzn_master', 'hzn_prime', 'hzn_vert_subdvn', 'hzn_desgn_other',
+  #'non_hzn_desgn', 
+  #'stratified_textures_flag', 
+  #'texture_description')
+
+###Pedon names ####
+#cat(paste0("'", names(data.lvl0.ls$data$lab_pedon), "'", collapse = ', '))
+lab_pedon.names <- c(#'OBJECTID', 'objectid_1', 
+                     'pedon_key', #'pedlabsampnum', 
+                     'observation_date', 
+                     #'user_pedon_id', 'pedon_seq_num', 
+                     #'cntrl_depth_to_top', 'cntrl_depth_to_bot', 
+                     #'fldsyb', 'mapsyb', 
+                     'site_key')
+
+###Site names ####
+#cat(paste0("'", names(data.lvl0.ls$data$lab_site), "'", collapse = ', '))
+lab_site.names <- c(
+  #'OBJECTID', 'objectid_1', 
+  'site_key', #'user_site_id', 
+  'horizontal_datum_name',
+  'latitude_direction', 
+  #'latitude_degrees', 'latitude_minutes', 'latitude_seconds',
+  'longitude_direction',
+  #'longitude_degrees', 'longitude_minutes', 'longitude_seconds', 
+  'latitude_std_decimal_degrees', 'longitude_std_decimal_degrees')#, 
+  #'msrepl_tran_version')
+```
+
+```{r}
 #| label: createLvl1
-#| eval: false
 
-#### Method-section only data ####
-#Create a table for the data in the method-section that is not directly 
-#...associated with any table. Often this is study level information.
 
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+###Physical table####
 
-#### Table/Figure N ####
-# Process the primary data from Table/Figure M by maintaining data groups and 
-#...standardizing the variable name so that we can link this to the study 
-#...metadata and data in the other tables when needed. Link in the methods 
-#...and other information from the method-section as needed.
-
-Table1Primary <- data.lvl0.ls$data$Table1$primary |>
-  #Add a row id preserving row grouping -- not unique
-  mutate(row_id = paste0('R', 1:n())) |>
-  #Transform the table to long data by row group and column names.
-  #...This allows us to then create the cross links between the tables.
-  pivot_longer(cols = -row_id,
-               names_to = 'column_name', values_to = 'with_entry',
-               values_drop_na = TRUE) |> #drop missing values
-  #Link the variable names to the column names using a switch statement
-  mutate(of_variable = case_when(
-           #Soil PH is given as an example below
-           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
-  #Flag the source of this data as Table 1, this table is merged later with
-  #...other data so this keeps track of where the data came from
-  mutate(from_source = 'Table 1')
-
-## Create the metadata for table one from the header information and cited methods
-Table1Meta <- Table1Primary |>
-  select(column_name, of_variable) |>
-  unique() |>
-  #Grab everything between the parentheses as units and attribute the source as the column names.
-  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-         from_source = 'Table 1 column names.') |>
-  #If there aren't units then drop the row
-  filter(!is.na(unit)) |>
-  #Don't keep the column name now that you have the units, cross link via the variable
-  select(-column_name) |>
-  #Stack into the table the methods for each variable that we can find
-  bind_rows(
-  tribble(~of_variable, ~method, ~from_source,
-            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
-  #Stack onto the tables the controlled vocabulary used
-  bind_rows(
-    tribble(~of_variable, ~control_vocabulary, ~from_source,
-            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
-  ) |>
-  # Push the dimensions of the variable into a single column. Making this a long table.
-  pivot_longer(cols = c(unit, method, control_vocabulary),
-               names_to = 'is_type',
-               values_drop_na = TRUE,
-               values_to = 'with_entry')
-
-#### Create level 1 #####
-## Pull everything together into by stacking the meta and primary data tables
-data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    arrange(row_id, column_name,
-            of_variable, is_type, with_entry, from_source)
+#pull bulk density, coarse fraction, and LOI
+physical.df <- data.lvl0.ls$data$lab_physical_properties |>
+  select(all_of(lab_physical_properties.names)) |> #406 281 obs
+  filter(is.finite(total_frag_wt_pct_gt_2_mm_ws)) |> #210 027 obs
+  filter(is.finite(bulk_density_oven_dry) |
+           is.finite(bulk_density_lt_2_mm_air_dry)) |> #82 046 obs
+  mutate(across(everything(), as.character),
+         table_name = 'lab_physical_properties',
+         from_source = 'Table lab_physical_properties') |>
+  pivot_longer(cols = -c(table_name, layer_key, from_source),
+               names_to = 'column_name',
+               values_to = 'with_entry',
+              values_drop_na = TRUE) |>
+  mutate(
+    is_type = case_when(
+      str_detect(column_name, pattern = 'method$') ~ 'method',
+      column_name %in% c('total_frag_wt_pct_gt_2_mm_ws',
+                         'bulk_density_oven_dry',
+                         'bulk_density_lt_2_mm_air_dry',
+                         'mineral_content_loss_on_ignition') ~ 'value',
+      .default = 'unknown'
+    ),
+    of_variable = case_when(
+      column_name %in% c('particle_size_method', 'total_frag_wt_pct_gt_2_mm_ws') ~ 'coarse_fraction',
+      column_name %in% c('bulk_density_oven_dry', 'bulk_density_oven_dry_method') ~ 'bulk_density_stock',
+      column_name %in% c('bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method') ~ 'fine_earth_bulk_density',
+      column_name %in% c('mineral_content_loss_on_ignition', 'mineral_content_loss_ignition_method') ~ 'loss_on_ignition',
+      .default = 'unknown'
+    )
   )
 
+#check for unknowns with this code
+#physical.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
+
+###Chemistry table####
+chemical.df <- data.lvl0.ls$data$lab_chemical_properties |>
+  select(all_of(lab_chemical_properties.names)) |> #325 740 obs
+  filter(is.finite(total_carbon_ncs - caco3_lt_2_mm) |
+           is.finite(estimated_organic_carbon) |
+           is.finite(organic_carbon_walkley_black)) |> #296 603 obs
+  mutate(across(everything(), as.character),
+         table_name = 'lab_chemical_properties',
+         from_source = 'Table lab_chemical_properties') |>
+  pivot_longer(cols = -c(table_name, layer_key, from_source),
+               names_to = 'column_name',
+               values_to = 'with_entry',
+              values_drop_na = TRUE) |>
+  mutate(
+    is_type = case_when(
+      column_name %in% c('total_carbon_ncs_method',
+                         'caco3_lt_2_mm_method',
+                         'oc_walkley_black_method') ~ 'method',
+      column_name %in% c('total_carbon_ncs',
+                         'estimated_organic_carbon',
+                         'caco3_lt_2_mm',
+                         'organic_carbon_walkley_black') ~ 'value',
+      .default = 'unknown'
+    ),
+    of_variable = case_when(
+      column_name %in% c("total_carbon_ncs", "total_carbon_ncs_method") ~ 'carbon_total',
+      column_name %in% c('estimated_organic_carbon') ~ 'carbon_organic',
+      column_name %in% c('caco3_lt_2_mm', 'caco3_lt_2_mm_method') ~ 'carbon_inorganic',
+      column_name %in% c('organic_carbon_walkley_black', 'oc_walkley_black_method') ~ 'carbon_organic_walkley_black',
+      .default = 'unknown'
+    )
+  )
+
+#check for unknowns with this code
+#chemical.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
+
+
+###Layer table####
+#select => filter => mutate - character/table/source => pivot => mutate - types/varibles
+layer.df <- data.lvl0.ls$data$lab_layer |>
+  select(all_of(lab_layer.names)) |>
+  #keep layers that are in the soil observation tables
+  filter(layer_key %in% c(chemical.df$layer_key, physical.df$layer_key)) |>
+  mutate(across(everything(), as.character),
+         table_name = 'lab_layer',
+         from_source = 'Table Lab_layer') |>
+  pivot_longer(cols = c("layer_sequence", "layer_type", "hzn_top", "hzn_bot"),
+               names_to = 'column_name',
+               values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = 'depth_layer',
+         is_type = case_when(column_name == 'hzn_bot' ~ 'lower',
+                             column_name == 'hzn_top' ~ 'upper',
+                             column_name == 'layer_sequence' ~ 'order',
+                             column_name == 'layer_type' ~ 'boundary',
+                            .default = 'unknown')) 
+  # layer.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
+
+###Pedon table####
+#select => filter => mutate - character/table/source => pivot => mutate - types/varibles
+pedon.df <- data.lvl0.ls$data$lab_pedon |>
+  select(all_of(lab_pedon.names)) |>
+  filter(is.finite(observation_date)) |>
+  #cross reference with the layer table defined by the 
+  filter(pedon_key %in% layer.df$pedon_key) |>
+  #recast the observation_date
+  mutate(observation_date = 
+           lubridate::as_date(observation_date,
+                              origin = lubridate::ymd('1900-01-01')) |>
+           as.character()) |>
+  mutate(across(everything(), as.character)) |>
+  pivot_longer(cols = -c(pedon_key, site_key),
+               names_to = 'column_name',
+               values_to = 'with_entry') |>
+  mutate(of_variable = if_else(column_name == 'observation_date',
+                               'observation_date', 'unknown'),
+         is_type = if_else(column_name == 'observation_date', 
+                           'date', 'unknown'),
+         from_source = 'Table lab_pedon',
+         table_name = 'lab_pedon') 
+
+#pedon.df |> reframe(count = n(), .by = c(is_type, of_variable)) 
+
+###Site table####
+#select => filter => mutate - character/table/source => pivot => mutate - types/varibles
+site.df <- data.lvl0.ls$data$lab_site |> 
+  select(all_of(lab_site.names)) |>
+  filter(site_key %in% c(pedon.df$site_key, layer.df$site_key)) |> #50 614 obs
+  filter(is.finite(latitude_std_decimal_degrees) &
+           is.finite(longitude_std_decimal_degrees)) |> #39 308 obs
+  mutate(across(everything(), as.character),
+         table_name = 'lab_site',
+         from_source = 'Table lab_site') |>
+  pivot_longer(cols = -c(site_key, table_name, from_source),
+               names_to = 'column_name',
+               values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  mutate(of_variable = if_else(
+    column_name %in% c('horizontal_datum_name',
+                       'latitude_direction',
+                       'longitude_direction',
+                       'latitude_std_decimal_degrees',
+                       'longitude_std_decimal_degrees'), 'geolocation', 'unknown'),
+    is_type = case_when(
+      column_name %in% c('horizontal_datum_name') ~ 'datum',
+      column_name %in% c('latitude_std_decimal_degrees') ~ 'latitude',
+      column_name == 'longitude_std_decimal_degrees' ~ 'longitude',
+      column_name == 'longitude_direction' ~ 'longitude_direction',
+      column_name == 'latitude_direction' ~ 'latitude_direction',
+      .default = 'unknown'
+    )
+  )
+
+###Merge keys ####
+
+key.df <- layer.df |> 
+  select(site_key, pedon_key, layer_key) |>
+  unique() |> #1 194 008 obs
+  filter(!is.na(site_key),
+         !is.na(pedon_key),
+         !is.na(layer_key)) #299 323 obs
+
+soilObs.df <- key.df |>
+  left_join(layer.df,
+            by = join_by(site_key, pedon_key, layer_key)) |>
+  bind_rows( key.df |>
+               left_join(bind_rows(physical.df, chemical.df),
+                         by = join_by(layer_key)))
+
+key.df <- layer.df |> 
+  select(site_key, pedon_key) |>
+  unique() |> #50 986 obs
+  filter(!is.na(site_key),
+         !is.na(pedon_key)) #50 985 obs
+
+geoObs.df <- key.df  |>
+  left_join(pedon.df,
+            by = join_by(site_key, pedon_key)) |>
+  bind_rows(key.df |>
+              left_join(site.df,
+                        by = join_by(site_key),
+                        #some locations are observed many times
+                        relationship = 'many-to-many') )
+# names(physical.df) #layer_key
+# names(chemical.df) #layer_key
+# names(pedon.df) #pedon_key, site_key
+# names(layer.df) #layer_key, site_key, pedon_key
+# names(site.df) #site_key
+
+###Pull metadata from column discriptions####
+meta.df <- data.lvl0.ls$meta$columns |>
+  semi_join(bind_rows(geoObs.df, soilObs.df),
+            by = join_by(table_name, column_name)) |>
+  filter_out(str_detect(column_name, 'method$')) |> #remove method columns
+  mutate(from_source = 'Web site table: NCSS Columns Description') |>
+  #coded from description interpretation with cross reference to data dictionary and methods descriptions
+  mutate(unit = case_when(
+    column_description == "Carbonate in the < 2mm fraction is measured by CO2 evolution after acid treatment. It is reported as gravimetric percent CaCO3 on a <2 mm base, even though carbonates of Mg, Na, K, and Fe may be present and react with the acid." ~ 'fine-earth-mass percent',
+    column_description == "Total carbon is a measure of all organic and inorganic carbon, including that found in carbonate minerals." ~ 'fine-earth-mass percent', #expert interpretation from method understanding,
+    column_description == 'CMS analyte. Organic carbon is a measure of all organic forms of carbon in the soil, including organic carbon within minerals.' ~ 'fine-earth-mass percent', #expert interpretation from method understanding,
+    column_description == "Organic carbon is a measure of all organic forms of carbon in the soil, including organic carbon within minerals." ~ 'fine-earth-mass percent', #expert interpretation from method understanding,
+    column_description == "The oven dry weight of the less than 2 mm soil material per unit volume of soil exclusive of the desiccation cracks, measured on a coated clod." ~ 'fine-earth g per whole-soil cm3', #expert interpretation
+    column_description == 'Bulk density, <2mm fraction, air-dry is the weight per unit volume of the <2 mm fraction, with volume measured after air drying.  It is reported as grams per cubic centimeter on a <2 mm base.' ~ 'fine-earth g per fine-earth cm3',
+    column_description == "The best estimate of the total horizon fragment weight, in percent, on a whole soil basis." ~ 'whole-soil mass percent',
+    column_name %in% c('hzn_top', 'hzn_bot') ~ 'cm',
+    column_name %in% c('layer_sequence', 'layer_type',
+                       'observation_date',
+                       'horizontal_datum_name',
+                       'latitude_direction', 'longitude_direction') ~ NA_character_,
+    column_name %in% c('latitude_std_decimal_degrees', 'longitude_std_decimal_degrees') ~ 'decimal degrees',
+    .default = 'unknown'
+  )) |>
+  select(table_name, column_name, from_source, description = column_description, unit) |>
+  pivot_longer(cols = c(description, unit),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  left_join(
+    bind_rows(
+      select(soilObs.df, table_name, column_name, of_variable) 
+      |> unique(),
+      select(geoObs.df, table_name, column_name, of_variable) 
+      |> unique()),
+    by = join_by(table_name, column_name))
+
+
+### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = meta.df,
+  layer = soilObs.df,
+  geolocation = geoObs.df,
+  citations = data.lvl0.ls$citations
+  )
+
+keepVars <- c(keepVars, 'data.lvl1.ls')
+rm(list = setdiff(ls(), keepVars)) #remove large file
 ```
 
-## Check for new variables
-
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_of_variable
-#| eval: false
-
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
-
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
-
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-#| eval: false
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
-  select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
-
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
-
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
-}
-
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
-}else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
-}
-```
 
 ## Check function match
 
@@ -480,13 +728,12 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
-#| eval: false
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readNCSS(dataDir = '.',
                                          dataLevel = 'level1')
   
-  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
     print('Read function output matches ReadMe code for level 1.')
   }else{
     print('There is a mismatch in the level 1 data objects between the code here and the read function.')
@@ -496,7 +743,6 @@ if(file.exists(readsource.file)){
 }
 
 ```
-
 
 # References
 
