@@ -13,7 +13,7 @@ The Kalopa pasture site has been maintained in that land use for about 90 yr.
 Sugarcane, which is a C<sub>4</sub> plant, has been grown at the Humuula site for about 90 yr and at the Kalopa site for about 50 yr.
 Typical management of sugarcane in this area includes fertilization with 85, 75, and 110 kg ha yr<sup>−1</sup> of N, P, and K, respectively, liming every two years, and tilling to 40 cm every 4 to 6 yr [@Bashkin1998].
 The forest sites in both areas consist of native ‘ohi’a lehua (*Metrosideros polymorpha Gaud.*)–dominated rain forest using the C<sub>3</sub> photosynthetic pathway.
-The mean δ13C values of major plant carbon sources to the soil microbial community are: forest litter −29.3‰, sugarcane tissues −12.1‰, and pasture plant tissues −11.1‰ [@Osher1997].
+The mean δ$^{13}$C values of major plant carbon sources to the soil microbial community are: forest litter −29.3‰, sugarcane tissues −12.1‰, and pasture plant tissues −11.1‰ [@Osher1997].
 In July 1997 eight soil cores were collected from each site, divided into 0- to 10- and 10- to 20-cm intervals, and composited.
 At the Kalopa pasture site a separate set of eight soil cores was collected from a different part of the pasture a week later and treated in the same manner as the other samples.
 The Kalopa pasture results are reported as an average of the results obtained from the two sets of samples.
@@ -30,7 +30,7 @@ Aboveground and belowground production are approximately equal in both cultivate
 Prior to a recent ban, fields were typically burned each year after harvest and about 5 × 103 kg ha<sup>−1</sup> of residue was left.
 Chemical fertilization of both sugarcane areas consisted of 350 kg ha<sup>−1</sup> of 0–13–8 (N–P–K) fertilizer in the furrows at planting, 300 kg ha<sup>−1</sup> of 12–0–30 (N–P–K) during initial growth, and 350 kg ha<sup>−1</sup> of 12–0–30 (N–P–K) to the ratoon (regrowth after harvest without reseeding) 3 yr after planting [@Vitorello1989].
 Every 5 yr the fields are plowed to a depth of 20 to 30 cm and replanted.
-The mean δ13C values of major plant carbon sources to the soil microbial community are: forest litter −26.4‰, sugarcane leaves −13.2‰, and sugarcane roots −12.8‰ [@Vitorello1989].
+The mean δ$^{13}$C values of major plant carbon sources to the soil microbial community are: forest litter −26.4‰, sugarcane leaves −13.2‰, and sugarcane roots −12.8‰ [@Vitorello1989].
 Samples from the intervals 0 to 10 and 10 to 20 cm were collected from the walls of a pit dug at each site.
 
 ### Ecuador
