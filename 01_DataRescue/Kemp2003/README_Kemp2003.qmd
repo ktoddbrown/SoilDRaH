@@ -69,10 +69,10 @@ timelog:
       start: 2026-09-23 T2030
       duration: PT1H
   - activity: 
-      description: Table 1 transcription
+      description: Table 1 transcription and cross check
       who: ashbonner310 
       start: 2026-09-30 
-      duration: PT1H
+      duration: PT1H15M
 ---
 
 
