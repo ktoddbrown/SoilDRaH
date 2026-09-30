@@ -18,7 +18,15 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: lead
-      
+  - id: ktoddbrown
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review     
   - id: ChaseSaxour
     name:
       given: Chase
@@ -49,7 +57,6 @@ timelog:
       description: Secondary Transcription
       who: ChaseSaxour 
       start: 2026-06-28 
-      end: 
       duration: PT2H
   - activity: 
       description: fixing yaml errors, Methods transcription & cross check
@@ -60,6 +67,11 @@ timelog:
       description: Methods citations
       who: ashbonner310 
       start: 2026-09-23 T2030
+      duration: PT1H
+  - activity: 
+      description: Table 1 transcription
+      who: ashbonner310 
+      start: 2026-09-30 
       duration: PT1H
 ---
 
@@ -79,8 +91,7 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Kemp2003_Methods_AB.md"
-table1.file <- 'Kemp2003_Table1_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#########
-table3.file <- 'Kemp2003_Table3_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#########
+table1.file <- 'Kemp2003_Table1_AB.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#########
 figure3.file <- 'Kemp2003_Figure3_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
 figure4.file <- 'Kemp2003_Figure4_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
 
@@ -96,8 +107,8 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+# of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+# is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -169,10 +180,14 @@ These files are in the Kemp2003 data rescue.
   + citations for the methods section of the article
 - [Kemp2003_Methods.md](Kemp2003_Methods_AB.md)
   + methods transcribed from primary article
-- [Kemp2003_TableN.csv](Kemp2003_TableN.csv)
-  + table N from primary article with ...
+- [Kemp2003_Table1_AB.csv](Kemp2003_Table1_AB.csv)
+  + Table 1 from the primary article
+- [Kemp2003_Figure3_AB.csv](Kemp2003_Figure3_AB.csv)
+  + Figure 3 from the primary article, digitized into a table
+- [Kemp2003_Figure4_AB.csv](Kemp2003_Figure4_AB.csv)
+  + Figure 4 from the primary article, digitized into a table
 - [temp/](temp/)
-    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions. This folder also contains the secondary transcriptions.
 
 # Data Rescue working notes 
 
@@ -187,16 +202,15 @@ These files are in the Kemp2003 data rescue.
   - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
   - [X] Add the reviewer to the author list in the yml
 + Do
-  - [ ] Create a spreadsheet with Table 1 and export it to csv
-  - [ ] Create a spreadsheet with Table 3 and export it to csv
+  - [X] Create a spreadsheet with Table 1 and export it to csv
   - [ ] Extract points from Figure 3 and export it to csv
   - [ ] Extract points from Figure 4 and export it to csv
   - [X] Transcribe or copy the method section
   - [X] Insert references to bib entries
   - [X] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
   - [X] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
-  - [ ] Create a bib file with the citations from the methods section
-  - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
+  - [X] Create a bib file with the citations from the methods section
+  - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
   - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
@@ -204,22 +218,23 @@ These files are in the Kemp2003 data rescue.
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
-## Table N
+## Table 1
 
-<!--- Common table modifications include: inserting an extra column to pivot sub-headers, filling in NA to identify blanks, and adding Latex or Markdown to denote formatting.---->
-
-Table N was modified ....
+Table 1 had both footnote text and a title caption; both are included in the first row of the .csv.
+In addition, the table used multiple reference marks.
+The dagger, double dagger, section sign, and paragraph sign were all included, but a double vertical bar reference mark was replaced with a double asterisk instead.
+This table included several citations in the footnotes and these are included in the methods.bib file.
 
 ```{r}
 #| label: table1Check
-#| eval: false #remove when you have the file transcribed
+#| eval: false 
 
 
-read_csv(file = tableN.file, #read in the specific file
+read_csv(file = table1.file, #read in the specific file
          skip = 1, #skip the first line with the caption
          #read everything as a character, don't worry about formatting yet
          col_types = cols(.default = col_character())) |>
-  kable(caption = read_csv(file = tableN.file, #read in that file again but...
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
                            n_max = 1, #only read the first line
                            col_names = 'caption', #call it the caption
                            #read everything as a character
@@ -279,9 +294,10 @@ This generally doesn't read well in the final report so commenting it out here b
 Some citations are missing, those are noted here and how best guess were generated.
 Think of this as a lab notebook documenting how you found each citation.
 
-- [ ] short citation
-  + copy from bib
-  + manually entered or direct export
+- [Velleman1995] 
+  + Citation for software, used "misc" bibtex entry and did the best I could to replicate what was on the original publication.
+  
+All other citations downloaded as bibtex citations created by the publishers of the papers being cited.
 ---->
 
 # Level 0 Data rescue
@@ -290,6 +306,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
+#| eval: false ###remove when finished!!!
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -330,6 +347,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readKemp2003(dataDir = '.',
@@ -449,6 +467,7 @@ data.lvl1.ls <- list(
 
 ```{r}
 #| label: check_of_variable
+#| eval: false
 
 #Read in the list of current 'of_variable' entries
 SoilDRaH_variable_list <- read_csv(file =of_variable.file,
@@ -476,6 +495,7 @@ if(length(new_variables) == 0){
 
 ```{r}
 #| label: check_is_type
+#| eval: false
 
 #read in the current types and what variable they are associated with
 SoilDRaH_type_list <- read_csv(file = is_type.file,
@@ -522,6 +542,7 @@ Check for an exact match with the read function.
 
 ```{r}
 #| label: checkReadFunction_lvl1
+#| eval: false
 
 if(file.exists(readsource.file)){
   datafunction.lvl1.ls <- readKemp2003(dataDir = '.',
