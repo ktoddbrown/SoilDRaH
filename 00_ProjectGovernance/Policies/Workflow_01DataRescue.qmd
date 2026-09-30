@@ -184,12 +184,33 @@ When in doubt, try something.
 
 With this in mind, here are some general practices:
 
-1) Use a spreadsheet software for the data entry then export it later to a csv-file that you can archive. Spreadsheets are generally much easier to work with columns in then flat text files, but old spreadsheet files are not always readable by modern software.
-2) Be sure to set your spreadsheet to text entries. Spreadsheets try to be clever and guess what type of data you are entering. Numbers are often truncated if they end in a zero, but this looses significant digits. Treat everything as a text when you are transcribing.
+1) Use a spreadsheet software for the data entry then export it later to a csv-file that you can archive. Spreadsheets are generally much easier to work with columns in then flat text files, but old spreadsheet files are not always readable by modern software, which is why the data should not *stay* in a spreadsheet format.
+2) Set your spreadsheet to text entries. Spreadsheets try to be clever and guess what type of data you are entering. Numbers are often truncated if they end in a zero or can end up 'padded' due to numerical imprecision (0.1 ends up as 0.1000001), both loose information in the significant digits about how precise the number is entered. Treat everything as a text when you are transcribing.
 3) Use the first row to copy the caption. This will ensure that the table and it's caption are always together. The compromise here is that you have to skip the first row when reading the final csv, no ideal but also not difficult.
-4) Sub-table headers may new columns or multi column entires should be repeated. While spreadsheets will merge cells for you, it does not export nicely to csv tables. You should strive to preserve the structure of the data by repeating entries either in the header or as a new column.
+    a) An alternative that was also considered here was commenting out the row using `#` instead, however the comment character is not standardized so we decided to go with the first row convention instead.
+4) Sub-table headers may new columns and removing the sub-header rows. While spreadsheets will merge cells for you, it does not export nicely to csv tables. This may require discussion with other people who have done data rescues before if you are new. An example of this is in Table 1 of Burke2003.
 
 #### Figures
+
+Figures in manuscripts are designed to community complex data visually in such a way that trends supporting research conclusions are evident. This is broadly not machine readable. In addition to the x-y location on the graph, figure shapes, colors, line types, and error bars all contains information that needs to be captured.
+
+1) Take a screenshot of the figure and upload it to a click capture tool. We have been using the online version of https://plotdigitizer.com/ as of September 2026, but you can also do this in Powerpoint.
+2) Record points. You will generally need to define the axis bounds and then can click on points on the image and the tool will record the x-y location of those clicks in a spread sheet.
+3) Label the x and y columns with the axis label OR create a x-label column and y-label column if you are dealing with multiple sub-panels with different axises.
+4) Add the caption to the first line, similar to a table, and export to a csv file.
+
+In some cases it is not possible to capture the data in a figure to a useful degree. Highly dense, overlapping points where you don't know the number of points being obscured or '3D' figures are two examples of figures that may not be able to be digitized. You should discuss this with the data curator for your project if this appears to be the case.
+
+### ReadMe
+
+This is a good step to create the ReadMe file from the 01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd template file.
+You'll want to review the template file carefully, there are useful hits in the `<!--- comments --->`.
+
+Before moving on you'll want to make sure that you can read in all the csv files (use the code in the ReadMe document as a starting point) and recreate any figures or tables from your csv file for a visual check of the transcription.
+
+Figure creation can be complicated.
+Project standard libraries are declared in the template and you should not include any new libraries without discussion with the maintainers.
+There is a basic example in the template of a figure creation but you may need to ask for help if you have not worked with the R package `ggplot2` before.
 
 ### Cross check
 
