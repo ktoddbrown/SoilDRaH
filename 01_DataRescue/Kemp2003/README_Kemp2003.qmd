@@ -91,7 +91,7 @@ library(bibtex) # reading in BibTex files to R
 
 # data files for level 0
 methods.file <- "Kemp2003_Methods_AB.md"
-table1.file <- 'Kemp2003_Table1_AB.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#########
+table1.file <- 'Kemp2003_Table1_AB.csv'
 figure3.file <- 'Kemp2003_Figure3_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
 figure4.file <- 'Kemp2003_Figure4_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
 
@@ -224,10 +224,11 @@ Table 1 had both footnote text and a title caption; both are included in the fir
 In addition, the table used multiple reference marks.
 The dagger, double dagger, section sign, and paragraph sign were all included, but a double vertical bar reference mark was replaced with a double asterisk instead.
 This table included several citations in the footnotes and these are included in the methods.bib file.
+A citation for Moorhead & Reynolds (1993) in the footnote for lignin root measurements does not exist in the reference section of the paper, so we assume the author meant Moorhead and Reynolds (1991) and cited that instead.
 
 ```{r}
 #| label: table1Check
-#| eval: false 
+#| eval: true 
 
 
 read_csv(file = table1.file, #read in the specific file
@@ -253,7 +254,7 @@ And is crosschecked with the secondary transcription
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_TableN_ABC.md Kemp2003_TableN.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Table1_CS.csv Kemp2003_Table1_AB.csv
 ```
 
 ## Methods
@@ -262,7 +263,7 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Methods_CS.md Kemp2003_Methods_AB.md
