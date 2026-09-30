@@ -1,25 +1,6 @@
-"Table 1. Measured and estimated chemical composition of initial litter (values are
-expressed as % of total dry mass) *Measured in this study ( ?1 S.D.).
- ? @Commanor1978 reported that late season, senescent leaves consisted of 17?25.5% soluble
-extractives, while @Moorhead1989a & @Moorhead1989b measured 25% solubles in a mixture of leaf and stem
-litter, and @CepedaPizarro1990 estimated a ?labile? fraction ranging from 25% to 33% for leaf
-litter. We have assumed 25% solubles for both leaf and root litter. Litter structural fraction is assumed to be
-1-solubles.
-
-? @CepedaPizarro1990 estimated 24% ?labile? fraction from decay rates of *Prosopis* leaf litter,
-and we have assumed a similar value for both leaves and roots.
-
-? @Elkins1982, @Schaefer1985 and @CepedaPizarro1990 all reported
-similar lignin contents of leaf litter (9.5?10.6%).
-
-? @CepedaPizarro1990 measured 7.9% lignin for *Prosopis* leaf litter, and we have assumed a
-similar value for leaves and 2 ? that for roots.
-
-?We have no lignin measurements for root litter. @Moorhead1991 reported a lignin content
-of 22% for combined leaf and stem litter of *Larrea*. We have used this value for roots, as well.",,,,
+"**Table 1.** Measured and estimated chemical composition of initial litter (values are expressed as % of total dry mass). \*Measured in this study (± 1 S.D.). †@Commanor1978 reported that late season, senescent leaves consisted of 17-25.5% soluble extractives, while @Moorhead1989b & @Moorhead1989a measured 25% solubles in a mixture of leaf and stem litter, and @CepedaPizarro1990 estimated a 'labile' fraction ranging from 25% to 33% for leaf litter. We have assumed 25% solubles for both leaf and root litter. Litter structural fraction is assumed to be 1-solubles. ‡@CepedaPizarro1990 estimated 24% 'labile' fraction from decay rates of *Prosopis* leaf litter, and we have assumed a similar value for both leaves and roots. §@Elkins1982, @Schaefer1985 and @CepedaPizarro1990 all reported similar lignin contents of leaf litter (9.5-10.6%). ¶@CepedaPizarro1990 measured 7.9% lignin for *Prosopis* leaf litter, and we have assumed a similar value for leaves and 2 × that for roots. **We have no lignin measurements for root litter. @Moorhead1991 reported a lignin content of 22% for combined leaf and stem litter of *Larrea*. We have used this value for roots, as well.",,,,
 Fraction,*Larrea* Leaf,*Larrea* Root,*Prosopis* Leaf,*Prosopis* Root
-Carbon,52 ? 0.4* ,50 ? 0.4*,47 ? 0.2*,50 ? 0.9*
-Nitrogen,2.2 ? 0.1*,2.4 ? 0.4*,2.5 ? 0.1*,2.1 ? 0.4*
-Soluble,25?,25?,24?,24?
-Lignin,10?,22?,8?,16?
-,,,,
+Carbon,52 ± 0.4*,50 ± 0.4*,47 ± 0.2*,50 ± 0.9*
+Nitrogen,2.2 ± 0.1*,2.4 ± 0.2*,2.5 ± 0.1*,2.1 ± 0.4*
+Soluble,25†,25†,24‡,24‡
+Lignin,10§,22**,8¶,16¶
