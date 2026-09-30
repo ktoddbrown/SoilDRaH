@@ -80,7 +80,7 @@ timelog:
       start: 2026-01-29 T1530
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P05M
+      duration: PT05M
   - activity: 
       description: revised execute with only provided files
       who: ktoddbrown #github username
@@ -88,7 +88,7 @@ timelog:
       start: 2025-01-22 T1400
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
+      duration: PT45M
   - activity: 
       description: Revise based on feedback
       who: ktoddbrown #github username
@@ -96,7 +96,7 @@ timelog:
       end: 2025-11-26
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P30M
+      duration: PT30M
   - activity: 
       description: Table 1
       who: angelacanini-a11y #github username
@@ -104,7 +104,7 @@ timelog:
       end: 2026-08-06
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P90M
+      duration: PT90M
   - activity: 
       description: Table 2
       who: angelacanini-a11y #github username
@@ -112,7 +112,7 @@ timelog:
       end: 2026-08-06
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
+      duration: PT45M
   - activity: 
       description: Methods Citation
       who: angelacanini-a11y #github username
@@ -120,7 +120,7 @@ timelog:
       end: 2026-08-06
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
+      duration: PT45M
   - activity: 
       description: UF ESSIE PhD candidate
       who: vaasukimarupaka #github username
@@ -128,7 +128,7 @@ timelog:
       start: 2026-16-06 T1600
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P05M
+      duration: PT05M
   - activity: 
       description: Table 2
       who: vaasukimarupaka #github username
@@ -136,7 +136,7 @@ timelog:
       end: 2026-11-08
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P15M
+      duration: PT15M
   - activity: 
       description: Methods.md
       who: vaasukimarupaka #github username
@@ -144,7 +144,7 @@ timelog:
       end: 2026-11-08
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P10M
+      duration: PT10M
   - activity: 
       description: Methods Citation
       who: vaasukimarupaka #github username
@@ -152,7 +152,7 @@ timelog:
       end: 2026-11-08
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P15M 
+      duration: PT15M 
   - activity: 
       description: Methods.md
       who: mbalvarez72 #github username
@@ -160,7 +160,7 @@ timelog:
       end: 2026-08-10
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P20M
+      duration: PT20M
   - activity: 
       description: Figure 1
       who: mbalvarez72 #github username
@@ -168,8 +168,17 @@ timelog:
       end: 2026-08-10
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P120M
-version: 'vs202512' #template version, remove before use
+      duration: PT120M
+  - activity:
+      description: figure 1
+      who: laylakalandjian
+      end: 2026-08-09
+      duration: PT60M
+  - activity:
+      description: table 1
+      who: laylakalandjian
+      end: 2026-08-09
+      duration: PT15M
 ---
 
 
