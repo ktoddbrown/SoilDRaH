@@ -74,6 +74,11 @@ timelog:
       who: ashbonner310 
       start: 2026-09-30 
       duration: PT1H15M
+  - activity: 
+      description: Figure 3 transcription and cross check
+      who: ashbonner310 
+      start: 2026-10-01 
+      duration: PT2H
 ---
 
 
@@ -93,7 +98,7 @@ library(bibtex) # reading in BibTex files to R
 # data files for level 0
 methods.file <- "Kemp2003_Methods_AB.md"
 table1.file <- 'Kemp2003_Table1_AB.csv'
-figure3.file <- 'Kemp2003_Figure3_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
+figure3.file <- 'Kemp2003_Figure3_AB.csv'
 figure4.file <- 'Kemp2003_Figure4_XX.csv' ####NEED TO UPDATE WITH INITIALS WHEN FILE IS UPLOADED#######
 
 # Bibliography files
@@ -206,7 +211,7 @@ These files are in the Kemp2003 data rescue.
   - [X] Add the reviewer to the author list in the yml
 + Do
   - [X] Create a spreadsheet with Table 1 and export it to csv
-  - [ ] Extract points from Figure 3 and export it to csv
+  - [X] Extract points from Figure 3 and export it to csv
   - [ ] Extract points from Figure 4 and export it to csv
   - [X] Transcribe or copy the method section
   - [X] Insert references to bib entries
@@ -259,6 +264,46 @@ And is crosschecked with the secondary transcription
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Table1_CS.csv Kemp2003_Table1_AB.csv
 ```
+
+## Figure 3
+
+Figure 3 contained four sub-plots, two each for the species (*Larrea* vs *Prosopis*) and litter type (root vs leaf).
+In addition, each graph has two sets of observed data based on litter treatment (control or drought).
+The .csv file includes columns for the x and y values of each data point, the units for each, treatment, which subgraph it is on (both by letter and subgraph title - litter species and type), and the reported standard error.
+X values (time in months) are reported to the whole number value, and Y values were reported to the tenth decimal place.
+
+```{r}
+#| label: Figure3Check
+#| eval: true 
+
+
+read_csv(file = figure3.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure3.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Figure3_CS.csv Kemp2003_Figure3_AB.csv
+```
+Discrepancies in values in the figure digitization were averaged when differences were >0.1, otherwise the cross check reviewer made a judgement call.
+
 
 ## Methods
 
