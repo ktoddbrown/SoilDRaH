@@ -8,6 +8,7 @@ date-format: YYYY-MMMM
 bibliography:
   - Kemp2003_Methods.bib #contains the citations in the methods section
   - Kemp2003.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Kemp2003_Table1.bib #contains citations included in Table 1.
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ashbonner310 #use the github name as an id
     name:
@@ -182,6 +183,8 @@ These files are in the Kemp2003 data rescue.
   + methods transcribed from primary article
 - [Kemp2003_Table1_AB.csv](Kemp2003_Table1_AB.csv)
   + Table 1 from the primary article
+- [Kemp2003_Table1.bib](Kemp2003_Table1.bib)
+  + citations for Table 1 from the primary article  
 - [Kemp2003_Figure3_AB.csv](Kemp2003_Figure3_AB.csv)
   + Figure 3 from the primary article, digitized into a table
 - [Kemp2003_Figure4_AB.csv](Kemp2003_Figure4_AB.csv)
