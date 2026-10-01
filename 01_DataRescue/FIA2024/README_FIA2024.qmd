@@ -51,22 +51,21 @@ timelog:
       end: 
       start: 
       duration:
-      timelog:
+  - activity: 
+      description: Rewrite level 0 and debug tables
+      who: ktoddbrown
+      start: 2026-10-1
+      duration: PT2H
 ---
 
 ```{r}
 #| label: setup
-#| include: true
-#| warning: false
 #| message: false
-#| echo: false
-#| eval: true
 
 # libraries
 library(tidyverse) # data processing
 library(kableExtra) # pretty tables
 library(bibtex) # reading in BibTex files to R
-library(stringr) # regular expressions
 
 # Download url for the entire FIA database
 downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
@@ -104,14 +103,18 @@ if(file.exists(readsource.file)){
   source(readsource.file)
 }
 
+verbose <- TRUE
+
 #semantic files for level 1
-of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
+#of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
+#is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
 The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
 Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+FIA DataMart v2.1.0, US Forest Service. [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
 
 # What is the FIADB
 
@@ -119,8 +122,6 @@ The version of the US Forest Service's Forest Inventory Analysis Database descri
 
 > **Forest Inventory and Analysis**
 For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
-
-Taken from [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
 
 > **Background**
 The Forest Inventory and Analysis (FIA) research program has been in existence since mandated by Congress in 1928. FIA reports on status and trends in forest area and location; in the species, size, and health of trees; in total tree growth, mortality, and removals by harvest; in wood production and utilization rates by various products; and in forest land ownership. Before 1999, all inventories were conducted on a periodic basis. The passage of the 1998 Farm Bill requires FIA to collect data annually on plots within each State. This kind of up-to-date information is essential to frame realistic forest policies and programs. USDA Forest Service regional research stations are responsible for conducting these inventories and publishing summary reports for individual States.
@@ -149,8 +150,10 @@ The annotations table draws heavily on these above documents with augmentation f
 
 ## Files
 
+TODO: REview this and cross check with DB description. Looks like the bulk density is in the ENTIRE_SUBP_SOIL_SAMPLE_LAYER table
+
 This data is identified as a data source for ISCN4 data harmonization and curation project.
-There are six tables currently annotated in the FIADB data collection.
+There are five tables (`ENTIRE_SUBP_SOIL_SAMPLE_LAB`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC`, `ENTIRE_SUBP_SOIL_SAMPLE_LAYER`, `ENTIRE_PLOT`, `ENTIRE_SURVEY`) currently annotated in the FIADB data collection.
 This represents the data directly relevant for layer-level: 
 
   + soil carbon measurements: 
@@ -175,7 +178,6 @@ This represents the data directly relevant for layer-level:
     - state name `ENTIRE_SURVEY$STATENM`
 
 
-This focuses us on four main tables.
 Each table has a column called CN that identifies unique records for that table.
 This is then cross references with other tables according to the following:
   
@@ -189,6 +191,7 @@ The above annotation tables are associated with the following CSV data tables:
   * `ENTIRE_PLOT.CSV`: *FIA2024_TableEntirePLOT.csv*
   * `ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv`:  *FIA2024_TableSubPlot_Soil_Sample_Location.csv* 
   * `ENTIRE_SUBP_SOIL_SAMPLE_LAB.csv` : *FIA2024_table_subplot_soil_sample_layer*
+  * ENTIRE_SURVEY.csv: *FIA2024_TableSurvey.csv*
   * Missing data description: 
 
 This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
@@ -213,52 +216,12 @@ These files are in the FIADB 2024 data rescue.
 - [temp/](temp/)
         + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
 
-# Data Rescue working notes 
-
-## Data Rescue Plan
-
-+ Lead
-  - [x] Read the article or data resource and the discription of the target project
-  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
-  - [x] Create a copy of this template folder and rename it to AuthorYYYY
-  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [x] Add the reviewer to the author list in the yml
-+ Do
-  - [x] Code up data download from FIADB Data Mart
-  - [x] Transcribe the Data tables in FIADB manual v.9.4 for the selected tables
-  - [x] Create a bib file with the recommended citations
-  - [x] Read in primary tables and variable description information from the manual
-  - [ ] read function match `02_DataHarmonization/readFIA.R` function inputs and output formats
-  - [ ] ask one of the undergrads to provide a secondary transcription for the TemplateCV and TemplateSubmit pdfs
-  - [ ] push everything to the lead fork
-+ Measure
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions in your pull request review
-  - [ ] celebrate!
-
-## Annotations notes:
--   The soils visit, soil erosion tables do not exist as explicit annotation tables in the pdf manual, hence, we do not have separate annotations for these tables
 
 ## Download FIA 2024
 
-# Data processing
-
 ```{r}
 #| label: downloadData
-#| echo: false
-#| eval: false # i already have data downloaded to my local
-# This data pull may have a high memory demand
-# Ensure verbose is defined
-if (!exists("verbose")) verbose <- T
-if(verbose) warning('This function may have a high memory demand.')
 
-# # Download entire FIA database
-# downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
-# # What name is the downloaded file
-# filename <- "CSV_FIADB_ENTIRE.zip"
 if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
   if(verbose) message('Database not found, downloading...')
   if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
@@ -277,168 +240,141 @@ if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
 
 ```
 
-Reading in FIA ENTIRE PLOT csv table
-
 ```{r}
-#| label: table1Check
-#| eval: false #remove when you have the file transcribed
+#| label: reportLabMart
+labMartTables <- list.files(path = 'temp/CSV_FIADB_ENTIRE/', 
+                               pattern = '.csv', full.names = TRUE)
 
-read_csv(file = file.path(dataDir, 'ENTIRE_PLOT.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 1,988,296 × 63 tibble
+tableColumns <- plyr::ldply(labMartTables, 
+            function(filename){
+              tibble(column_names = names(read_csv(filename, n_max = 0,
+                                                   show_col_types = FALSE)),
+                     table_name = str_remove(string = basename(filename),
+                                             pattern = '.csv$'))
+})
 
 ```
 
-Reading in FIA ENTIRE SURVEY csv table
-
-```{r}
-#| label: table2Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SURVEY.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 1,775 × 14 tibble
-
-```
-
-Reading in FIA ENTIRE SUBPLOT csv table
-
-```{r}
-#| label: table3Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SUBPLOT.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 7,640,714 × 48 tibble
-
-```
-
-Reading in FIA ENTIRE SUBPLOT SOIL SAMPLE LOCATION csv table
-
-```{r}
-#| label: table4Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 3,716 × 32 tibble
-
-```
-
-Reading in FIA ENTIRE SUBPLOT SOIL SAMPLE LAYER csv table
-
-```{r}
-#| label: table5Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 14,243 × 57 tibble
-
-```
-
-Reading in FIA ENTIRE TREE csv table
-
-```{r}
-#| label: table6Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_TREE.csv'), #read in the specific file
-         n_max = 1000, # just 1000 rows 
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) 
-# this table is high in memory (13.32 GB data) with 198 columns
-
-```
-
-Reading in FIA SOILS EROSION csv table
-
-```{r}
-#| label: table7Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SOILS_EROSION.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 44,874 × 16 tibble
-
-```
-
-Reading in FIA SOILS VISIT csv table
-
-```{r}
-#| label: table8Check
-#| eval: false #remove when you have the file transcribed
-
-read_csv(file = file.path(dataDir, 'ENTIRE_SOILS_VISIT.csv'), #read in the specific file
-         #read everything as a character, don't worry about formatting yet
-         col_types = cols(.default = col_character())) # 12,683 × 12 tibble
-```
-
-Using the FIABD pdf manual v.9.4(2024), we manually transcribe the annotations into different tables; plot, subplot, subplot layer, subplot location, survey, tree tables for level0. These annotations will further be extended to a standard data model for our level01 data.
-
-```{r}
-annotations <- list(
-  FIA2024_annotations = lapply(annotationFilenames, function(xx) {
-    readr::read_delim(
-      file = xx,
-      delim = ",",
-      col_types = readr::cols(.default = readr::col_character()),
-      comment = '#'
-    )
-  }))
-
-### Read in control vocabulary###
-#Read in the results as tables or figure transcriptions. This includes
-#...the caption as well as the tables themselves
-controlVocabulary.ls <- list(
-  primary_CV = readr::read_delim(file = controlVocabulary,
-    delim = ',', 
-    skip = 5, # we want to only keep the headers without the preamble text.
-    col_types = readr::cols(.default = readr::col_character())))
-
-```
+There are a total of `length(labMartTables)` downloaded in this version of the database with `nrow(tableColumns)` columns of information.
+Below we read in the subset that is relevant for the ISCN4 reanalysis.
 
 # Level 0 data
 
-```{r}
-#This chunk has two purposes. 
-#...1) Check the formatting by reading in everything 
-#...2) Create a list of everything to process later in level 1
+Using the FIABD pdf manual v.9.4(2024) (@burrill2024d), we manually transcribe the descriptions for tables of interest and control vocabularies.
 
-original_tables <- function(dataDir,
-                            data_files = c('ENTIRE_PLOT.csv',
-                                           'ENTIRE_SURVEY.csv',
-                                           'ENTIRE_SUBPLOT.csv',
-                                           'ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv',
-                                           'ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv',
-                                          # 'ENTIRE_TREE.csv',
-                                           'ENTIRE_SOILS_EROSION.csv',
-                                           'ENTIRE_SOILS_VISIT.csv')) {
-  
-  # create an empty list to hold the data
-  tables <- vector("list", length(data_files))
-  
-  # read files
-  for (i in seq_along(data_files)) {
-    tables[[i]] <- readr::read_csv(
-      file = file.path(dataDir, data_files[i]),
+  + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
+  + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
+  + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
+  + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
+  + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
+  + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
+  + [FIA2024_Entire_Control_Vocabulary.csv](FIA2024_Entire_Control_Vocabulary.csv)
+
+```{r}
+#| label: readRescues
+
+readCheck <- Inf
+
+level0.ls <- list(
+  citation = read.bib(file = primaryCitation.file),
+  ENTIRE_PLOT = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_PLOT.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = readr::read_csv(
+      file = 'FIA2024_TableEntirePLOT.csv',
       col_types = readr::cols(.default = readr::col_character())
     )
-  }
+  ),
+  ENTIRE_SURVEY = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SURVEY.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = readr::read_csv(
+      file = 'FIA2024_TableSurvey.csv',
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  ),
+  # ENTIRE_SUBPLOT <- list(
+  #   data = readr::read_csv(
+  #     file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBPLOT.csv'),
+  #     col_types = readr::cols(.default = readr::col_character()),
+  #     n_max = readCheck
+  #   ),
+  #   description = readr::read_csv(
+  #     file = 'FIA2024_TableSubPlot.csv',
+  #     col_types = readr::cols(.default = readr::col_character())
+  #   )
+  # ),
+  ENTIRE_SUBP_SOIL_SAMPLE_LOC = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = readr::read_csv(
+      file = 'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
+      col_types = readr::cols(.default = readr::col_character())
+     )
+   ),
+  ENTIRE_SUBP_SOIL_SAMPLE_LAYER = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = readr::read_csv(
+      file = 'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
+      col_types = readr::cols(.default = readr::col_character())
+    )
+  ),
+  # ENTIRE_SOILS_EROSION = list(
+  #   data = readr::read_csv(
+  #     file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_EROSION.csv'),
+  #     col_types = readr::cols(.default = readr::col_character()),
+  #     n_max = readCheck
+  #   ),
+  #   description = 'missing'
+  # ),
+  ENTIRE_SOILS_VISIT = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_VISIT.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = 'missing'
+  ),
+  ENTIRE_SOILS_VISIT = list(
+    data = readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_VISIT.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ),
+    description = 'missing'
+  ),
+  controlVocabulary = readr::read_csv(
+    file = controlVocabulary,
+    col_types = readr::cols(.default = readr::col_character())
+  )
+)
 
-  table_names <- tools::file_path_sans_ext(basename(data_files)) # strip .csv
-  names(tables) <- table_names 
-  
-  return(tables)
-}
+#problematic ENTIRE_PLOT notations
+which(level0.ls$ENTIRE_PLOT$data |> names() != 
+        level0.ls$ENTIRE_PLOT$description$`Column name (attribute)`)
 
-primary_data <- original_tables(dataDir)
+#no current problems with ENTIRE_SURVEY
+#which(names(level0.ls$ENTIRE_SURVEY$data) != names(level0.ls$ENTIRE_SURVEY$description$`Column name (attribute)`))
 
-data.lvl0.ls <- list(
-  #Read in a list of all the bib files
-  citation.ls = read.bib(file = primaryCitation.file),
-  primaryData.ls = primary_data,
-  primaryAnnotations.ls = annotations,
-  controlVocabulary.ls = controlVocabulary.ls)
+#no current problems with ENTIRE_SUBP_SOIL_SAMPLE_LOC
+# which(names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LOC$data) != 
+#         names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LOC$description$`Column name (attribute)`))
 
+#no current problems with ENTIRE_SUBP_SOIL_SAMPLE_LAYER
+# which(names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LAYER$data) != 
+#         names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LAYER$description$`Column name (attribute)`))
 ```
+
