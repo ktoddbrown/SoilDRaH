@@ -1,4 +1,3 @@
-﻿wo-v9-4_Aug2025_UG_FIADB_database_description_NFI.pdf,,,,
 Subsection, Column name (attribute),Descriptive name, Oracle data type,Description
 2.6.1,CN,Sequence number,VARCHAR2(34),A unique sequence number used to identify a subplot record.
 2.6.2,PLT_CN,Plot sequence number,VARCHAR2(34),Foreign key linking the subplot record to the plot record.
