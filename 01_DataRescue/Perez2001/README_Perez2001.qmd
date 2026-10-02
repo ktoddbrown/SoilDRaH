@@ -10,53 +10,57 @@ bibliography:
   - Perez2001_Thestudyarea.bib
   - Perez2001.bib
 author:
-  - name:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Review"
-  - name:
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliations:
+      - id: ESS UF
+        name: University of Florida
+        department: Environmental Engineering Sciences
+        city: Gainesville
+        state: FL
+        country: USA
+    role: 
+      - "Review"
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/SavaScott
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/SavaScott
+  - id: laylakalandjian
+    name:
       given: Layla
       family: Kalandjian
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/laylakalandjian
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/laylakalandjian
+  - id: vaasukimarupaka
+    name:
       given: Vaasuki
       family: Marupaka
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Review"
-      note: https://github.com/vaasukimarupaka
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Review"
+    note: https://github.com/vaasukimarupaka
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}

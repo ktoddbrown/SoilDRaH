@@ -20,38 +20,37 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: review
       #- standardization: 
       #- curation: 
-  - id: semantic-nomad 
+  - id: semantic-nomad
     name:
       given: Brandon
       family: Whitehead
-    orcid: 
+    #orcid:
     affiliation:
       - ref: uf-ees
-    role: 
+    role:
       - transcription: review
-      - standardization: 
-      - curation: 
+     # - standardization:
+     # - curation:
   - id: misheph
     name:
       given: Mirah
       family: Blanchard
     affiliation:
       - ref: uf-mae
-    role: 
-      - transcription: lead 
+    role:
+      - transcription: lead
       #- standardization:
-      #- curation: 
+      #- curation:
   - id: SavaScott
     name:
       given: Savannah
       family: Scott
     affiliation:
       - ref: uf-ees
-    role: 
+    role:
       - transcription: secondary
-      #- standardization: 
-      #- curation: 
-
+      #- standardization:
+      #- curation:
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -59,7 +58,7 @@ affiliations:
     city: Gainesville
     state: Florida
     country: USA
-    address: "365 Weil Hall \nP.O. Box 116580"
+    address: "365 Weil Hall, P.O. Box 116580"
     postal-code: 32611
     url: https://essie.ufl.edu/ees/
   - id: uf-mae
@@ -71,14 +70,13 @@ affiliations:
     address: "P.O Box 116250"
     postal-code: 32611
     url: https://mae.ufl.edu/
-    
 timelog:
-  - activity: 
+  - activity:
       description: Revise based on feedback
-      who: Misheph 
+      who: Misheph
       end: 2026-1-31
       start: 2025-10-25
-      duration: P10H
+      duration: PT10H
 ---
 
 

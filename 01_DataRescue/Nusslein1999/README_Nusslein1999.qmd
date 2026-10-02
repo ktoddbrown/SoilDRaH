@@ -40,7 +40,6 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - transcription: secondary
       #- standardization: 
       #- curation: 
-
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -57,19 +56,16 @@ affiliations:
     city: Gainesville
     state: Florida
     county: USA
-    address:
-    postal-code: "P.O Box 116250"
-    url:  32611
+    address: "P.O Box 116250"
+    postal-code:  32611
     url: https://mae.ufl.edu/
-    
 timelog:
   - activity: 
       description: Revise based on feedback
       who: Misheph
       end: 2025-01-22
       start: 2025-11-01
-      duration: P10H
-
+      duration: PT10H
 ---
 
 

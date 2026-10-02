@@ -3,38 +3,348 @@ title: "Summary of data rescues"
 format:
   html:
     toc: true
+    code-fold: true
 date: last-modified
 date-format: YYYY-MMMM
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  #remove ktoddbrown if they did not work on the rescue directly
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+timelog:
+  - activity:
+      description: Parse YAML and Git logs for authorship and repo contribution timeline. Fixed formatting in many of the README qmd files.
+      who: ktoddbrown
+      start: 2027-07-30
+      duration: P3H
+  - activity:
+      description: Parse yaml time logs. Only minor fixes in the README qmd needed
+      who: ktoddbrown
+      start: 2027-08-1
+      duration: P1H
 ---
+
+
+**Purpose**: The purpose of this file is to track the number of data rescues, how often data rescues are contributed, how frequently students (especially undergraduates) contribute data rescues, and how long data rescues take to preform. This is to provide an accurate estimate for future projects rather then tracking metrics for individual people.
+
+# Setting things up
+
+This code base uses the R-packages `tidyverse`, `plyr`, and `yaml` for data processing and YAML parsing.
 
 ```{r}
 #| label: setup
 
 library(tidyverse)
+library(yaml) #used to parse headers
+#plyr package not loaded so as not to conflict the name space. 
+#...Called out instead using the package::function notate.
+```
+
+
+```{r}
+#| label: pullGitLogs
+
+#Pull out the git blame and timestamps
+fileGitTouches <- tibble(filenames = list.files(path = '.',
+                      recursive = TRUE)) |>
+  #remove files in the temp or rendered directories
+  filter_out(str_detect(filenames, '/t|Temp/') |
+             str_detect(filenames, '_files')) |>
+  #slice_sample(n=10) |> #uncomment for code dev
+  #pass the system a `git log` request for each file 
+  #... (takes a minute, quick stretch break!)
+  mutate(gitLogStr = paste0(system(paste0('git log -- ', filenames),
+                            intern = TRUE), collapse = '\\n'),
+         .by = filenames) |>
+  #parse the log file
+  reframe(timestamp_str = #when was the commit, many are squashed when merged to main
+            str_extract_all(gitLogStr,
+                            '(?<=Date:)[[:alnum:]\\s\\-\\:]+') |> unlist(),
+         author = #who made the commit
+           str_extract_all(gitLogStr, 
+                           '(?<=Author:\\s)[^<]*(?=\\s<)') |> unlist(),
+         .by = c(filenames, gitLogStr)) |>
+  mutate(timestamp_date = 
+           parse_date_time(timestamp_str, 
+                           orders = '%a %b %d %H:%M:%S %Y %z',
+                           truncated = 1), #sometimes no timezone, deal
+         studyID = str_extract(filenames, '^\\w+(?=/)'),
+         .by = c(filenames, gitLogStr)) 
+ 
+```
+
+```{r}
+#| label: pullReadMeYAML
+
+
+#create a dataframe of readme files
+readME.df <- tibble(filenames = list.files(path = '.',
+                      recursive = TRUE)) |>
+  #define readme based on the appearence of 'readme' at the start of the file name
+  #... of files within directories and that end in 'md'
+  filter(str_detect(filenames, regex('^\\w+/README_\\w+\\.\\wmd$',
+                                     dotall = TRUE, ignore_case = TRUE))) |>
+  #pull the directory as study name
+  mutate(studyID = str_extract(filenames, '^\\w+(?=/)')) 
+
+readME.ls <- setNames(as.list(readME.df$filenames), readME.df$studyID)
+studyID_exclude <- c('CPEAT2025', 'FIA2024', 'NCSS2023', 'ISCN3_2015')
+
+allYAML <- lapply(readME.ls[setdiff(names(readME.ls), studyID_exclude)],
+                  function(myfilename){
+                    #allYAML <- lapply(readME.ls['Nusslein1999'], function(myfilename){
+                    fileLines <- read_lines(file = myfilename) 
+                    
+                    yamlStartEnd <- which(str_detect(fileLines, '^---\\s*$'))
+                    
+                    fileHeader <- fileLines[(yamlStartEnd[1]+1):(yamlStartEnd[2]-1)]
+                    
+                    yamlHeader <- read_yaml(text = fileHeader)
+                    
+                  })
 
 ```
 
-# Counts: Studies, tables, and figures
+```{r}
+#| label: assignStudyType
+
+studyTypes.df <- readME.df |>
+  select(studyID) |>
+  unique() |>
+  mutate(sourceType = 
+           case_when(studyID == '_TemplateYYYY' ~ 'template',
+                     studyID %in% c('FIA2024', 'NCSS2023') ~ 'monitoring data',
+                     studyID %in% c('CPEAT2025', "ISCN3_2015") ~ 'data repository',
+                     .default = 'primary literature'
+                     
+           ))
+```
+
+# Scale of data rescued
+
+```{r}
+fileStats <- fileGitTouches |>
+  filter(filenames != 'ReadMe_DataRescue.qmd',
+         !str_detect(filenames, '^_')) |>
+  select(filenames_str = filenames, studyID) |>
+  unique() |>
+  mutate(lineCount = length(read_lines(filenames_str)),
+         fileSize = file.size(filenames_str),
+         .by = filenames_str) |>
+  mutate(file_type =
+           case_when(str_detect(filenames_str, '[fF]igure.*\\.csv$') ~ 'figure',
+                     str_detect(filenames_str, '[tT]able.*\\.csv$') ~ 'table',
+                     str_detect(filenames_str, '\\.bib$') ~ 'bibliography',
+                     str_detect(filenames_str, '\\.md$') ~ 'text',
+                     str_detect(filenames_str, '\\.qmd$') ~ 'documentation',
+                     .default = 'Unknown'),
+         .by = filenames_str) |>
+  reframe(lines = sum(lineCount),
+          files = n(),
+          size_kB = sum(fileSize) / 2^10,
+          .by = c(studyID, file_type))
+
+studyStats <- fileStats |>
+  filter(file_type %in% c('figure', 'table', 'bibliography', 'text')) |>
+  reframe(lines = sum(lines),
+          files = sum(files),
+          size_kB = sum(size_kB),
+          .by = studyID)
+
+typeStats <- fileStats |>
+  filter(file_type %in% c('figure', 'table', 'bibliography', 'text')) |>
+  reframe(lines = sum(lines),
+          files = sum(files),
+          size_kB = sum(size_kB),
+          .by = file_type)
+```
+
+```{r}
+plot.df <- studyTypes.df |>
+  full_join(fileStats) |>
+  filter(file_type %in% c('figure', 'table', 'bibliography', 'text')) |>
+  filter(sourceType == "primary literature") |>
+  pivot_longer(cols = c(lines, files, size_kB),
+               names_to = 'sizeType') 
+  
+ggplot(plot.df) +
+  geom_histogram(aes(x=value)) +
+  facet_grid(file_type~sizeType, scale='free') +
+  labs(title = 'Scale of a data rescue element')
+```
+
+```{r}
+plot.df <- studyTypes.df |>
+  full_join(studyStats) |>
+  pivot_longer(cols = c(lines, files, size_kB),
+               names_to = 'sizeType') |>
+  filter(sourceType == "primary literature")
+
+ggplot(plot.df) +
+  geom_histogram(aes(x=value)) +
+  facet_wrap(~sizeType, scale='free') +
+  labs(title = 'Scale of a data rescue')
+```
+
+Overall, there are `r sum(studyStats$size_kB)` kB of data currently rescued across `r nrow(studyStats)` data rescues.
+
+# When and how long does a data rescue take?
+
+```{r}
+ 
+startProjects <- fileGitTouches |>
+  select(timestamp_date, studyID) |>
+  unique() |>
+  reframe(firstCommit = min(timestamp_date),
+          lastCommit = max(timestamp_date),
+         .by = studyID) |>
+  arrange(firstCommit, studyID) |>
+  mutate(startingRank = 1:n()) 
+
+```
+
+
+```{r}
+author.df <- plyr::ldply(allYAML, .id = 'studyID',
+                         .fun = function(yamlHeader){
+ #yamlHeader <- allYAML[[27]]
+  #TODO Standardize this across the project
+  if('authors' %in% names(yamlHeader)){
+    author_str <-'authors'
+  }else if('author' %in% names(yamlHeader)){
+    author_str <-'author'
+  }else{
+    stop('bad author key')
+  }
+  
+  ans <- as.data.frame(yamlHeader[[author_str]]) |>
+    select(starts_with('id'),
+           starts_with('name.given'), starts_with('name.family')) |>
+    unique() |>
+    pivot_longer(cols = everything()) |>
+    mutate(author_order = str_extract(name, '\\d+$')) |>
+    mutate(author_order = if_else(is.na(author_order), '0', author_order),
+           name = str_remove(name, '\\.\\d+$')) |>
+    pivot_wider(names_from = 'name', values_from = 'value') |>
+     select(author_order, author_id = id, `name.family`, `name.given`) #|>
+    # mutate(studyID = str_extract(tempFilename, pattern = '^[[:alnum:]_]+'))
+  return(ans)
+}) |>
+  mutate(student_status = case_when(
+    name.family %in% c("Marupaka", "Whitehead", "Bonner") ~ 'PhD Student',
+    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen", "Walder", "Saxour", "Velazquez", "Anegondi") ~ 'BS Student',
+    .default = 'Other'
+  ), 
+  UG_cohort = case_when(
+    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen") ~ ym('2025-1'),
+    name.family %in% c("Saxour", "Walder") ~ ym('2025-09'),
+    name.family %in% c("Green", "Velazquez", "Anegondi") ~ ym('2026-1'),
+    .default = NA
+  ))
+
+```
 
 ```{r}
 
-directories.ls <- tibble(filenames = list.files(path = '.',
-                      recursive = FALSE)) |>
-  filter(!str_detect(filenames, '^\\w+\\.\\w+$'))
+loggedTime.df <- plyr::ldply(allYAML, function(list_item){
+  plyr::ldply(list_item[['timelog']], function(activity_item){
+  return(as.data.frame(activity_item$activity))
+}) }, .id = 'studyID') |>
+  mutate(duration = lubridate::duration(duration)) 
 
-readME.ls <- tibble(filenames = list.files(path = '.',
-                      recursive = TRUE)) |>
-  filter(str_detect(filenames, '^\\w+/\\w+\\.\\wmd$')) 
-  filter(str_detect(filenames, '^\\w+/README\\w+\\.\\w+$')) #only look at 
+studyTotals <- loggedTime.df |>
+  reframe(totalTime = sum(duration)/(60*60),
+          description = paste(description, collapse = '; '),
+          .by = studyID) |>
+  mutate(level1_included = str_detect(description, 'T|transcrip')) |>
+  arrange(desc(level1_included), totalTime)
+
+authorTotals <- loggedTime.df |>
+  #only look at studies that have transcriptions logged
+  filter(studyID %in% studyTotals$studyID) |>
+  reframe(totalTime = sum(duration)/(60*60),
+          description = paste(description, collapse = '; '),
+          .by = who) |>
+  arrange(totalTime)
 ```
 
-# Template adherence
 
-## YAML
+```{r}
+plot.df <- author.df |>
+  left_join(startProjects, by = join_by(studyID)) |>
+  filter(author_id != 'ktoddbrown',
+         firstCommit > ymd('2025-01-01')) |>
+  arrange(name.family, firstCommit) |>
+  mutate(cumulative_count = 1:n(),
+         time_since_first = firstCommit - min(firstCommit),
+         .by = name.family)
 
-## Sections
+ggplot(plot.df |>
+         filter(firstCommit > min(firstCommit) ), 
+       aes(x=difftime(firstCommit, UG_cohort)/365,
+                y = cumulative_count, color = name.family)) +
+  guides(color = 'none') +
+  geom_point() +
+  geom_line() +
+  labs(x= 'Years project start', y = 'Cumulative study count',
+       title = 'Undergraduate study submits over time')
 
-# People and time
+ggplot(plot.df) +
+  geom_point(aes(x=time_since_first/(60*60*24),
+                y = cumulative_count)) +
+  geom_line(aes(x=time_since_first/(60*60*24),
+                y = cumulative_count, color = name.family)) +
+  guides(color = 'none') +
+  labs(x= 'Days since first commit', y = 'Cumulative study count',
+       title = 'Data rescuer study submits over time')
 
-# Level 1
+ggplot(plot.df |>
+         filter(cumulative_count == max(cumulative_count),
+                .by = name.family)) +
+  geom_histogram(aes(x =  cumulative_count), binwidth = 1) +
+  labs(x = 'Cumulative study count', title = 'Data rescuer productivity')
 
+ggplot(plot.df |>
+         filter(cumulative_count == max(cumulative_count),
+                .by = name.family),
+       mapping = aes(x = time_since_first/(60*60*24*365), y = cumulative_count,
+                     color = student_status)) +
+  geom_jitter() +
+  labs(x= 'Years since first commit', y = 'Cumulative study count',
+       title = 'Total data rescuer productivity')
+
+# lm(data = plot.df |>
+#          filter(cumulative_count == max(cumulative_count),
+#                 .by = name.family),
+#   formula =  cumulative_count ~ I(time_since_first/(60*60*24*365)) ) |>
+#   summary()
+```
+
+```{r}
+ggplot(fileGitTouches |>
+         full_join(studyTypes.df,
+                   by = join_by(studyID)) |>
+         full_join(startProjects,
+                   by = join_by(studyID)) |>
+         filter(studyID != 'ReadMe_DataRescue.qmd')) +
+  geom_line(aes(y=startingRank, x = timestamp_date, group = studyID, color = sourceType)) +
+  geom_point(aes(y = startingRank, x = timestamp_date, color = sourceType)) +
+  geom_line(aes(x=firstCommit, y = startingRank), linetype = 3) +
+  labs(x = "Date",
+       y = 'Cumulative study count',
+       title = 'Data rescue study commits (any change)')
+```
