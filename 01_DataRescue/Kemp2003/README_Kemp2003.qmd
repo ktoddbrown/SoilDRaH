@@ -232,8 +232,8 @@ These files are in the Kemp2003 data rescue.
   - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [X] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [X] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
 
