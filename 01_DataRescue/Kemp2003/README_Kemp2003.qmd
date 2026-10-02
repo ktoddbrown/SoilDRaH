@@ -84,6 +84,11 @@ timelog:
       who: ashbonner310 
       start: 2026-10-02
       duration: PT2H
+  - activity: 
+      description: Last checks through readme and render
+      who: ashbonner310 
+      start: 2026-10-02
+      duration: PT15M
 ---
 
 
@@ -237,7 +242,7 @@ These files are in the Kemp2003 data rescue.
 Table 1 had both footnote text and a title caption; both are included in the first row of the .csv.
 In addition, the table used multiple reference marks.
 The dagger, double dagger, section sign, and paragraph sign were all included, but a double vertical bar reference mark was replaced with a double asterisk instead.
-This table included several citations in the footnotes and these are included in the methods.bib file.
+This table included several citations in the footnotes and these are included in the related bib file.
 A citation for Moorhead & Reynolds (1993) in the footnote for lignin root measurements does not exist in the reference section of the paper, so we assume the author meant Moorhead and Reynolds (1991) and cited that instead.
 
 ```{r}
@@ -263,7 +268,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTableN
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -320,7 +325,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure3
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -375,7 +380,7 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure4
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
@@ -435,7 +440,7 @@ This level 0 data read parses the transcribed files with minimal cleaning or tra
 
 ```{r}
 #| label: readLevel0
-#| eval: false ###remove when finished!!!
+#| eval: true
 #This chunk has two purposes. 
 #...1) Check the formatting by reading in everything 
 #...2) Create a list of everything to process later in level 1
@@ -448,7 +453,7 @@ data.lvl0.ls <- list(
     #Citations for referenced articles in methods
     methods = read.bib(file = methodsCitation.file),
     #Citations for referenced articles in the table 1 caption
-    methods = read.bib(file = table1Citation.file)
+    table1caption = read.bib(file = table1Citation.file)
   ),
   #Read in the text transcription of the article's methods section
   method = read_lines(file = methods.file),
@@ -456,18 +461,31 @@ data.lvl0.ls <- list(
   #...the caption as well as the tables themselves
   data = list(
     Table1 = list(
-      #Read the caption as a text string. Captions are the first cell on 
-      #...the first row.
-      caption = read_csv(file = tableN.file,
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure4 = list(
+      caption = read_csv(file = figure4.file,
                          col_types = cols(.default = col_character()),
                          n_max = 1, col_names = FALSE)$X1[1],
       #Read in all the data, skipping the first row with the caption and read
       #...in the table as character. This element is a tibble (data.frame).
-      primary = read_csv(file = tableN.file,
+      primary = read_csv(file = figure4.file,
                          col_types = cols(.default = col_character()),
                          skip = 1)
-    ) #End 'Table1' element
-    #Repeat for all tables and figures...
+    )
    ) #end 'data' element
 )
 
@@ -478,7 +496,7 @@ Below verifies that the data from the function matches what is coded above.
 
 ```{r}
 #| label: checkReadFunction_lvl0
-#| eval: false
+#| eval: true
 
 if(file.exists(readsource.file)){
   datafunction.lvl0.ls <- readKemp2003(dataDir = '.',
