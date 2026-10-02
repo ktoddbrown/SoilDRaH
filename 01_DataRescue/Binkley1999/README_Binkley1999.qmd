@@ -9,57 +9,102 @@ bibliography:
   - Binkley1999_Methods.bib
   - Binkley1999.bib
 author:
-  - id: ktoddbrown
+  - id: ktoddbrown #use the github name as an id
     name:
       given: Katherine
       family: Todd-Brown
     orcid: 0000-0002-3109-8130
-    note: https://github.com/ktoddbrown
-    affiliations:
-      - id: ESS UF
-        name: University of Florida
-        department: Environmental Engineering Sciences
-        city: Gainesville
-        state: FL
-        country: USA
-    role: 
-      - "Transcription"
-      - "Review"
-  - id: hannguyenuf
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary, review
+      - standardization: review
+   #   - curation: lead #review
+
+  - id: hannguyenuf #use the github name as an id
     name:
       given: Han
       family: Nguyen
     affiliation:
-      - id: UF
-        name: University of Florida
-        city: Gainesville
-        state: FL
-        country: USA
-    role: "Transcription"
-    note: https://github.com/hannguyenuf
-  - id: SavaScott
+      - ref: uf-e
+    role:
+      - transcription: lead #secondary, review
+
+  - id: SavaScott #use the github name as an id
     name:
       given: Savannah
       family: Scott
     affiliation:
-      - id: UF
-        name: University of Florida
-        city: Gainesville
-        state: FL
-        country: USA
-    role: "Transcription"
-    note: https://github.com/SavaScott
+      - ref: uf-ees
+    role:
+      - transcription: review
+      - standardization: lead
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+  - id: uf-e
+    name: University of Florida
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "300 Weil Hall \nP.O. Box 116550"
+    postal-code: 32611
+    url: https://www.eng.ufl.edu/
+  - id: uf-mae
+    name: University of Florida
+    department: Mechanical and Aerospace Engineering
+    city: Gainesville
+    state: Florida
+    county: USA
+    address: "P.O Box 116250"
+    postal-code: 32611
+    url: https://mae.ufl.edu/
+  - activity: 
+      description: Lev1 standardization started
+      who: SavaScott
+      start: 2026-01-24
+      end: 2026-04-30
+      duration: PT7H25M #lost track of the time along the semester, this is an estimate and it may have been higher
+  - activity: 
+      description: Lev1 standardization reworked
+      who: SavaScott
+      start: 2026-07-07
+      end: 2026-08-05
+      duration: PT4H
 ---
 
+
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+
 library(tidyverse)
 library(kableExtra)
 library(bibtex)
 
-methods.file <- 'Binkley1999_Methods.md'
+# data files for level 0
+methods.file <- "Binkley1999_Methods.md"
 table1.file <- 'Binkley1999_Table1.csv'
+
+# Bibliograph files
 primaryCitation.file <- 'Binkley1999.bib'
 methodsCitation.file <- 'Binkley1999_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../02_DataHarmonization/readBinkley1999.R'
+source(readsource.file)
+
+
+#semantic files for level 1
+#of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
+#is_type.file <- '../../02_DataHarmonization/is_type.csv'
+
 ```
 
 This documents the data transcription for @Binkley1999 .
@@ -73,7 +118,7 @@ For the discussion of this data rescue see the Github issue: https://github.com/
 
 This paper documents changes in Hawaiian soil after 32 months of development of a eucalyptus plantation.
 Soil C was found to not change significantly, suggesting that expectations of C accumulation due to afforestation may need to be reduced.
-Rapid changes in soil are examined here as: (1) Soil fertility may affect tree growth rate, and (2) Changes in soil C must be accounted for to predict root production following an efflux in CO2.
+Rapid changes in soil are examined here as: (1) Soil fertility may affect tree growth rate, and (2) Changes in soil C must be accounted for to predict root production following an efflux in CO$_2$.
 
 ## Fit for purpose: HiCSC
 
@@ -95,7 +140,7 @@ This data is identified as a data source for the Hawai'i Soil Organic Carbon Dat
 
 ### Table 1
 
-Table 1 was modified by filling in blanks with `NA` and down filling the Age column.
+Table 1 was modified by filling in blanks with `NA`, modifying Age column to also include duration, flagging rows as either stock or change, and down filling the Age/duration column.
 There were two rows in the 'K' column that indicated control vs fertilizer, I split this into two separate columns.
 The CI for pH was not aggregated to 0-30 but reported for 0-15 and 15-30, I concatenated both values with a ';' separate into one entry.
 
@@ -177,7 +222,7 @@ In the future this draft will be echoed from the R scripts.
 
 ```{r readLevel0}
 
-data.lvl0.df <- list(citation = 
+data.lvl0.ls <- list(citation = 
                     list(primary = 
                            read.bib(file = primaryCitation.file), 
                          methods = 
@@ -198,3 +243,201 @@ data.lvl0.df <- list(citation =
                   ) 
 )
 ```
+
+# Level 1
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `source`
+
+The `of_variable` being used here are:
+
++ citation
++ doi
++ region
++ geolocation
++ air_temperature
++ rainfall
++ elevation
++ soil_class
++ inital_planting
++ observation_time
++ soil_sample_prep
++ soil_sampling
++ stand_type
++ layer
++ soil_aluminum
++ soil_calcium
++ soil_magensium
++ soil_nitrogen
++ soil_organic_carbon
++ soil_ph
++ soil_potassium
++ stand_age
+
+```{r}
+#| label: constructLevel1
+
+#### Pull info true across study ####
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                     'region', 'site', '13 km NNE of downtown Hilo', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'region', 'state', 'HI', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     #convert to decimal degrees
+                     'geolocation', 'latitude', as.character(19 + 50/60 + 28.1/3600), paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'geolocation', 'longitude', as.character(-1*(155 + 7/60 + 28.3/3600)), paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'geolocation', 'unit', 'decimal_degree', 'manual conversion in level1 codebase',
+                     #pull climate variables
+                     'air_temperature', 'value', '21',paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'air_temperature', 'unit', '°C',paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'rainfall', 'min', '300', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'rainfall', 'max', '400', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'rainfall', 'unit', 'mm mo<sup>-1</sup>', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     #Elevation info
+                     'elevation', 'value', '350', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     'elevation', 'unit', 'm', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                     #sampling info
+                     'soil_class', 'value', 'Kaiwiki thixotropic, isothermic Typic Hydrandepts', paste('Method ln4:',paste(data.lvl0.ls$method[4], collapse = ' ')),
+                     'soil_sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.ls$method[22]),
+                     'soil_sampling', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.ls$method[12]),
+                     'carbon_organic', 'unit', 'g m-2', 'Table 1 column name',
+                     'carbon_organic', 'method', 'CN analyzer on carbonate-corrected sample then multipled by sampled bulk density and depth of sample', paste('Methods ln 21, 24, 29-30, 55', paste0(data.lvl0.ls$method[c(21, 24, 29:30, 55)], collapse = ' ')),
+                     'depth', 'unit', 'cm', 'Table 1 column name',
+                     'depth', 'method', paste0(data.lvl0.ls$method[c(19:20,23:24)], collapse = ' '), 'Methods ln 19-20;23-24',
+                     #land use information
+                     'initial_planting', 'value', '1994', paste('Method ln11:', data.lvl0.ls$method[11]),
+                     'observation_time', 'value', '1997', paste('Method ln23:', data.lvl0.ls$method[23]),
+                     'stand_age', 'unit', 'month', 'Table 1 column name',
+                     'stand_age', 'method', 'Six month seedlings planted late April/early May', paste('Method ln11:', data.lvl0.ls$method[11]),
+                     'stand_type', 'value', 'Eucalyptus saligna', paste('Method ln3:', data.lvl0.ls$method[3]),
+                     #study citation
+                     'citation', 'value', format(data.lvl0.ls$citation$primary), 
+                     'journal_citation', 'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation') 
+
+land_use.df <- tribble(~land_use_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
+                      #Group the two different land use descriptions, LU1 is the current
+                      'LU1', 'land_use', 'description', '4-ha plantation of *E. saligna*', paste('Method ln1:', data.lvl0.ls$method[1]),
+                      'LU1', 'land_use', 'time_period', '1994/1997', paste('Method ln11,23:', paste(data.lvl0.ls$method[11], data.lvl0.ls[23], collapse = '...')),
+                      #... LU2 is the historical land use
+                      'LU2', 'land_use', 'description', 'Sugarcane', paste('Method ln3:', data.lvl0.ls$method[3]),
+                      'LU2', 'land_use', 'duration', 'P80Y/1994', paste('Method ln3:', data.lvl0.ls$method[3])
+)
+
+#### Table 1 ####
+                
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  mutate(row_id = paste0('R', 1:n())) |>
+  filter(`Stock or change` == 'stock') |>
+  mutate(timeSincePlanting_id = paste0('Months ', `Age/duration (mo)`),
+         layer_id = paste0('Layer ', `Depth (cm)`)) |>
+  select(ends_with('_id'), `Age/duration (mo)`, `Depth (cm)`, `C (g m<sup>-2</sup>)`) |>
+  mutate(depth__top = str_extract(`Depth (cm)`, pattern = "^\\d+(?=-)"),
+         depth__bottom = str_extract(`Depth (cm)`, pattern ="(?<=-)\\d+$"),
+         carbon_organic__mean = str_extract(`C (g m<sup>-2</sup>)`, pattern = '^\\d+'),
+         carbon_organic__standard_error = str_extract(`C (g m<sup>-2</sup>)`, pattern = '(?<=\\()\\d+(?=\\))'),
+         stand_age__value = `Age/duration (mo)`) |>
+  select(ends_with('_id'), starts_with('depth', ignore.case = FALSE),
+         starts_with('carbon'), starts_with('stand')) |>
+  pivot_longer(cols = -c(row_id, timeSincePlanting_id, layer_id),
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |>
+  separate_wider_delim(cols = column_name, delim = '__',
+                        names = c('of_variable', 'is_type')) |>
+  mutate(from_source = 'Table 1')
+
+
+#### Create level 1
+
+data.lvl1.ls <- list(
+  study = studyMeta,
+  land_use = land_use.df,
+  layer = Table1Primary
+  )
+```
+
+## Check for new variables and types
+
+`of_variable` and `is_type` in the data files should be defined in the draft vocabulary.
+Update this after 3-6 datasets have been joined together in the initial curation.
+
+```{r}
+#| label: check_of_variable
+
+temp <- data.lvl1.ls$study |>
+  select(of_variable, is_type) |>
+  bind_rows(data.lvl1.ls$primary_meta) |>
+              select(of_variable, is_type) |>
+  bind_rows(data.lvl1.ls$primary |>
+              select(of_variable, is_type)
+            ) |>
+  unique() |>
+  mutate(study_id = 'Binkley1999')
+
+#write_csv(temp, file = '../../03_DataCuration/HiCSC/vocabulary_draft.csv')
+ref_draft <- read_csv('../../03_DataCuration/HICSC/vocabulary_draft.csv',
+                      show_col_types = FALSE)
+
+newVariables <- anti_join(temp, ref_draft,
+                          by = join_by(of_variable, is_type, study_id))
+
+if(nrow(newVariables) == 0){
+  print('All variables in draft document')
+}else{
+  #add the missing rows to the draft
+  write_csv(temp, file = '../../03_DataCuration/HICSC/vocabulary_draft.csv',
+            append = TRUE, col_names = FALSE)
+}
+
+ #Read in the list of current 'of_variable' entries
+# SoilDRaH_variable_list <- read_csv(file = '..//../02_DataHarmonization/of_variable.csv',
+ #                                   show_col_types = FALSE)
+ 
+ #compare the variables in the level 1 tables to the SoilDRaH variables
+# new_variables <- lapply(data.lvl1.ls, function(xx){
+ #  setdiff(unique(xx$of_variable), 
+  #         unique(SoilDRaH_variable_list$of_variable))
+# }) |>
+ #  unlist()
+ 
+# #Check that there are no new variables
+# if(length(new_variables) == 0){
+ #  print('All of_variables are in the SoilDRaH variable list. No additions required')
+ #}else{
+  # cat(paste('Please start a issue for new variables [',
+   #             new_variables, ']', sep = '', collapse = '\n'))
+# }
+```
+
+
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readBinkley1999(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
+
