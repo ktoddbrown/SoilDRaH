@@ -150,6 +150,49 @@ The annotations table draws heavily on these above documents with augmentation f
 
 ## Files
 
+These files are in the FIADB 2024 data rescue.
+
+-   [Readme](README_FIA2024.qmd)
+    -   This is the primary file that documents the transcriptions and decision made during data rescue.
+-   [FIA2024.bib](FIA2024.bib)
+    -   citation for database transcribed from user manuals and other documentation
+-   Annotations
+    -   this includes the annotations constructed using user manual (latest version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
+        + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
+        + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
+        + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
+        + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
+        + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
+        + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
+    - Note: the soil erosion and visit table is not exclusively annotated in the documented user manual; hence, we pulled annotations for these tables using column header search in the manual. 
+- [temp/](temp/)
+        + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+
+## Download FIA 2024
+
+```{r}
+#| label: downloadData
+
+if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
+  if(verbose) message('Database not found, downloading...')
+  if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
+  utils::download.file(url = downloadUrl, 
+                       destfile = file.path(dataDir, 
+                                            CSV_FIADB_ENTIRE_filename))
+}
+  
+  # Unzip zip file
+if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
+  if(verbose) message('Unzipping file...')
+  if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
+  utils::unzip(file.path(dataDir, CSV_FIADB_ENTIRE_filename), exdir = dataDir, overwrite = FALSE)
+  if(verbose) message('Unzipping done.')
+}
+
+```
+
+
 TODO: REview this and cross check with DB description. Looks like the bulk density is in the ENTIRE_SUBP_SOIL_SAMPLE_LAYER table
 
 This data is identified as a data source for ISCN4 data harmonization and curation project.
@@ -198,47 +241,6 @@ This represents the data directly relevant for layer-level soil carbon measureme
 
 Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
 
-These files are in the FIADB 2024 data rescue.
-
--   [Readme](README_FIA2024.qmd)
-    -   This is the primary file that documents the transcriptions and decision made during data rescue.
--   [FIA2024.bib](FIA2024.bib)
-    -   citation for database transcribed from user manuals and other documentation
--   Annotations
-    -   this includes the annotations constructed using user manual (latest version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
-        + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
-        + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
-        + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
-        + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
-        + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
-        + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
-    - Note: the soil erosion and visit table is not exclusively annotated in the documented user manual; hence, we pulled annotations for these tables using column header search in the manual. 
-- [temp/](temp/)
-        + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
-
-
-## Download FIA 2024
-
-```{r}
-#| label: downloadData
-
-if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
-  if(verbose) message('Database not found, downloading...')
-  if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
-  utils::download.file(url = downloadUrl, 
-                       destfile = file.path(dataDir, 
-                                            CSV_FIADB_ENTIRE_filename))
-}
-  
-  # Unzip zip file
-if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
-  if(verbose) message('Unzipping file...')
-  if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
-  utils::unzip(file.path(dataDir, CSV_FIADB_ENTIRE_filename), exdir = dataDir, overwrite = FALSE)
-  if(verbose) message('Unzipping done.')
-}
-
-```
 
 ```{r}
 #| label: reportLabMart
@@ -253,6 +255,25 @@ tableColumns <- plyr::ldply(labMartTables,
                                              pattern = '.csv$'))
 })
 
+
+temp <- tableColumns |>
+  mutate(soil_obs = str_detect(column_names, pattern = 'BULK') |
+           str_detect(column_names, pattern = '^C_.*_PCT$') |
+           str_detect(column_names, pattern = 'COARSE_FRACTION_PCT'),
+         depth = str_detect(column_names, pattern = '^LAYER_T(YPE)|(HICKNESS)') |
+           str_detect(column_names, pattern = '^CORE') | #sample details
+           str_detect(column_names, pattern = '^RESTRICTION_DEPTH_\\d'),
+         time_obs =  str_detect(column_names, pattern = 'INVYR') | #obs time
+           str_detect(column_names, pattern = 'MEAS'),
+         location_obs = str_detect(column_names, pattern = 'LON') |
+           str_detect(column_names, pattern = 'LAT') |
+           str_detect(column_names, pattern = 'STATE') |
+           str_detect(column_names, pattern = 'COUNTY'),
+         ids = str_detect(column_names, pattern = 'CN$') |
+           str_detect(column_names, pattern = 'NBR$') |
+           str_detect(column_names, pattern = '_ID$')) |>
+  filter(soil_obs | depth | time_obs | location_obs | ids) |>
+  arrange(desc(soil_obs))
 ```
 
 There are a total of `length(labMartTables)` downloaded in this version of the database with `nrow(tableColumns)` columns of information.
