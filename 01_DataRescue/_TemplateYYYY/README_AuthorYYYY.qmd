@@ -241,14 +241,21 @@ ggplot(data = plot.df,
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
-#| label: compareTableN
+```{r}
+#| label: compareFigureN
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+print('Differing lines in primary file:')
+setdiff(read_lines('AuthorYYYY_FigureM.csv'),
+        read_lines('temp/AuthorYYYY_FigureM_AC.csv'))
+
+print('Differing lines in secondary file:')
+setdiff(read_lines('temp/AuthorYYYY_FigureM_AC.csv'),
+        read_lines('AuthorYYYY_FigureM.csv'))
+
+
 ```
 
 
@@ -278,14 +285,21 @@ read_csv(file = tableN.file, #read in the specific file
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
+```{r}
 #| label: compareTableN
+
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template has an example of an unresolved conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_AC.csv AuthorYYYY_TableN.csv
+print('Differing lines in primary file:')
+setdiff(read_lines('AuthorYYYY_TableN.csv'),
+        read_lines('temp/AuthorYYYY_TableN_AC.csv'))
+
+print('Differing lines in secondary file:')
+setdiff(read_lines('temp/AuthorYYYY_TableN_AC.csv'),
+        read_lines('AuthorYYYY_TableN.csv'))
+
 ```
 
 ## Methods

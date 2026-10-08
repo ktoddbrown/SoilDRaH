@@ -152,6 +152,13 @@ A spreadsheet software that allows you to enter tablular data (for example Excel
 Finally, figure x-y capture software like [PlotDigitizer](https://plotdigitizer.com/app) will capture mouse click locations allowing you to translate figures into a set of coordinates.
 If you have never worked with these files or software you may wish to look up online tutorials and familarize yourself with them before moving on.
 
+#### ReadMe
+
+This is a good step to create the ReadMe file from the 01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd template file.
+You'll want to review the template file carefully, there are useful hits in the `<!--- comments --->`.
+
+
+
 ### Transcribe
 
 Finally there!
@@ -190,6 +197,9 @@ With this in mind, here are some general practices:
     a) An alternative that was also considered here was commenting out the row using `#` instead, however the comment character is not standardized so we decided to go with the first row convention instead.
 4) Sub-table headers may new columns and removing the sub-header rows. While spreadsheets will merge cells for you, it does not export nicely to csv tables. This may require discussion with other people who have done data rescues before if you are new. An example of this is in Table 1 of Burke2003.
 
+As a final check you should recreate the table in the template and compare it to the table in the manuscript.
+There is sample code for you to work off of in the readme template.
+
 #### Figures
 
 Figures in manuscripts are designed to community complex data visually in such a way that trends supporting research conclusions are evident. This is broadly not machine readable. In addition to the x-y location on the graph, figure shapes, colors, line types, and error bars all contains information that needs to be captured.
@@ -201,18 +211,17 @@ Figures in manuscripts are designed to community complex data visually in such a
 
 In some cases it is not possible to capture the data in a figure to a useful degree. Highly dense, overlapping points where you don't know the number of points being obscured or '3D' figures are two examples of figures that may not be able to be digitized. You should discuss this with the data curator for your project if this appears to be the case.
 
-### ReadMe
-
-This is a good step to create the ReadMe file from the 01_DataRescue/_TemplateYYYY/README_AuthorYYYY.qmd template file.
-You'll want to review the template file carefully, there are useful hits in the `<!--- comments --->`.
-
-Before moving on you'll want to make sure that you can read in all the csv files (use the code in the ReadMe document as a starting point) and recreate any figures or tables from your csv file for a visual check of the transcription.
-
+Finally you should create a plot that duplicates the one in the paper to make sure you have the figure transcribed correctly.
 Figure creation can be complicated.
 Project standard libraries are declared in the template and you should not include any new libraries without discussion with the maintainers.
 There is a basic example in the template of a figure creation but you may need to ask for help if you have not worked with the R package `ggplot2` before.
 
 ### Cross check
+
+Now is the time to ask for a secondary transcription to cross check your work. This second transcription generally lives in the `temp` folder of the study folder. Code in the template uses the `bash` command `diff` to check line by line for exact character matches.
+
+The `diff` command is very sensitive.
+
 
 ## Reviewing transcripts {#sec-ReviewingTranscripts}
 
