@@ -244,6 +244,25 @@ data.lvl0.ls <- list(citation =
 )
 ```
 
+```{r}
+#| label: checkReadLvl0
+
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readBinkley1999(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 0.')
+  }else{
+    print('There is a mismatch in the level 0 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
 
 # Level 1
 The final format of the data frame here will include the following 
