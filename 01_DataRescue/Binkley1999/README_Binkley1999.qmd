@@ -102,8 +102,7 @@ source(readsource.file)
 
 
 #semantic files for level 1
-#of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
-#is_type.file <- '../../02_DataHarmonization/is_type.csv'
+variable_type.filename <- '../../03_DataCuration/HiCSC/vocabulary_draft.csv'
 
 ```
 
@@ -220,7 +219,8 @@ The Level 0 data in this package include the tables above (Table 1 and 3) as wel
 Here we draft the read function that will be transferred to the R scripts.
 In the future this draft will be echoed from the R scripts.
 
-```{r readLevel0}
+```{r}
+#| label: readLevel0
 
 data.lvl0.ls <- list(citation = 
                     list(primary = 
@@ -243,6 +243,7 @@ data.lvl0.ls <- list(citation =
                   ) 
 )
 ```
+
 
 # Level 1
 The final format of the data frame here will include the following 
@@ -366,49 +367,40 @@ Update this after 3-6 datasets have been joined together in the initial curation
 ```{r}
 #| label: check_of_variable
 
-temp <- data.lvl1.ls$study |>
+#look at the variable_type in this study
+variable_type.df <- data.lvl1.ls$study |>
   select(of_variable, is_type) |>
-  bind_rows(data.lvl1.ls$primary_meta) |>
+  bind_rows(data.lvl1.ls$land_use) |>
               select(of_variable, is_type) |>
-  bind_rows(data.lvl1.ls$primary |>
+  bind_rows(data.lvl1.ls$layer |>
               select(of_variable, is_type)
             ) |>
   unique() |>
+  #make everything pretty for checking pairings
+  arrange(of_variable, is_type) |>
   mutate(study_id = 'Binkley1999')
 
-#write_csv(temp, file = '../../03_DataCuration/HiCSC/vocabulary_draft.csv')
-ref_draft <- read_csv('../../03_DataCuration/HICSC/vocabulary_draft.csv',
+#pull the old variable-types
+ref_draft <- read_csv(file = variable_type.filename,
                       show_col_types = FALSE)
 
-newVariables <- anti_join(temp, ref_draft,
+#find the new variables that are not in the old reference
+newVariables <- anti_join(variable_type.df, ref_draft,
                           by = join_by(of_variable, is_type, study_id))
 
 if(nrow(newVariables) == 0){
+  #do nothing
   print('All variables in draft document')
 }else{
-  #add the missing rows to the draft
-  write_csv(temp, file = '../../03_DataCuration/HICSC/vocabulary_draft.csv',
-            append = TRUE, col_names = FALSE)
+  #add the new variables to the list for future reference
+  variable_type.df |>
+    #this will match colums by name
+    bind_rows(newVariables) |>
+    #add the missing rows to the draft
+    write_csv(file = variable_type.filename,
+              append = FALSE)
 }
 
- #Read in the list of current 'of_variable' entries
-# SoilDRaH_variable_list <- read_csv(file = '..//../02_DataHarmonization/of_variable.csv',
- #                                   show_col_types = FALSE)
- 
- #compare the variables in the level 1 tables to the SoilDRaH variables
-# new_variables <- lapply(data.lvl1.ls, function(xx){
- #  setdiff(unique(xx$of_variable), 
-  #         unique(SoilDRaH_variable_list$of_variable))
-# }) |>
- #  unlist()
- 
-# #Check that there are no new variables
-# if(length(new_variables) == 0){
- #  print('All of_variables are in the SoilDRaH variable list. No additions required')
- #}else{
-  # cat(paste('Please start a issue for new variables [',
-   #             new_variables, ']', sep = '', collapse = '\n'))
-# }
 ```
 
 
