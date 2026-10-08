@@ -86,7 +86,12 @@ affiliations:
 ---
 
 
-```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+```{r}
+#|label:  setup
+#|include: TRUE
+#|warning: FALSE
+#|message: FALSE
+#|echo: FALSE
 
 library(tidyverse)
 library(kableExtra)
@@ -148,7 +153,8 @@ Table 1 was modified by filling in blanks with `NA`, modifying Age column to als
 There were two rows in the 'K' column that indicated control vs fertilizer, I split this into two separate columns.
 The CI for pH was not aggregated to 0-30 but reported for 0-15 and 15-30, I concatenated both values with a ';' separate into one entry.
 
-```{r table1}
+```{r}
+#| label: Table1
 #| code-fold: true
 #| message: false
 
@@ -162,7 +168,22 @@ read_csv(file = filename,
 ```
 
 
-{{< include Binkley1999_Methods.md >}}
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
 
 This transcription was done before the cross checks were committed in the temp folder.
 This code will not evaluate but wa cross checked on transcription using `diff` as stated below.
