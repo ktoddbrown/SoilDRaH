@@ -78,6 +78,11 @@ affiliations:
       start: 2026-07-07
       end: 2026-08-05
       duration: PT4H
+  - activity: 
+      description: further revisions with Layla and Savannah
+      who: ktoddbrown
+      start: 2026-10-08
+      duration: PT2H
 ---
 
 
@@ -159,7 +164,8 @@ read_csv(file = filename,
 
 {{< include Binkley1999_Methods.md >}}
 
-# Transcription comparison
+This transcription was done before the cross checks were committed in the temp folder.
+This code will not evaluate but wa cross checked on transcription using `diff` as stated below.
 
 ```{bash eval=FALSE}
 diff --strip-trailing-cr Binkley1999_Methods.md Binkley1999_Methods_HN.md
@@ -180,6 +186,7 @@ These files are in the @Binkley1999 data rescue.
 - [Binkley1999_Table1.csv](Binkley1999_Table1.csv)
   + table 1 from primary article with data about the soil properties at time of planting and 32 months after (C, N, pH, Ca, Mg, K+, Al)
 
+<!---- 
 # Working notes 
 
 ## Data Rescue Plan
@@ -212,12 +219,11 @@ Some citations are missing, those are noted here and how best guess were generat
   + copy from bib
 - [x] Bashkin, M., and D. Binkley. 1998. Changes in soil carbon following afforestation in Hawaii. Ecology 79:828-833.
   + copy from bib
+---->
 
 # Level 0: raw data reads
 
-The Level 0 data in this package include the tables above (Table 1 and 3) as well as the methods section.
-Here we draft the read function that will be transferred to the R scripts.
-In the future this draft will be echoed from the R scripts.
+The Level 0 data in this package include the tables above (Table 1) as well as the methods section.
 
 ```{r}
 #| label: readLevel0
@@ -265,38 +271,34 @@ if(file.exists(readsource.file)){
 
 
 # Level 1
+
 The final format of the data frame here will include the following 
 
   + grouping ids
   + `of_variable`
   + `is_type`
   + `with_entry`
-  + `source`
+  + `from_source`
 
 The `of_variable` being used here are:
 
-+ citation
-+ doi
-+ region
-+ geolocation
 + air_temperature
-+ rainfall
++ carbon_organic
++ citation
++ depth
++ doi
 + elevation
-+ soil_class
-+ inital_planting
++ geolocation
++ initial_planting
++ land_use
 + observation_time
++ rainfall
++ region
++ soil_class
 + soil_sample_prep
 + soil_sampling
-+ stand_type
-+ layer
-+ soil_aluminum
-+ soil_calcium
-+ soil_magensium
-+ soil_nitrogen
-+ soil_organic_carbon
-+ soil_ph
-+ soil_potassium
 + stand_age
++ stand_type
 
 ```{r}
 #| label: constructLevel1
@@ -336,6 +338,8 @@ studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                      #study citation
                      'citation', 'value', format(data.lvl0.ls$citation$primary), 
                      'journal_citation', 'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation') 
+
+#### Construct land use history ####
 
 land_use.df <- tribble(~land_use_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
                       #Group the two different land use descriptions, LU1 is the current
@@ -398,6 +402,9 @@ variable_type.df <- data.lvl1.ls$study |>
   #make everything pretty for checking pairings
   arrange(of_variable, is_type) |>
   mutate(study_id = 'Binkley1999')
+
+#useful bit of code for generating the variable list at the start of the level 1 section
+# cat(paste0('+ ', unique(variable_type.df$of_variable), collapse = '\n'))
 
 #pull the old variable-types
 ref_draft <- read_csv(file = variable_type.filename,

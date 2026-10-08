@@ -16,8 +16,9 @@
 #' @importFrom bibtex read.bib
 #' @importFrom readr read_lines read_csv cols col_character
 #' @importFrom tibble tribble
-#' @importFrom dplyr mutate n case_when bind_rows select left_join join_by arrange
-#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr mutate filter ends_with starts_with select n
+#' @importFrom stringr str_extract
+#' @importFrom tidyr pivot_longer separate_wider_delim
 #' 
 #'  
 #'  
@@ -66,125 +67,87 @@ readBinkley1999 <- function(dataDir,
   if(dataLevel == 'level0'){
     return(data.lvl0.ls)
   }
-  #### Construct level 1 ####
+
+  #### Pull info true across study ####
   
   studyMeta <- tibble::tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                        'region', 'site', '13 km NNE of downtown Hilo', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'region', 'state', 'HI', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                       #convert to decimal degrees
                        'geolocation', 'latitude', as.character(19 + 50/60 + 28.1/3600), paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'geolocation', 'longitude', as.character(-1*(155 + 7/60 + 28.3/3600)), paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                       'geolocation', 'unit', 'decimal_degree', 'manual conversion in level1 codebase',
+                       #pull climate variables
                        'air_temperature', 'value', '21',paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'air_temperature', 'unit', '°C',paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'rainfall', 'min', '300', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'rainfall', 'max', '400', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'rainfall', 'unit', 'mm mo<sup>-1</sup>', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                       #Elevation info
                        'elevation', 'value', '350', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
                        'elevation', 'unit', 'm', paste('Method ln3:', paste(data.lvl0.ls$method[3], collapse = ' ')),
+                       #sampling info
                        'soil_class', 'value', 'Kaiwiki thixotropic, isothermic Typic Hydrandepts', paste('Method ln4:',paste(data.lvl0.ls$method[4], collapse = ' ')),
-                       'initial_planting', 'value', '1994', paste('Method ln11:', data.lvl0.ls$method[11]),
-                       'observation_time', 'value', '1997', paste('Method ln23:', data.lvl0.ls$method[23]),
                        'soil_sample_prep', 'method', 'oven dried at 100 C to constant weight', paste('Method ln22:', data.lvl0.ls$method[22]),
                        'soil_sampling', 'description', '30 by 30 m plots with trees at two spacings (1 by 1 m and 3 by 3 m)', paste('Method ln12:', data.lvl0.ls$method[12]),
-                       'stand_type', 'value', 'E. saligna', paste('Method ln3:', data.lvl0.ls$method[3]),
-                       'current_land_use', 'description', '4-ha plantation of *E. saligna*', paste('Method ln1:', data.lvl0.ls$method[1]),
-                       'site_history', 'description', 'Sugarcane was cropped on this site for more than 80 yr.', paste('Method ln3:', data.lvl0.ls$method[3]),
+                       'carbon_organic', 'unit', 'g m-2', 'Table 1 column name',
+                       'carbon_organic', 'method', 'CN analyzer on carbonate-corrected sample then multipled by sampled bulk density and depth of sample', paste('Methods ln 21, 24, 29-30, 55', paste0(data.lvl0.ls$method[c(21, 24, 29:30, 55)], collapse = ' ')),
+                       'depth', 'unit', 'cm', 'Table 1 column name',
+                       'depth', 'method', paste0(data.lvl0.ls$method[c(19:20,23:24)], collapse = ' '), 'Methods ln 19-20;23-24',
+                       #land use information
+                       'initial_planting', 'value', '1994', paste('Method ln11:', data.lvl0.ls$method[11]),
+                       'observation_time', 'value', '1997', paste('Method ln23:', data.lvl0.ls$method[23]),
+                       'stand_age', 'unit', 'month', 'Table 1 column name',
+                       'stand_age', 'method', 'Six month seedlings planted late April/early May', paste('Method ln11:', data.lvl0.ls$method[11]),
+                       'stand_type', 'value', 'Eucalyptus saligna', paste('Method ln3:', data.lvl0.ls$method[3]),
+                       #study citation
                        'citation', 'value', format(data.lvl0.ls$citation$primary), 
-                       'journal_citation', 'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation')
+                       'journal_citation', 'doi', 'value', data.lvl0.ls$citation$primary$doi, 'journal citation') 
+  
+  #### Construct land use history ####
+  
+  land_use.df <- tibble::tribble(~land_use_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
+                         #Group the two different land use descriptions, LU1 is the current
+                         'LU1', 'land_use', 'description', '4-ha plantation of *E. saligna*', paste('Method ln1:', data.lvl0.ls$method[1]),
+                         'LU1', 'land_use', 'time_period', '1994/1997', paste('Method ln11,23:', paste(data.lvl0.ls$method[11], data.lvl0.ls[23], collapse = '...')),
+                         #... LU2 is the historical land use
+                         'LU2', 'land_use', 'description', 'Sugarcane', paste('Method ln3:', data.lvl0.ls$method[3]),
+                         'LU2', 'land_use', 'duration', 'P80Y/1994', paste('Method ln3:', data.lvl0.ls$method[3])
+  )
+  
   #### Table 1 ####
   
   Table1Primary <- data.lvl0.ls$data$Table1$primary |>
-    dplyr::mutate(row_id = paste0('R', 1:dplyr::n())) |>
-    tidyr::pivot_longer(cols = -row_id,
+    dplyr::mutate(row_id = paste0('R', 1:n())) |>
+    dplyr::filter(`Stock or change` == 'stock') |>
+    dplyr::mutate(timeSincePlanting_id = paste0('Months ', `Age/duration (mo)`),
+           layer_id = paste0('Layer ', `Depth (cm)`)) |>
+    dplyr::select(dplyr::ends_with('_id'), `Age/duration (mo)`, 
+                  `Depth (cm)`, `C (g m<sup>-2</sup>)`) |>
+    dplyr::mutate(depth__top = stringr::str_extract(`Depth (cm)`, pattern = "^\\d+(?=-)"),
+           depth__bottom = stringr::str_extract(`Depth (cm)`, pattern ="(?<=-)\\d+$"),
+           carbon_organic__mean = stringr::str_extract(`C (g m<sup>-2</sup>)`, pattern = '^\\d+'),
+           carbon_organic__standard_error = stringr::str_extract(`C (g m<sup>-2</sup>)`, pattern = '(?<=\\()\\d+(?=\\))'),
+           stand_age__value = `Age/duration (mo)`) |>
+    dplyr::select(dplyr::ends_with('_id'), dplyr::starts_with('depth', ignore.case = FALSE),
+           dplyr::starts_with('carbon'), dplyr::starts_with('stand')) |>
+    tidyr::pivot_longer(cols = -c(row_id, timeSincePlanting_id, layer_id),
                  names_to = 'column_name', values_to = 'with_entry',
                  values_drop_na = TRUE) |>
-    dplyr::mutate(of_variable = dplyr::case_when(
-      column_name == "Age (mo)" ~ "stand_age",
-      column_name == "Depth (cm)" ~ "layer",
-      column_name == "C (g m<sup>-2</sup>)" ~ "soil_organic_carbon",
-      column_name == "N (g m<sup>-2</sup>)" ~ "soil_nitrogen",
-      column_name == "pH<sub>CaCl2</sub>" ~ "soil_ph",
-      column_name == "Ca (mmol m<sup>-2</sup>)" ~ "soil_calcium",
-      column_name == "Mg (mmol m<sup>-2</sup>)" ~ "soil_magensium",
-      column_name == "C K† (mmol m<sup>-2</sup>)" ~ "soil_potassium",
-      column_name == "F K† (mmol m<sup>-2</sup>)" ~ "soil_potassium",
-      column_name == "Al (mmol m<sup>-2</sup>)" ~ "soil_aluminum")) |>
-    
-    dplyr::mutate(
-      value = case_when(
-        column_name == "Age (mo)" & str_detect(with_entry,"(?i)change") ~ "Change",
-        column_name == "Age (mo)" ~ with_entry,
-        TRUE ~ NA_character_
-      ),
-      lowerbound = case_when(
-        str_detect(with_entry, '^\\d+\\s*-\\s*\\d+') ~ str_extract(with_entry, "\\d+(?=-)"),
-        TRUE ~ NA_character_
-      ),
-      upperbound = case_when(
-        str_detect(with_entry, '^\\d+\\s*-\\s*\\d+') ~ str_extract(with_entry, "(?<=-)\\d+"),
-        TRUE ~ NA_character_
-      ),
-      mean = as.character(
-        str_extract(with_entry, '^-?\\d*\\.?\\d+(?=\\s*\\()')),
-      `standard error` = as.character(
-        str_extract(with_entry, '(?<=\\()[0-9.]+(?=\\))')),
-    ) |>
-    dplyr::select(-with_entry) |>
-    
-    tidyr::pivot_longer(cols = c('lowerbound','upperbound','mean','standard error','value'),
-                 names_to = 'is_type',
-                 values_to = 'with_entry',
-                 values_drop_na = TRUE) |>
-    
+    tidyr::separate_wider_delim(cols = column_name, delim = '__',
+                         names = c('of_variable', 'is_type')) |>
     dplyr::mutate(from_source = 'Table 1')
   
-  Table1Meta <- Table1Primary |>
-    dplyr::select(column_name, of_variable) |>
-    unique() |>
-    #Grab everything between the parentheses as units and attribute the source as the column names.
-    dplyr::mutate(unit = stringr::str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
-           
-           species = dplyr::case_when(str_detect(column_name, 'E. saligna') ~ 'Eucalyptus saligna',                             .default = NA_character_),
-           from_source = 'Table 1 column names.') |>
-    #If there aren't units or a species flag then drop the row
-    dplyr::filter(!is.na(unit) | !is.na(species)) |>
-    
-    dplyr::bind_rows(
-      tibble::tribble(~of_variable, ~method, ~from_source,
-              'soil_ph', paste0(data.lvl0.ls$method[25:26], collapse = ' '), 'Methods ln25-26',
-              'soil_calcium', paste0(data.lvl0.ls$method[27], collapse = ' '), 'Methods ln27',
-              'soil_magensium', paste0(data.lvl0.ls$method[27], collapse = ' '), 'Methods ln27',
-              'soil_aluminum', paste0(data.lvl0.ls$method[27], collapse = ' '), 'Methods ln27',
-              'soil_potassium', paste0(data.lvl0.ls$method[c(14:15,27)], collapse = ' '), 'Methods ln14-15;27',
-              'soil_potassium', paste0(data.lvl0.ls$method[c(16:17,27)], collapse = ' '), 'Methods ln16-17;27',
-              'stand_age', paste0(data.lvl0.ls$method[11], collapse = ' '), 'Methods ln11',
-              'layer', paste0(data.lvl0.ls$method[c(19:20,23:24)], collapse = ' '), 'Methods ln 19-20;23-24',
-              'soil_organic_carbon', paste0(data.lvl0.ls$method[29:30], collapse = ' '), 'Methods ln 29-30',
-              'soil_nitrogen', paste0(data.lvl0.ls$method[29:30], collapse = ' '), 'Methods ln 29-30') ) |>
-    dplyr::bind_rows(
-      tibble::tribble(~of_variable, ~control_vocabulary, ~from_source,
-              'soil_class', 'Kaiwiki thixotropic: USDA classification for deep, well drained soils formed from weathered volcanic ash|isothermic Typic Hydrandept: USDA taxonomic class of deep, well drained soils formed in material weathered from basic volcanic ash', 'USDA',
-              'stand_type', '*E. saligna*: pure stands of Eucalyptus saligna (Sm.)', 'Abstract ln3',) |>
-        dplyr::left_join(Table1Primary |>
-                           dplyr::select(column_name, of_variable) |>
-                    unique(),
-                  by = dplyr::join_by(of_variable)))|>
-    tidyr::pivot_longer(cols = c(unit, species, method, control_vocabulary),
-                 names_to = 'is_type',
-                 values_drop_na = TRUE,
-                 values_to = 'with_entry')
   
   #### Create level 1
   
   data.lvl1.ls <- list(
     study = studyMeta,
-    primary_meta = dplyr::bind_rows(Table1Meta),
-    primary = dplyr::bind_rows(Table1Primary)|>
-      dplyr::mutate(age_id = with_entry[of_variable == 'stand_age'],
-             is_type = 'value',
-             .by = row_id) |>
-      dplyr::arrange(row_id, age_id, column_name,
-              of_variable, is_type, with_entry, from_source)
+    land_use = land_use.df,
+    layer = Table1Primary
   )
+  
+  
   if(dataLevel == 'level1'){
     return(data.lvl1.ls)
   }
