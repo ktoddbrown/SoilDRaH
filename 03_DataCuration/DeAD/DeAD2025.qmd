@@ -55,7 +55,7 @@ timelog:
       end: 2025-01-20
       start: 2025-01-21
       #alternatively duration can be combined with a being/end
-      duration: P3H15M
+      duration: PT3H15M
       
   - activity: 
       description: Updating Rescues in progres and completed
@@ -63,6 +63,11 @@ timelog:
       start: 2026-06-18 T04:10
       end: 2026-06-18 T04:45
       
+  - activity: 
+      description: Updating Data Resuces lists
+      who: AshBonner310
+      start: 2026-09-23
+      duration: PT30M
 ---
 
 
@@ -141,6 +146,7 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Kavvadias 2001 | @Kavvadias2001 | [202](https://github.com/ktoddbrown/SoilDRaH/issues/202) | [Kavvadias 2001](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Kavvadias2001) |
 | Rozema 1997 | @Rozema1997 | [221](https://github.com/ktoddbrown/SoilDRaH/issues/221) | [Rozema 1997](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Rozema1997) |
 | Lyons 2010 | @Lyons2010 | [267](https://github.com/ktoddbrown/SoilDRaH/issues/267) | [Lyons 2010](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Lyons2010)
+| Wang 2017 | @Wang2017 | [251](https://github.com/ktoddbrown/SoilDRaH/issues/251) | [Wang 2017](https://github.com/ktoddbrown/SoilDRaH/tree/main/01_DataRescue/Wang2017) |
 
 
 ## In process
@@ -153,14 +159,16 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | Bravo-Oviedo 2017 | @BravoOviedo2017 | [220](https://github.com/ktoddbrown/SoilDRaH/issues/220) | AmandaLopez14 |
 | Kemp 2003 | @Kemp2003 | [207](https://github.com/ktoddbrown/SoilDRaH/issues/207) | ashbonner310 |
 | Santos 1984 | @Santos1984 | [241](https://github.com/ktoddbrown/SoilDRaH/issues/241) | laylakalandjian |
-| Wang 2017 | @Wang2017 | [251](https://github.com/ktoddbrown/SoilDRaH/issues/251) | JennavieveK |
 | Barba 2016 | @Barba2016 | [252](https://github.com/ktoddbrown/SoilDRaH/issues/252) | semantic-nomad |
 | Martínez 2010 | @Martinez2010 | [259](https://github.com/ktoddbrown/SoilDRaH/issues/259) | angelacanini-a11y |
 | Blanco 2011 | @Blanco2011 | [260](https://github.com/ktoddbrown/SoilDRaH/issues/260) | SavaScott |
 | Qasemian 2014 | @Qasemian2014 | [280](https://github.com/ktoddbrown/SoilDRaH/issues/280) | SavaScott |
-| Kumada 2008 | @Kumada2008 | TBA | laylakalandjian |
 | Duguay 2000 | @Duguay2000 | TBA | Ben (need github handle) |
-| Dirks 2010 | @Dirks2010 | TBA | Matthew (need github handle) |
+| Dirks 2010 | @Dirks2010 | TBA | mbalvarez72 |
+| Gliksman 2016 | @Gliksman2016 | [312](https://github.com/ktoddbrown/SoilDRaH/issues/312) | SavaScott |
+| Smith 2010 | @Smith2010 | [311](https://github.com/ktoddbrown/SoilDRaH/issues/311) | JennavieveK |
+| LadoMonserrat 2016 | @LadoMonserrat2016 | [307](https://github.com/ktoddbrown/SoilDRaH/issues/307) | laylakalandjian |
+| Almagro 2012 | @Almagro2012 | TBA | anegondia |
 
 ## Imported to bib
 
@@ -168,9 +176,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 | AuthorYYYY | citation | 
 |------------|------------|
-| LadoMonserrat 2016 | @LadoMonserrat2016 |
-| Almagro 2012 | @Almagro2012 |
-| Gliksman 2016 | @Gliksman2016 |
 | Sagi 2019 | @Sagi2019 |
 | Bates 2007 | @Bates2007 |
 | dosSantos 2019 | @dosSantos2019 |
@@ -182,7 +187,6 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 | HerreraArreola 2007 | @HerreraArreola2007 |
 | Gallo 2009 | @Gallo2009 |
 | Kotilainen 2009 | @Kotilainen2009 |
-| Smith 2010 | @Smith2010 |
 | DíazGuerra 2018 | @DiazGuerra2018 |
 | Lee 2014 | @Lee2014 |
 | Barnes 2012 | @Barnes2012 |
@@ -196,7 +200,10 @@ We are focusing on datasets that are not in [Aridec](https://essd.copernicus.org
 
 ## Identified
 
-List from collaborator (to be added soon)
+List of Mexican data sources from collaborator
+
+<!----Following was determined to be a model study, no  data to pull for this project:
+| Kumada 2008 | @Kumada2008 | [304](https://github.com/ktoddbrown/SoilDRaH/issues/304) | laylakalandjian | --->
 
 # Data Level 1 
 
