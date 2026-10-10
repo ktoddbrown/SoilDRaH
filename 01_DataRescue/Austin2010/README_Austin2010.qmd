@@ -93,6 +93,11 @@ timelog:
       start: 2026-07-21 T17:30
       end: 2026-07-21 T18:00
       duration: PT30M
+  - activity:
+      description: Reopening Data Rescue for figures 3 and 4; adding temp folder to repo.
+      who: ashbonner310
+      start: 2026-10-07 T19:00
+      duration: PT30M
 ---
 
 
@@ -111,6 +116,8 @@ library(bibtex) # reading in BibTex files to R
 # data files for level 0
 methods.file <- "Austin2010_Methods.md"
 figure1.file <- 'Austin2010_Figure1.csv'
+figure3.file <- 'Austin2010_Figure3.csv'
+figure4.file <- 'Austin2010_Figure4.csv'
 
 # Bibliograph files
 primaryCitation.file <- 'Austin2010.bib'
@@ -147,31 +154,55 @@ This paper contains no tables.
   3) Degradation of synthetic cellulose-lignin substrates under biotic conditions and abiotic conditions with full solar radiation.
   4) Panel A shows initial to final lignin concentrations of the synthetic cellulose-lignin substrate in both abiotic and biotic experiments, while panels B and C compare observed lignin loss compared to predictions based on the assumption that all degradation was due to biotic or abiotic conditions.
 
-Since we are only interested in the litter decay, we are rescuing only Figure 1.
+Initially, we planned to only rescue Figure 1 because it had data on natural litter decay.
+Upon review, we have decided to re-open the rescue and also rescue the data for the synthetic litter, so we will also be transcribing Figures 3 and 4.
 
 ## Fit for purpose: DeAD
 
 This paper was identified for data rescue with the Decomposition Across Drylands (DeAD) project. 
 The DeAD data rescue project is concerned with documenting and preserving data which documents litter decay rates in arid and semi-arid ecosystems.
 
-The paper contains data from two seperate experiments, one using a synthetic cellulose-lignin substrate which we are not including in the data rescue, and an experiment using collected litter which we are rescuing.
+The paper contains data from four separate experiments, three using a synthetic cellulose-lignin substrate (CL-substrate), one using collected senescent litter.
+One CL substrate study measured absorbance spectra of Lignin and is not included in this rescue (reported in Figure 2).
 
- - Location: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
- - Duration: 120 days
- - Mass loss: Mass loss or decay rate or mass remaining of litter sample over duration
- - Solar exposure: Litter treated with filters (see treatments below)
- - Litter species: Senescent litter was gathered on site, and were perennial tussock grasses. Identified species were *Festuca hieronymi* and *Stipa trichotoma*
+ - Location: 
+    + Litter study: a perennial grassland in the province of Córdoba, Argentina (31° 04 S, 64° 31 W)
+    + CL-substrate studies: experimental station at the College of Agronomy in Buenos Aires (34° 35 S, 58° 29 W)
+ - Duration: 
+    + Litter Study: 120 days (Figure 1A)
+    + CL substrate study 1: 75 days (Figure 1B)
+    + *CL substrate study 3: 30 days (Figure 2 - not included)*
+    + CL substrate study 2: 120 days (Figures 3,4)
+ - Mass loss: Mass remaining of litter sample over duration (See Figure 1, Figure 3)
+ - Solar exposure: 
+    + Litter treated with filters, see treatments below
+    + CL substrate study 1 (Figure 1B) also treated with filters, see treatments below
+    + CL substrate study 2 (Figures 3, 4) no solar exposure; see treatments below
+    + *CL substrate study 3 (Figure 2 - not included) Full exposure*
+ - Litter species: 
+    + Senescent litter was gathered on site, and were perennial tussock grasses; identified species were *Festuca hieronymi* and *Stipa trichotoma*
+    + CL substrates were created by soaking cellulose filter papers until they were impregnated with lignin solutions at 0%, 5%, 10%, 15%, and 20% concentrations.
  - Vegetation Coverage: Open Woodland
  - Litter Chemistry: Found via standard acid detergent method:
     + cellulose and sugars, 49.1 ± 0.4%
     + hemicellulose, 37.3 ± 0.2%
     + lignin,7.3 ± 0.2%.
- - Litter bag materials and method: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
- - Treatments: 
-    + Plastic box placed in chicken wire cage to allow for free flow of air.
-    + Rainout shelter
-    + No contact with ground; wire cage suspended 30cm above ground.
-    + Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+ - Litter bag materials and method: 
+    + Litter Study: 0.750 g of litter in an open-topped plastic polystyrene box measuring 8 cm wide × 13 cm long × 2.5 cm.
+    + CL substrate study 2: $\approx$500 mg of CL substrate in 2-mm fiberglass mesh litterbag of 12 × 12 cm
+ - Treatments:
+    + Litter Study:
+        - Plastic box placed in chicken wire cage to allow for free flow of air.
+        - Rainout shelter
+        - No contact with ground; wire cage suspended 30cm above ground.
+        - Four solar filter treatments: control (transparent filter), attenuation of UV-B (280–315 nm), attenuation of all UV radiation (280–400 nm), attenuation of UV and blue wavelengths (280–450 nm)
+    + CL substrate study 1 (Figure 1B)
+        - Varying lignin concentration (see Litter Species above)
+        - Suspended 7cm above ground with clips
+        - Same four solar treatments as the litter study, plus one which attenuated UV and visible radiation up to 550 nm.
+    + CL substrate study 2 (Figures 3, 4)
+        - Varying lignin concentration (see Litter Species above)
+        - for the biotic experiment, substrate in litter bags were placed on soil surface under a 75% shade cloth.
 
 
 ## Files
@@ -187,9 +218,14 @@ These files are in the Austin2010 data rescue.
 - [Austin2010_Methods.md](Austin2010_Methods.md)
   + methods transcribed from primary article
 - [Austin2010_Figure1.csv](Austin2010_Figure1.csv)
-  + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure. 
+  + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure.
+- [Austin2010_Figure1.csv](Austin2010_Figure3.csv)
+  + Plot-digitized values of Figure 3 from primary article
+- [Austin2010_Figure1.csv](Austin2010_Figure4.csv)
+  + Plot-digitized values of Figure 4 from primary article
 - [temp/](temp/)
-    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions. 
+    + In addition to scratch documents, this also contains the secondary transcriptions of the data which will be committed to the repo.
 
 # Data Rescue working notes 
 
@@ -216,6 +252,17 @@ These files are in the Austin2010 data rescue.
   - [X] push to your local fork and create a pull request to the main branch of the primary repository
   - [X] address any revisions suggested in your pull request review
   - [X] celebrate!
+  - [X] Re-open branch to add new data transcriptions
+  - [X] Adjust Rescue plan to include new figures
+  - [ ] Extract points from Figure 3 and export it to csv
+  - [ ] Extract points from Figure 4 and export it to csv
+  - [ ] Get a second transcription by someone else on the project
+  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
+  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions suggested in your pull request review
+  - [ ] celebrate!
+  
 
 ## Figure 1
 
@@ -263,9 +310,79 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareFigure1
-#| eval: false
+#| eval: true
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure1_LK.csv Austin2010_Figure1.csv
+```
+
+## Figure 3
+
+<--- Add description of Figure 3 here --->
+Initial digitization for Figure 1 was performed with the [Plot Digitization app](https://plotdigitizer.com/app).
+Values were rounded to XXXX than the y-axis on the original graph.
+
+The Figure .csv has x columns: XX, XX, XX, ...
+
+```{r}
+#| label: figure3
+#| eval: FALSE
+
+read_csv(file = figure3.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+
+Figure3.df<- read_csv(file = figure3.file,
+                   skip = 1)
+
+ggplot(Figure3.df)
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure3
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure3.csv Austin2010_Figure3.csv
+```
+
+## Figure 4
+
+<--- Add description of Figure 4 here --->
+Initial digitization for Figure 4 was performed with XX.
+Values were rounded to XX than the y-axis on the original graph.
+
+The Figure .csv has x columns: XX, XX, XX, ...
+
+```{r}
+#| label: figure4
+#| eval: FALSE
+
+read_csv(file = figure4.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption)
+
+Figure4.df<- read_csv(file = figure4.file,
+                   skip = 1)
+
+ggplot(Figure4.df)
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure4
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure4.csv Austin2010_Figure4.csv
 ```
 
 ## Methods 
@@ -274,7 +391,7 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
 ```
