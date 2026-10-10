@@ -1,0 +1,66 @@
+" Figure 4: Mass remaining (mean ±
+SE) for each litter type (a)and
+habitat type (b) at 6 collection
+times (0.16, 0.5, 1, 1.5, 2 and
+3 years, n=5). The lower case
+indicates significant differences in
+remaining mass between litter
+types (panel a) within collection
+times. The capital letters indicate
+significant differences in
+remaining mass significant over
+time within litter types (panel a)
+and within habitat types (panel b).
+No significant differences were
+found in remaining mass between
+microsites within collection times
+(b). Comparisons were madewith
+GLMs, with microsite as a
+random factor (p<0.05).
+Statistical analyses were
+performed with remaining mass
+log-odd transformed to achieve
+normality",,,,,,,,,
+Litter Type,Habitat Type,Tissue Type,y,x,x  label,y label,y SE,Significant litter type group,Significant time group
+Qi,N/A,Roots,0.16,95.29,Remaining mass (%),Year,0,b,A
+Qi,N/A,Roots,0.5,84.3361,Remaining mass (%),Year,0,b,B
+Qi,N/A,Roots,1,81.97095,Remaining mass (%),Year,0.9483,b,B
+Qi,N/A,Roots,1.5,73.69295,Remaining mass (%),Year,1.586556,a,D
+Qi,N/A,Roots,2,73.44398,Remaining mass (%),Year,1.83552,b,D
+Qi,N/A,Roots,3,65.29046,Remaining mass (%),Year,3.59153,c,E
+Ps,N/A,Needles,0.16,93.04979,Remaining mass (%),Year,0,a,A
+Ps,N/A,Needles,0.5,80.6639,Remaining mass (%),Year,0,a,B
+Ps,N/A,Needles,1,77.55187,Remaining mass (%),Year,0.905902,a,B
+Ps,N/A,Needles,1.5,72.38589,Remaining mass (%),Year,0,a,C
+Ps,N/A,Needles,2,68.46473,Remaining mass (%),Year,1.224709,a,C
+Ps,N/A,Needles,3,61.18257,Remaining mass (%),Year,1.364007,a,D
+Ps,N/A,Roots,0.16,94.23237,Remaining mass (%),Year,0,b,A
+Ps,N/A,Roots,0.5,83.21577,Remaining mass (%),Year,0,ab,B
+Ps,N/A,Roots,1,78.60996,Remaining mass (%),Year,1.017372,ab,C
+Ps,N/A,Roots,1.5,70.58091,Remaining mass (%),Year,1.264143,a,C
+Ps,N/A,Roots,2,67.09544,Remaining mass (%),Year,1.629595,b,D
+Ps,N/A,Roots,3,50.62499,Remaining mass (%),Year,9.37501,bc,E
+Qi,N/A,Leaves,0.16,93.04348,Remaining mass (%),Year,0,a,A
+Qi,N/A,Leaves,0.5,81.86336,Remaining mass (%),Year,0.496895,ab,B
+Qi,N/A,Leaves,1,80.37267,Remaining mass (%),Year,0.745342,ab,B
+Qi,N/A,Leaves,1.5,72.04969,Remaining mass (%),Year,0.186335,a,C
+Qi,N/A,Leaves,2,64.2236,Remaining mass (%),Year,1.24224,b,C
+Qi,N/A,Leaves,3,25.875,Remaining mass (%),Year,0,b,D
+N/A,HPs,N/A,0.16,94.18349,Remaining mass (%),Year,0,N/A,N/A
+N/A,HPs,N/A,0.5,82.45872,Remaining mass (%),Year,0,N/A,N/A
+N/A,HPs,N/A,1,80.47707,Remaining mass (%),Year,1.211008,N/A,N/A
+N/A,HPs,N/A,1.5,72.27523,Remaining mass (%),Year,1.376146,N/A,N/A
+N/A,HPs,N/A,2,70.0734,Remaining mass (%),Year,1.706421,N/A,N/A
+N/A,HPs,N/A,3,52.14955,Remaining mass (%),Year,8.508588,N/A,N/A
+N/A,DPs,N/A,0.16,93.90826,Remaining mass (%),Year,0,N/A,N/A
+N/A,DPs,N/A,0.5,82.89908,Remaining mass (%),Year,0,N/A,N/A
+N/A,DPs,N/A,1,80.0367,Remaining mass (%),Year,0.605505,N/A,N/A
+N/A,DPs,N/A,1.5,72.49541,Remaining mass (%),Year,1.155963,N/A,N/A
+N/A,DPs,N/A,2,67.76147,Remaining mass (%),Year,1.266058,N/A,N/A
+N/A,DPs,N/A,3,61.9266,Remaining mass (%),Year,1.266053,N/A,N/A
+N/A,Qi,N/A,0.16,94.73395,Remaining mass (%),Year,0,N/A,N/A
+N/A,Qi,N/A,0.5,81.74312,Remaining mass (%),Year,0.440365,N/A,N/A
+N/A,Qi,N/A,1,78.55046,Remaining mass (%),Year,1.100918,N/A,N/A
+N/A,Qi,N/A,1.5,70.84404,Remaining mass (%),Year,1.211011,N/A,N/A
+N/A,Qi,N/A,2,66.93578,Remaining mass (%),Year,1.816514,N/A,N/A
+N/A,Qi,N/A,3,44.29904,Remaining mass (%),Year,24.11212,N/A,N/A

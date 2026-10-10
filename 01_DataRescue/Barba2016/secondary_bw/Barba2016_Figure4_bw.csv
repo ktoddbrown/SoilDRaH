@@ -1,0 +1,46 @@
+"Fig. 4 Mass remaining (mean ± SE) for each litter type (a) and habitat type (b) at 6 collection times (0.16, 0.5, 1, 1.5, 2 and 3 years, n=5). The lower case indicates significant differences in remaining mass between litter types (panel a) within collection times. The capital letters indicate significant differences in remaining mass significant over time within litter types (panel a) and within habitat types (panel b). No significant differences were found in remaining mass between microsites within collection times (b). Comparisons were made with GLMs, with microsite as a random factor (p<0.05). Statistical analyses were performed with remaining mass log-odd transformed to achieve normality",,,,,
+Litter type,year (x),Remaining mass (%) (y),y standard error,Significant litter type group,Significant time group
+Ps needles,0.16522,92.92899,,a,A
+Ps needles,0.5,80.76923,,a,B
+Ps needles,1,77.48521,1.8,a,B
+Ps needles,1.5,71.09467,,a,C
+Ps needles,2,68.3432,1.7,a,C
+Ps needles,3,61.15385,3,a,D
+Qi leaves,0.16522,93.37278,,a,A
+Qi leaves,0.5,82.63314,,ab,B
+Qi leaves,1,80.14793,,ab,B
+Qi leaves,1.5,72.15976,,a,C
+Qi leaves,2,64.1716,2.6,a,C
+Qi leaves,3,54.49704,4.45,b,D
+Ps roots,0.16522,94.26036,,b,A
+Ps roots,0.5,83.25444,,ab,B
+Ps roots,1,78.46154,1.9,ab,C
+Ps roots,1.5,70.56213,2.3,a,C
+Ps roots,2,67.10059,3,b,D
+Ps roots,3,58.31361,3.4,bc,E
+Qi roots,0.16522,95.14793,,b,A
+Qi roots,0.5,84.31953,,b,B
+Qi roots,1,82.01183,,b,B
+Qi roots,1.5,73.57988,2.7,a,D
+Qi roots,2,73.40237,3.9,b,D
+Qi roots,3,65.23669,6,c,E
+,,,,,
+Habitat type,,,,,
+HPs,0.16522,94.29708,,,
+HPs,0.5,82.99735,,,
+HPs,1,80.61008,1.4,,
+HPs,1.5,72.65252,,,
+HPs,2,70.34483,3.1,,
+HPs,3,59.3634,2.1,,
+DPs,0.16522,94.21751,,,
+DPs,0.5,83.31565,,,
+DPs,1,79.97347,1.8,,
+DPs,1.5,72.49337,1.7,,
+DPs,2,67.79841,2.2,,
+DPs,3,61.98939,2.8,,
+Qi ,0.16522,94.21751,,,
+Qi ,0.5,82.12202,,,
+Qi ,1,78.54111,2,,
+Qi ,1.5,70.82228,1.8,,
+Qi ,2,67.08223,3.3,,
+Qi ,3,58.48806,3.6,,
