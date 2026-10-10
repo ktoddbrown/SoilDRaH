@@ -94,10 +94,10 @@ timelog:
       end: 2026-07-21 T18:00
       duration: PT30M
   - activity:
-      description: Reopening Data Rescue for figures 3 and 4; adding temp folder to repo.
+      description: Reopening Data Rescue for figures 3 and 4; adding temp folder and old secondary transcriptions
       who: ashbonner310
       start: 2026-10-07 T19:00
-      duration: PT30M
+      duration: PT1H30M
 ---
 
 
