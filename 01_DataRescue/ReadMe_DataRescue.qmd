@@ -106,6 +106,7 @@ studyID_exclude <- c('CPEAT2025', 'FIA2024', 'NCSS2023', 'ISCN3_2015')
 
 allYAML <- lapply(readME.ls[setdiff(names(readME.ls), studyID_exclude)],
                   function(myfilename){
+                    #print(myfilename)
                     #allYAML <- lapply(readME.ls['Nusslein1999'], function(myfilename){
                     fileLines <- read_lines(file = myfilename) 
                     
@@ -269,6 +270,8 @@ loggedTime.df <- plyr::ldply(allYAML, function(list_item){
 studyTotals <- loggedTime.df |>
   reframe(totalTime = sum(duration)/(60*60),
           description = paste(description, collapse = '; '),
+          initalized = min(start, na.rm=TRUE),
+          finish = max(start, na.rm=TRUE),
           .by = studyID) |>
   mutate(level1_included = str_detect(description, 'T|transcrip')) |>
   arrange(desc(level1_included), totalTime)
