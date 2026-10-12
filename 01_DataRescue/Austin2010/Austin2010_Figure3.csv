@@ -1,11 +1,11 @@
-﻿"**Fig. 3.** Dual role of lignin in litter decomposition. Decomposition of CL substrates under abiotic conditions of full solar radiation (pink diamonds) and under biotic conditions (green circles), both under field conditions during summer and early fall. Symbols indicate mean values (n = 5 $\pm$ SEM). Solid lines are least-squares fits of the original data, which in both cases were simple linear regressions. Equations: Photodegradation $= 0.0091 \times $(%lignin)$ + 0.0002$. $r^2 = 0.92$; Biotic decomposition $= −0.0105 \times$ (%lignin) $+ 0.0024$. $r^2 = 0.45$.",,,
+"**Fig. 3.** Dual role of lignin in litter decomposition. Decomposition of CL substrates under abiotic conditions of full solar radiation (pink diamonds) and under biotic conditions (green circles), both under field conditions during summer and early fall. Symbols indicate mean values (n = 5 $\pm$ SEM). Solid lines are least-squares fits of the original data, which in both cases were simple linear regressions. Equations: Photodegradation $= 0.0091 \times $(% lignin)$ + 0.0002$. $r^2 = 0.92$; Biotic decomposition $= -0.0105 \times$ (%lignin) $+ 0.0024$. $r^2 = 0.45$.",,,
 Type of Loss,Lignin Concentration (%),Mass Loss (% per day),SEM
-Photodegradation,0.1,0.006,0.000
-Photodegradation,5.1,0.077,0.007
-Photodegradation,9.3,0.100,0.006
-Photodegradation,13.7,0.133,0.005
+Photodegradation,0.1,0.006,-
+Photodegradation,5.0,0.077,0.007
+Photodegradation,9.2,0.101,0.007
+Photodegradation,13.6,0.134,0.005
 Biotic Degradation,0.0,0.284,0.026
-Biotic Degradation,4.7,0.146,0.041
-Biotic Degradation,9.0,0.132,0.048
-Biotic Degradation,12.9,0.104,0.025
-Biotic Degradation,16.2,0.105,0.015
+Biotic Degradation,4.6,0.147,0.040
+Biotic Degradation,8.9,0.132,0.048
+Biotic Degradation,12.8,0.105,0.025
+Biotic Degradation,16.2,0.106,0.015

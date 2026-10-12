@@ -1,10 +1,10 @@
-﻿"Fig. 4. Lignin concentration decreases with photodegradation and increases during biotic decomposition. (A) Initial and final lignin concentrations for photodegradation and biotic incubation experiments. CL substrates exposed to solar radiation consistently demonstrated a reduction in lignin concentration, whereas biotically incubated CL substrates overall showed increased lignin concentrations. Each data point corresponds to an individual sample exposed to full solar radiation (pink diamonds) or biotic conditions (green circles). (B) Predicted and observed changes in lignin for photodegradation: predicted changes were calculated assuming that all mass loss was due to the photodegradation of lignin. Regression for data points shown: Observed % = 0.99 × (Predicted %), r$^2$ = 0.88, which does not deviate significantly from the 1:1 line. (C) Predicted and observed changes in lignin for biotic decomposition: predicted changes were calculated assuming that all mass loss was due to cellulose respiration. Regression for data points shown: Observed % = 1.06 × (Predicted %), r$^2$ = 0.77, which does not deviate significantly from the 1:1 line.",,,,,
-x value ,y value,x value label,y value label,decomposition type,figure label
-4.95,0.954,Initial lignin (%),Final lignin (%),Photodegradation,A
-4.86,1.190,Initial lignin (%),Final lignin (%),Photodegradation,A
-5.15,1.255,Initial lignin (%),Final lignin (%),Photodegradation,A
-4.98,1.577,Initial lignin (%),Final lignin (%),Photodegradation,A
-4.95,1.878,Initial lignin (%),Final lignin (%),Photodegradation,A
+"**Fig. 4.** Lignin concentration decreases with photodegradation and increases during biotic decomposition. (A) Initial and final lignin concentrations for photodegradation and biotic incubation experiments. CL substrates exposed to solar radiation consistently demonstrated a reduction in lignin concentration, whereas biotically incubated CL substrates overall showed increased lignin concentrations. Each data point corresponds to an individual sample exposed to full solar radiation (pink diamonds) or biotic conditions (green circles). (B) Predicted and observed changes in lignin for photodegradation: predicted changes were calculated assuming that all mass loss was due to the photodegradation of lignin. Regression for data points shown: Observed $% = 0.99 \times$ (Predicted %), $r^2 = 0.88$, which does not deviate significantly from the 1:1 line. (C) Predicted and observed changes in lignin for biotic decomposition: predicted changes were calculated assuming that all mass loss was due to cellulose respiration. Regression for data points shown: Observed % $= 1.06 \times$ (Predicted %), $r^2 = 0.77$, which does not deviate significantly from the 1:1 line.",,,,,
+x value,y value,x label,y label,decomposition type,subfigure
+4.88,1.18,Initial lignin (%),Final lignin (%),Photodegradation,A
+4.98,0.97,Initial lignin (%),Final lignin (%),Photodegradation,A
+5.00,1.47,Initial lignin (%),Final lignin (%),Photodegradation,A
+5.05,1.88,Initial lignin (%),Final lignin (%),Photodegradation,A
+5.10,1.23,Initial lignin (%),Final lignin (%),Photodegradation,A
 9.43,2.759,Initial lignin (%),Final lignin (%),Photodegradation,A
 9.15,3.038,Initial lignin (%),Final lignin (%),Photodegradation,A
 9.19,3.253,Initial lignin (%),Final lignin (%),Photodegradation,A
