@@ -98,6 +98,16 @@ timelog:
       who: ashbonner310
       start: 2026-10-07 T19:00
       duration: PT1H30M
+  - activity:
+      description: Transcriptions for Figure 3 and 4
+      who: SavaScott
+      start: 2026-10-10
+      duration: PT1H10M
+  - activity:
+      description: Transcriptions for Figure 3 and plot coding
+      who: ashbonner310
+      start: 2026-10-12
+      duration: PT40M
 ---
 
 
@@ -337,7 +347,14 @@ read_csv(file = figure3.file,
 Figure3.df<- read_csv(file = figure3.file,
                    skip = 1)
 
-ggplot(Figure3.df)
+ggplot(Figure3.df)  + 
+  geom_errorbar(aes(x = `Lignin Concentration (%)`,
+                    ymin = `Mass Loss (% per day)` - SEM,
+                    ymax = `Mass Loss (% per day)` + SEM),
+                width = 0.2) + 
+    geom_point(aes(x = `Lignin Concentration (%)`,
+                   y = `Mass Loss (% per day)`,
+                   color = `Type of Loss`))
 
 ```
 
@@ -347,7 +364,7 @@ And is crosschecked with the secondary transcription
 #| label: compareFigure3
 #| eval: false
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure3.csv Austin2010_Figure3.csv
+diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Figure3_XX.csv Austin2010_Figure3.csv
 ```
 
 ## Figure 4
