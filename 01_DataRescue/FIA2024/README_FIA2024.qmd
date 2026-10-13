@@ -273,7 +273,17 @@ temp <- tableColumns |>
            str_detect(column_names, pattern = 'NBR$') |
            str_detect(column_names, pattern = '_ID$')) |>
   filter(soil_obs | depth | time_obs | location_obs | ids) |>
-  arrange(desc(soil_obs))
+  arrange(desc(soil_obs)) |>
+  mutate(readFlag = (str_detect(table_name, 'SOILS_LAB') &
+                       column_names %in% c('CN', 'PLT_CN',
+                                           'INVYR', 'STATE_CD', "COUNTY_CD",
+                                           'LAYER_TYPE',
+                                           'BULK_DENSITY', 'BULK_DENSITY_FINES',
+                                           'COARSE_FRACTION_PCT',
+                                           'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT')) |
+           (str_detect(table_name, 'ENTIRE_PLOT') &
+              column_names %in% c('CN', 'LAT', 'LON', 'STATENM'))
+  )
 ```
 
 There are a total of `length(labMartTables)` downloaded in this version of the database with `nrow(tableColumns)` columns of information.
