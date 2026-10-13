@@ -1,6 +1,6 @@
 # Data Rescue Workflow
 Katherine Todd-Brown
-2026-September
+2026-October
 
 - [Understanding data source](#sec-UndertandingDataSource)
   - [Identify, find, and read data
@@ -10,7 +10,13 @@ Katherine Todd-Brown
 - [Transcribing data](#sec-TranscribingData)
   - [Prep documents](#prep-documents)
   - [Transcribe](#transcribe)
+  - [Cross check](#cross-check)
 - [Reviewing transcripts](#sec-ReviewingTranscripts)
+  - [Prep the data rescue](#prep-the-data-rescue)
+  - [Pull Request](#pull-request)
+  - [PR Review](#pr-review)
+  - [Requested changes](#requested-changes)
+  - [Accepting the PR](#accepting-the-pr)
 
 This workflow provides guidance for moving data out of a pdf manuscript,
 report, or other non-machine readable format into a machine readable
@@ -173,7 +179,35 @@ If you have never worked with these files or software you may wish to
 look up online tutorials and familarize yourself with them before moving
 on.
 
+#### ReadMe
+
+This is a good step to create the ReadMe file from the
+01_DataRescue/\_TemplateYYYY/README_AuthorYYYY.qmd template file. Fork
+this repository (see
+https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo).
+Clone your forked repository to your computer (see
+https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+Then create a branch for this data rescue on the forked repository (see
+https://docs.github.com/en/pull-requests/how-tos/commit-changes/managing-branches-within-your-repository).
+Finally copy the 01_DataRescue/\_TemplateYYYY to a new folder and rename
+it the study name (generally last name of the first author followed by
+publication year).
+
+Set up the new ReadMe file by changing the citations and updating the
+documentation in the README_AuthorYYYY.qmd. You’ll want to review the
+template file carefully, there are useful hits in the
+`<!--- comments --->`. Rename the files to reflect your study name.
+Update the activity log to reflect the work you’ve done so far! Make
+your first `git commit` at this point so you can start tracking changes
+to share with your team.
+
 ### Transcribe
+
+Finally there! This should be where the bulk of your work happens, the
+data transcription. At this stage you are pull in the data elements
+(methods, tables, and figures) to populate the template. At the end you
+should then update the template to read in and reproduce all of the data
+elements.
 
 #### Methods
 
@@ -204,8 +238,18 @@ follow when creating your methods section:
     a new [BibTex](https://www.bibtex.org/) file that is separate from
     the reference for the source. Right now we are putting the reference
     to the bib entry at the end of the line where it is references with
-    a `@AuthorYear` tag that corresponds to the bib label. This may
-    change in the future (as of spring 2025).
+    a `@AuthorYear` tag that corresponds to the bib label.
+
+Bibliography files should be downloaded from the referenced journal
+article page. This is generally at the top of the webpage under the
+title and authors. You will select the `bibtex` option here and often
+download a `.bib` file. Open this file in a text editor (like RStudio)
+and copy/paste the contents into the `AuthorYYYY_Methods.bib` (for
+method references), or `AuthorYYYY.bib` for the primary reference of the
+study. If there is no journal download, try to create the bibentry based
+on <https://www.bibtex.com/format/#templates>. Note that the automatic
+reference generators have a hard time getting the more obscure
+references correct. Use them with caution.
 
 When in doubt, try something. Then bring it to a [SoilDRaH
 meeting](https://github.com/ktoddbrown/SoilDRaH/discussions) or make a
@@ -227,82 +271,171 @@ With this in mind, here are some general practices:
 1)  Use a spreadsheet software for the data entry then export it later
     to a csv-file that you can archive. Spreadsheets are generally much
     easier to work with columns in then flat text files, but old
-    spreadsheet files are not always readable by modern software.
-2)  Be sure to set your spreadsheet to text entries. Spreadsheets try to
-    be clever and guess what type of data you are entering. Numbers are
-    often truncated if they end in a zero, but this looses significant
-    digits. Treat everything as a text when you are transcribing.
+    spreadsheet files are not always readable by modern software, which
+    is why the data should not *stay* in a spreadsheet format.
+2)  Set your spreadsheet to text entries. Spreadsheets try to be clever
+    and guess what type of data you are entering. Numbers are often
+    truncated if they end in a zero or can end up ‘padded’ due to
+    numerical imprecision (0.1 ends up as 0.1000001), both loose
+    information in the significant digits about how precise the number
+    is entered. Treat everything as a text when you are transcribing.
 3)  Use the first row to copy the caption. This will ensure that the
     table and it’s caption are always together. The compromise here is
     that you have to skip the first row when reading the final csv, no
     ideal but also not difficult.
-4)  Sub-table headers may new columns or multi column entires should be
-    repeated. While spreadsheets will merge cells for you, it does not
-    export nicely to csv tables. You should strive to preserve the
-    structure of the data by repeating entries either in the header or
-    as a new column.
+    1)  An alternative that was also considered here was commenting out
+        the row using `#` instead, however the comment character is not
+        standardized so we decided to go with the first row convention
+        instead.
+4)  Sub-table headers may new columns and removing the sub-header rows.
+    While spreadsheets will merge cells for you, it does not export
+    nicely to csv tables. This may require discussion with other people
+    who have done data rescues before if you are new. An example of this
+    is in Table 1 of Burke2003.
 
-#### Compare transcriptions
+As a final check you should recreate the table in the template and
+compare it to the table in the manuscript. There is sample code for you
+to work off of in the readme template.
+
+#### Figures
+
+Figures in manuscripts are designed to community complex data visually
+in such a way that trends supporting research conclusions are evident.
+This is broadly not machine readable. In addition to the x-y location on
+the graph, figure shapes, colors, line types, and error bars all
+contains information that needs to be captured.
+
+1)  Take a screenshot of the figure and upload it to a click capture
+    tool. We have been using the online version of
+    https://plotdigitizer.com/ as of September 2026, but you can also do
+    this in Powerpoint.
+2)  Record points. You will generally need to define the axis bounds and
+    then can click on points on the image and the tool will record the
+    x-y location of those clicks in a spread sheet.
+3)  Label the x and y columns with the axis label OR create a x-label
+    column and y-label column if you are dealing with multiple
+    sub-panels with different axises.
+4)  Add the caption to the first line, similar to a table, and export to
+    a csv file.
+
+A word on precision. The software will give you a very high precision on
+your mouse click. In general you should look at the axis label and
+record 1 to 2 significant digits more then is represented on the labels.
+If two points are mostly overlapping, it is okay to give them the same
+number.
+
+In some cases it is not possible to capture the data in a figure to a
+useful degree. Highly dense, overlapping points where you don’t know the
+number of points being obscured or ‘3D’ figures are two examples of
+figures that may not be able to be digitized. You should discuss this
+with the data curator for your project if this appears to be the case.
+
+Finally you should create a plot that duplicates the one in the paper to
+make sure you have the figure transcribed correctly. Figure creation can
+be complicated. Project standard libraries are declared in the template
+and you should not include any new libraries without discussion with the
+maintainers. There is a basic example in the template of a figure
+creation but you may need to ask for help if you have not worked with
+the R package `ggplot2` before.
+
+### Cross check
+
+Now is the time to ask for a secondary transcription to cross check your
+work. This second transcription generally lives in the `temp` folder of
+the study folder. Code in the template uses `R` to check the line by
+line character matches and outputs lines that do not have matching
+characters. The character matches are very sensitive and will flag as
+different \* space vs tab \* newlines on different operating machines
+(sometimes) \* special characters on different operating machines
+(sometimes) \* upper vs lower characters.
+
+Both the primary and secondary transcribers should meet and discuss the
+line by line differences and arrive on something that is ‘good enough’.
 
 ## Reviewing transcripts
 
 | Lead | Do | Measure |
 |----|----|----|
-| Prep transcription package | Create a pull request to incorporate the data rescue into the repository | Expert Review: Does the pull request have the documentation identified below? Does the ReadMe render? |
+| Prep transcription package | Create a pull request to incorporate the data rescue into the repository | **Expert Review** Does the pull request have the documentation identified below? Are there obvious errors that would cause the code not to render? |
 
-Almost there! The final step in this data rescue is an expert review of
-the entire data package. Generally this is a fairly high level review
-looking for specific sections, formatting, and a working Level 0 read
-demo. It is possible (likely even) that when the data moves onto the
-harmonization phase that there will be additional issues that will need
-to be addressed.
+Almost there!
 
-**To create a pull request.** First you will need to fork the main
-branch on the primary repository. Then create a new branch on your fork
-for this specific rescue. Upload the following files to that branch
-either via the web GUI or using a `git push` command. Finally create a
-pull request on the primary repository asking for your branch to be
-merged into the main branch and let an expert reviewer know that it’s
-ready for review!
+### Prep the data rescue
 
-You will need to include the following files:
+First you should review your entire data rescue. **Render** the README
+file and make sure that everything runs. Common things to check are: -
+Do the figures and tables match what is in the primary literature? - Do
+you have everyone logged as authors who needs to be? - Did you record
+the time that you spent on this data rescue?
 
-- A ReadMe file with (qmd)
-- A data transcription(s) include methods sections (csv, md)
-- BibTex files (bib)
+You should have need to include the following files:
 
-**Reviewer checks** should include the following:
+- A README file with (qmd)
+- A data transcription(s) include methods section and secondary
+  transcriptions in the `temp` folder (csv, md)
+- BibTex files including methods and primary citation (bib)
 
-- A qmd ReadMe file that renders without error with the following
-  sections
-  1)  all contributors identified in the metadata
-  2)  human readable summary of data source with context for data rescue
-      with citation
-      - A BibTex file with a single citation for the primary paper
-        should be included as well using a *AuthorYear* bib key format
-        with the first authors last name and year of publication.
-  3)  specific plan for fit-for-purpose data rescue
-  4)  a markdown read of the rescued text sections (generally Methods
-      section)
-  5)  chunks that reproduce the tables/figures rescued and explain any
-      deviation from the format in the article.
-  6)  a section that constructs the Level 0 data product
-- Data transcription(s) that
-  1)  transcriptions of tables or x-y extracted data points from figures
-      with fit for purpose information are csv (comma separated) format
-      - The first line should contain the caption and any footnotes
-      - The second line should be header information that reflects the
-        table headers as much as possible or figure axis/labels
-      - There should be evidence of a cross check between two
-        transcriptions that either includes a commented out section that
-        uses a diff command to compare the two transcriptions or
-        documentation as to why this was not done
-  2)  transcription of methods section with paired BibTex formatted
-      reference
-      - methods section headers should be well formatted using `##` or
-        `###` as appropriate with an empty line above and below.
-      - mathematics in the text should be well formatted LaTex using
-        `$ ... $`
-      - citations should be linked to a BibTex file using a *AuthorYear*
-        bib key format with the first authors last name and year of
-        publication.
+### Pull Request
+
+Make a Pull Request on the main repository. Commit and push your files
+to your github fork. Here is a good reference to start with:
+https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/creating-a-pull-request
+but feel free to ask if this is your first pull request! Be sure to
+mention your orignal issue in the pull request message.
+
+### PR Review
+
+Tag yourself as the reviewer for the pull request. Unless you are very
+enthusiastic, you probably will not be executing the quarto document;
+level 1 harmonization will check the content and fix runtime errors
+before it can proceed. Rather you are looking for broad inconsistencies
+and common mistakes.
+
+Reviewer check list:
+
+- README_AUTHORYYYY.qmd
+  - [ ] all contributors identified in the metadata and yml format looks
+    good
+  - [ ] human readable summary of data source with context for data
+    rescue with citation
+  - [ ] A BibTex file with a single citation for the primary paper
+    should be included as well using a *AuthorYear* bib key format with
+    the first authors last name and year of publication.
+  - [ ] chunk labels are all different
+  - [ ] code looks like it would render
+- AUTHORYYYY\_\*.csv
+  - [ ] first line contains the caption and any footnotes
+  - [ ] transcriptions of tables or x-y extracted data points appear to
+    have reasonable precision
+  - [ ] second transcription of methods and csv files are in the temp
+    folder
+- AUTHORYYYY_Methods.csv
+  - [ ] methods section headers should be well formatted using `#` or
+    `##` as appropriate with an empty line above and below.
+  - [ ] mathematics in the text should be well formatted LaTex using
+    `$ ... $`
+- BibTex formatted references
+  - [ ] citations should be linked to a BibTex file using a *AuthorYear*
+    bib key format with the first authors last name and year of
+    publication.
+  - [ ] all lines within the citation end in a comma
+  - [ ] bibtex appears to be well formatted
+
+Add line by line (or file level) suggestions to address any changes that
+need to be made and use githubs PR review process
+https://docs.github.com/en/pull-requests/reference/pull-request-reviews
+
+### Requested changes
+
+Most of the time there are changes that need to be made. Don’t worry!
+There should be line by line changes for you to respond to on the pull
+request. Make the changes to your fork/branch (add-commit-push), and
+they will automatically update on the pull request. Respond to the any
+comments or suggested changes and ask for a re-review from your
+reviewer. Repeat as needed.
+
+### Accepting the PR
+
+Once the data rescue is good enough, squash and merge.
+
+Celebrate!
