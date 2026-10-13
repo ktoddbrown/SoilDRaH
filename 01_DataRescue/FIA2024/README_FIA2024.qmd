@@ -56,6 +56,11 @@ timelog:
       who: ktoddbrown
       start: 2026-10-1
       duration: PT2H
+  - activity: 
+      description: simplify level 0
+      who: ktoddbrown
+      start: 2026-10-13
+      duration: PT1H
 ---
 
 ```{r}
@@ -77,18 +82,14 @@ CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
 dataDir  <- 'temp'
 
 # The below csv tables are used to construct annotations for FIADB
-annotationFilenames <- c(FIA_Plot_Annotations = 'FIA2024_TableEntirePLOT.csv',
-                   #ENTIRE_SOILS_VISIT Table appears in datamart download 
-                   #...but is not documented in manual
-                   FIA_Survey_Annotations = 'FIA2024_TableSurvey.csv',
-                   FIA_Subplot_Annotations = 'FIA2024_TableSubPlot.csv',
-                   FIA_Subplot_SampleLoc_Annotations =
-                     'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
-                   #ENTIRE_SOILS_EROSION Table appears in datamart download 
-                   #...but is not documented in manual
-                   FIA_Subplot_Lab_Annotations =
-                     'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
-                   FIA_Tree_Annotations = 'FIA2024_TableTREE.csv'
+metaTranscriptions_filename <- tribble( 
+  ~table_name, ~metadata_filename,
+  'ENTIRE_PLOT', 'FIA2024_TableEntirePLOT.csv',
+  'ENTIRE_SURVEY', 'FIA2024_TableSurvey.csv',
+  'ENTIRE_SUBPLOT', 'FIA2024_TableSubPlot.csv',
+  'ENTIRE_SUBP_SOIL_SAMPLE_LOC', 'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
+  'ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
+  'ENTIRE_TREE',  'FIA2024_TableTREE.csv'
 )
 
 #Pulled from nested table in the manual
@@ -106,8 +107,6 @@ if(file.exists(readsource.file)){
 verbose <- TRUE
 
 #semantic files for level 1
-#of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
-#is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -157,7 +156,7 @@ These files are in the FIADB 2024 data rescue.
 -   [FIA2024.bib](FIA2024.bib)
     -   citation for database transcribed from user manuals and other documentation
 -   Annotations
-    -   this includes the annotations constructed using user manual (latest version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
+    -   this includes the annotations constructed using user manual (version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
         + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
         + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
         + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
@@ -190,36 +189,49 @@ if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
   if(verbose) message('Unzipping done.')
 }
 
+
+labMartTables <- list.files(path = 'temp/CSV_FIADB_ENTIRE/', 
+                               pattern = '.csv', full.names = TRUE)
+
 ```
 
+## Meta data transcription
 
-TODO: REview this and cross check with DB description. Looks like the bulk density is in the ENTIRE_SUBP_SOIL_SAMPLE_LAYER table
+```{r}
+#| label: compareMeta
 
-This data is identified as a data source for ISCN4 data harmonization and curation project.
-There are five tables (`ENTIRE_SUBP_SOIL_SAMPLE_LAB`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC`, `ENTIRE_SUBP_SOIL_SAMPLE_LAYER`, `ENTIRE_PLOT`, `ENTIRE_SURVEY`) currently annotated in the FIADB data collection.
-This represents the data directly relevant for layer-level: 
+tableColumns <- plyr::ldply(labMartTables, 
+            function(filename){
+              tibble(column_name = names(read_csv(filename, n_max = 0,
+                                                   show_col_types = FALSE)),
+                     table_name = str_remove(string = basename(filename),
+                                             pattern = '.csv$'))
+})
 
-  + soil carbon measurements: 
-    - bulk density `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY`
-    - bulk density fine fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$BULK_DENSITY_FINES`
-    - organic carbon fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_ORG_PCT`
-    - total carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_TOTAL_PCT`
-    - inorganic carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAB$C_INORG_PCT`
-    - coarse fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAB$COARSE_FRACTION_PCT`
-  + depth of sample and layer information:
-    - layer thickness `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_THICKNESS`
-    - layer type `ENTIRE_SUBP_SOIL_SAMPLE_LAB$LAYER_TYPE`
-    - core size `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_SIZE`
-    - core length `ENTIRE_SUBP_SOIL_SAMPLE_LOC$CORE_LENGTH`
-    - depth of refuse for four locations `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_1`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_2`, `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_3`, and `ENTIRE_SUBP_SOIL_SAMPLE_LOC$RESTRICTION_DEPTH_4`
-  + sampling time: 
-    - inventory year
-      * `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`
-  + sample location: 
-    - latitude `ENTIRE_PLOT$LAT`
-    - longitude `ENTIRE_PLOT$LON`
-    - state name `ENTIRE_SURVEY$STATENM`
+transcriptions.df <- metaTranscriptions_filename |>
+  reframe(meta = read_csv(file = metadata_filename,
+                          show_col_types = FALSE),
+          .by = everything()) |>
+  unnest(meta) |>
+  dplyr::rename(column_name = 'Column name (attribute)' ) |>
+  full_join(tableColumns |>
+              filter(table_name %in% metaTranscriptions_filename$table_name),
+            by = join_by(table_name, column_name))
 
+```
+
+The following miss-matches between the transcriptions and the file downloads, often this is a version issue.
+We can ignore this as long as the variables of interest are not in this subset.
+
+```{r}
+#| label: checkMetadata
+
+transcriptions.df |> 
+  filter(is.na(metadata_filename) | is.na(`Descriptive name`)) |> 
+  kable()
+```
+
+### Control Number
 
 Each table has a column called CN that identifies unique records for that table.
 This is then cross references with other tables according to the following:
@@ -227,185 +239,115 @@ This is then cross references with other tables according to the following:
   1) ENTIRE_SURVEY: `SRV_CN`
   2) ENTIRE_PLOT: `PLT_CN`
   3) ENTIRE_SUBP_SOIL_SAMPLE_LOC: `SSSL_CN`
-  4) ENTIRE_SUBP_SOIL_SAMPLE_LAB
 
-The above annotation tables are associated with the following CSV data tables:
+## ISCN4 relevance
 
-  * `ENTIRE_PLOT.CSV`: *FIA2024_TableEntirePLOT.csv*
-  * `ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv`:  *FIA2024_TableSubPlot_Soil_Sample_Location.csv* 
-  * `ENTIRE_SUBP_SOIL_SAMPLE_LAB.csv` : *FIA2024_table_subplot_soil_sample_layer*
-  * ENTIRE_SURVEY.csv: *FIA2024_TableSurvey.csv*
-  * Missing data description: 
+This data is identified as a data source for ISCN4 data harmonization and curation project.
+There are two tables (`ENTIRE_SUBP_SOIL_SAMPLE_LAYER`, `ENTIRE_PLOT`) containing the variables below that are relevant for layer-resolved soil carbon stocks.
 
-This represents the data directly relevant for layer-level soil carbon measurements including bulk density, organic carbon fraction, coarse fraction, depth of sample, sampling time, and sample location.
+  + soil carbon measurements: 
+    - bulk density `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$BULK_DENSITY`
+    - bulk density fine fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$BULK_DENSITY_FINES`
+    - organic carbon fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_ORG_PCT`
+    - total carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_TOTAL_PCT`
+    - inorganic carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_INORG_PCT`
+    - coarse fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$COARSE_FRACTION_PCT`
+  + depth of sample and layer information:
+    - layer thickness `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_THICKNESS`
+    - layer type `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_TYPE`
+  + sampling time: 
+    - inventory year `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`
+  + sample location: 
+    - latitude `ENTIRE_PLOT$LAT`
+    - longitude `ENTIRE_PLOT$LON`
+    - state name `ENTIRE_SURVEY$STATENM`
 
 Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
 
 
 ```{r}
 #| label: reportLabMart
-labMartTables <- list.files(path = 'temp/CSV_FIADB_ENTIRE/', 
-                               pattern = '.csv', full.names = TRUE)
 
-tableColumns <- plyr::ldply(labMartTables, 
-            function(filename){
-              tibble(column_names = names(read_csv(filename, n_max = 0,
-                                                   show_col_types = FALSE)),
-                     table_name = str_remove(string = basename(filename),
-                                             pattern = '.csv$'))
-})
+meta.df <- transcriptions.df |>
+  #commented out code below explores soil carbon variables across the tables
+  # mutate(soil_obs = str_detect(column_names, pattern = 'BULK') |
+  #          str_detect(column_names, pattern = '^C_.*_PCT$') |
+  #          str_detect(column_names, pattern = 'COARSE_FRACTION_PCT'),
+  #        depth = str_detect(column_names, pattern = '^LAYER_T(YPE)|(HICKNESS)') |
+  #          str_detect(column_names, pattern = '^CORE') | #sample details
+  #          str_detect(column_names, pattern = '^RESTRICTION_DEPTH_\\d'),
+  #        time_obs =  str_detect(column_names, pattern = 'INVYR') | #obs time
+  #          str_detect(column_names, pattern = 'MEAS'),
+  #        location_obs = str_detect(column_names, pattern = 'LON') |
+  #          str_detect(column_names, pattern = 'LAT') |
+  #          str_detect(column_names, pattern = 'STATE') |
+  #          str_detect(column_names, pattern = 'COUNTY'),
+  #        ids = str_detect(column_names, pattern = 'CN$') |
+  #          str_detect(column_names, pattern = 'NBR$') |
+  #          str_detect(column_names, pattern = '_ID$')) |>
+  # filter(soil_obs | depth | time_obs | location_obs | ids) |>
+  # arrange(desc(soil_obs)) |>
+  filter( table_name %in% c('ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 
+                            'ENTIRE_PLOT',
+                            'ENTIRE_SURVEY'),
+          column_name %in% c('CN', 'PLT_CN',
+                          'INVYR', 
+                          'LAT', 'LON', 'STATE_CD', 'STATENM',
+                          'LAYER_TYPE', 'LAYER_THICKNESS', 'LAYER_COLLECTED_CD',
+                          'BULK_DENSITY', 'BULK_DENSITY_FINES',
+                          'COARSE_FRACTION_PCT',
+                          'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))
 
-
-temp <- tableColumns |>
-  mutate(soil_obs = str_detect(column_names, pattern = 'BULK') |
-           str_detect(column_names, pattern = '^C_.*_PCT$') |
-           str_detect(column_names, pattern = 'COARSE_FRACTION_PCT'),
-         depth = str_detect(column_names, pattern = '^LAYER_T(YPE)|(HICKNESS)') |
-           str_detect(column_names, pattern = '^CORE') | #sample details
-           str_detect(column_names, pattern = '^RESTRICTION_DEPTH_\\d'),
-         time_obs =  str_detect(column_names, pattern = 'INVYR') | #obs time
-           str_detect(column_names, pattern = 'MEAS'),
-         location_obs = str_detect(column_names, pattern = 'LON') |
-           str_detect(column_names, pattern = 'LAT') |
-           str_detect(column_names, pattern = 'STATE') |
-           str_detect(column_names, pattern = 'COUNTY'),
-         ids = str_detect(column_names, pattern = 'CN$') |
-           str_detect(column_names, pattern = 'NBR$') |
-           str_detect(column_names, pattern = '_ID$')) |>
-  filter(soil_obs | depth | time_obs | location_obs | ids) |>
-  arrange(desc(soil_obs)) |>
-  mutate(readFlag = (str_detect(table_name, 'SOILS_LAB') &
-                       column_names %in% c('CN', 'PLT_CN',
-                                           'INVYR', 'STATE_CD', "COUNTY_CD",
-                                           'LAYER_TYPE',
-                                           'BULK_DENSITY', 'BULK_DENSITY_FINES',
-                                           'COARSE_FRACTION_PCT',
-                                           'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT')) |
-           (str_detect(table_name, 'ENTIRE_PLOT') &
-              column_names %in% c('CN', 'LAT', 'LON', 'STATENM'))
-  )
 ```
 
-There are a total of `length(labMartTables)` downloaded in this version of the database with `nrow(tableColumns)` columns of information.
-Below we read in the subset that is relevant for the ISCN4 reanalysis.
+# Read Level 0 data
 
-# Level 0 data
-
-Using the FIABD pdf manual v.9.4(2024) (@burrill2024d), we manually transcribe the descriptions for tables of interest and control vocabularies.
-
-  + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
-  + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
-  + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
-  + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
-  + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
-  + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
-  + [FIA2024_Entire_Control_Vocabulary.csv](FIA2024_Entire_Control_Vocabulary.csv)
+This is a large data set so we only read in the columns we are interested in defined above and saved in the `meta.df` data frame.
 
 ```{r}
 #| label: readRescues
 
-readCheck <- Inf
+readCheck <- Inf #big tables to read in so develop code with subset
 
-level0.ls <- list(
-  citation = read.bib(file = primaryCitation.file),
-  ENTIRE_PLOT = list(
-    data = readr::read_csv(
-      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_PLOT.csv'),
-      col_types = readr::cols(.default = readr::col_character()),
-      n_max = readCheck
-    ),
-    description = readr::read_csv(
-      file = 'FIA2024_TableEntirePLOT.csv',
-      col_types = readr::cols(.default = readr::col_character())
-    )
-  ),
-  ENTIRE_SURVEY = list(
-    data = readr::read_csv(
-      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SURVEY.csv'),
-      col_types = readr::cols(.default = readr::col_character()),
-      n_max = readCheck
-    ),
-    description = readr::read_csv(
-      file = 'FIA2024_TableSurvey.csv',
-      col_types = readr::cols(.default = readr::col_character())
-    )
-  ),
-  # ENTIRE_SUBPLOT <- list(
-  #   data = readr::read_csv(
-  #     file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBPLOT.csv'),
-  #     col_types = readr::cols(.default = readr::col_character()),
-  #     n_max = readCheck
-  #   ),
-  #   description = readr::read_csv(
-  #     file = 'FIA2024_TableSubPlot.csv',
-  #     col_types = readr::cols(.default = readr::col_character())
-  #   )
-  # ),
-  ENTIRE_SUBP_SOIL_SAMPLE_LOC = list(
-    data = readr::read_csv(
-      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LOC.csv'),
-      col_types = readr::cols(.default = readr::col_character()),
-      n_max = readCheck
-    ),
-    description = readr::read_csv(
-      file = 'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
-      col_types = readr::cols(.default = readr::col_character())
-     )
-   ),
-  ENTIRE_SUBP_SOIL_SAMPLE_LAYER = list(
-    data = readr::read_csv(
+layer_data <- readr::read_csv(
       file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'),
       col_types = readr::cols(.default = readr::col_character()),
       n_max = readCheck
-    ),
-    description = readr::read_csv(
-      file = 'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
-      col_types = readr::cols(.default = readr::col_character())
-    )
-  ),
-  # ENTIRE_SOILS_EROSION = list(
-  #   data = readr::read_csv(
-  #     file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_EROSION.csv'),
-  #     col_types = readr::cols(.default = readr::col_character()),
-  #     n_max = readCheck
-  #   ),
-  #   description = 'missing'
-  # ),
-  ENTIRE_SOILS_VISIT = list(
-    data = readr::read_csv(
-      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_VISIT.csv'),
+    ) |>
+  select(one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER'])) 
+
+plot_data <-  readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_PLOT.csv'),
       col_types = readr::cols(.default = readr::col_character()),
       n_max = readCheck
-    ),
-    description = 'missing'
-  ),
-  ENTIRE_SOILS_VISIT = list(
-    data = readr::read_csv(
-      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SOILS_VISIT.csv'),
+    ) |>
+  select(one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_PLOT'])) |>
+  rename(PLT_CN = CN) |> #2 023 534 obs
+  filter(PLT_CN %in% layer_data$PLT_CN) # 1 359 obs
+
+survey_data <- readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SURVEY.csv'),
       col_types = readr::cols(.default = readr::col_character()),
       n_max = readCheck
-    ),
-    description = 'missing'
-  ),
-  controlVocabulary = readr::read_csv(
+    ) |>
+  select(STATECD, STATENM) |>
+  unique()
+
+cv.df <- readr::read_csv(
     file = controlVocabulary,
     col_types = readr::cols(.default = readr::col_character())
-  )
+  ) |>
+  rename(table_name = Table_ID, column_name = Name) |>
+  filter(column_name %in% meta.df$column_name)
+
+level0.ls <- list(
+  citation = read.bib(file = primaryCitation.file),
+  meta = meta.df,
+  Table = list(ENTIRE_SUBP_SOIL_SAMPLE_LAYER = layer_data,
+               ENTIRE_SURVEY = survey_data,
+               ENTIRE_PLOT = plot_data),
+  controlVocabulary = cv.df
 )
 
-#problematic ENTIRE_PLOT notations
-which(level0.ls$ENTIRE_PLOT$data |> names() != 
-        level0.ls$ENTIRE_PLOT$description$`Column name (attribute)`)
-
-#no current problems with ENTIRE_SURVEY
-#which(names(level0.ls$ENTIRE_SURVEY$data) != names(level0.ls$ENTIRE_SURVEY$description$`Column name (attribute)`))
-
-#no current problems with ENTIRE_SUBP_SOIL_SAMPLE_LOC
-# which(names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LOC$data) != 
-#         names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LOC$description$`Column name (attribute)`))
-
-#no current problems with ENTIRE_SUBP_SOIL_SAMPLE_LAYER
-# which(names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LAYER$data) != 
-#         names(level0.ls$ENTIRE_SUBP_SOIL_SAMPLE_LAYER$description$`Column name (attribute)`))
 ```
 
