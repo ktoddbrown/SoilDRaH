@@ -3,7 +3,6 @@ title: "Data Rescue: Author YYYY"
 format:
   html:
     toc: true
-    eval: true #if you want to not evaluate the chunks and just check the rendering, switch this to false
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
@@ -52,6 +51,11 @@ affiliations:
     
 timelog:
   #remove activites below and add activites for the data rescue. Include one activity for developing the data rescue plan, each data element (table, figures, methods, bibliography), readme write-up, and anything else related to the data rescue.
+    - activity:
+      description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/306. Changes include revsion the check list for the data rescue plan, moving crosschecks over to R from bash, removing eval flags, and removing the semantic check.
+      who: ktoddbrown
+      start: 2026-10-13 T1430
+      duration: PT20M
   - activity:
       description: revise based on feedback, see https://github.com/ktoddbrown/SoilDRaH/issues/262. Changes include more details in the commented guidence, additional table and figure examples.
       who: ktoddbrown
@@ -67,23 +71,15 @@ timelog:
       duration: PT05M
   - activity: 
       description: revised execute with only provided files
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
+      who: ktoddbrown 
       start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
       duration: PT45M
-  - activity: #Suggested that you log each day's activity here
+  - activity:
       description: Revise based on feedback
-      who: ktoddbrown #github username
-      #Over what days did you work on this? Use
-      #... https://en.wikipedia.org/wiki/ISO_8601#Dates format.
+      who: ktoddbrown 
       start: 2025-11-21
-      end: 2025-11-26
-      #Estimate how long this took you, below is an example of 30 minutes. Use
-      #... https://en.wikipedia.org/wiki/ISO_8601#Durations
       duration: PT30M
-version: 'vs20270801' #template version, remove before use
+version: 'vs20261013' #template version, remove before use
 ---
 
 
@@ -92,8 +88,6 @@ version: 'vs20270801' #template version, remove before use
 #| include: true
 #| warning: false
 #| message: false
-#| echo: false
-#| eval: true
 
 
 library(tidyverse) # data processing
@@ -117,8 +111,7 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+curation_canidate_semantics.file <- '../../03_DataCuration/CURATION_PROJECT/vocabulary_draft.csv'
 
 ```
 
@@ -183,12 +176,15 @@ These files are in the AuthorYYYY data rescue.
 ## Data Rescue Plan
 
 + Lead
+  - [ ] Claim the article! Let everyone know what you are doing by creating a Data Rescue Issue on the main repository: 
   - [ ] Read the article or data resource and the discription of the target project
-  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_AuthorYYYY'
+  - [ ] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_YI' where 'YI' are Your Initials.
+  - [ ] Create a new branch for this data rescue, it is good practice to name it the study ID here, AuthorYYYY where 'Author' is the last name of the first author and YYYY is the four digit year of publication.
   - [ ] Create a copy of this template folder and rename it to AuthorYYYY
-  - [ ] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
-  - [ ] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
-  - [ ] Add the reviewer to the author list in the yml
+  - [ ] Identify data elements (tables and figures) that you plan to transcribe for what curation project and why. Fill out Data summary section (except for the Files), the Data Rescue Plan (here!).
+  - [ ] Update the author section of the yml to reflect who is working on the rescue, update the activity log.
+  - [ ] Add-Commit-Push the changes to your repository
+  - [ ] Ask someone to review your plan.
 + Do
   - [ ] Create a spreadsheet with TableN and export it to csv
   - [ ] Extract points from FigureM and export it to csv
@@ -200,7 +196,7 @@ These files are in the AuthorYYYY data rescue.
   - [ ] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
 + Measure
   - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [ ] compile or render this ReadMe
   - [ ] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions in your pull request review
   - [ ] celebrate!
@@ -239,16 +235,24 @@ ggplot(data = plot.df,
   )
 ```
 
-And is crosschecked with the secondary transcription (expected to be empty)
+Cross check for the figure above. 
+Looking for `character(0)` outputs here to show that the two transcripts match exactly.
 
-```{bash}
-#| label: compareTableN
+```{r}
+#| label: compareFigureN
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_FigureM_AC.csv AuthorYYYY_FigureM.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('AuthorYYYY_FigureM.csv'),
+        read_lines('temp/AuthorYYYY_FigureM_AC.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('<%s',setdiff(read_lines('temp/AuthorYYYY_FigureM_AC.csv'),
+        read_lines('AuthorYYYY_FigureM.csv')))
+
+
 ```
 
 
@@ -276,30 +280,45 @@ read_csv(file = tableN.file, #read in the specific file
   )
 ```
 
-And is crosschecked with the secondary transcription (expected to be empty)
+Cross check for table above. 
+Looking for `character(0)` outputs here to show that the two transcripts match exactly.
 
-```{bash}
+```{r}
 #| label: compareTableN
+
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template has an example of an unresolved conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_TableN_AC.csv AuthorYYYY_TableN.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('AuthorYYYY_TableN.csv'),
+        read_lines('temp/AuthorYYYY_TableN_AC.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/AuthorYYYY_TableN_AC.csv'),
+        read_lines('AuthorYYYY_TableN.csv')))
+
 ```
 
 ## Methods
 
-Any different to the cross check for the methods section will be output after this line.
+Cross check for methods section. 
+Looking for `character(0)` outputs here to show that the two transcripts match exactly.
 
-```{bash}
+```{r}
 #| label: compareMethods
-#| eval: false
+
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note the template example does NOT have a conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/AuthorYYYY_Methods_AC.md AuthorYYYY_Methods.md
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('AuthorYYYY_Methods.md'),
+        read_lines('temp/AuthorYYYY_Methods_AC.md')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/AuthorYYYY_Methods_AC.md'),
+        read_lines('AuthorYYYY_Methods.md')))
+
 ```
 
 ### Methods  - Text
@@ -503,78 +522,6 @@ data.lvl1.ls <- list(
 
 ```
 
-## Check for new variables
-
-`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_of_variable
-
-#Read in the list of current 'of_variable' entries
-SoilDRaH_variable_list <- read_csv(file =of_variable.file,
-                                   show_col_types = FALSE)
-
-#compare the variables in the level 1 tables to the SoilDRaH variables
-new_variables <- lapply(data.lvl1.ls, function(xx){
-  setdiff(unique(xx$of_variable), 
-          unique(SoilDRaH_variable_list$of_variable))
-}) |>
-  unlist()
-
-#Check that there are no new variables
-if(length(new_variables) == 0){
-  print('All of_variables are in the SoilDRaH variable list. No additions required')
-}else{
-  cat(paste('Please start a issue for new variables [',
-               new_variables, ']', sep = '', collapse = '\n'))
-}
-```
-
-## Check for is_type
-
-`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
-
-```{r}
-#| label: check_is_type
-
-#read in the current types and what variable they are associated with
-SoilDRaH_type_list <- read_csv(file = is_type.file,
-                                   show_col_types = FALSE) |>
-  #remove the project definition and only keep the variable and type
-  select(of_variable, is_type) |>
-  #variables are pushed together in the type defined table. Separate the
-  #...entries here
-  separate_longer_delim(cols = 'of_variable', delim = ',')
-
-#Pull all the of_variable-is_type pairs from the source data
-source_pairs <- tibble()
-
-#If there are a large number of entries, consider replacing this for-loop.
-#...However this avoids having to install the plyr or other libraries, and 
-#...there are generally no more then 3-5 tables
-for(dataTable in data.lvl1.ls){
-  source_pairs <- dataTable |>
-    select(of_variable, is_type) |> 
-    unique() |>
-    bind_rows(source_pairs)
-}
-
-undefined_data_type <- source_pairs |>
-  #subset for variables that are not 'incomplete'
-  semi_join(SoilDRaH_variable_list |>
-              filter(project_status != 'incomplete'),
-            by = join_by(of_variable)) |>
-  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
-  anti_join(SoilDRaH_type_list,
-            by = join_by(of_variable, is_type))
-
-#Tell the user what you found.
-if(nrow(undefined_data_type) == 0){
-  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
-}else{
-  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
-}
-```
 
 ## Check function match
 
