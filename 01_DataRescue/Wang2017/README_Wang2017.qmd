@@ -41,7 +41,7 @@ timelog:
       description: add general UF affilation and filled in portion of template
       who: JennavieveK 
       start: 2026-07-14 T1130
-      duration: P60M
+      duration: PT60M
   - activity: 
       description: data summary and fit for purpose
       who: JennavieveK #github username
@@ -49,7 +49,7 @@ timelog:
       start: 2026-07-15 T1050
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P45M
+      duration: PT45M
   - activity: 
       description: added figures 2 and 3, took out tables section
       who: AmandaLopez14 #github username
@@ -57,7 +57,7 @@ timelog:
       start: 2026-07-20 T1013
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P50M
+      duration: PT50M
   - activity: 
       description: cross-checked figure 2
       who: JennavieveK 
@@ -65,7 +65,7 @@ timelog:
       start: 2026-08-06 T1115
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P60M
+      duration: PT60M
   - activity: 
       description: cross-checked figure 3
       who: JennavieveK 
@@ -73,7 +73,7 @@ timelog:
       start: 2026-08-07 T1440
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P70M
+      duration: PT70M
   - activity: 
       description: cross-checked methods section
       who: JennavieveK 
@@ -81,7 +81,7 @@ timelog:
       start: 2026-08-08 T1620
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P120M
+      duration: PT120M
   - activity: 
       description: fixed pull-request changes
       who: JennavieveK 
@@ -89,7 +89,7 @@ timelog:
       start: 2026-09-06 T1200
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
-      duration: P90M
+      duration: PT90M
 version: 'vs202512' #template version, remove before use
 ---
 

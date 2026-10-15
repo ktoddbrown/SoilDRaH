@@ -75,7 +75,7 @@ affiliations:
 timelog:
   - activity: 
       description: Lead and ReadMe Updated
-      who: sierra-droid #github username
+      who: sierrav-droid #github username
       #when you started and ended, can be just a year or down to the minute
       start: 2026-03-25
       end: 2026-04-15

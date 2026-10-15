@@ -90,7 +90,7 @@ timelog:
       description: Revise based on feedback from pull request
       who: vaasukimarupaka #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-09-02
+      start: 2026-09-02
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: PT30M
@@ -98,7 +98,7 @@ timelog:
       description: Transcribed table 1, table 2, and citations
       who: JennavieveK #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-04-10
+      start: 2026-04-10
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: PT120M
@@ -106,7 +106,7 @@ timelog:
       description: Transcribed table 1
       who: angelacanini-a11y #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-04-02
+      start: 2026-04-02
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: PT55M
@@ -114,7 +114,7 @@ timelog:
       description: secondary transcription for methods
       who: angelacanini-a11y #github username
       #when you started and ended, can be just a year or down to the minute
-      end: 2026-04-04
+      start: 2026-04-04
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: PT40M

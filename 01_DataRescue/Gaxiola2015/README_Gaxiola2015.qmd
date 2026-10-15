@@ -62,11 +62,10 @@ timelog:
       start: 2025-01-31
       #end: YYYY-MM-DD
       duration: PT7H30M
-
   - activity: 
       description: Secondary Transcription
       who: laylakalandjian
-      end: 2025-11-26
+      start: 2025-11-26
       #start: YYYY-MM-DD THH:MM
       duration: PT3H30M
 ---
