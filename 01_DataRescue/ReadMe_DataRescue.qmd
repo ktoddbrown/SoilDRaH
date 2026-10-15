@@ -248,13 +248,14 @@ author.df <- plyr::ldply(allYAML, .id = 'studyID',
 }) |>
   mutate(student_status = case_when(
     name.family %in% c("Marupaka", "Whitehead", "Bonner") ~ 'PhD Student',
-    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen", "Walder", "Saxour", "Velazquez", "Anegondi") ~ 'BS Student',
+    name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen", "Walder", "Saxour", "Velazquez", "Anegondi", 'Canini', 'Cheser', 'Keefer', 'Lopez') ~ 'BS Student',
     .default = 'Other'
   ), 
   UG_cohort = case_when(
     name.family %in% c("Green", "Scott", "Blanchard", "Kalandjian", "Nguyen") ~ ym('2025-1'),
     name.family %in% c("Saxour", "Walder") ~ ym('2025-09'),
     name.family %in% c("Green", "Velazquez", "Anegondi") ~ ym('2026-1'),
+    name.family %in% c('Canini', 'Cheser', 'Keefer', 'Lopez') ~ ym('2025-5'),
     .default = NA
   ))
 
@@ -273,17 +274,21 @@ studyTotals <- loggedTime.df |>
           description = paste(description, collapse = '; '),
           initalized = min(start, na.rm=TRUE),
           finish = max(start, na.rm=TRUE),
+          totalStudents = length(unique(who)),
           .by = studyID) |>
-  mutate(level1_included = str_detect(description, 'T|transcrip')) |>
-  arrange(desc(level1_included), totalTime)
+  arrange(initalized, totalTime)
 
 authorTotals <- loggedTime.df |>
   #only look at studies that have transcriptions logged
   filter(studyID %in% studyTotals$studyID) |>
   reframe(totalTime = sum(duration)/(60*60),
+          firstStudy = min(start, na.rm=TRUE),
+          latestStudy = max(start, na.rm=TRUE),
+          countStudy = length(unique(studyID)),
           description = paste(description, collapse = '; '),
           .by = who) |>
-  arrange(totalTime)
+  mutate(timePerStudy = totalTime/countStudy) |>
+  arrange(latestStudy)
 ```
 
 
@@ -302,13 +307,13 @@ ggplot(plot.df |>
        aes(x=difftime(firstCommit, UG_cohort)/365,
                 y = cumulative_count, color = name.family)) +
   guides(color = 'none') +
-  geom_point() +
+  geom_jitter() +
   geom_line() +
   labs(x= 'Years project start', y = 'Cumulative study count',
        title = 'Undergraduate study submits over time')
 
 ggplot(plot.df) +
-  geom_point(aes(x=time_since_first/(60*60*24),
+  geom_jitter(aes(x=time_since_first/(60*60*24),
                 y = cumulative_count)) +
   geom_line(aes(x=time_since_first/(60*60*24),
                 y = cumulative_count, color = name.family)) +
