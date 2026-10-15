@@ -107,7 +107,6 @@ studyID_exclude <- c('CPEAT2025', 'FIA2024', 'NCSS2023', 'ISCN3_2015')
 allYAML <- lapply(readME.ls[setdiff(names(readME.ls), studyID_exclude)],
                   function(myfilename){
                     #print(myfilename)
-                    #allYAML <- lapply(readME.ls['Nusslein1999'], function(myfilename){
                     fileLines <- read_lines(file = myfilename) 
                     
                     yamlStartEnd <- which(str_detect(fileLines, '^---\\s*$'))
@@ -140,7 +139,8 @@ studyTypes.df <- readME.df |>
 ```{r}
 fileStats <- fileGitTouches |>
   filter(filenames != 'ReadMe_DataRescue.qmd',
-         !str_detect(filenames, '^_')) |>
+         !str_detect(filenames, '^_'),
+         !str_detect(filenames, '.png$')) |>
   select(filenames_str = filenames, studyID) |>
   unique() |>
   mutate(lineCount = length(read_lines(filenames_str)),
@@ -184,8 +184,9 @@ plot.df <- studyTypes.df |>
   
 ggplot(plot.df) +
   geom_histogram(aes(x=value)) +
-  facet_grid(file_type~sizeType, scale='free') +
-  labs(title = 'Scale of a data rescue element')
+  facet_grid(sizeType~ file_type, scale='free') +
+  labs(title = 'Scale of a data rescue element') +
+  coord_flip()
 ```
 
 ```{r}
@@ -289,8 +290,8 @@ authorTotals <- loggedTime.df |>
 ```{r}
 plot.df <- author.df |>
   left_join(startProjects, by = join_by(studyID)) |>
-  filter(author_id != 'ktoddbrown',
-         firstCommit > ymd('2025-01-01')) |>
+  # filter(author_id != 'ktoddbrown',
+  #        firstCommit > ymd('2025-01-01')) |>
   arrange(name.family, firstCommit) |>
   mutate(cumulative_count = 1:n(),
          time_since_first = firstCommit - min(firstCommit),
