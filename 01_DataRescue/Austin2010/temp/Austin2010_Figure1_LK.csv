@@ -1,0 +1,11 @@
+**Fig. 1.** Experimental attenuation of specific regions of the solar spectrum demonstrates that both UV and visible radiation can drive photodegradation in the field. (*A*) Mass loss of grass litter in a semiarid grassland. Initial lignin concentration of litter was 7.3%. (*B*) Mass loss of cellulose-lignin (CL) substrates with 10% lignin concentration. Bars denote treatment means (*n* = 5 + SEM). Different letters indicate significant differences for Tukey HSD posthoc comparisons.,,,,
+Substrate,Transmitted Wavelengths (nm),Mass loss (% per day),Mass loss (% per day) SEM,Letter
+Grass Litter,>290,0.052,0.061,a
+Grass Litter,>315,0.040,0.045,ab
+Grass Litter,>400,0.026,0.028,bc
+Grass Litter,>450,0.021,0.024,c
+Synthetic cellulose-lignin substrate,>290,0.058,0.061,a
+Synthetic cellulose-lignin substrate,>315,0.038,0.044,b
+Synthetic cellulose-lignin substrate,>400,0.025,0.026,b
+Synthetic cellulose-lignin substrate,>450,0.025,0.026,b
+Synthetic cellulose-lignin substrate,>550,0.004,0.006,c
