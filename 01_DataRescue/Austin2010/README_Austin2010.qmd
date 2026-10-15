@@ -18,7 +18,6 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role:
       - transcription: lead 
-      
   - id: ktoddbrown 
     name:
       given: Katherine
@@ -28,6 +27,23 @@ authors: #author scheme from https://quarto.org/docs/journals/authors.html
       - ref: uf-ees
     role: 
       - transcription: review
+      - standardization: lead
+  - id: laylakalandjian
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+  - id: SavaScott
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
 affiliations:
   - id: uf-ees
     name: University of Florida
@@ -57,6 +73,11 @@ timelog:
       start: 2026-01-30 T17:51
       end: 2026-01-30 T18:45
       duration: PT54M
+  - activity: 
+      description: secondary transcriptions (Methods & Fig 1)
+      who: laylakalandjian
+      start: 2026-01-30 T12:00
+      duration: PT1H
   - activity: 
       description: Fixing some old errors, starting the cross-check.
       who: ashbonner310 
@@ -113,6 +134,11 @@ timelog:
       who: ashbonner310
       start: 2026-10-12
       duration: PT1H15M
+  - activity:
+      description: laborious cross check for Fig 4. Last Readme file updates and render.
+      who: ashbonner310
+      start: 2026-10-15
+      duration: PT1H15M
 ---
 
 
@@ -160,10 +186,10 @@ They also used wavelength-specific light attenuation filters to determine what w
 
 ## Tables and figures
 
-- Table
-This paper contains no tables.
+- Table:
+*This paper contains no tables.*
 
-- Figure 
+- Figure:
   1) Mass loss over experimental attenuation of specific regions of the solar spectrum; panel A covers mass loss of litter and panel B covers mass loss of a synthetic cellulose-lignin substrate.
   2) Radiation absorbance spectra of synthetic cellulose-lignin substrates enriched with different quantities of lignin.
   3) Degradation of synthetic cellulose-lignin substrates under biotic conditions and abiotic conditions with full solar radiation.
@@ -234,9 +260,9 @@ These files are in the Austin2010 data rescue.
   + methods transcribed from primary article
 - [Austin2010_Figure1.csv](Austin2010_Figure1.csv)
   + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure.
-- [Austin2010_Figure1.csv](Austin2010_Figure3.csv)
+- [Austin2010_Figure3.csv](Austin2010_Figure3.csv)
   + Plot-digitized values of Figure 3 from primary article
-- [Austin2010_Figure1.csv](Austin2010_Figure4.csv)
+- [Austin2010_Figure4.csv](Austin2010_Figure4.csv)
   + Plot-digitized values of Figure 4 from primary article
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions. 
@@ -269,12 +295,12 @@ These files are in the Austin2010 data rescue.
   - [X] celebrate!
   - [X] Re-open branch to add new data transcriptions
   - [X] Adjust Rescue plan to include new figures
-  - [ ] Extract points from Figure 3 and export it to csv
-  - [ ] Extract points from Figure 4 and export it to csv
-  - [ ] Get a second transcription by someone else on the project
-  - [ ] cross check with second transcriber for tables and methods, and resolve any differences
-  - [ ] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
+  - [X] Extract points from Figure 3 and export it to csv
+  - [X] Extract points from Figure 4 and export it to csv
+  - [X] Get a second transcription by someone else on the project
+  - [X] cross check with second transcriber for tables and methods, and resolve any differences
+  - [X] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
   - [ ] address any revisions suggested in your pull request review
   - [ ] celebrate!
   
@@ -387,6 +413,8 @@ Subfigure 4A plots final lignin against initial lignin across the synthetic CL s
 Initial digitization for Figure 1 was performed with the [Web Plot Digitizer](https://apps.automeris.io/wpd4/).
 Subfigure A has the x and y values rounded to the second decimal place, two more than the axis reports (whole numbers).
 Due to the small size of subfigures B and C, their x and y values are rounded to the first decimal place, one more than the axes report (also whole numbers).
+The cross-check was performed by first ordering pairs by x-values, then double checking that y-vlaues generally lined up, and finally by taking the average between the two digitized points for both x and y values.
+No y-values were more than .2 apart.
 
 The Figure .csv has six columns due to the subfigure label differences: x value, y value, x label, y label, decomposition type, and subfigure.
 
@@ -406,18 +434,21 @@ Figure4.df<- read_csv(file = figure4.file,
 
 ggplot(Figure4.df %>%
            filter(subfigure == "A"))+
+    geom_abline(slope = 1, intercept = 0) +
     geom_point(aes(x = `x value`,
                    y = `y value`,
                    color = `decomposition type`,
                    shape = `decomposition type`),
                size = 3) + 
     scale_color_manual(values = c("green", "hotpink")) +
-    scale_shape_manual(values = c("circle", "diamond")) + 
+    scale_shape_manual(values = c("circle", "diamond")) +
+    xlim(0,20) + 
     labs(x = unique(Figure4.df$`x label`)[1],
          y = unique(Figure4.df$`y label`)[1])
 
 ggplot(Figure4.df %>%
            filter(subfigure != "A"))+
+    geom_abline(slope = 1, intercept = 0) +
     geom_point(aes(x = `x value`,
                    y = `y value`,
                    color = `decomposition type`,
