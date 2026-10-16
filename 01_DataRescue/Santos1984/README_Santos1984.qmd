@@ -269,8 +269,8 @@ figCaption <- read_csv(file = figure1.file,
 figData <- read_csv(file = figure1.file,
                    skip = 1,
                    col_types = cols(.default = col_character())) |> 
-  mutate(`x value` = as.numeric(`x value`), # this changes the str to numeric
-    `y value` = as.numeric(`y value`))
+  mutate(`Precipitation (mm)` = as.numeric(`Precipitation (mm)`), # this changes the str to numeric
+    `Mass loss (%)` = as.numeric(`Mass loss (%)`))
 
 # ggplot(data = figData,
 #        aes(x = `x value`,
@@ -288,8 +288,8 @@ figData <- read_csv(file = figure1.file,
 #   theme_bw()
 
 ggplot(figData,
-       aes(x = `x value`,
-           y = `y value`)) +
+       aes(x = `Precipitation (mm)`,
+           y = `Mass loss (%)`)) +
   geom_point(aes(shape = site, 
                  fill = date),
              size = 3) +
