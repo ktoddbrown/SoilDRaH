@@ -220,7 +220,7 @@ transcriptions.df <- metaTranscriptions_filename |>
 
 ```
 
-The following miss-matches between the transcriptions and the file downloads, often this is a version issue.
+The following miss-matches between the transcriptions and the file downloads, often this is a database version issue.
 We can ignore this as long as the variables of interest are not in this subset.
 
 ```{r}
@@ -290,7 +290,7 @@ meta.df <- transcriptions.df |>
   filter( table_name %in% c('ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 
                             'ENTIRE_PLOT',
                             'ENTIRE_SURVEY'),
-          column_name %in% c('CN', 'PLT_CN',
+          column_name %in% c('CN', 'PLT_CN', 'SRV_CN',
                           'INVYR', 
                           'LAT', 'LON', 'STATE_CD', 'STATENM',
                           'LAYER_TYPE', 'LAYER_THICKNESS', 'LAYER_COLLECTED_CD',
@@ -330,7 +330,9 @@ survey_data <- readr::read_csv(
       col_types = readr::cols(.default = readr::col_character()),
       n_max = readCheck
     ) |>
-  select(STATECD, STATENM) |>
+  #need the RSCD to define the datum
+  select(SRV_CN = CN, RSCD, STATECD, STATENM) |>
+  filter(SRV_CN %in% plot_data$SRV_CN) |>
   unique()
 
 cv.df <- readr::read_csv(
@@ -351,3 +353,69 @@ level0.ls <- list(
 
 ```
 
+
+# Level 1 data - ISCN2025
+
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
+We have closed contributions for this project and are working on analysis.
+
+For this analysis we are interested in:
+
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+  + latitude and longitude in the ENTIRE_PLOT table
+  + datum and units are located in the latitude and longitude description in the meta.df
+  + state names are in the ENTIRE_SURVEY
+  + year of observation for the soil variables is in `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`. There are other inventory years associated with different tables as well but since we are interested in soils, this is the one we are going with.
+- Layer depth: Are recorded as part of the `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_TYPE` names
+- Soil carbon stock: broken down to components (BULK_DENSITY, COARSE_FRACTION, BULK_DENSITY_FINES, C_ORG_PCT) in the `ENTIRE_SUBP_SOIL_SAMPLE_LAYER`
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+
+```{r}
+#| label: createLvl1
+
+meta.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'geolocation', 'uncertainty_value', '1', filter(level0.ls$meta, column_name == 'LAT')$Description,
+                   'geolocation', 'uncertainty_unit', 'mile', 
+                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT description:', filter(level0.ls$meta, column_name == 'LAT')$Description))
+
+datum.df <- tibble(state_id = as.character(c(60, 64, 66, 68, 69, 70)),
+                   #region_id = 26, check this when we have more information
+                   with_entry = 'WSG84') |>
+  bind_rows(tibble(state_id = setdiff(unique(level0.ls$Table$ENTIRE_SURVEY$STATECD), as.character(c(60, 64, 66, 68, 69, 70))),
+            #region_id = NA, #fill this in with the layer RSCD later
+            with_entry = 'NAD83')) |>
+  mutate(of_variable = 'geolocation',
+         is_type = 'datum',
+         from_source = paste('FIADB User Guides Volume: Database Description (version 9.4), LAT description:', filter(level0.ls$meta, column_name == 'LAT')$Description))
+
+location.df <- level0.ls$Table$ENTIRE_PLOT |>
+  left_join(level0.ls$Table$ENTIRE_SURVEY)
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
