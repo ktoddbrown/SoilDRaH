@@ -392,22 +392,35 @@ The `of_variable` being used here are:
 #| label: createLvl1
 
 meta.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'geolocation', 'uncertainty_value', '1', filter(level0.ls$meta, column_name == 'LAT')$Description,
+                   'geolocation', 'uncertainty_value', '1',  paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
                    'geolocation', 'uncertainty_unit', 'mile', 
-                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT description:', filter(level0.ls$meta, column_name == 'LAT')$Description))
-
-datum.df <- tibble(state_id = as.character(c(60, 64, 66, 68, 69, 70)),
-                   #region_id = 26, check this when we have more information
-                   with_entry = 'WSG84') |>
-  bind_rows(tibble(state_id = setdiff(unique(level0.ls$Table$ENTIRE_SURVEY$STATECD), as.character(c(60, 64, 66, 68, 69, 70))),
-            #region_id = NA, #fill this in with the layer RSCD later
-            with_entry = 'NAD83')) |>
-  mutate(of_variable = 'geolocation',
-         is_type = 'datum',
-         from_source = paste('FIADB User Guides Volume: Database Description (version 9.4), LAT description:', filter(level0.ls$meta, column_name == 'LAT')$Description))
+                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
+                   'geolocation', 'unit', 'decimal degrees', 
+                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
+                   'observation_date', 'description', 'collection year', paste('FIADB User Guides Volume: Database Description (version 9.4), ENTIRE_PLOT$INVYR description:', filter(level0.ls$meta,table_name == 'ENTIRE_PLOT', column_name == 'INVYR')$Description))
 
 location.df <- level0.ls$Table$ENTIRE_PLOT |>
-  left_join(level0.ls$Table$ENTIRE_SURVEY)
+  left_join(level0.ls$Table$ENTIRE_SURVEY,
+            by = join_by(SRV_CN)) |>
+  mutate(DATUM = if_else(
+    STATECD %in% as.character(c(60, 64, 66, 68, 69, 70)) & RSCD %in% c('26'),
+    'WSG84', 'NAD83')) |>
+  #drop the RSCD and STATECD now that the state name and data are merged
+  select(PLT_CN, INVYR, LAT, LON, DATUM, STATENM) |>
+  pivot_longer(cols = c('INVYR', 'LAT', 'LON', 'STATENM', 'DATUM'),
+               names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(of_variable = case_when(column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+                                 column_name == 'INVYR' ~ 'observation_year',
+                                 column_name == 'STATENM' ~ 'region',
+                                 .default = NA_character_),
+         is_type = case_when(column_name == 'LAT' ~ 'latitude',
+                             column_name == 'LON' ~ 'longitude',
+                             column_name == 'DATUM' ~ 'datum',
+                             column_name == 'INVYR' ~ 'YYYY',
+                             column_name == 'STATENM' ~ 'state',
+                             .default = NA_character_))
+
+layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER 
 
 #### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
