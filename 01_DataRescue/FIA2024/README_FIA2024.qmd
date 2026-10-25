@@ -391,13 +391,38 @@ The `of_variable` being used here are:
 ```{r}
 #| label: createLvl1
 
-meta.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'geolocation', 'uncertainty_value', '1',  paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
-                   'geolocation', 'uncertainty_unit', 'mile', 
-                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
-                   'geolocation', 'unit', 'decimal degrees', 
-                   paste('FIADB User Guides Volume: Database Description (version 9.4), LAT/LON description:', filter(level0.ls$meta, column_name == 'LAT')$Description),
-                   'observation_date', 'description', 'collection year', paste('FIADB User Guides Volume: Database Description (version 9.4), ENTIRE_PLOT$INVYR description:', filter(level0.ls$meta,table_name == 'ENTIRE_PLOT', column_name == 'INVYR')$Description))
+meta.df <- level0.ls$meta |>
+  filter((table_name == 'ENTIRE_PLOT' & column_name %in% c('LAT', 'LON')) |
+           (table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER' &
+              column_name %in% c('INVYR', 
+                                 'LAYER_TYPE', #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+                                 'BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                                 'COARSE_FRACTION_PCT', 'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))) |>
+  select(column_name, description = Description, long_name = `Descriptive name`) |>
+  mutate(
+    unit = case_when(
+      str_detect(column_name, 'BULK_DENSITY') ~ 'g cm-3',
+      str_detect(column_name, '_PCT$') ~ 'mass percent',
+      column_name %in% c('LAT', 'LON') ~ 'decimal degrees',
+      .default = NA_character_),
+    privacy_protcol = if_else(column_name %in% c('LAT', 'LON'),
+                           '1 mile with 20% swap within county', NA_character_),
+    from_source = 'FIADB User Guides Volume: Database Description (version 9.4)',
+    of_variable = case_when(
+      column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+      column_name == 'INVYR' ~ 'observation_year',
+      column_name == 'STATENM' ~ 'region',
+      column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'layer',
+      column_name == 'BULK_DENSITY' ~ 'bulk_density',
+      column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+      column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+      column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+      column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+      column_name == 'C_TOTAL_PCT' ~ 'carbon',
+      .default = NA_character_)) |>
+  pivot_longer(cols = c(description, long_name, unit, privacy_protcol),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE)
 
 location.df <- level0.ls$Table$ENTIRE_PLOT |>
   left_join(level0.ls$Table$ENTIRE_SURVEY,
@@ -406,8 +431,10 @@ location.df <- level0.ls$Table$ENTIRE_PLOT |>
     STATECD %in% as.character(c(60, 64, 66, 68, 69, 70)) & RSCD %in% c('26'),
     'WSG84', 'NAD83')) |>
   #drop the RSCD and STATECD now that the state name and data are merged
-  select(PLT_CN, INVYR, LAT, LON, DATUM, STATENM) |>
-  pivot_longer(cols = c('INVYR', 'LAT', 'LON', 'STATENM', 'DATUM'),
+  select(PLT_CN, #INVYR,#use the inventory year from the layer informatino
+         LAT, LON, DATUM, STATENM) |>
+  unique() |>
+  pivot_longer(cols = c('LAT', 'LON', 'STATENM', 'DATUM'),
                names_to = 'column_name', values_to = 'with_entry') |>
   mutate(of_variable = case_when(column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
                                  column_name == 'INVYR' ~ 'observation_year',
@@ -420,15 +447,51 @@ location.df <- level0.ls$Table$ENTIRE_PLOT |>
                              column_name == 'STATENM' ~ 'state',
                              .default = NA_character_))
 
-layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER 
+layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER |>
+  select(CN, PLT_CN, 
+         INVYR, 
+         LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+         BULK_DENSITY, BULK_DENSITY_FINES, 
+         COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT) |>
+  mutate(Depth_upper_cm = str_extract(LAYER_TYPE, '\\d\\d?(?=-\\d{2,3}_CM)'),
+         Depth_lower_cm = str_extract(LAYER_TYPE, '\\d{2,3}(?=_CM)')) |>
+  pivot_longer(cols = c(INVYR, 
+         LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+         Depth_lower_cm, Depth_upper_cm,
+         BULK_DENSITY, BULK_DENSITY_FINES, 
+         COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT),
+         names_to = 'column_name', values_to = 'with_entry',
+         values_drop_na = TRUE) |>
+  mutate(of_variable = case_when(
+    column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'layer',
+    column_name == 'INVYR' ~ 'observation_year',
+    column_name == 'BULK_DENSITY' ~ 'bulk_density',
+    column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+    column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+    column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+    column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+    column_name == 'C_TOTAL_PCT' ~ 'carbon',
+    .default = NA_character_),
+    is_type = case_when(
+      column_name %in% c('LAYER_TYPE') ~ 'type',
+      column_name %in% c('Depth_upper_cm') ~ 'upper',
+      column_name == 'Depth_lower_cm' ~ 'lower',
+      column_name %in% c('BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                         'COARSE_FRACTION_PCT', 
+                         'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT') ~ 'value',
+      column_name == 'INVYR' ~ 'YYYY',
+      .default = NA_character_))
 
 #### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
 data.lvl1.ls <- list(
-  meta = bind_rows(studyMeta, Table1Meta),
-  primary = bind_rows(Table1Primary)|>
-    arrange(row_id, column_name,
-            of_variable, is_type, with_entry, from_source)
+  meta = meta.df,
+  site = location.df,
+  layer = layer.df
   )
+
+```
+
+```{r}
 
 ```
