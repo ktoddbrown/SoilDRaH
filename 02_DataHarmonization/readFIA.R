@@ -3,183 +3,299 @@
 #' This function downloads the entire csv Forest Inventory Analysis Database from https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, unzips the file, reads in a project specific data annotation as well as the tables that have annotations. The data is either returned in the orginal table structure or a long format.
 #'
 #' @param dataDir a string that specifies the filepath of where the data should be downloaded.
-#' @param annotationFilename a string that specifies where the data annotations are
-#' @param format a string flat to return the original format or the long format.
+#' @param dataLevel a string that specifies level0 or level1 data
 #' @param verbose a boolean that prints out the stage of the file
 #'
 #' @importFrom readr read_csv col_character cols
-#' @importFrom dplyr mutate full_join right_join rename_with filter join_by
-#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr select rename mutate full_join filter join_by 
+#' @importFrom tidyr pivot_longer unnest
+#' @importFrom plyr ldply
+#' @importFrom tidyselect one_of everything
+#' @importFrom stringr str_remove
+#' @importFrom bibtex read.bib
 #' 
 #'
 #' @return a list containing the annotation data frame and the data that is annotated. Note that for this function we trim some of the data due to size and only return plot information related to the soil data.
 
-readFIA <- function(dataDir,
-                    annotationFilename,
-                    format = c('original',
-                               'long', 'joinPivot',
-                               'wide','pivotBind')[1],
-                    verbose = TRUE){
+readFIA <- function(dataDir, dataLevel = c('level0', 'level1')[1],
+                    verbose = FALSE){
   
-  #annotationFilename <- 'data/FIA_Annotations.csv'
-  #dataDir <- '~/Dropbox (UFL)/Research/Datasets/FS_FIA'
+  # debug values
+  # dataDir <- '01_DataRescue/FIA2024/'
+  # verbose <- TRUE
+  # dataLevel <- c('level0', 'level1')[1]
+  #### Expected filenames ####
   
-  if(verbose) warning('This function may have a high memory demand.')
-  
-  # Download entire FIA database
+  # Download url for the entire FIA database
   downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+  # name the zip file
+  CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
   
-  # What name is the downloaded file
-  filename <- "CSV_FIADB_ENTIRE.zip"
+  #Download data directory
+  #Change this file to run locally for you
+  #dataDir  <- 'temp'
   
-  if(!file.exists(file.path(dataDir, filename))){
+  # The below csv tables are used to construct annotations for FIADB
+  metaTranscriptions_filename <- tribble( 
+    ~table_name, ~metadata_filename,
+    'ENTIRE_PLOT', 'FIA2024_TableEntirePLOT.csv',
+    'ENTIRE_SURVEY', 'FIA2024_TableSurvey.csv',
+    'ENTIRE_SUBPLOT', 'FIA2024_TableSubPlot.csv',
+    'ENTIRE_SUBP_SOIL_SAMPLE_LOC', 'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
+    'ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
+    'ENTIRE_TREE',  'FIA2024_TableTREE.csv'
+  )
+  
+  #Pulled from nested table in the manual
+  controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
+  
+  # Bibliography files
+  primaryCitation.file <- 'FIA2024.bib'
+  
+  #### Download data ####
+  
+  if(!file.exists(file.path(dataDir, 'temp', CSV_FIADB_ENTIRE_filename))){
     if(verbose) message('Database not found, downloading...')
     if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
     utils::download.file(url = downloadUrl, 
-                         destfile = file.path(dataDir, 
-                                              filename))
-    if(verbose) message('Download done.')
+                         destfile = file.path(dataDir, 'temp',
+                                              CSV_FIADB_ENTIRE_filename))
   }
   
   # Unzip zip file
-  if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
+  if(!file.exists(file.path(dataDir, 'temp', 'CSV_FIADB_ENTIRE'))){
     if(verbose) message('Unzipping file...')
     if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
-    utils::unzip(file.path(dataDir, filename), exdir = dataDir, overwrite = FALSE)
+    utils::unzip(file.path(dataDir, 'temp', CSV_FIADB_ENTIRE_filename), 
+                 exdir = file.path(dataDir, 'temp'), overwrite = FALSE)
     if(verbose) message('Unzipping done.')
   }
   
-  # Read in annotations
-  if(verbose) message('Loading annotations.')
-  annotations.df <- readr::read_delim(annotationFilename,
-                                      col_type = readr::cols(
-                                        .default = readr::col_character()),
-                                      delim = ';')
   
-  # Get list of annotated table names
-  tables <- unique((annotations.df |>
-                      filter(!is.na(table_id)))$table_id)
+  labMartTables <- list.files(path = file.path( dataDir, 'temp', 'CSV_FIADB_ENTIRE'), 
+                              pattern = '.csv', full.names = TRUE)
   
-  # Read in the original files
-  if(verbose) message('Starting data read... ')
   
-  # Read in csv's if annotated
-  #... go through each of the tables that we have annotations for,
-  #... load the entire table using read_csv as character reads (don't let R guess!)
-  original_data <- lapply(file.path(dataDir, 
-                                    'CSV_FIADB_ENTIRE', 
-                                    paste(tables, ".csv", sep = "")), 
-                          FUN = readr::read_csv, 
-                          col_type = readr::cols(
-                            .default = readr::col_character()))
+  #### Read in transcribed meta data ####
   
-  #make sure the names are set right
-  names(original_data) <- tables
+  tableColumns <- plyr::ldply(labMartTables, 
+                              function(filename){
+                                tibble::tibble(column_name = 
+                                                 names(readr::read_csv(filename, n_max = 0,
+                                                                       show_col_types = FALSE)),
+                                               table_name = stringr::str_remove(string = basename(filename),
+                                                                                pattern = '.csv$'))
+                              })
   
-  if(verbose) message('done.')
+  transcriptions.df <- metaTranscriptions_filename |>
+    reframe(meta = readr::read_csv(file = file.path(dataDir, metadata_filename),
+                                   show_col_types = FALSE),
+            .by = tidyselect::everything()) |>
+    tidyr::unnest(meta) |>
+    dplyr::rename(column_name = 'Column name (attribute)' ) |>
+    dplyr::full_join(tableColumns |>
+                       dplyr::filter(table_name %in% metaTranscriptions_filename$table_name),
+                     by = dplyr::join_by(table_name, column_name))
   
-  # if we are just loading the data, then return things here.
-  if(format == 'original'){
-    return(list(annotations = annotations.df, original = original_data))
+  #pull relevent metadata
+  meta.df <- transcriptions.df |>
+    #commented out code below explores soil carbon variables across the tables
+    # mutate(soil_obs = str_detect(column_names, pattern = 'BULK') |
+    #          str_detect(column_names, pattern = '^C_.*_PCT$') |
+    #          str_detect(column_names, pattern = 'COARSE_FRACTION_PCT'),
+    #        depth = str_detect(column_names, pattern = '^LAYER_T(YPE)|(HICKNESS)') |
+    #          str_detect(column_names, pattern = '^CORE') | #sample details
+    #          str_detect(column_names, pattern = '^RESTRICTION_DEPTH_\\d'),
+    #        time_obs =  str_detect(column_names, pattern = 'INVYR') | #obs time
+    #          str_detect(column_names, pattern = 'MEAS'),
+    #        location_obs = str_detect(column_names, pattern = 'LON') |
+    #          str_detect(column_names, pattern = 'LAT') |
+    #          str_detect(column_names, pattern = 'STATE') |
+    #          str_detect(column_names, pattern = 'COUNTY'),
+    #        ids = str_detect(column_names, pattern = 'CN$') |
+    #          str_detect(column_names, pattern = 'NBR$') |
+    #          str_detect(column_names, pattern = '_ID$')) |>
+    # filter(soil_obs | depth | time_obs | location_obs | ids) |>
+    # arrange(desc(soil_obs)) |>
+    filter( table_name %in% c('ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 
+                              'ENTIRE_PLOT',
+                              'ENTIRE_SURVEY'),
+            column_name %in% c('CN', 'PLT_CN', 'SRV_CN',
+                               'INVYR', 
+                               'LAT', 'LON', 'STATE_CD', 'STATENM',
+                               'LAYER_TYPE', 'LAYER_THICKNESS', 'LAYER_COLLECTED_CD',
+                               'BULK_DENSITY', 'BULK_DENSITY_FINES',
+                               'COARSE_FRACTION_PCT',
+                               'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))
+  
+  #### Read in downloaded primary data ####
+  readCheck <- Inf #big tables to read in so develop code with subset
+  
+  if(verbose) message('reading FIA layer table')
+  layer_data <- readr::read_csv(
+    file = file.path(dataDir, 'temp',
+                     'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'),
+    col_types = readr::cols(.default = readr::col_character()),
+    n_max = readCheck) |>
+    dplyr::select(tidyselect::one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER'])) 
+  
+  if(verbose) message('reading FIA plot table')
+  plot_data <-  readr::read_csv(
+    file = file.path(dataDir, 'temp',
+                     'CSV_FIADB_ENTIRE/ENTIRE_PLOT.csv'),
+    col_types = readr::cols(.default = readr::col_character()),
+    n_max = readCheck
+  ) |>
+    dplyr::select(one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_PLOT'])) |>
+    dplyr::rename(PLT_CN = CN) |> #2 023 534 obs
+    dplyr::filter(PLT_CN %in% layer_data$PLT_CN) # 1 359 obs
+  
+  if(verbose) message('reading FIA survey table')
+  survey_data <- readr::read_csv(
+    file = file.path(dataDir, 'temp', 
+                     'CSV_FIADB_ENTIRE/ENTIRE_SURVEY.csv'),
+    col_types = readr::cols(.default = readr::col_character()),
+    n_max = readCheck
+  ) |>
+    #need the RSCD to define the datum
+    dplyr::select(SRV_CN = CN, RSCD, STATECD, STATENM) |>
+    dplyr::filter(SRV_CN %in% plot_data$SRV_CN) |>
+    unique()
+  
+  if(verbose) message('reading FIA control vocabulary table')
+  cv.df <- readr::read_csv(
+    file = file.path(dataDir, controlVocabulary),
+    col_types = readr::cols(.default = readr::col_character())
+  ) |>
+    dplyr::rename(table_name = Table_ID, column_name = Name) |>
+    dplyr::filter(column_name %in% meta.df$column_name)
+  
+  if(verbose) message('done with FIA level 0 table reads')
+  level0.ls <- list(
+    citation = bibtex::read.bib(file = file.path(dataDir, primaryCitation.file)),
+    meta = meta.df,
+    Table = list(ENTIRE_SUBP_SOIL_SAMPLE_LAYER = layer_data,
+                 ENTIRE_SURVEY = survey_data,
+                 ENTIRE_PLOT = plot_data),
+    controlVocabulary = cv.df
+  )
+  
+  if(dataLevel == 'level0'){
+    return(level0.ls)
   }
   
-  # Move into a set of id-of_variable-is_type-with_entry long tables
-  #... in this dataset the id is composed of all CN columns which are table specific unique identifiers, these are taken together to create a unique set of identifier across the tables. 
-  #... in addition to the row, the column of the orginal data entry is recorded using the combined table-column name as an identifier.
-  if(verbose) message('Transforming data to id(table, column, row) - with_entry... ')
-  if(verbose) warning('this results in a >2Gb data object')
+  #### Create level 1#####
   
-  # Notes from P2 guide
-  # ENTIRE_PLOT::SRV_CN links to ENTIRE_SURVEY::CN
-  # Notes from P3 guide
-  # ENTIRE_SOILS_VISIT::PLT_CN links to ENTIRE_PLOT:CN
-  # ENTIRE_SOILS_EROSION::PLT_CN links to ENTIRE_PLOT:CN
-  # ENTIRE_SOILS_SAMPLE_LOC::PLT_CN links to ENTIRE_PLOT:CN
-  # ENTIRE_SOILS_LAB::PLT_CN links to ENTIRE_PLOT:CN
+  if(verbose) message('constructing FIA level 1')
+  meta.df <- level0.ls$meta |>
+    dplyr::filter((table_name == 'ENTIRE_PLOT' & column_name %in% c('LAT', 'LON')) |
+                    (table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER' &
+                       column_name %in% c('INVYR', 
+                                          'LAYER_TYPE', #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+                                          'BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                                          'COARSE_FRACTION_PCT', 'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))) |>
+    dplyr::select(column_name, description = Description, long_name = `Descriptive name`) |>
+    dplyr::mutate(
+      unit = dplyr::case_when(
+        stringr::str_detect(column_name, 'BULK_DENSITY') ~ 'g cm-3',
+        stringr::str_detect(column_name, '_PCT$') ~ 'mass percent',
+        column_name %in% c('LAT', 'LON') ~ 'decimal degrees',
+        .default = NA_character_),
+      privacy_protcol = dplyr::if_else(column_name %in% c('LAT', 'LON'),
+                                       '1 mile with 20% swap within county', NA_character_),
+      from_source = 'FIADB User Guides Volume: Database Description (version 9.4)',
+      of_variable = dplyr::case_when(
+        column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+        column_name == 'INVYR' ~ 'observation_year',
+        column_name == 'STATENM' ~ 'region',
+        column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'layer',
+        column_name == 'BULK_DENSITY' ~ 'bulk_density',
+        column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+        column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+        column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+        column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+        column_name == 'C_TOTAL_PCT' ~ 'carbon',
+        .default = NA_character_)) |>
+    tidyr::pivot_longer(cols = c(description, long_name, unit, privacy_protcol),
+                        names_to = 'is_type', values_to = 'with_entry',
+                        values_drop_na = TRUE)
   
-  #CN is always a row identifier for each table but there is no assurance it is unique across the data set
-  #Natural identifiers in each table are:
-  # ENTIRE_PLOT => STATECD, INVYR, UNITCD, COUNTYCD, PLOT
-  # ENTIRE_SOILS_VISIT => STATECD, INVYR, COUNTYCD, PLOT
-  # ENTIRE_SOILS_EROSION => STATECD, INVYR, COUNTYCD, PLOT, SUBP
-  # ENTIRE_SOILS_SAMPLE_LOC => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR
-  # ENTIRE_SOILS_LAB => STATECD, INVYR, COUNTYCD, PLOT, SMPLNNBR, LAYER_TYPE
+  location.df <- level0.ls$Table$ENTIRE_PLOT |>
+    dplyr::left_join(level0.ls$Table$ENTIRE_SURVEY,
+                     by = dplyr::join_by(SRV_CN)) |>
+    dplyr::mutate(DATUM = if_else(
+      STATECD %in% as.character(c(60, 64, 66, 68, 69, 70)) & RSCD %in% c('26'),
+      'WSG84', 'NAD83')) |>
+    #drop the RSCD and STATECD now that the state name and data are merged
+    dplyr::select(PLT_CN, #INVYR,#use the inventory year from the layer informatino
+                  LAT, LON, DATUM, STATENM) |>
+    unique() |>
+    tidyr::pivot_longer(cols = c('LAT', 'LON', 'STATENM', 'DATUM'),
+                        names_to = 'column_name', values_to = 'with_entry') |>
+    dplyr::mutate(of_variable = 
+                    dplyr::case_when(
+                      column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+                      column_name == 'INVYR' ~ 'observation_year',
+                      column_name == 'STATENM' ~ 'region',
+                      .default = NA_character_),
+                  is_type = 
+                    dplyr::case_when(
+                      column_name == 'LAT' ~ 'latitude',
+                      column_name == 'LON' ~ 'longitude',
+                      column_name == 'DATUM' ~ 'datum',
+                      column_name == 'INVYR' ~ 'YYYY',
+                      column_name == 'STATENM' ~ 'state',
+                      .default = NA_character_))
   
-  #TODAY PLAN
-  #   + rename CN to table_CN patterns
-  #   + Pull out the wide table before pivoting
-  #   + return 'joinPivot' instead of 'long'
+  layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER |>
+    dplyr::select(CN, PLT_CN, 
+                  INVYR, 
+                  LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+                  BULK_DENSITY, BULK_DENSITY_FINES, 
+                  COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT) |>
+    dplyr::mutate(Depth_upper_cm = str_extract(LAYER_TYPE, '\\d\\d?(?=-\\d{2,3}_CM)'),
+                  Depth_lower_cm = str_extract(LAYER_TYPE, '\\d{2,3}(?=_CM)')) |>
+    tidyr::pivot_longer(cols = c(INVYR, 
+                                 LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+                                 Depth_lower_cm, Depth_upper_cm,
+                                 BULK_DENSITY, BULK_DENSITY_FINES, 
+                                 COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT),
+                        names_to = 'column_name', values_to = 'with_entry',
+                        values_drop_na = TRUE) |>
+    dplyr::mutate(of_variable = 
+                    dplyr::case_when(
+                      column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'depth_interval',
+                      column_name == 'INVYR' ~ 'observation_year',
+                      column_name == 'BULK_DENSITY' ~ 'bulk_density',
+                      column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+                      column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+                      column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+                      column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+                      column_name == 'C_TOTAL_PCT' ~ 'carbon',
+                      .default = NA_character_),
+                  is_type = 
+                    dplyr::case_when(
+                      column_name %in% c('LAYER_TYPE') ~ 'type',
+                      column_name %in% c('Depth_upper_cm') ~ 'upper',
+                      column_name == 'Depth_lower_cm' ~ 'lower',
+                      column_name %in% c('BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                                         'COARSE_FRACTION_PCT', 
+                                         'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT') ~ 'value',
+                      column_name == 'INVYR' ~ 'YYYY',
+                      .default = NA_character_))
   
-  if(format %in% c('wide', 'joinPivot', 'long')){
+  ## Pull everything together into by stacking the meta and primary data tables
+  data.lvl1.ls <- list(
+    meta = meta.df,
+    site = location.df,
+    layer = layer.df,
+    citation = level0.ls$citation
+  )
   
-  wide.df <- original_data$ENTIRE_PLOT |>
-    #copy over the Control Number(?) (aka CN) to cross refernece 
-    #...with other tables, preserving the original column for 
-    #...uniformity of how we treat the tables. 
-    #...This is probably overkill and we could just rename the column
-    dplyr::mutate(PLT_CN = CN) |> 
-    #add in the table name to columns
-    dplyr::rename_with(.cols = !PLT_CN, 
-                       ~paste0(.x, '.ENTIRE_PLOT')) |>
-    dplyr::right_join(original_data$ENTIRE_SOILS_VISIT |> 
-                        #add in the table name to columns
-                        dplyr::rename_with(.cols = !PLT_CN, 
-                                           ~paste0(.x, '.ENTIRE_SOILS_VISIT')), 
-                      by = dplyr::join_by(PLT_CN)) |>
-    dplyr::full_join(original_data$ENTIRE_SOILS_SAMPLE_LOC |> 
-                       #add in the table name to columns
-                       dplyr::rename_with(.cols = !PLT_CN, 
-                                          ~paste0(.x, '.ENTIRE_SOILS_SAMPLE_LOC')), 
-                     by = dplyr::join_by(PLT_CN)) |>
-    dplyr::full_join(original_data$ENTIRE_SOILS_EROSION |>
-                       #add in the table name to columns
-                       dplyr::rename_with(.cols = !PLT_CN, 
-                                          ~paste0(.x, '.ENTIRE_SOILS_EROSION')), ,
-                     by = dplyr::join_by(PLT_CN),
-                     relationship = "many-to-many") |>
-    dplyr::full_join(original_data$ENTIRE_SOILS_LAB |>
-                       #add in the table name to columns
-                       dplyr::rename_with(.cols = !PLT_CN, 
-                                          ~paste0(.x, '.ENTIRE_SOILS_LAB')), ,
-                     by = dplyr::join_by(PLT_CN),
-                     relationship = "many-to-many") |>
-    dplyr::filter(!is.na(C_ORG_PCT.ENTIRE_SOILS_LAB))
-  
-  #before pivot => 0.4 Gb
-  #slice_head(n=100)
-  
-  if(format == 'wide'){
-    
-    if(verbose) message('done.')
-    return(list(annotations = annotations.df, 
-                wide = wide.df))
+  if(verbose) message('done with FIA level 1')
+  if(dataLevel == 'level1'){
+    return(data.lvl1.ls)
   }
-  
-  joinPivot.df <- wide.df |>
-    #make everything long
-    tidyr::pivot_longer(cols = !c(starts_with('CN.'), PLT_CN), 
-                        values_drop_na = TRUE,
-                        names_to = c('column_id', 'table_id'),
-                        names_sep = '\\.',
-                        names_transform = as.factor,
-                        values_to = 'with_entry')
-  #after pivot => 2.1 Gb
-  
-  if(format %in% c('joinPivot', 'long')){
-    
-    if(format == 'long') warning('`long` format is decrepit. Use `joinPivot`')
-    if(verbose) message('done.')
-    return(list(annotations = annotations.df, 
-                joinPivot = joinPivot.df))
-  }
-  
-  }
-  
-  if(format %in% c('pivotBind')){
-    warning('This is not currently implemented.')
-    return(NULL)
-  }
-  
-  
-  return(list(annotations = annotations.df, long = allData))
+
+  stop('unknown dataLevel')
 }

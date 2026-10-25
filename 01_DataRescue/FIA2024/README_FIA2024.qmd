@@ -99,7 +99,7 @@ controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
 primaryCitation.file <- 'FIA2024.bib'
 
 # read function
-readsource.file <- 'readFIA.R'
+readsource.file <- '../../02_DataHarmonization/readFIA.R'
 if(file.exists(readsource.file)){
   source(readsource.file)
 }
@@ -353,6 +353,22 @@ level0.ls <- list(
 
 ```
 
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readFIA(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, level0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
 
 # Level 1 data - ISCN2025
 
@@ -491,6 +507,23 @@ data.lvl1.ls <- list(
   citation = level0.ls$citation
   )
 
+```
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readFIA(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
 ```
 
 ```{r}
