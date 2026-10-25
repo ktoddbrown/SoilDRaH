@@ -107,7 +107,7 @@ if(file.exists(readsource.file)){
 verbose <- TRUE
 
 #semantic files for level 1
-
+proposedSemantic.file <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
 ```
 
 The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
@@ -463,7 +463,7 @@ layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER |>
          names_to = 'column_name', values_to = 'with_entry',
          values_drop_na = TRUE) |>
   mutate(of_variable = case_when(
-    column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'layer',
+    column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'depth_interval',
     column_name == 'INVYR' ~ 'observation_year',
     column_name == 'BULK_DENSITY' ~ 'bulk_density',
     column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
@@ -487,11 +487,53 @@ layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER |>
 data.lvl1.ls <- list(
   meta = meta.df,
   site = location.df,
-  layer = layer.df
+  layer = layer.df,
+  citation = level0.ls$citation
   )
 
 ```
 
 ```{r}
+#| label: checkVocab
 
+#Read in the curated semantics
+ISCN2025_semantics.df <- read_csv(proposedSemantic.file)
+
+#construct the FIA semantics table
+FIA2024_semantics.df <- data.lvl1.ls$meta |> 
+  select(of_variable, is_type)  |>
+  mutate(table = 'meta') |> 
+  unique() |>
+  bind_rows(data.lvl1.ls$site |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'site')) |> 
+  bind_rows(data.lvl1.ls$layer |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'layer')) |>
+  mutate(study_id = 'FIA2024')
+
+#check this dataframe to compare the semantics across all studies
+compare.df <- bind_rows(ISCN2025_semantics.df,
+                        FIA2024_semantics.df) |>
+  reframe(count = n(),
+          studies = paste(unique(study_id), collapse = ', '),
+          .by = c(of_variable, is_type)) |>
+  arrange(of_variable, is_type)
+
+#check this to look for the differences before this study is added
+difference.df <- FIA2024_semantics.df |>
+  anti_join(ISCN2025_semantics.df,
+            by = join_by(of_variable, is_type, table, study_id))
+
+if(nrow(difference.df) > 0){
+  print('writing new semantic suggestions')
+  new_ISCN2025 <- ISCN2025_semantics.df |>
+    bind_rows(difference.df) |>
+    arrange(of_variable, is_type)
+  
+  
+  write_csv(new_ISCN2025, file = proposedSemantic.file)
+}
 ```
