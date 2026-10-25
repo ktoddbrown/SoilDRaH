@@ -1,6 +1,8 @@
 #' Read function for FIA data
 #' 
-#' This function downloads the entire csv Forest Inventory Analysis Database from https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, unzips the file, reads in a project specific data annotation as well as the tables that have annotations. The data is either returned in the orginal table structure or a long format.
+#' This function downloads the entire csv Forest Inventory Analysis Database from https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, unzips the file, reads in a project specific data annotation as well as the tables that have annotations.
+#' 
+#' FIA DataMart v2.1.0, US Forest Service. [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
 #'
 #' @param dataDir a string that specifies the filepath of where the data should be downloaded.
 #' @param dataLevel a string that specifies level0 or level1 data
@@ -15,7 +17,7 @@
 #' @importFrom bibtex read.bib
 #' 
 #'
-#' @return a list containing the annotation data frame and the data that is annotated. Note that for this function we trim some of the data due to size and only return plot information related to the soil data.
+#' @return a list of the level 0 and level 1 data
 
 readFIA <- function(dataDir, dataLevel = c('level0', 'level1')[1],
                     verbose = FALSE){
