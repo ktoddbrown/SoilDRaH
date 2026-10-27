@@ -61,6 +61,11 @@ timelog:
       who: ktoddbrown
       start: 2026-10-13
       duration: PT1H
+  - activity: 
+      description: Recode level 1 and check semantics
+      who: ktoddbrown
+      start: 2026-10-25
+      duration: PT3H
 ---
 
 ```{r}
