@@ -106,9 +106,9 @@ methodsCitation.file <- 'CPEAT2025_Methods.bib'
 readsource.file <- '../../02_DataHarmonization/readCPEAT2025.R'
 source(readsource.file)
 
+
 #semantic files for level 1
-of_variable.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_of_variable.csv'
-is_type.file <- '../../02_DataHarmonization/SoilDRaHVocabulary_is_type.csv'
+proposedSemantic.file <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
 
 ```
 
@@ -552,6 +552,9 @@ if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
 # Level 1 data
 
 ```{r}
+#| label: createLevel1
+
+verbose <- FALSE
 
 doi_core <- datafunction.lvl0.ls$data$study |>
   #remove 112 dois that have been replaced
@@ -599,34 +602,36 @@ column_noPI.df <- column.df |>
   filter(is_type != 'geocode') |>
   mutate(across(everything(), trimws))
 
-####Map core to ISCN4 #####
+####Map core to ISCN4, level 1 dataframe here #####
 core.df <- study.df |>
   #add the PI to the study.df
-  bind_rows(pi.df)
+  bind_rows(pi.df) |>
+  select(bibKey, variable_name = of_variable, is_type, with_entry)
 
-####Create unique variable groups and map to ISCN4 ####
+####Create unique variable groups and map to ISCN4, level 1 dataframe ####
 ####some of the variables have the same name but different methods, within the 
-####same core (!). Go through and add in an index to group the unique variable
-####dimensions
+####same core (!). Keep the column ID as an identifying variable.
 
 unique_column.df <- column_noPI.df |>
-  pivot_wider(names_from = is_type, values_from = with_entry) |>
-  reframe(doi_list = str_c(bibKey, column_index, sep = '$', collapse = ';'),
-          .by = -c(bibKey, column_index))|>
-  mutate(variable_id = paste0('Variable_',1:n()) )|>
-  rename(method = MethodDevice) |>
-  pivot_longer(cols = c('description', 'unit', 'comment', 'method'),
-               names_to = 'is_type', 
-               values_to = 'with_entry', values_drop_na = TRUE)
+  mutate(is_type = if_else(is_type == 'MethodDevice', 'method', is_type)) |>
+  # pivot_wider(names_from = is_type, values_from = with_entry) |>
+  # #reframe(doi_list = str_c(bibKey, column_index, sep = '$', collapse = ';'),
+  # #        .by = -c(bibKey, column_index))|>
+  # #mutate(variable_id = paste0('Variable_',1:n()) )|>
+  # rename(method = MethodDevice) |>
+  # pivot_longer(cols = c('description', 'unit', 'comment', 'method'),
+  #              names_to = 'is_type', 
+  #              values_to = 'with_entry', values_drop_na = TRUE)
+  select(bibKey, column_index, variable_name = of_variable, is_type, with_entry)
 
-####Move variable ID over to primary data####
+####Move of_variable over to primary data####
 
 expanded_primary.df <- primary.df |>
   full_join(unique_column.df |>
-              separate_longer_delim(cols = doi_list, delim = ';') |>
-              separate_wider_delim(cols = doi_list, delim = '$', 
-                                   names = c('bibKey', 'column_index')) |>
-              select(bibKey, column_index, variable_id, of_variable) |>
+              #separate_longer_delim(cols = doi_list, delim = ';') |>
+              #separate_wider_delim(cols = doi_list, delim = '$', 
+              #                     names = c('bibKey', 'column_index')) |>
+              select(bibKey, column_index, variable_name) |>
               unique(),
             by = join_by(bibKey, column_index)) |>
   mutate(is_type = 'value')
@@ -647,51 +652,81 @@ lvl1_data.ls <- list(
                  primary = expanded_primary.df),
             .fun = function(xx){
               xx |>
-                mutate(of_variable_DRaH = case_when(
-                  of_variable == 'C' ~ 'carbon_percent',
-                  of_variable == 'TC' ~ 'total_carbon_percent',
-                  of_variable == 'TIC' ~ 'inorganic_carbon_percent',
-                  of_variable == 'TOC' ~ 'organic_carbon_percent',
-                  of_variable == 'Corg dens' ~ 'organic_carbon_density',
-                  of_variable == 'DBD' ~ 'dry_bulk_density',
-                  of_variable == 'Depth bot' ~ 'layer_bottom',
-                  of_variable == 'Depth top' ~ 'layer_top',
-                  #of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
-                  of_variable == 'Depth sed' ~ 'layer_middle',
-                  of_variable == 'Samp thick' ~ 'layer_thickness',
-                  of_variable == 'LOI' ~ 'loss_on_ignition',
-                  of_variable == 'OM' ~ 'organic_matter_percent',
-                  of_variable == 'OM dens' ~ 'organic_matter_density',
-                  of_variable == "Water wm" ~ 'field_water_percent',
-                  
-                  of_variable == 'citation' ~ 'citation',
-                  of_variable == 'related_to' ~ 'related_research',
-                  of_variable == 'projects' ~ 'projects',
-                  of_variable == 'license' ~ 'data_license',
-                  of_variable == 'header_comment' ~ 'core_comment',
-                  of_variable == "EVENT::LATITUDE" ~ 'latitude',
-                  of_variable == "EVENT::LONGITUDE" ~ 'longitude',
-                  of_variable == "EVENT::LOCATION" ~ 'region',
-                  of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
-                  of_variable == "EVENT::ELEVATION" ~ 'elevation',
-                  of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
-                  of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
-                  of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
-                  of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
-                  of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
-                  of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
-                  of_variable == 'PI' ~ 'principal_investigator',
+                mutate(of_variable = case_when(
+                  variable_name == 'C' ~ 'carbon',
+                  variable_name == 'TC' ~ 'carbon',
+                  variable_name == 'TIC' ~ 'carbon_inorganic',
+                  variable_name == 'TOC' ~ 'carbon_organic',
+                  variable_name == 'Corg dens' ~ 'carbon_organic',
+                  variable_name == 'DBD' ~ 'bulk_density',
+                  #layers; need to expand is_type
+                  variable_name == 'Depth bot' ~ 'depth_interval',
+                  variable_name == 'Depth top' ~ 'depth_interval',
+                  #variable_name == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+                  variable_name == 'Depth sed' ~ 'depth_interval',
+                  variable_name == 'Samp thick' ~ 'depth_interval',
+                  ### sample
+                  variable_name == 'LOI' ~ 'loss_on_ignition',
+                  variable_name == 'OM' ~ 'organic_matter',
+                  variable_name == 'OM dens' ~ 'organic_matter',
+                  variable_name == "Water wm" ~ 'field_water',
+                  ##Location
+                  str_detect(variable_name, "LATITUDE") ~ 'geolocation',
+                  str_detect(variable_name, "LONGITUDE") ~ 'geolocation',
+                  variable_name == "EVENT::LOCATION" ~ 'georegion',
+                  variable_name == "EVENT::ELEVATION" ~ 'elevation',
+                  variable_name == "EVENT::ELEVATION START" ~ 'elevation',
+                  variable_name == "EVENT::ELEVATION END" ~ 'elevation',
+                  str_detect(variable_name, regex('altitude', ignore_case = TRUE)) |
+                    str_detect(variable_name, 'ELEVATION' )~ 'elevation',
+                  ##obs year
+                  variable_name == "EVENT::COMMENT::coring year" ~ 'observation_year',
+                  ##peat calss
+                  variable_name == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+                  variable_name == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+                  variable_name == 'EVENT::COMMENT::site name' ~ 'site_name',
+                  variable_name == 'PI' ~ 'principal_investigator',
+                  variable_name == 'citation' ~ 'citation',
+                  variable_name == 'related_to' ~ 'related_research',
+                  variable_name == 'projects' ~ 'projects',
+                  variable_name == 'license' ~ 'data_license',
+                  variable_name == 'header_comment' ~ 'core_comment',
+                  variable_name == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
                   TRUE ~ NA_character_
+                ),
+                is_type = case_when(
+                  is_type == 'value' & variable_name == 'Depth bot' ~ 'lower',
+                  is_type == 'value' & variable_name == 'Depth top' ~ 'upper',
+                  #variable_name == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+                  is_type == 'value' & variable_name == 'Depth sed' ~ 'middle',
+                  is_type == 'value' & variable_name == 'Samp thick' ~ 'thickness',
+                  is_type == 'value' & str_detect(variable_name, "LATITUDE") ~ 'latitude',
+                  is_type == 'value' & str_detect(variable_name, "LONGITUDE") ~ 'longitude',
+                  is_type == 'value' & variable_name == "EVENT::LOCATION" ~ 'name',
+                  #match transect first
+                  is_type == 'value' & variable_name == "EVENT::ELEVATION START" ~ 'start',
+                  is_type == 'value' & variable_name == "EVENT::ELEVATION END" ~ 'end',
+                  #then match generic elevation
+                  is_type == 'value' & 
+                    (str_detect(variable_name, regex('altitude', ignore_case = TRUE)) |
+                       str_detect(variable_name, 'ELEVATION' )) ~ 'value',
+                  is_type == 'value' & variable_name == "EVENT::COMMENT::coring year" ~ 'YYYY',
+                  TRUE ~ is_type
                 )) |>
-                rename(of_variable_CPEAT = of_variable)
+                #remove this if you want to expand the variables captured
+                filter_out(is.na(of_variable))
             })
 )
+
+# check_variable_map  <- unique(select(lvl1_data.ls$data$core, variable_name, of_variable) )|>
+#   bind_rows(unique(select(lvl1_data.ls$data$variable, variable_name, of_variable))) |>
+#   bind_rows(unique(select(lvl1_data.ls$data$primary, variable_name, of_variable))) |>
+#   arrange(of_variable)
 
 ```
 
 ```{r}
 #| label: readFunction_lvl1
-#| eval: true
 #| warning: false
 datafunction.lvl1.ls <- readCPEAT2025(dataDir = '.', 
                                       dataLevel = "level1")
@@ -710,125 +745,62 @@ if(isTRUE(all.equal(datafunction.lvl1.ls, lvl1_data.ls))){
 ```{r}
 #| label: ISCN4SemanticProposal
 
-proposedSemantics.filename <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
-
-semantics.df <- datafunction.lvl1.ls$data$core |>
-  select(of_variable = of_variable_DRaH, is_type) |>
+semantics.df <- lvl1_data.ls$data$core |>
+  select(of_variable, is_type) |>
   unique() |>
+  mutate(table = 'core') |>
   filter_out(is.na(of_variable) | is.na(is_type)) |>
   bind_rows(
-    datafunction.lvl1.ls$data$variable |>
-      select(of_variable = of_variable_DRaH, is_type) |>
+    lvl1_data.ls$data$variable |>
+      select(of_variable, is_type) |>
       unique() |>
+      mutate(table = 'variable') |>
       filter_out(is.na(of_variable) | is.na(is_type))
   ) |>
   bind_rows(
-    datafunction.lvl1.ls$data$primary |>
-      select(of_variable = of_variable_DRaH, is_type) |>
+    lvl1_data.ls$data$primary |>
+      select(of_variable, is_type) |>
       unique() |>
+      mutate(table = 'primary') |>
       filter_out(is.na(of_variable) | is.na(is_type))
   ) |>
-  mutate(site_id = 'CPEAT2025') |>
+  mutate(study_id = 'CPEAT2025') |>
   arrange(of_variable) 
 
+
+ISCN2025_semantics.df <- read_csv(proposedSemantic.file,
+                                  show_col_types = FALSE)
+
+
 #Write things the first time and then just check
-#write_csv(semantics.df, file = proposedSemantics.filename,
-#  append = TRUE, col_names = FALSE)
+# firstWrite <- ISCN2025_semantics.df |>
+#   full_join(semantics.df,
+#             by = join_by(study_id, table, of_variable, is_type)) |>
+#   arrange(of_variable, study_id)
+# 
+# write_csv(firstWrite, file = proposedSemantic.file)
 
-ISCN4Semantics <- read_csv(proposedSemantics.filename)
+#check this dataframe to compare the semantics across all studies
+compare.df <- bind_rows(ISCN2025_semantics.df,
+                        semantics.df) |>
+  reframe(count = n(),
+          studies = paste(unique(study_id), collapse = ', '),
+          .by = c(of_variable, is_type)) |>
+  arrange(of_variable, is_type)
 
-if(anti_join(semantics.df, ISCN4Semantics,
-             by = join_by(of_variable, is_type, site_id)) |> nrow() > 0){
+#check this to look for the differences before this study is added
+difference.df <- semantics.df |>
+  anti_join(ISCN2025_semantics.df,
+            by = join_by(of_variable, is_type, table, study_id))
+
+if(anti_join(semantics.df, ISCN2025_semantics.df,
+             by = join_by(of_variable, is_type, study_id)) |> nrow() > 0){
   stop('new variables')
 }else{
   print('Proposed semantics are included.')
 }
 ```
 
-
-```{r}
-#| label: updateVocab
-
-SoilDRaH_isType <- read_csv(is_type.file) |>
-  separate_longer_delim(of_variable, delim = ',')
-
-SoilDRaH_ofVarible <-read_csv(of_variable.file)
-
-CPEAT_variables <- datafunction.lvl1.ls$data$core |>
-  select(is_type, of_variable_DRaH) |>
-  unique() |>
-  bind_rows(datafunction.lvl1.ls$data$variable|>
-              select(is_type, of_variable_DRaH) |>
-              unique()) |>
-  bind_rows(datafunction.lvl1.ls$data$primary|>
-              select(is_type, of_variable_DRaH) |>
-              unique()) |>
-  unique()
-
-missing_variables <- CPEAT_variables |>
-  rename(of_variable = of_variable_DRaH) |>
-  anti_join(SoilDRaH_ofVarible,
-            by = join_by(of_variable)) |>
-  select(of_variable) |>
-  unique()
-  
-#cat(paste0(missing_variables,', ,draft\n'))
-
-# go through and add missing variables printed above to the file manually
-
-new_is_type <- CPEAT_variables |>
-  filter(!is.na(is_type) & !is.na(of_variable_DRaH)) |>
-  rename('of_variable' = 'of_variable_DRaH') |>
-  full_join(SoilDRaH_isType |>
-              select(is_type, project_definition) |>
-              unique()) |>
-  bind_rows(SoilDRaH_isType) |>
-  unique() |>
-  arrange(is_type, of_variable) |>
-  reframe(of_variable = paste0(of_variable, collapse = ','),
-          .by = c(is_type, project_definition))
-
-#so much here. modify directly
-#write_csv(new_is_type, is_type.file)
-```
-
-```{r}
-#| label: checkVocabulary
-#| eval: true
-
-SoilDRaH_isType <- read_csv(is_type.file) |>
-  separate_longer_delim(of_variable, delim = ',')
-
-SoilDRaH_ofVarible <-read_csv(of_variable.file)
-
-CPEAT_variables <- datafunction.lvl1.ls$data$core |>
-  select(is_type, of_variable = of_variable_DRaH) |>
-  unique() |>
-  bind_rows(datafunction.lvl1.ls$data$variable|>
-              select(is_type, of_variable = of_variable_DRaH) |>
-              unique()) |>
-  bind_rows(datafunction.lvl1.ls$data$primary|>
-              select(is_type, of_variable = of_variable_DRaH) |>
-              unique()) |>
-  unique() |>
-  filter(!is.na(of_variable), !is.na(is_type))
-
-if(all(CPEAT_variables$of_variable %in% SoilDRaH_ofVarible$of_variable)){
-  message('Success! All variables are in the DRaH')
-}else{
-  message('Fail! There are variables not in the DRaH, go back and add them.')
-}
-
-missingTypes <- CPEAT_variables |>
-  anti_join(SoilDRaH_isType,
-            by = join_by(is_type, of_variable))
-
-if(nrow(missingTypes) != 0){
-  message('Success! All types are in the DRaH')
-}else{
-  message('Fail! There are types not in the DRaH, go back and add them.')
-}
-```
 
 # References
 
