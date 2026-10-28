@@ -13,10 +13,10 @@ Plastic filters that attenuated specific wavelengths of natural solar radiation 
 Litter was protected from all rainfall events and was not in contact with the soil surface during the period of the incubation.
 Litter was incubated for 120 days in the field, and there were eight replicates of each attenuation treatment.
 Litter from each box was collected, extraneous debris was removed, and litter was oven-dried at 65 °C for 48 h and weighed to determine mass loss.
-Initial litter quality measurements for carbon chemistry, made by using a standard acid detergent method (@VanSoest1963), were the following: cellulose and sugars, 49.1 ± 0.4%; hemicellulose, 37.3 ± 0.2%; and lignin,7.3 ± 0.2%.
+Initial litter quality measurements for carbon chemistry, made by using a standard acid detergent method (@VanSoest1963), were the following: cellulose and sugars, 49.1 ± 0.4%; hemicellulose, 37.2 ± 0.2%; and lignin,7.3 ± 0.2%.
 
 Two photodegradation experiments and one biotic incubation experiment were conducted using cellulose-lignin (CL) substrates at the second study site, the experimental station at the College of Agronomy in Buenos Aires (34° 35 S, 58° 29 W).
-Cellulose filter papers (Whatman no.42) were cut in quarters (≈250 mg and 31 cm<sup>2</sup> for each filter) for impregnation with a lignin solution.
+Cellulose filter papers (Whatman no.42) were cut in quarters (≈250 mg and 31 cm$^2$ for each filter) for impregnation with a lignin solution.
 The solution consisted of purified sugarcane lignin powder (Sigma Aldrich) dissolved in dioxane at a concentration of 3% lignin.
 The solution was applied in 400 μL doses to achieve substrates with different concentrations of lignin (≈5, 10, 15, 20%).
 In addition, dioxane was added in the same dose to the 0% lignin (pure cellulose) substrates.
@@ -37,4 +37,4 @@ The absorption spectra of pure cellulose (Whatman no.42) and CL substrates were 
 To evaluate changes in lignin concentration during the incubation, CL substrates used in the lignin dosage and biotic decomposition experiments were analyzed for visible and infrared (VIS-IR) reflectance with a FieldSpec Pro spectrophotometer (Analytical Spectral Devices).
 The reflectance measurements were then converted to absorbance (log 1/R).
 Unexposed CL substrates in the range of 0-20% lignin, identical to those used in the experiments, were scanned to generate calibration regressions using the integral of absorbance in a 550- to 650-nm waveband.
-This calibration yielded a highly predictive polynomial regression equation: %lignin = 0.00003(abs)<sup>2</sup> - 0.0002(abs) - 0.0036; *r*<sup>2</sup> = 0.98, *P* < 0.0001, which was used to calculate the final lignin concentrations in the experimental substrates.
+This calibration yielded a highly predictive polynomial regression equation: %lignin = 0.00003(abs)$^2$ - 0.0002(abs) - 0.0036; *r*$^2$ = 0.98, *P* < 0.0001, which was used to calculate the final lignin concentrations in the experimental substrates.
