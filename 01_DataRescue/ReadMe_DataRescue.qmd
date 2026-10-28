@@ -276,7 +276,9 @@ studyTotals <- loggedTime.df |>
           finish = max(start, na.rm=TRUE),
           totalStudents = length(unique(who)),
           .by = studyID) |>
-  arrange(initalized, totalTime)
+  mutate(level1_included = str_detect(description, 'T|transcrip') |
+           started > ymd('2026-08-01')) |>
+  arrange(desc(level1_included), totalTime)
 
 authorTotals <- loggedTime.df |>
   #only look at studies that have transcriptions logged
