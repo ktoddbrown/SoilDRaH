@@ -1,0 +1,715 @@
+---
+title: "Data Rescue: Kemp 2003"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Kemp2003_Methods.bib #contains the citations in the methods section
+  - Kemp2003.bib #contains citation for the data source, generally a single citation of the primary paper
+  - Kemp2003_Table1.bib #contains citations included in Table 1.
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ashbonner310 #use the github name as an id
+    name:
+      given: Ashley
+      family: Bonner
+    orcid: 0000-0001-7882-6353
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+  - id: ktoddbrown
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: review     
+  - id: ChaseSaxour
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: Secondary
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: formulating/finishing data rescue plan, updating readme
+      who: ashbonner310 
+      start: 2026-07-14 T1500
+      duration: PT2H
+  - activity: 
+      description: Secondary Transcription
+      who: ChaseSaxour 
+      start: 2026-06-28 
+      duration: PT2H
+  - activity: 
+      description: fixing yaml errors, Methods transcription & cross check
+      who: ashbonner310 
+      start: 2026-09-23 T1800
+      duration: PT1H
+  - activity: 
+      description: Methods citations
+      who: ashbonner310 
+      start: 2026-09-23 T2030
+      duration: PT1H
+  - activity: 
+      description: Table 1 transcription and cross check
+      who: ashbonner310 
+      start: 2026-09-30 
+      duration: PT1H15M
+  - activity: 
+      description: Figure 3 transcription and cross check
+      who: ashbonner310 
+      start: 2026-10-01 
+      duration: PT2H
+  - activity: 
+      description: Figure 4 transcription and cross check
+      who: ashbonner310 
+      start: 2026-10-02
+      duration: PT2H
+  - activity: 
+      description: Last checks through readme and render
+      who: ashbonner310 
+      start: 2026-10-02
+      duration: PT15M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+#| eval: true
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- 'Kemp2003_Methods_AB.md'
+table1.file  <- 'Kemp2003_Table1_AB.csv'
+figure3.file <- 'Kemp2003_Figure3_AB.csv'
+figure4.file <- 'Kemp2003_Figure4_AB.csv'
+
+# Bibliography files
+primaryCitation.file <- 'Kemp2003.bib'
+methodsCitation.file <- 'Kemp2003_Methods.bib'
+table1Citation.file  <- 'Kemp2003_Table1.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../02_DataHarmonization/readKemp2003.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+# of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+# is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+> Kemp, P.R., Reynolds, J.F., Virginia, R.A. and Whitford, W.G., 2003. Decomposition of leaf and root litter of Chihuahuan desert shrubs: effects of three years of summer drought. Journal of Arid Environments, 53(1), pp.21-39. https://doi.org/10.1006/jare.2002.1025
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/207.
+
+This paper deployed litter bags (leaves and roots) in the Chihuahuan Desert for three years, trying to measure the effects of seasonal precipitation (summer drought) of litter decomposition and chemistry.
+The litterbags were analyzed for mass loss as well as N, C, and ash fractions. 
+They used this data and compared to predictions using the CENTURY model.
+
+## Tables and figures
+
+- Table 
+  1) Measured and estimated chemical composition of initial litter; including measured Carbon and Nitrogen for *Larrea* and *Prosopis* species, as well as estimated fractions for Soluble and Lignin fractions sourced from the literature.
+  2) Decay constants, N/C ratios, and conversion inefficiencies for various litter and soil organic matter fractions used in CENTURY for this study.
+  3) Decay coefficients for litter fractions determined by best fit of litter mass data.
+  4) Regression of predicted values against measured mean values of litter mass and nitrogen content.
+
+- Figure 
+  1) Observed rainfall at the study sites during the length of the study.
+  2) Simulated soil water content, predicted from rainfall inputs at each site.
+  3) Observed and simulated Mass Loss for leaf and root litter.
+  4) Observed nitrogen content of leaf and root litter.
+
+## Fit for purpose: **De**composition **A**cross **D**rylands
+
+This paper was identified for data rescue with the Decomposition Across Drylands (DeAD) project. 
+The paper includes a litterbug study in the dryland region of southern New Mexico.
+
+**Location**: Northern Chihuahuan Desert New Mexico US. Jornada Long-Term Ecological Research (LTER) site at the southern end of the Jornada del Muerto Basin of south-central New Mexico, U.S.A. (Dona Ana County).
+
+**Duration**: 41 months from January 1992 - June 1995.
+
+**Mass loss**: Leaf and root litter receiving natural rainfall lost 74% and 36% total mass, respectively. 
+*Prosopis* leaf and root receiving natural rainfall lost 60% and 35%. 
+The drought effect recorded insignificant differences in the first 18 months but reduced decay in the drought conditions for the remainder of the study. 
+Approximately 22% reduction in leaf litter decay and >60% reduction in root decay for both species.
+
+**Solar exposure**: Slight reduced solar exposure due to polyethylene rain shelters made for the litter bags receiving drought treatment for the summer months. 
+This reduced solar radiation by 15-35% as stated in the methods section.
+
+**Litter species**: Roots and leaves from shrub species:
+ - *Larrea tridentata*: Creosote bush, evergreen
+ - *Prosopis glandulosa*: Honey Mesquite, winter deciduous
+Microsite information: *Larrea* litterbags were studied on a "gently sloping eroded terrace" in an area dominated by sparse *Larrea* cover. 
+*Prosopis* litter bags were deployed in a "flat subsidiary basin" in a dune area dominated by sparse *Prosopis *cover. 
+Leaves were left on surface and roots were buried 10 cm. 
+Surface litter was placed under shrubs (Information found in methods under Study site and Litterbag sampling).
+
+**Litter bags**: 5g was apportioned into a 12 x 12 cm$^2$ fiberglass screen with 1.5 mm mesh.
+
+**Treatments**: Summer-drought treatment was created by deploying shelters over the shrubs to block rain from June-September. 
+The shelters were made of metal frames (open sided) with a polyethylene roof, and designed to cover 5 times the canopy area of the shrub it was covering. 
+The polyethylene reduced total solar radiation by 15-35% and temperatures a differed at the soil surface by up to 2$^\circ$C and at 10 cm depth by 6$^\circ$C (see more at the end of the Methods: Climate and drought treatment section).
+  
+## Files
+
+These files are in the Kemp2003 data rescue.
+
+- [Readme](README_Kemp2003.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Kemp2003.bib](Kemp2003.bib)
+  + citation for article transcribed
+- [Kemp2003_Methods.bib](Kemp2003_Methods.bib)
+  + citations for the methods section of the article
+- [Kemp2003_Methods.md](Kemp2003_Methods_AB.md)
+  + methods transcribed from primary article
+- [Kemp2003_Table1_AB.csv](Kemp2003_Table1_AB.csv)
+  + Table 1 from the primary article
+- [Kemp2003_Table1.bib](Kemp2003_Table1.bib)
+  + citations for Table 1 from the primary article  
+- [Kemp2003_Figure3_AB.csv](Kemp2003_Figure3_AB.csv)
+  + Figure 3 from the primary article, digitized into a table
+- [Kemp2003_Figure4_AB.csv](Kemp2003_Figure4_AB.csv)
+  + Figure 4 from the primary article, digitized into a table
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions. This folder also contains the secondary transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [X] Read the article or data resource and the discription of the target project
+  - [X] Create a fresh fork of the primary repository
+  - [X] Create a copy of this template folder and rename it to Kemp2003
+  - [X] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!)
+  - [X] Update the author section of the yml to reflect who is working on the rescue
+  - [X] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [X] Add the reviewer to the author list in the yml
++ Do
+  - [X] Create a spreadsheet with Table 1 and export it to csv
+  - [X] Extract points from Figure 3 and export it to csv
+  - [X] Extract points from Figure 4 and export it to csv
+  - [X] Transcribe or copy the method section
+  - [X] Insert references to bib entries
+  - [X] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [X] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [X] Create a bib file with the citations from the methods section
+  - [X] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [X] cross check with second transcriber for tables and methods, and resolve any differences
+  - [X] compile or render this ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
+  - [ ] address any revisions in your pull request review
+  - [ ] celebrate!
+
+## Table 1
+
+Table 1 had both footnote text and a title caption; both are included in the first row of the .csv.
+In addition, the table used multiple reference marks.
+The dagger, double dagger, section sign, and paragraph sign were all included, but a double vertical bar reference mark was replaced with a double asterisk instead.
+This table included several citations in the footnotes and these are included in the related bib file.
+A citation for Moorhead & Reynolds (1993) in the footnote for lignin root measurements does not exist in the reference section of the paper, so we assume the author meant Moorhead and Reynolds (1991) and cited that instead.
+
+```{r}
+#| label: table1Check
+#| eval: true 
+
+
+read_csv(file = table1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTableN
+#| eval: true
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Table1_CS.csv Kemp2003_Table1_AB.csv
+```
+
+## Figure 3
+
+Figure 3 contained four sub-plots, two each for the species (*Larrea* vs *Prosopis*) and litter type (root vs leaf).
+In addition, each graph has two sets of observed data based on litter treatment (control or drought).
+The .csv file includes columns for the x and y values of each data point, the units for each, treatment, which subgraph it is on (both by letter and subgraph title - litter species and type), and the reported standard error.
+X values (time in months) are reported to the whole number value, and Y values were reported to the tenth decimal place.
+
+```{r}
+#| label: Figure3Check
+#| eval: true 
+
+
+read_csv(file = figure3.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure3.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+
+#pull in data to plot:
+fig3_plot.df <- read_csv(file = figure3.file, 
+         skip = 1)
+
+#plot the data
+ggplot(fig3_plot.df) + 
+    geom_point(aes(x = x,
+                   y = y,
+                   color = Treatment)) + 
+    geom_errorbar(aes(x = x, color = Treatment,
+                      ymin = y - `Standard Error`, ymax = y + `Standard Error`),
+                  width = 0.4) +
+    labs(title = "Figure 3: Observed mass loss for leaf litter (placed on the soil surface) and root litter (buried at 10 cm)", #slightly altered first expression from the caption for brevity
+         x = unique(fig3_plot.df$`x unit`),  #Using exactly what the table has to label the axis
+         y = unique(fig3_plot.df$`y unit`)) + 
+    facet_wrap(~`Subgraph and Litter Type`,
+               ncol = 2)
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure3
+#| eval: true
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Figure3_CS.csv Kemp2003_Figure3_AB.csv
+```
+Discrepancies in values in the figure digitization were averaged when differences were >0.1, otherwise the cross check reviewer made a judgement call.
+
+## Figure 4
+
+Figure 4 also contained four sub-plots, two each for the species (*Larrea* vs *Prosopis*) and litter type (root vs leaf), and each graph also has two sets of observed data based on litter treatment (control or drought).
+The .csv file includes columns for the x and y values of each data point, the units for each, treatment, which subgraph it is on (both by letter and subgraph title - litter species and type), and the reported standard error.
+X values (time in months) are reported to the whole number value, and Y values (% nitrogen in litter), were reported to the hundredth decimal place.
+
+```{r}
+#| label: Figure4Check
+#| eval: true 
+
+
+read_csv(file = figure4.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = figure4.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+
+fig4_plot.df <- read_csv(file = figure4.file, 
+         skip = 1)
+
+ggplot(fig4_plot.df) + 
+    geom_point(aes(x = x,
+                   y = y,
+                   color = Treatment)) + 
+    geom_errorbar(aes(x = x, color = Treatment,
+                      ymin = y - `Standard Error`, ymax = y + `Standard Error`),
+                  width = 0.4) +
+    labs(title = "Figure 4. Observed nitrogen content of leaf litter (placed on the soil surface) and root litter (buried at 10 cm)", #slightly altered first expression from the caption for brevity
+         x = unique(fig4_plot.df$`x unit`), #Using exactly what the table has to label the axis
+         y = unique(fig4_plot.df$`y unit`)) + 
+    facet_wrap(~`Subgraph and Litter Type`,
+               ncol = 2)
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure4
+#| eval: true
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Figure4_CS.csv Kemp2003_Figure4_AB.csv
+```
+
+Discrepancies in values in the figure digitization were averaged when differences were >0.1, otherwise the cross check reviewer made a judgement call.
+
+## Methods
+
+Any different to the cross check for the methods section will be output after this line.
+
+```{bash}
+#| label: compareMethods
+#| eval: true
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y temp/Kemp2003_Methods_CS.md Kemp2003_Methods_AB.md
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+#| eval: true
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [Velleman1995] 
+  + Citation for software, used "misc" bibtex entry and did the best I could to replicate what was on the original publication.
+  
+All other citations downloaded as bibtex citations created by the publishers of the papers being cited.
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#| eval: true
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for referenced articles in methods
+    methods = read.bib(file = methodsCitation.file),
+    #Citations for referenced articles in the table 1 caption
+    table1caption = read.bib(file = table1Citation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure4 = list(
+      caption = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      #Read in all the data, skipping the first row with the caption and read
+      #...in the table as character. This element is a tibble (data.frame).
+      primary = read_csv(file = figure4.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: true
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readKemp2003(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+## Check for new variables
+
+`of_variable` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_of_variable
+#| eval: false
+
+#Read in the list of current 'of_variable' entries
+SoilDRaH_variable_list <- read_csv(file =of_variable.file,
+                                   show_col_types = FALSE)
+
+#compare the variables in the level 1 tables to the SoilDRaH variables
+new_variables <- lapply(data.lvl1.ls, function(xx){
+  setdiff(unique(xx$of_variable), 
+          unique(SoilDRaH_variable_list$of_variable))
+}) |>
+  unlist()
+
+#Check that there are no new variables
+if(length(new_variables) == 0){
+  print('All of_variables are in the SoilDRaH variable list. No additions required')
+}else{
+  cat(paste('Please start a issue for new variables [',
+               new_variables, ']', sep = '', collapse = '\n'))
+}
+```
+
+## Check for is_type
+
+`is_type` in the data files should be defined in the SoilDRaH Vocabulary files.
+
+```{r}
+#| label: check_is_type
+#| eval: false
+
+#read in the current types and what variable they are associated with
+SoilDRaH_type_list <- read_csv(file = is_type.file,
+                                   show_col_types = FALSE) |>
+  #remove the project definition and only keep the variable and type
+  select(of_variable, is_type) |>
+  #variables are pushed together in the type defined table. Separate the
+  #...entries here
+  separate_longer_delim(cols = 'of_variable', delim = ',')
+
+#Pull all the of_variable-is_type pairs from the source data
+source_pairs <- tibble()
+
+#If there are a large number of entries, consider replacing this for-loop.
+#...However this avoids having to install the plyr or other libraries, and 
+#...there are generally no more then 3-5 tables
+for(dataTable in data.lvl1.ls){
+  source_pairs <- dataTable |>
+    select(of_variable, is_type) |> 
+    unique() |>
+    bind_rows(source_pairs)
+}
+
+undefined_data_type <- source_pairs |>
+  #subset for variables that are not 'incomplete'
+  semi_join(SoilDRaH_variable_list |>
+              filter(project_status != 'incomplete'),
+            by = join_by(of_variable)) |>
+  #check for of_variable-is_type tuples that are not in the SoilDRaH type definitions
+  anti_join(SoilDRaH_type_list,
+            by = join_by(of_variable, is_type))
+
+#Tell the user what you found.
+if(nrow(undefined_data_type) == 0){
+  print('All of_variables-is_types are in the SoilDRaH type list. No additions required')
+}else{
+  print(paste0('Please start a issue for new of_variable-is_type [', paste(paste(undefined_data_type$of_variable, undefined_data_type$is_type, sep = '-'), collapse = ','), ']'))
+}
+```
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+#| eval: false
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readKemp2003(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
