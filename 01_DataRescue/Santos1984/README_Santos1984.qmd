@@ -50,22 +50,6 @@ affiliations:
     
 timelog:
   - activity: 
-      description: revised execute with only provided files
-      who:  #github username
-      #when you started and ended, can be just a year or down to the minute
-      start: 2025-01-22 T1400
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P45M
-  - activity: 
-      description: Revise based on feedback
-      who: ktoddbrown #github username
-      #when you started and ended, can be just a year or down to the minute
-      end: 2025-11-26
-      #start: YYYY-MM-DD THH:MM
-      #alternatively duration can be combined with a being/end
-      duration: P30M
-  - activity: 
       description: grad student uf essie
       who: vaasukimarupaka #github username
       #when you started and ended, can be just a year or down to the minute

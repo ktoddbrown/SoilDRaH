@@ -265,6 +265,8 @@ author.df <- plyr::ldply(allYAML, .id = 'studyID',
 
 loggedTime.df <- plyr::ldply(allYAML, function(list_item){
   plyr::ldply(list_item[['timelog']], function(activity_item){
+    #print(list_item$title)
+    #print(names(activity_item$activity))
   return(as.data.frame(activity_item$activity))
 }) }, .id = 'studyID') |>
   mutate(duration = lubridate::duration(duration)) 
@@ -272,7 +274,7 @@ loggedTime.df <- plyr::ldply(allYAML, function(list_item){
 studyTotals <- loggedTime.df |>
   reframe(totalTime = sum(duration)/(60*60),
           description = paste(description, collapse = '; '),
-          initalized = min(start, na.rm=TRUE),
+          started = min(start, na.rm=TRUE),
           finish = max(start, na.rm=TRUE),
           totalStudents = length(unique(who)),
           .by = studyID) |>
