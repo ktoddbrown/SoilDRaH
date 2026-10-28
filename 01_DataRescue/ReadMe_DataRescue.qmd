@@ -273,7 +273,8 @@ studyTotals <- loggedTime.df |>
           initalized = min(start, na.rm=TRUE),
           finish = max(start, na.rm=TRUE),
           .by = studyID) |>
-  mutate(level1_included = str_detect(description, 'T|transcrip')) |>
+  mutate(level1_included = str_detect(description, 'T|transcrip') |
+           started > ymd('2026-08-01')) |>
   arrange(desc(level1_included), totalTime)
 
 authorTotals <- loggedTime.df |>
