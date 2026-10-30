@@ -726,16 +726,17 @@ data.lvl0.df <- list(citation =
                                 ))
 ```
 
-# Level 1 data - CURATION PROJECT
+# Level 1 data - HiCSC
 
-This data is identified as a data source for the ...
+This data is identified as a data source for the HiCSC.
 Broad classes of information that we are looking for include:
 
-<!--- Include description of where the data is located in the source.--->
-- Location: 
-- Soil carbon stock: 
-- Soil type: 
-- Land use: 
+- Location: Material and Methods section, subsection Study Area. Specifically island of Maui, Hawai'i. The coordinates listed for the plantation are latitude: 20°54′ N and longitude: 156°26′ W.
+- Soil carbon stock: Total, inorganic, and organic soil carbon stocks are reported Figure 1 and Figure 2. Bulk density is in Table 2.
+- Soil type: The samples were determined to be either Pulehi series-cobbly silt loam or Molokai series-silty clay loam. This was found in the Materials and Methods section, subsection Study Area.
+- Land use:  The land use of the samples is found in the subsection 2.1 Study Area, which is a commercial sugarcane plantation. Both of the soil plots were planted in 2011 and harvested in 2013.
+- observation time: We have planting and harvest date however, sampling is reported based on growth stage
+
 
 Information from the methods and other sections are pulled into tables with line by line source citations.
 This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
@@ -756,14 +757,35 @@ The `of_variable` being used here are:
 
 ```{r}
 #| label: createLvl1
-#| eval: false
+#| eval: true
 
 #### Method-section only data ####
 #Create a table for the data in the method-section that is not directly 
 #...associated with any table. Often this is study level information.
 
-studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
-                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                     #island
+                     #land use
+                     #?lat long? with reported precision
+                     #units for depth, carbon stocks
+                     #methods for soil collection
+                   'island', 'value', 'Maui', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'land_use', 'description', 'commercial sugar cane plantation', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'geolocation', 'latitude', as.numeric(20 + 54/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'geolocation', 'longitude', as.numeric(156 + 1/26), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'geolocation', 'precision', as.numeric(1/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#units from figure legends
+
+geolocation.df <- tribble(~site_id, ~of_variable, ~is_type, ~with_entry, ~from_source,
+                          #location for sites
+                          #soil type
+                          #planting time
+                          #harvest time
+                          )
+
+#depth, TC, IC, OC stocks, collection time by growth stage
+layer.df 
 
 #### Table/Figure N ####
 # Process the primary data from Table/Figure M by maintaining data groups and 
