@@ -492,7 +492,47 @@ ggplot(data10, aes(x = y, y = x, fill = `site label`)) +
   size = 2
 )
 ```
-{{< include TiradoCorbala2015_Methods.md >}}
+
+## Methods
+
+Cross check for methods section. 
+Looking for `character(0)` outputs here to show that the two transcripts match exactly. 
+*This was transcribed before we were logging the secondary transcriptions.*
+
+```{r}
+#| label: compareMethods
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('TiradoCorbala2015_Methods.md'),
+        read_lines('temp/')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/AuthorYYYY_Methods_AC.md'),
+        read_lines('AuthorYYYY_Methods.md')))
+
+```
+
+### Methods  - Text
+
+The final text transcription from the Methods section is rendered below.
+
+```{r}
+#| label: readMethods
+#| output: asis
+
+# This revised section will append two ### to any existing headers here so that it renders nicely with the other headers in the document.
+
+methodsLines <- readLines(methods.file) |>
+  str_replace_all(pattern = '^#', replacement = '####')
+
+cat(paste0(methodsLines, collapse = '\n'))
+
+```
+
 
 # Transcription comparison
 
@@ -685,3 +725,131 @@ data.lvl0.df <- list(citation =
                                 )
                                 ))
 ```
+
+# Level 1 data - CURATION PROJECT
+
+This data is identified as a data source for the ...
+Broad classes of information that we are looking for include:
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+- Soil carbon stock: 
+- Soil type: 
+- Land use: 
+
+Information from the methods and other sections are pulled into tables with line by line source citations.
+This information can be values, units, methods, or other useful notes and is manually extracted from the transcriptions loaded into the level 0 data above.
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+ <!--- include other variables being used, this should match vocabulary in the SoilDRaHVocabulary resources --->
+
+```{r}
+#| label: createLvl1
+#| eval: false
+
+#### Method-section only data ####
+#Create a table for the data in the method-section that is not directly 
+#...associated with any table. Often this is study level information.
+
+studyMeta <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
+                   'region', 'value', 'Honaunau Forest on the southwestern slopes of Mauna Loa, island of Hawaii', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+
+#### Table/Figure N ####
+# Process the primary data from Table/Figure M by maintaining data groups and 
+#...standardizing the variable name so that we can link this to the study 
+#...metadata and data in the other tables when needed. Link in the methods 
+#...and other information from the method-section as needed.
+
+Table1Primary <- data.lvl0.ls$data$Table1$primary |>
+  #Add a row id preserving row grouping -- not unique
+  mutate(row_id = paste0('R', 1:n())) |>
+  #Transform the table to long data by row group and column names.
+  #...This allows us to then create the cross links between the tables.
+  pivot_longer(cols = -row_id,
+               names_to = 'column_name', values_to = 'with_entry',
+               values_drop_na = TRUE) |> #drop missing values
+  #Link the variable names to the column names using a switch statement
+  mutate(of_variable = case_when(
+           #Soil PH is given as an example below
+           column_name == 'SOC' ~ 'soil_organic_carbon')) |>
+  #Flag the source of this data as Table 1, this table is merged later with
+  #...other data so this keeps track of where the data came from
+  mutate(from_source = 'Table 1')
+
+## Create the metadata for table one from the header information and cited methods
+Table1Meta <- Table1Primary |>
+  select(column_name, of_variable) |>
+  unique() |>
+  #Grab everything between the parentheses as units and attribute the source as the column names.
+  mutate(unit = str_extract(column_name, pattern = '(?<=\\().*(?=\\))'),
+         from_source = 'Table 1 column names.') |>
+  #If there aren't units then drop the row
+  filter(!is.na(unit)) |>
+  #Don't keep the column name now that you have the units, cross link via the variable
+  select(-column_name) |>
+  #Stack into the table the methods for each variable that we can find
+  bind_rows(
+  tribble(~of_variable, ~method, ~from_source,
+            'soil_organic_carbon', paste0(data.lvl0.ls$method[72:73], collapse = ' '), 'Methods ln72-73') ) |>
+  #Stack onto the tables the controlled vocabulary used
+  bind_rows(
+    tribble(~of_variable, ~control_vocabulary, ~from_source,
+            'soil_class', 'Histosol:USDA classification for histosol soil type|Andisols:USDA classification for andisol soil type', 'expert informed')
+  ) |>
+  # Push the dimensions of the variable into a single column. Making this a long table.
+  pivot_longer(cols = c(unit, method, control_vocabulary),
+               names_to = 'is_type',
+               values_drop_na = TRUE,
+               values_to = 'with_entry')
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = bind_rows(studyMeta, Table1Meta),
+  primary = bind_rows(Table1Primary)|>
+    arrange(row_id, column_name,
+            of_variable, is_type, with_entry, from_source)
+  )
+
+```
+
+
+## Check function match
+
+Check for an exact match with the read function.
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function output matches ReadMe code for level 1.')
+  }else{
+    print('There is a mismatch in the level 1 data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+
+
