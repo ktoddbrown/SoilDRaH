@@ -1,56 +1,56 @@
 "Fig. 1. Remaining dry mass (%) after two years of decomposition of Q. pyrenaica leaves (solid lines) and P. pinaster needles (dashed lines) in an unthinned, lightly thinned and heavily thinned Mediterranean mixed forest.", ,,,,
-Time since incubation (Days),Remaining dry mass (%),Type,Species,ymin,ymax
-0,100,Unthinned - CT,oak,100,100
-87.34,92.05,Unthinned - CT,oak,88.91,95.19
-178.93,92.05,Unthinned - CT,oak,89.37,94.73
-266.272,86.41,Unthinned - CT,oak,78.37,94.45
-357.87,80.04,Unthinned - CT,oak,74.68,85.4
-447.34,77.63,Unthinned - CT,oak,72.45,82.81
-536.804,75.14,Unthinned - CT,oak,71.44,78.84
-626.27,69.69,Unthinned - CT,oak,64.7,74.68
-717.87,69.04,Unthinned - CT,oak,65.53,72.55
-0,100,Unthinned - CT,pine,100,100
-91.6,94.36,Unthinned - CT,pine,92.95,95.77
-181.07,93.62,Unthinned - CT,pine,92.59,94.65
-272.66,90.3,Unthinned - CT,pine,87.47,93.13
-362.13,85.67,Unthinned - CT,pine,82.86,88.48
-451.6,81.33,Unthinned - CT,pine,78.31,84.35
-543.2,82.62,Unthinned - CT,pine,80.68,84.56
-632.66,75.79,Unthinned - CT,pine,73.25,78.33
-722.13,76.06,Unthinned - CT,pine,73.19,78.93
-0,100,Light Thinned - LT,oak,100,100
-90.72,91.43,Light Thinned - LT,oak,89.32,93.54
-177.59,87.51,Light Thinned - LT,oak,84.2,90.82
-268.31,85.67,Light Thinned - LT,oak,81.64,89.7
-357.1,76.2,Light Thinned - LT,oak,71.69,80.71
-445.9,81.99,Light Thinned - LT,oak,77.75,86.23
-536.62,77.93,Light Thinned - LT,oak,72.46,83.4
-627.35,79.22,Light Thinned - LT,oak,69.98,88.46
-716.14,70.61,Light Thinned - LT,oak,60.24,80.98
-0,100,Light Thinned - LT,pine,100,100
-92.65,94.47,Light Thinned - LT,pine,91.53,97.41
-183.38,93.9,Light Thinned - LT,pine,90.95,96.85
-272.17,90.16,Light Thinned - LT,pine,86.3,94.02
-362.89,85.08,Light Thinned - LT,pine,82.71,87.45
-453.62,80.21,Light Thinned - LT,pine,77.1,83.32
-542.4,81.48,Light Thinned - LT,pine,79.1,83.86
-633.14,74.75,Light Thinned - LT,pine,71,78.5
-720,69.66,Light Thinned - LT,pine,61.43,77.89
-0,100,Heavy Thinned - HT,oak,100,100
-87.06,92.07,Heavy Thinned - HT,oak,87.19,96.95
-178.06,89.31,Heavy Thinned - HT,oak,86.08,92.54
-267.1,88.34,Heavy Thinned - HT,oak,84.36,92.32
-358.06,84.34,Heavy Thinned - HT,oak,80.51,88.17
-447.1,78.13,Heavy Thinned - HT,oak,74.25,82.01
-538.06,80.79,Heavy Thinned - HT,oak,74.65,86.93
-627.1,74.63,Heavy Thinned - HT,oak,68.12,81.14
-718.06,75.65,Heavy Thinned - HT,oak,66.71,84.59
-0,100,Heavy Thinned - HT,pine,100,100
-92.9,94.92,Heavy Thinned - HT,pine,93.63,96.21
-181.94,93.98,Heavy Thinned - HT,pine,92.9,95.06
-272.9,93.05,Heavy Thinned - HT,pine,91.07,95.03
-361.94,86.79,Heavy Thinned - HT,pine,85.09,88.49
-452.9,83.87,Heavy Thinned - HT,pine,79.92,87.82
-541.94,82.94,Heavy Thinned - HT,pine,81.31,84.57
-630.97,79,Heavy Thinned - HT,pine,73.96,84.04
-720,75.14,Heavy Thinned - HT,pine,66.45,83.83
+Time since incubation (Days),Remaining dry mass (%),Type,Species,ymin,ymax, p value
+0,100,Unthinned - CT,oak,100,100,na
+87.34,92.05,Unthinned - CT,oak,88.91,95.19,na
+178.93,92.05,Unthinned - CT,oak,89.37,94.73,na
+266.272,86.41,Unthinned - CT,oak,78.37,94.45,na
+357.87,80.04,Unthinned - CT,oak,74.68,85.4,na
+447.34,77.63,Unthinned - CT,oak,72.45,82.81,na
+536.804,75.14,Unthinned - CT,oak,71.44,78.84,p < 0.001
+626.27,69.69,Unthinned - CT,oak,64.7,74.68,p < 0.05
+717.87,69.04,Unthinned - CT,oak,65.53,72.55,p < 0.01
+0,100,Unthinned - CT,pine,100,100,na
+91.6,94.36,Unthinned - CT,pine,92.95,95.77,na
+181.07,93.62,Unthinned - CT,pine,92.59,94.65,na
+272.66,90.3,Unthinned - CT,pine,87.47,93.13,na
+362.13,85.67,Unthinned - CT,pine,82.86,88.48,na
+451.6,81.33,Unthinned - CT,pine,78.31,84.35,na
+543.2,82.62,Unthinned - CT,pine,80.68,84.56,p < 0.001
+632.66,75.79,Unthinned - CT,pine,73.25,78.33,p < 0.05
+722.13,76.06,Unthinned - CT,pine,73.19,78.93,p < 0.01
+0,100,Light Thinned - LT,oak,100,100,na
+90.72,91.43,Light Thinned - LT,oak,89.32,93.54,na
+177.59,87.51,Light Thinned - LT,oak,84.2,90.82,p < 0.01
+268.31,85.67,Light Thinned - LT,oak,81.64,89.7,na
+357.1,76.2,Light Thinned - LT,oak,71.69,80.71,p < 0.001
+445.9,81.99,Light Thinned - LT,oak,77.75,86.23,na
+536.62,77.93,Light Thinned - LT,oak,72.46,83.4,na
+627.35,79.22,Light Thinned - LT,oak,69.98,88.46,na
+716.14,70.61,Light Thinned - LT,oak,60.24,80.98,na
+0,100,Light Thinned - LT,pine,100,100,na
+92.65,94.47,Light Thinned - LT,pine,91.53,97.41,na
+183.38,93.9,Light Thinned - LT,pine,90.95,96.85,p < 0.01
+272.17,90.16,Light Thinned - LT,pine,86.3,94.02,na
+362.89,85.08,Light Thinned - LT,pine,82.71,87.45,p < 0.001
+453.62,80.21,Light Thinned - LT,pine,77.1,83.32,na
+542.4,81.48,Light Thinned - LT,pine,79.1,83.86,na
+633.14,74.75,Light Thinned - LT,pine,71,78.5,na
+720,69.66,Light Thinned - LT,pine,61.43,77.89,na
+0,100,Heavy Thinned - HT,oak,100,100,na
+87.06,92.07,Heavy Thinned - HT,oak,87.19,96.95,na
+178.06,89.31,Heavy Thinned - HT,oak,86.08,92.54,p < 0.01
+267.1,88.34,Heavy Thinned - HT,oak,84.36,92.32,p < 0.05
+358.06,84.34,Heavy Thinned - HT,oak,80.51,88.17,na
+447.1,78.13,Heavy Thinned - HT,oak,74.25,82.01,p < 0.05
+538.06,80.79,Heavy Thinned - HT,oak,74.65,86.93,na
+627.1,74.63,Heavy Thinned - HT,oak,68.12,81.14,na
+718.06,75.65,Heavy Thinned - HT,oak,66.71,84.59,na
+0,100,Heavy Thinned - HT,pine,100,100,na
+92.9,94.92,Heavy Thinned - HT,pine,93.63,96.21,na
+181.94,93.98,Heavy Thinned - HT,pine,92.9,95.06,p < 0.01
+272.9,93.05,Heavy Thinned - HT,pine,91.07,95.03,p < 0.05
+361.94,86.79,Heavy Thinned - HT,pine,85.09,88.49,na
+452.9,83.87,Heavy Thinned - HT,pine,79.92,87.82,p < 0.05
+541.94,82.94,Heavy Thinned - HT,pine,81.31,84.57,na
+630.97,79,Heavy Thinned - HT,pine,73.96,84.04,na
+720,75.14,Heavy Thinned - HT,pine,66.45,83.83,na

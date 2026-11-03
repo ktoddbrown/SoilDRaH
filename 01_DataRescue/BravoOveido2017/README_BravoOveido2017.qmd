@@ -306,14 +306,7 @@ ggplot(fig1Data,
   scale_x_continuous(breaks = seq(0,720, by = 90)) + 
   ylim(50,100) +
   labs(caption = str_wrap(fig1Caption, width = 115)) + 
-  theme_minimal() #i would like for theere to be no vertical lines
-# move the species  to be ON the graph (middle)
-# add p
-# add the caption??? the caption isn't showing up 
-# grid
-# 
-
-
+  theme_minimal() 
 ```
 
 Cross check for the figure above. 
@@ -327,11 +320,11 @@ Looking for `character(0)` outputs here to show that the two transcripts match e
 
 print('Differing lines in primary file:')
 sprintf('>%s', setdiff(read_lines('BravoOveido2017_Figure1.csv'),
-        read_lines('temp/BravoOveido2017_Figure1_AL.csv')))
+        read_lines('temp/BravoOveido2017_Figure1.csv')))
 
 print('Differing lines in secondary file:')
-sprintf('<%s',setdiff(read_lines('temp/AuthorYYYY_FigureM_AC.csv'),
-        read_lines('AuthorYYYY_FigureM.csv')))
+sprintf('<%s',setdiff(read_lines('temp/BravoOveido2017_Figure1.csv'),
+        read_lines('BravoOveido2017_Figure1.csv')))
 
 
 ```
