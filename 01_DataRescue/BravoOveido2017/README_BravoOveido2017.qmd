@@ -258,7 +258,7 @@ These files are in the BravoOveido2017 data rescue.
 
 <!--- Create a plot to make the figure easy to compare to the table. You don't have to be exactly the same but it should be obvious, at a glance, if the transcript matches.---->
 
-Figure 1 was modified ....
+Figure 1 was modified by omitting the p-values.
 
 ```{r}
 #| label: figure1Check
