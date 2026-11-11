@@ -2,8 +2,8 @@
 
 ## 2.1. Experimental area and layout
 
-The experimental site is located in Montes de Toledo, central Spain, (39??31???N, 4??16???40???W).
-The climate is classified as Mediterranean with annual precipitation of 469 mm and average temperature of 12.9 ??C.
+The experimental site is located in Montes de Toledo, central Spain, (39°31'N, 4°16'40''W).
+The climate is classified as Mediterranean with annual precipitation of 469 mm and average temperature of 12.9°C.
 The original dominant tree cover is Pyrenean oak (*Quercus pyrenaica* Willd).
 Despite its scientific name, this species is seldom found in the Pyrenees and is native of sub-Mediterranean areas of central and southern Spain and Portugal as well as southern France.
 Hereafter we will refer to *Q. pyrenaica* as oak.
@@ -22,15 +22,15 @@ Thinning consisted of removing pines from the lower diameter classes until the d
 
 In parallel to the thinning experiment, a nutrient cycling study was established in the same plots after the first thinning in 2009.
 Four littertraps were installed per plot.
-In February 2011, a decomposition bag experiment was incubated next to each littertrap (4 litter bag experiments on each plot) 8 bags were placed on each point containing 5.11 ?? 0.01 g of air dried foliar material from oaks and pines shed in the previous autumn following a similar proportion to that found in the litterfall traps (3.40 ?? 1.16 g for needles and 1.68 ?? 1.19 g for leaves).
-The total number of incubated bags were 8 bags/point ?? 4 points/plot ?? 9 plots = 288.
+In February 2011, a decomposition bag experiment was incubated next to each littertrap (4 litter bag experiments on each plot) 8 bags were placed on each point containing 5.11±0.01 g of air dried foliar material from oaks and pines shed in the previous autumn following a similar proportion to that found in the litterfall traps (3.40±1.16 g for needles and 1.68±1.19 g for leaves).
+The total number of incubated bags were 8 bags/point × 4 points/plot × 9 plots = 288.
 Every three months, a bag per sample point was harvested (4 bags per plot) and transported into a raffia fiber bag to the lab the same day to avoid mass losses.
 The first collection date was May 2011 and the last collection date was February 2013.
 
 ## 2.2. Mass loss and nutrient calculations
 
-The air dried weight of needles and leaves was measured separately at every harvest and half of the sample was dried at 65 ??C to analyze nutrient content in the foliar material.
-The other half was dried at 105 ??C to constant weight.
+The air dried weight of needles and leaves was measured separately at every harvest and half of the sample was dried at 65°C to analyze nutrient content in the foliar material.
+The other half was dried at 105°C to constant weight.
 Total mass loss was calculated for the whole sample.
 The elements analyzed were total carbon (C) in percentage, total nitrogen (N), phosphorus (P), calcium (Ca), magnesium (Mg) and potassium (K).
 

@@ -106,6 +106,14 @@ timelog:
       #start: YYYY-MM-DD THH:MM
       #alternatively duration can be combined with a being/end
       duration: P30M
+  - activity: 
+      description: Coded Figure 1
+      who: AmandaLopez14 #github username
+      #when you started and ended, can be just a year or down to the minute
+      end: 2026-10-20 
+      #start: YYYY-MM-DD THH:MM
+      #alternatively duration can be combined with a being/end
+      duration: P60M
   - activity:
       description: completed figure 1 secondary transcription
       who: laylakalandjian
@@ -240,7 +248,7 @@ These files are in the BravoOveido2017 data rescue.
 + Do
   - [x] Create a spreadsheet with Table1 and export it to csv
   - [x] Create a spreadsheet with Table2 and export it to csv
-  - [ ] Extract points from Figure1 and export it to csv
+  - [x] Extract points from Figure1 and export it to csv
   - [x] Transcribe or copy the method section
   - [x] Insert references to bib entries
   - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
@@ -320,10 +328,10 @@ Looking for `character(0)` outputs here to show that the two transcripts match e
 
 print('Differing lines in primary file:')
 sprintf('>%s', setdiff(read_lines('BravoOveido2017_Figure1.csv'),
-        read_lines('temp/BravoOveido2017_Figure1.csv')))
+        read_lines('temp/BravoOveido2017_Figure1_LK.csv')))
 
 print('Differing lines in secondary file:')
-sprintf('<%s',setdiff(read_lines('temp/BravoOveido2017_Figure1.csv'),
+sprintf('<%s',setdiff(read_lines('temp/BravoOveido2017_Figure1_LK.csv'),
         read_lines('BravoOveido2017_Figure1.csv')))
 
 
@@ -357,12 +365,11 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTable1
-#| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Table1_AL.md BravoOveido2017_Table1.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Table1_AL.csv BravoOveido2017_Table1.csv
 ```
 
 ## Table 2
@@ -373,7 +380,7 @@ Table 2 was modified ....
 
 ```{r}
 #| label: table2Check
-#| eval: false #remove when you have the file transcribed
+##| eval: true #remove when you have the file transcribed
 
 
 read_csv(file = table2.file, #read in the specific file
@@ -394,12 +401,12 @@ And is crosschecked with the secondary transcription
 
 ```{bash}
 #| label: compareTable2
-#| eval: false
+#| eval: true
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Table2_AL.md BravoOveido2017_Table2.md
+diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Table2_AL.csv BravoOveido2017_Table2.csv
 ```
 
 ## Methods
@@ -408,7 +415,7 @@ Any different to the cross check for the methods section will be output after th
 
 ```{bash}
 #| label: compareMethods
-#| eval: false
+#| eval: true
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Methods_AL.md BravoOveido2017_Methods.md
