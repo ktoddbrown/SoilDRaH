@@ -372,143 +372,167 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   
   ####Remove the replaced cores####
   #Find the dois of each core
-  doi_core <- data.lvl0.ls$data$study |>
+  doi_core <- datafunction.lvl0.ls$data$study |>
     #remove 112 dois that have been replaced
-    dplyr::filter(of_variable %in% 'citation') |>
-    dplyr::mutate(doi = stringr::str_extract(with_entry, 
-                                             '(?<=https://doi.org/).*$'))
+    filter(of_variable %in% 'citation') |>
+    mutate(doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
   
-  #Find the cores that are flagged as replaced and the replacement doi
-  replaced_core <- data.lvl0.ls$data$study |>
+  ### Remove replaced cores####
+  ### Also check to make sure we have their replacements
+  replaced_core <- datafunction.lvl0.ls$data$study |>
     #remove 112 dois that have been replaced
-    dplyr::filter(of_variable %in% 'replaced_by') |>
-    dplyr::mutate(
-      replacement_doi = stringr::str_extract(with_entry, 
-                                             '(?<=https://doi.org/).*$'))
+    filter(of_variable %in% 'replaced_by') |>
+    mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
   
   if(all(replaced_core$replacement_doi %in% doi_core$doi)){
     if(verbose) message('Replacement cores present in dataset')
   }else{
-    warning('There are missing replacement cores. Dropping cores that were not replaced.')
+    warning('There are missing replacement cores.')
   }
   
   # Take the cores out of each of the data frames
-  study.df <- data.lvl0.ls$data$study |>
-    dplyr::filter(!('replaced_by' %in% of_variable), .by = bibKey)
+  study.df <- datafunction.lvl0.ls$data$study |>
+    filter(!('replaced_by' %in% of_variable), .by = bibKey)
   
-  column.df <- data.lvl0.ls$data$columns |>
-    dplyr::filter(bibKey %in% study.df$bibKey)
+  column.df <- datafunction.lvl0.ls$data$columns |>
+    filter(bibKey %in% study.df$bibKey)
   
-  primary.df <- data.lvl0.ls$data$primary |>
-    dplyr::filter(bibKey %in% study.df$bibKey)
+  primary.df <- datafunction.lvl0.ls$data$primary |>
+    filter(bibKey %in% study.df$bibKey)
   
   #### Move the PI info to the study data ####
-  #There is a lot or repeated PI's in the column
   pi.df <- column.df |>
-    dplyr::filter(is_type == 'PI') |>
-    dplyr::select(bibKey, with_entry) |>
+    filter(is_type == 'PI') |>
+    select(bibKey, with_entry) |>
     unique() |>
     # #Confirm none of bibKeys have more then one PI, moving information to study.df
     # filter(n() > 1,
     #        .by = bibKey)
-    dplyr::mutate(of_variable = 'PI',
-                  is_type = 'value')
+    mutate(of_variable = 'PI',
+           is_type = 'value')
   
   #remove PI from the column.df
   column_noPI.df <- column.df |>
-    dplyr::filter(is_type != 'PI') |>
+    filter(is_type != 'PI') |>
     #drop geocode
-    dplyr::filter(is_type != 'geocode') |>
-    dplyr::mutate(across(everything(), trimws))
+    filter(is_type != 'geocode') |>
+    mutate(across(everything(), trimws))
   
-  # Create add the pi information to the study 
-  study_PI.df <- study.df |>
+  ####Map core to ISCN4, level 1 dataframe here #####
+  core.df <- study.df |>
     #add the PI to the study.df
-    dplyr::bind_rows(pi.df)
+    bind_rows(pi.df) |>
+    select(bibKey, variable_name = of_variable, is_type, with_entry)
   
-  ####Create unique variable groups####
+  ####Create unique variable groups and map to ISCN4, level 1 dataframe ####
   ####some of the variables have the same name but different methods, within the 
-  ####same core (!). Go through and add in an index to group the unique variable
-  ####dimensions
+  ####same core (!). Keep the column ID as an identifying variable.
   
   unique_column.df <- column_noPI.df |>
-    tidyr::pivot_wider(names_from = is_type, values_from = with_entry) |>
-    dplyr::reframe(doi_list = stringr::str_c(bibKey, column_index, 
-                                             sep = '$', collapse = ';'),
-                   .by = -c(bibKey, column_index))|>
-    dplyr::mutate(variable_id = paste0('Variable_',1:n()) ) |>
-    dplyr::rename(method = MethodDevice) |>
-    tidyr::pivot_longer(cols = c('description', 'unit',
-                                 'comment', 'method'),
-                        names_to = 'is_type', 
-                        values_to = 'with_entry', values_drop_na = TRUE)
+    mutate(is_type = if_else(is_type == 'MethodDevice', 'method', is_type)) |>
+    # pivot_wider(names_from = is_type, values_from = with_entry) |>
+    # #reframe(doi_list = str_c(bibKey, column_index, sep = '$', collapse = ';'),
+    # #        .by = -c(bibKey, column_index))|>
+    # #mutate(variable_id = paste0('Variable_',1:n()) )|>
+    # rename(method = MethodDevice) |>
+    # pivot_longer(cols = c('description', 'unit', 'comment', 'method'),
+    #              names_to = 'is_type', 
+    #              values_to = 'with_entry', values_drop_na = TRUE)
+    select(bibKey, column_index, variable_name = of_variable, is_type, with_entry)
   
-  ####Move variable ID over to primary data####
+  ####Move of_variable over to primary data####
+  
   expanded_primary.df <- primary.df |>
-    dplyr::full_join(unique_column.df |>
-                       tidyr::separate_longer_delim(cols = doi_list, delim = ';') |>
-                       tidyr::separate_wider_delim(cols = doi_list, delim = '$', 
-                                                   names = c('bibKey', 'column_index')) |>
-                       dplyr::select(bibKey, column_index, variable_id, of_variable) |>
-                       unique(),
-                     by = dplyr::join_by(bibKey, column_index)) |>
-    dplyr::mutate(is_type = 'value')
+    full_join(unique_column.df |>
+                #separate_longer_delim(cols = doi_list, delim = ';') |>
+                #separate_wider_delim(cols = doi_list, delim = '$', 
+                #                     names = c('bibKey', 'column_index')) |>
+                select(bibKey, column_index, variable_name) |>
+                unique(),
+              by = join_by(bibKey, column_index)) |>
+    mutate(is_type = 'value')
   
   #Finally create the variable map that matches the ISCN4 data purpose
   lvl1_data.ls <- list(
     #Read in a list of all the bib files
     citation = list(
       #Citation for the article transcriptions are pulled from
-      primary = primaryCitation, 
+      primary = bibtex::read.bib(file = primaryCitation.file), 
       #Citations for all referenced articles
-      methods = allMethodCitations
+      methods = bibtex::read.bib(file = methodsCitation.file)
     ),
     #Read in the text transcription of the primary website
     method = readr::read_lines(file = methods.file),
-    data = plyr::llply(
-      list(core = study_PI.df,
-           variable = unique_column.df,
-           primary = expanded_primary.df),
-      .fun = function(xx){
-        xx |>
-          dplyr::mutate(of_variable_DRaH = dplyr::case_when(
-            of_variable == 'C' ~ 'carbon_percent',
-            of_variable == 'TC' ~ 'total_carbon_percent',
-            of_variable == 'TIC' ~ 'inorganic_carbon_percent',
-            of_variable == 'TOC' ~ 'organic_carbon_percent',
-            of_variable == 'Corg dens' ~ 'organic_carbon_density',
-            of_variable == 'DBD' ~ 'dry_bulk_density',
-            of_variable == 'Depth bot' ~ 'layer_bottom',
-            of_variable == 'Depth top' ~ 'layer_top',
-            #of_variable == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
-            of_variable == 'Depth sed' ~ 'layer_middle',
-            of_variable == 'Samp thick' ~ 'layer_thickness',
-            of_variable == 'LOI' ~ 'loss_on_ignition',
-            of_variable == 'OM' ~ 'organic_matter_percent',
-            of_variable == 'OM dens' ~ 'organic_matter_density',
-            of_variable == "Water wm" ~ 'field_water_percent',
-            
-            of_variable == 'citation' ~ 'citation',
-            of_variable == 'related_to' ~ 'related_research',
-            of_variable == 'projects' ~ 'projects',
-            of_variable == 'license' ~ 'data_license',
-            of_variable == 'header_comment' ~ 'core_comment',
-            of_variable == "EVENT::LATITUDE" ~ 'latitude',
-            of_variable == "EVENT::LONGITUDE" ~ 'longitude',
-            of_variable == "EVENT::LOCATION" ~ 'region',
-            of_variable == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
-            of_variable == "EVENT::ELEVATION" ~ 'elevation',
-            of_variable == "EVENT::ELEVATION START" ~ 'elevation_start',
-            of_variable == "EVENT::ELEVATION END" ~ 'elevation_end',
-            of_variable == "EVENT::COMMENT::coring year" ~ 'observation_year',
-            of_variable == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
-            of_variable == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
-            of_variable == 'EVENT::COMMENT::site name' ~ 'site_name',
-            of_variable == 'PI' ~ 'principal_investigator',
-            TRUE ~ NA_character_
-          )) |>
-          dplyr::rename(of_variable_CPEAT = of_variable)
-      }))
+    data = plyr::llply(list(core = core.df,
+                            variable = unique_column.df,
+                            primary = expanded_primary.df),
+                       .fun = function(xx){
+                         xx |>
+                           mutate(of_variable = case_when(
+                             variable_name == 'C' ~ 'carbon',
+                             variable_name == 'TC' ~ 'carbon',
+                             variable_name == 'TIC' ~ 'carbon_inorganic',
+                             variable_name == 'TOC' ~ 'carbon_organic',
+                             variable_name == 'Corg dens' ~ 'carbon_organic',
+                             variable_name == 'DBD' ~ 'bulk_density',
+                             #layers; need to expand is_type
+                             variable_name == 'Depth bot' ~ 'depth_interval',
+                             variable_name == 'Depth top' ~ 'depth_interval',
+                             #variable_name == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+                             variable_name == 'Depth sed' ~ 'depth_interval',
+                             variable_name == 'Samp thick' ~ 'depth_interval',
+                             ### sample
+                             variable_name == 'LOI' ~ 'loss_on_ignition',
+                             variable_name == 'OM' ~ 'organic_matter',
+                             variable_name == 'OM dens' ~ 'organic_matter',
+                             variable_name == "Water wm" ~ 'field_water',
+                             ##Location
+                             str_detect(variable_name, "LATITUDE") ~ 'geolocation',
+                             str_detect(variable_name, "LONGITUDE") ~ 'geolocation',
+                             variable_name == "EVENT::LOCATION" ~ 'georegion',
+                             variable_name == "EVENT::ELEVATION" ~ 'elevation',
+                             variable_name == "EVENT::ELEVATION START" ~ 'elevation',
+                             variable_name == "EVENT::ELEVATION END" ~ 'elevation',
+                             str_detect(variable_name, regex('altitude', ignore_case = TRUE)) |
+                               str_detect(variable_name, 'ELEVATION' )~ 'elevation',
+                             ##obs year
+                             variable_name == "EVENT::COMMENT::coring year" ~ 'observation_year',
+                             ##peat calss
+                             variable_name == "EVENT::COMMENT::type of peatland"  ~ 'peatland_class',
+                             variable_name == "EVENT::COMMENT::peatland type"  ~ 'peatland_class',
+                             variable_name == 'EVENT::COMMENT::site name' ~ 'site_name',
+                             variable_name == 'PI' ~ 'principal_investigator',
+                             variable_name == 'citation' ~ 'citation',
+                             variable_name == 'related_to' ~ 'related_research',
+                             variable_name == 'projects' ~ 'projects',
+                             variable_name == 'license' ~ 'data_license',
+                             variable_name == 'header_comment' ~ 'core_comment',
+                             variable_name == "EVENT::METHOD/DEVICE" ~ 'sampling_method',
+                             TRUE ~ NA_character_
+                           ),
+                           is_type = case_when(
+                             is_type == 'value' & variable_name == 'Depth bot' ~ 'lower',
+                             is_type == 'value' & variable_name == 'Depth top' ~ 'upper',
+                             #variable_name == 'Depth sed' & str_detect(comment, 'LOI') ~ 'layer_middle_LOI',
+                             is_type == 'value' & variable_name == 'Depth sed' ~ 'middle',
+                             is_type == 'value' & variable_name == 'Samp thick' ~ 'thickness',
+                             is_type == 'value' & str_detect(variable_name, "LATITUDE") ~ 'latitude',
+                             is_type == 'value' & str_detect(variable_name, "LONGITUDE") ~ 'longitude',
+                             is_type == 'value' & variable_name == "EVENT::LOCATION" ~ 'name',
+                             #match transect first
+                             is_type == 'value' & variable_name == "EVENT::ELEVATION START" ~ 'start',
+                             is_type == 'value' & variable_name == "EVENT::ELEVATION END" ~ 'end',
+                             #then match generic elevation
+                             is_type == 'value' & 
+                               (str_detect(variable_name, regex('altitude', ignore_case = TRUE)) |
+                                  str_detect(variable_name, 'ELEVATION' )) ~ 'value',
+                             is_type == 'value' & variable_name == "EVENT::COMMENT::coring year" ~ 'YYYY',
+                             TRUE ~ is_type
+                           )) |>
+                           #remove this if you want to expand the variables captured
+                           filter_out(is.na(of_variable))
+                       })
+  )
   
   if(dataLevel == 'level1'){
     return(lvl1_data.ls)

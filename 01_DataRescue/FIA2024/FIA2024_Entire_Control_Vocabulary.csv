@@ -1,4 +1,3 @@
-﻿"wo-v9-4_Aug2025_UG_FIADB_database_description_NFI.pdf						",,,
 Name,Code,Description,Table_ID
 PLOT_STATUS_CD,1,Sampled - at least one accessible forest land condition present on plot.,ENTIRE_PLOT
 PLOT_STATUS_CD,2,Sampled - no accessible forest land condition present on plot.,ENTIRE_PLOT

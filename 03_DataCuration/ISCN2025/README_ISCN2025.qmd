@@ -13,6 +13,7 @@ bibliography:
   - ../../01_DataRescue/ISCN3_2015/ISCN3_Contributors.bib #ISCN3 sources
   - ../../01_DataRescue/NCSS2023/NCSS_SCD.bib #NCSS citation
   - ../../01_DataRescue/NCSS2023/NCSS_SCD_Methods.bib #NCSS methods
+  - ../../01_DataRescue/FIA2024/FIA2024.bib #FIA citations and manuals
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
   - id: ktoddbrown #use the github name as an id
     name:
@@ -77,6 +78,7 @@ refernceCitation.file <- 'ISCN2025.bib'
 source('../../02_DataHarmonization/readCPEAT2025.R')
 source('../../02_DataHarmonization/readISCN3.R')
 source('../../02_DataHarmonization/readNCSS.R')
+source('../../02_DataHarmonization/readFIA.R')
 
 #conversion factor between `organic matter` or `loss on ignition` and `organic carbon`
 organic_matter_to_carbon <- 0.5
@@ -108,7 +110,7 @@ These include:
   - Status: Level 2 in progress
 + FIA
   - This is a US Forest Service database.
-  - Status: Reprocessing into the new repository structure
+  - Status: Level 2 in progress
 + NCSS (@NCSS_SCD2026)
   - This is a US NRCS database.
   - Status: Level 2 in process
@@ -116,7 +118,12 @@ These include:
   - This database was originally compiled in 2015, we want to update the old NCSS data.
   - Status: Level 2 in progress
 
+```{r}
+#| label: semanticsVocab
 
+ISCN4_vocab <- read_csv('proposedSemantics.csv',
+                        show_col_types = FALSE)
+```
 
 # Data Level 1 
 
@@ -133,6 +140,9 @@ ISCN3.ls <- readISCN3(dataDir = '../../01_DataRescue/ISCN3_2015',
 #CPEAT throws a warning but is going to be hell to debug, quite warnings instead
 CPEAT.ls <- readCPEAT2025(dataDir = '../../01_DataRescue/CPEAT2025',
                           dataLevel = 'level1')
+
+FIA.ls <- readFIA(dataDir = '../../01_DataRescue/FIA2024/',
+                  dataLevel = 'level1')
 ```
 
 # Data Level 2
