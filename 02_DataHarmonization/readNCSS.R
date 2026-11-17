@@ -265,7 +265,7 @@ readNCSS <- function(dataDir,
       of_variable = dplyr::case_when(
         column_name %in% c('particle_size_method', 'total_frag_wt_pct_gt_2_mm_ws') ~ 'coarse_fraction',
         column_name %in% c('bulk_density_oven_dry', 'bulk_density_oven_dry_method') ~ 'bulk_density_stock',
-        column_name %in% c('bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method') ~ 'fine_earth_bulk_density',
+        column_name %in% c('bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method') ~ 'bulk_density_fine_earth',
         column_name %in% c('mineral_content_loss_on_ignition', 'mineral_content_loss_ignition_method') ~ 'loss_on_ignition',
         .default = 'unknown'
       )
