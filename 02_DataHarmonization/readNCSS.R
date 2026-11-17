@@ -10,7 +10,7 @@
 #' @export
 #'
 #' @importFrom RSQLite dbConnect dbListTables
-#' @importFrom dplyr filter filter_out select mutate full_join left_join semi_join case_when if_else bind_rows
+#' @importFrom dplyr filter filter_out select mutate full_join left_join right_join semi_join case_when if_else bind_rows
 #' @importFrom tidyr pivot_longer
 #' @importFrom readr read_csv cols col_character
 #' @importFrom tidyselect everything all_of
@@ -410,10 +410,10 @@ readNCSS <- function(dataDir,
            !is.na(pedon_key)) #50 985 obs
   
   geoObs.df <- key.df  |>
-    dplyr::left_join(pedon.df,
+    dplyr::right_join(pedon.df,
               by = join_by(site_key, pedon_key)) |>
     dplyr::bind_rows(key.df |>
-                dplyr::left_join(site.df,
+                dplyr::right_join(site.df,
                           by = join_by(site_key),
                           #some locations are observed many times
                           relationship = 'many-to-many') )

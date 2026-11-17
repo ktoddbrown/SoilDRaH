@@ -663,10 +663,10 @@ key.df <- layer.df |>
          !is.na(pedon_key)) #50 985 obs
 
 geoObs.df <- key.df  |>
-  left_join(pedon.df,
+  right_join(pedon.df,
             by = join_by(site_key, pedon_key)) |>
   bind_rows(key.df |>
-              left_join(site.df,
+              right_join(site.df,
                         by = join_by(site_key),
                         #some locations are observed many times
                         relationship = 'many-to-many') )
@@ -772,8 +772,7 @@ data_semantics <- data.lvl1.ls$meta |>
               mutate(table = 'layer')) |>
   mutate(study_id = 'NCSS2023')
 
-#TODO move fine_earth_bulk_density to bulk_density_fine_earth -DONE
-#TODO investigate the 28284 NA entries for column_name:table_name in data.lvl1.ls$geolocation
+#TODO investigate the 28284 NA entries for column_name:table_name in data.lvl1.ls$geolocation - left_join should have been a right_join
 
 #check this dataframe to compare the semantics across all studies
 compare.df <- bind_rows(ISCN2025_semantics.df,
