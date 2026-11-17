@@ -195,7 +195,7 @@ if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
 }
 
 
-labMartTables <- list.files(path = 'temp/CSV_FIADB_ENTIRE/', 
+labMartTables <- list.files(path = file.path(dataDir, 'CSV_FIADB_ENTIRE'), 
                                pattern = '.csv', full.names = TRUE)
 
 ```
@@ -514,6 +514,8 @@ data.lvl1.ls <- list(
 
 ```
 
+# Check the read function
+
 ```{r}
 #| label: checkReadFunction_lvl1
 
@@ -530,6 +532,8 @@ if(file.exists(readsource.file)){
   print('The read function does not exist.')
 }
 ```
+
+# Match the ISCN vocabulary
 
 ```{r}
 #| label: checkVocab
@@ -565,13 +569,14 @@ difference.df <- FIA2024_semantics.df |>
   anti_join(ISCN2025_semantics.df,
             by = join_by(of_variable, is_type, table, study_id))
 
-if(nrow(difference.df) > 0){
-  print('writing new semantic suggestions')
-  new_ISCN2025 <- ISCN2025_semantics.df |>
-    bind_rows(difference.df) |>
-    arrange(of_variable, is_type)
-  
-  
-  write_csv(new_ISCN2025, file = proposedSemantic.file)
+if(nrow(difference.df) > 0 & FALSE){ 
+  print('new semantic suggestion found, please see codebase')
+  if(FALSE){ #don't run this without manually changing code here. Be careful about modifying the ISCN vocabulary
+    new_ISCN2025 <- ISCN2025_semantics.df |>
+      bind_rows(difference.df) |>
+      arrange(of_variable, is_type)
+    
+    write_csv(new_ISCN2025, file = proposedSemantic.file)
+  }
 }
 ```
