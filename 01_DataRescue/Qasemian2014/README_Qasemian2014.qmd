@@ -92,7 +92,7 @@ timelog:
       #when you started and ended, can be just a year or down to the minute
       end: 2026-09-12
       start: 2026-09-01
-      duration: PT2H30M
+      duration: PT3H30M
   - activity: 
       description: Figures and and Tables CC
       who: SavaScott #github username
@@ -335,7 +335,7 @@ ggplot(fig2DataAromaticity, aes(x = `x label`, y = `y value`, fill = `litterbag 
 And is crosschecked with the secondary transcription (expected to be empty)
 
 ```{r}
-#| label: compareFigure3
+#| label: compareFigure2
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
@@ -380,21 +380,15 @@ fig3Data <- fig3Data %>%
          ymin = `U gdW$^{-1}$` - error_var,
          ymax = `U gdW$^{-1}$` + error_var)
 
-fig3DataLaccase <- fig3Data %>% filter(`graph label` == "a) Laccase")
-fig3DataCellulase <- fig3Data %>% filter(`graph label` == "b) Cellulase")
-fig3DataBgluc <- fig3Data %>% filter(`graph label` == "c) β-glucosidase")
-fig3DataPhos <- fig3Data %>% filter(`graph label` == "d) Phosphatase")
-
-# Figure a) Laccase
-
-ggplot(fig3DataLaccase, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
+ggplot(fig3Data, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
   theme_classic() + 
-  scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)) +
+ # scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)) +
   scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  facet_wrap(~`graph label`, scales = "free_y") +
   geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.70),
-    vjust = -1.4, size = 2, color = "black") +
+    position = position_dodge(width = 0.64),
+    vjust = -0.5, size = 1.47, color = "black") +
   geom_errorbar(aes(ymin = ymin, ymax = ymax), 
     position = position_dodge(width = 0.9), 
     width = 0.3, color = "black", 
@@ -402,64 +396,7 @@ ggplot(fig3DataLaccase, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag
        x = "Month Surveyed",
        y = "U gdW${-1}$",
        caption = fig3Caption,
-       title = "a) Laccase")
-
-# Figure b) Cellulase 
-
-ggplot(fig3DataCellulase, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
-  theme_classic() + 
-  scale_y_continuous(breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8)) +
-  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
-  geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.75),
-    vjust = -2.0, size = 2.2, color = "black") +
-  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
-    position = position_dodge(width = 0.9), 
-    width = 0.3, color = "black", 
-    linewidth = 0.3) + labs(
-       x = "Month Surveyed",
-       y = "U gdW${-1}$",
-       caption = fig3Caption,
-       title = "b) Cellulase")
-
-# Figure c) β-glucosidase
-
-ggplot(fig3DataBgluc, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
-  theme_classic() + 
-  scale_y_continuous(breaks = c(0, 0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)) +
-  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
-  geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.75),
-    vjust = -2.5, size = 2.4, color = "black") +
-  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
-    position = position_dodge(width = 0.9), 
-    width = 0.3, color = "black", 
-    linewidth = 0.3) + labs(
-       x = "Month Surveyed",
-       y = "U gdW${-1}$",
-       caption = fig3Caption,
-       title = "c) β-glucosidase")
-
-# Figure d) Phosphatase
-
-ggplot(fig3DataBgluc, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag type`, group = `litterbag type`)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
-  theme_classic() + 
-  scale_y_continuous(breaks = c(0, 0.5, 1, 1.5, 2, 2.5)) +
-  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
-  geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.75),
-    vjust = -2.5, size = 2.4, color = "black") +
-  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
-    position = position_dodge(width = 0.9), 
-    width = 0.3, color = "black", 
-    linewidth = 0.3) + labs(
-       x = "Month Surveyed",
-       y = "U gdW${-1}$",
-       caption = fig3Caption,
-       title = "d) Phosphatase")
+       title = "Figure 3")
 
 ```
 
@@ -513,17 +450,14 @@ fig4Data <- fig4Data %>%
          ymin = `y value` - error_var,
          ymax = `y value` + error_var)
 
-fig4DataA <- fig4Data %>% filter(`graph label` == "a")
-fig4DataB <- fig4Data %>% filter(`graph label` == "b")
-fig4DataC <- fig4Data %>% filter(`graph label` == "c")
 
-# Figure a
 
-ggplot(fig4DataA, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
+ggplot(fig4Data, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
   theme_classic() + 
-  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120)) +
+ # scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120)) +
   scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
+  facet_wrap(~`graph label`, ncol = 1, scales = "free_y") +
   geom_text(aes(label = footnotes),
     position = position_dodge(width = 0.70),
     vjust = -1.4, size = 2, color = "black") +
@@ -534,46 +468,7 @@ ggplot(fig4DataA, aes(x = `x label`, y = `y value`, fill = `litterbag type`, gro
        x = "Month Surveyed",
        y = "μg CO2-C gdw$^{-1}$",
        caption = fig4Caption,
-       title = "a")
-
-# Figure b
-
-ggplot(fig4DataB, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
-  theme_classic() + 
-  scale_y_continuous(breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8)) +
-  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
-  geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.70),
-    vjust = -1.9, size = 2, color = "black") +
-  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
-    position = position_dodge(width = 0.9), 
-    width = 0.3, color = "black", 
-    linewidth = 0.3) + labs(
-       x = "Month Surveyed",
-       y = "μg CO2-C gdw$^{-1}$",
-       caption = fig4Caption,
-       title = "b")
-
-# Figure c
-
-ggplot(fig4DataC, aes(x = `x label`, y = `y value`, fill = `litterbag type`, group = `litterbag type`)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + 
-  theme_classic() + 
-  scale_y_continuous(breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2)) +
-  scale_fill_manual(values = c("bisque3", "azure2", "azure4", "bisque1")) +
-  geom_text(aes(label = footnotes),
-    position = position_dodge(width = 0.70),
-    vjust = -2.2, size = 2, color = "black") +
-  geom_errorbar(aes(ymin = ymin, ymax = ymax), 
-    position = position_dodge(width = 0.9), 
-    width = 0.3, color = "black", 
-    linewidth = 0.3) + labs(
-       x = "Month Surveyed",
-       y = "μg CO2-C gdw$^{-1}$",
-       caption = fig4Caption,
-       title = "c")
-
+       title = "Figure 4")
 ```
 
 And is crosschecked with the secondary transcription (expected to be empty)
