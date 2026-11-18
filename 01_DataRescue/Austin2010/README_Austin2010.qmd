@@ -117,12 +117,12 @@ primaryCitation.file <- 'Austin2010.bib'
 methodsCitation.file <- 'Austin2010_Methods.bib'
 
 # read function
-  readsource.file <- '../../02_DataHarmonization/readAustin2010.R'
+readsource.file <- '../../02_DataHarmonization/readAustin2010.R'
 source(readsource.file)
 
 #semantic files for level 1
-# of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
-# is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
 
 ```
 
@@ -186,7 +186,7 @@ These files are in the Austin2010 data rescue.
   + citations for the methods section of the article
 - [Austin2010_Methods.md](Austin2010_Methods.md)
   + methods transcribed from primary article
-- [Austin2010_Figure1.csv](Austin2010_TableN.csv)
+- [Austin2010_Figure1.csv](Austin2010_Figure1.csv)
   + Plot-digitized values of Figure 1 from primary article, up to one significant figure more than the y-axis of the bar graph in the figure. 
 - [temp/](temp/)
     + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
@@ -213,9 +213,9 @@ These files are in the Austin2010 data rescue.
 + Measure
   - [X] cross check with second transcriber for tables and methods, and resolve any differences
   - [X] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
-  - [ ] push to your local fork and create a pull request to the main branch of the primary repository
-  - [ ] address any revisions suggested in your pull request review
-  - [ ] celebrate!
+  - [X] push to your local fork and create a pull request to the main branch of the primary repository
+  - [X] address any revisions suggested in your pull request review
+  - [X] celebrate!
 
 ## Figure 1
 
@@ -275,6 +275,7 @@ Any different to the cross check for the methods section will be output after th
 ```{bash}
 #| label: compareMethods
 #| eval: false
+
 diff --strip-trailing-cr --suppress-common-lines -y temp/Austin2010_Methods_LK.md Austin2010_Methods.md
 ```
 

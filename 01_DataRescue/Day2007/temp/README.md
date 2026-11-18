@@ -1,0 +1,1 @@
+This folder has all transcription files to do cross-checks.
