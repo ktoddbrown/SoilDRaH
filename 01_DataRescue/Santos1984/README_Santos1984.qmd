@@ -3,13 +3,23 @@ title: "Data Rescue: Santos 1984"
 format:
   html:
     toc: true
-    eval: true 
 date: last-modified
 date-format: YYYY-MMMM
 bibliography:
   - Santos1984_Methods.bib #contains the citations in the methods section
   - Santos1984.bib #contains citation for the data source, generally a single citation of the primary paper
 authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
   - id: vaasukimarupaka #use the github name as an id
     name:
       given: Vaasuki
@@ -254,6 +264,7 @@ And is crosschecked with the secondary transcription
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 
 diff --strip-trailing-cr --suppress-common-lines -y Santos1984_Table1.csv temp/Santos1984_Table_1_MA.csv
+
 ```
 
 ## Figure 1
