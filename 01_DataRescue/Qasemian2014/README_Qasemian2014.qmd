@@ -334,15 +334,21 @@ ggplot(fig2DataAromaticity, aes(x = `x label`, y = `y value`, fill = `litterbag 
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
-#| label: compareFigure2
+```{r}
+#| label: compareFigure3
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure2_JK.csv Qasemian2014_Figure2.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('Qasemian2014_Figure2.csv'),
+        read_lines('temp/Qasemian2014_Figure2_JK.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/Qasemian2014_Figure2_JK.csv'),
+        read_lines('Qasemian2014_Figure2.csv')))
 ```
 
 
@@ -459,7 +465,7 @@ ggplot(fig3DataBgluc, aes(x = `x label`, y = `U gdW$^{-1}$`, fill = `litterbag t
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
+```{r}
 #| label: compareFigure3
 #| eval: false
 
@@ -467,7 +473,13 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure3_JK.csv Qasemian2014_Figure3.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('Qasemian2014_Figure3.csv'),
+        read_lines('temp/Qasemian2014_Figure3_JK.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/Qasemian2014_Figure3_JK.csv'),
+        read_lines('Qasemian2014_Figure3.csv')))
 ```
 
 
@@ -566,7 +578,7 @@ ggplot(fig4DataC, aes(x = `x label`, y = `y value`, fill = `litterbag type`, gro
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
+```{r}
 #| label: compareFigure4
 #| eval: false
 
@@ -574,7 +586,13 @@ And is crosschecked with the secondary transcription (expected to be empty)
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
 #... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Figure4_JK.csv Qasemian2014_Figure4.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('Qasemian2014_Figure4.csv'),
+        read_lines('temp/Qasemian2014_Figure4_JK.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/Qasemian2014_Figure4_JK.csv'),
+        read_lines('Qasemian2014_Figure4.csv')))
 ```
 
 
@@ -604,29 +622,41 @@ read_csv(file = table1.file,
 
 And is crosschecked with the secondary transcription (expected to be empty)
 
-```{bash}
+```{r}
 #| label: compareTable1
 #| eval: false
 
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note that the template has an example of an unresolved conflict.
+#... Note that the template should not have a conflict here.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Table1_JK.csv Qasemian2014_Table1.csv
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('Qasemian2014_Table1.csv'),
+        read_lines('temp/Qasemian2014_Table1_JK.csv')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/Qasemian2014_Table1_JK.csv'),
+        read_lines('Qasemian2014_Table1.csv')))
 ```
 
 ## Methods
 
 Any different to the cross check for the methods section will be output after this line.
 
-```{bash}
+```{r}
 #| label: compareMethods
-#| eval: false
+
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-#... Note the template example does NOT have a conflict.
 
-diff --strip-trailing-cr --suppress-common-lines -y temp/Qasemian2014_Methods_SV.md Qasemian2014_Methods.md
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('Qasemian2014_Methods.md'),
+        read_lines('temp/Qasemian2014_Methods_SV.md')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/Qasemian2014_Methods_SV.md'),
+        read_lines('Qasemian2014_Methods.md')))
+
 ```
 
 ### Methods  - Text
