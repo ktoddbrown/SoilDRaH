@@ -413,12 +413,20 @@ diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Table2_
 
 Any different to the cross check for the methods section will be output after this line.
 
-```{bash}
+```{r}
 #| label: compareMethods
-#| eval: true
+
 # You will want to repeat the line below to cross check each csv and md file in the
 #... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
-diff --strip-trailing-cr --suppress-common-lines -y temp/BravoOveido2017_Methods_AL.md BravoOveido2017_Methods.md
+
+print('Differing lines in primary file:')
+sprintf('>%s', setdiff(read_lines('BravoOveido2017_Methods.md'),
+        read_lines('temp/BravoOveido2017_Methods_AL.md')))
+
+print('Differing lines in secondary file:')
+sprintf('>%s', setdiff(read_lines('temp/BravoOveido2017_Methods_AL.md'),
+        read_lines('BravoOveido2017_Methods.md')))
+
 ```
 
 ### Methods  - Text
