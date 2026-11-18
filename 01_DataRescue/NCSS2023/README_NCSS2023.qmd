@@ -577,7 +577,7 @@ layer.df <- data.lvl0.ls$data$lab_layer |>
                names_to = 'column_name',
                values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  mutate(of_variable = 'depth_layer',
+  mutate(of_variable = 'depth_interval',
          is_type = case_when(column_name == 'hzn_bot' ~ 'lower',
                              column_name == 'hzn_top' ~ 'upper',
                              column_name == 'layer_sequence' ~ 'order',
@@ -770,9 +770,7 @@ data_semantics <- data.lvl1.ls$meta |>
               select(of_variable, is_type)  |> 
               unique() |>
               mutate(table = 'layer')) |>
-  mutate(study_id = 'NCSS2023')
-
-#TODO investigate the 28284 NA entries for column_name:table_name in data.lvl1.ls$geolocation - left_join should have been a right_join
+  mutate(study_id = 'NCSS')
 
 #check this dataframe to compare the semantics across all studies
 compare.df <- bind_rows(ISCN2025_semantics.df,

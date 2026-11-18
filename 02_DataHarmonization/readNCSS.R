@@ -324,7 +324,7 @@ readNCSS <- function(dataDir,
                  names_to = 'column_name',
                  values_to = 'with_entry',
                  values_drop_na = TRUE) |>
-    dplyr::mutate(of_variable = 'depth_layer',
+    dplyr::mutate(of_variable = 'depth_interval',
            is_type = dplyr::case_when(column_name == 'hzn_bot' ~ 'lower',
                                column_name == 'hzn_top' ~ 'upper',
                                column_name == 'layer_sequence' ~ 'order',
