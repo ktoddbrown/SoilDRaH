@@ -72,7 +72,7 @@ timelog:
       description: standardize vocabulary
       who: ktoddbrown
       start: "2026-11-17"
-      duration: PT20M
+      duration: PT40M
 ---
 
 
