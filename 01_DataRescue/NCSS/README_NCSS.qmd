@@ -68,6 +68,11 @@ timelog:
       #when you started and ended, can be just a year or down to the minute
       start: "2026-09-22"
       duration: PT4H
+  - activity:
+      description: standardize vocabulary
+      who: ktoddbrown
+      start: "2026-11-17"
+      duration: PT40M
 ---
 
 
@@ -107,8 +112,7 @@ if(file.exists(readsource.file)){
 }
 
 #semantic files for level 1
-#of_variable.file <- '../../02_DataHarmonization/of_variable.csv'
-#is_type.file <- '../../02_DataHarmonization/is_type.csv'
+proposedSemantic.file <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
 
 keepVars <- c(ls(), 'keepVars')
 ```
@@ -514,7 +518,7 @@ physical.df <- data.lvl0.ls$data$lab_physical_properties |>
     of_variable = case_when(
       column_name %in% c('particle_size_method', 'total_frag_wt_pct_gt_2_mm_ws') ~ 'coarse_fraction',
       column_name %in% c('bulk_density_oven_dry', 'bulk_density_oven_dry_method') ~ 'bulk_density_stock',
-      column_name %in% c('bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method') ~ 'fine_earth_bulk_density',
+      column_name %in% c('bulk_density_lt_2_mm_air_dry', 'bulk_density_air_dry_method') ~ 'bulk_density_fine_earth',
       column_name %in% c('mineral_content_loss_on_ignition', 'mineral_content_loss_ignition_method') ~ 'loss_on_ignition',
       .default = 'unknown'
     )
@@ -573,7 +577,7 @@ layer.df <- data.lvl0.ls$data$lab_layer |>
                names_to = 'column_name',
                values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  mutate(of_variable = 'depth_layer',
+  mutate(of_variable = 'depth_interval',
          is_type = case_when(column_name == 'hzn_bot' ~ 'lower',
                              column_name == 'hzn_top' ~ 'upper',
                              column_name == 'layer_sequence' ~ 'order',
@@ -659,10 +663,10 @@ key.df <- layer.df |>
          !is.na(pedon_key)) #50 985 obs
 
 geoObs.df <- key.df  |>
-  left_join(pedon.df,
+  right_join(pedon.df,
             by = join_by(site_key, pedon_key)) |>
   bind_rows(key.df |>
-              left_join(site.df,
+              right_join(site.df,
                         by = join_by(site_key),
                         #some locations are observed many times
                         relationship = 'many-to-many') )
@@ -742,6 +746,55 @@ if(file.exists(readsource.file)){
   print('The read function does not exist.')
 }
 
+```
+
+# Match the ISCN vocabulary
+
+```{r}
+#| label: checkVocab
+
+#Read in the curated semantics
+ISCN2025_semantics.df <- read_csv(proposedSemantic.file, show_col_types = FALSE)
+data.lvl1.ls <- readNCSS(dataDir = '.', dataLevel = 'level1')
+
+#construct the contributed semantics table
+data_semantics <- data.lvl1.ls$meta |> 
+  select(of_variable, is_type)  |>
+  mutate(table = 'meta') |> 
+  unique() |>
+  bind_rows(data.lvl1.ls$geolocation |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'geolocation')) |> 
+  bind_rows(data.lvl1.ls$layer |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'layer')) |>
+  mutate(study_id = 'NCSS')
+
+#check this dataframe to compare the semantics across all studies
+compare.df <- bind_rows(ISCN2025_semantics.df,
+                        data_semantics) |>
+  reframe(count = n(),
+          studies = paste(unique(study_id), collapse = ', '),
+          .by = c(of_variable, is_type)) |>
+  arrange(of_variable, is_type)
+
+#check this to look for the differences before this study is added
+difference.df <- data_semantics |>
+  anti_join(ISCN2025_semantics.df,
+            by = join_by(of_variable, is_type, table, study_id))
+
+if(nrow(difference.df) > 0 & FALSE){ 
+  print('new semantic suggestion found, please see codebase')
+  if(FALSE){ #don't run this without manually changing code here. Be careful about modifying the ISCN vocabulary
+    new_ISCN2025 <- ISCN2025_semantics.df |>
+      bind_rows(difference.df) |>
+      arrange(of_variable, is_type)
+    
+    write_csv(new_ISCN2025, file = proposedSemantic.file)
+  }
+}
 ```
 
 # References
