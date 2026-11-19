@@ -1,5 +1,5 @@
 name: 01_NewDataRescue
-title: "[AuthorLastYYYY or ShortNameYYYY]"
+title: "[AuthorLastYYYY or ShortNameYYYY] Level 0"
 labels: "Data Rescue"
 description: "Make sure to hit all the main points for a data data rescue taking data from a non-machine readable format to a machine readable format."
 body:
@@ -7,31 +7,19 @@ body:
     attributes:
       value: |
         This template is for data that requires translation into a non-machine readable (typically PDF) form to one that is machine readable (typically csv or md). 
-  - type: input
+  - type: textarea
     attributes:
       label: Citation
       description: "What is the full citation for the dataset with url?"
       placeholder: "Nave, L., K. Johnson, C. van Ingen, D. Agarwal, M. Humphrey, and N. Beekwilder. 2022. International Soil Carbon Network version 3 Database (ISCN3) ver 1. Environmental Data Initiative. https://doi.org/10.6073/pasta/cc751923c5576b95a6d6a227d5afe8ba (Accessed 2024-06-03)."
     validations:
       required: true
-  - type: textarea
-    attributes:
-      label: "Data summary"
-      description: "What is the data about?"
-      placeholder: "This paper looks at ... They use this data to ..."
-  - type: textarea
-    attributes:
-      label: "Fit for purpose"
-      description: "How does this data set meet the fit for purpose criteria for a specific data collection?"
-  - type: textarea
-    attributes:
-      label: "Tables and figures"
-      description: "List the tables and figures with descriptions."
-  - type: textarea
-    attributes:
-      label: Plan
-      description: "Which of the tables and figures are you going to rescue?"
-  - type: textarea
+  - type: input
     attributes:
       label: "Working branch"
-      description: "Link to data rescue branch."
+      description: "Link to data rescue branch which is likely on a different fork then this primary repository."
+  - type: input
+    attributes:
+      label: Team
+      description: "Who are you working with on this issue you would like to tag in? List their GitHub usernames here"
+      placeholder: "@ktoddbrown"

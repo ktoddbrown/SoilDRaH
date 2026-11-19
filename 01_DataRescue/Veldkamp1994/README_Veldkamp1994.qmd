@@ -9,56 +9,60 @@ bibliography:
   - Veldkamp1994_Methods.bib
   - Veldkamp1994.bib
 author:
-  - name:
+  - id: brandonnodnarb
+    name:
       given: Brandon
       family: Whitehead
-      orcid: 
-      affiliations:
-        - id: UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Review"
-      note: https://github.com/brandonnodnarb
-  - name:
+    #orcid: 
+    affiliations:
+      - id: UF
+        name: University of Florida
+        department: Environmental Engineering Sciences
+        city: Gainesville
+        state: FL
+        country: USA
+    role: 
+      - "Review"
+    note: https://github.com/brandonnodnarb
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Review"
-  - name:
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliations:
+      - id: ESS UF
+        name: University of Florida
+        department: Environmental Engineering Sciences
+        city: Gainesville
+        state: FL
+        country: USA
+    role: 
+      - "Review"
+  - id: Misheph
+    name:
       given: Mirah
       family: Blanchard
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/Misheph
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/Misheph
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/SavaScott
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/SavaScott
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}

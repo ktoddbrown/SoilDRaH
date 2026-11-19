@@ -1,0 +1,608 @@
+---
+title: "Data Rescue: Gaxiola 2015"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Gaxiola2015_Methods.bib #contains the citations in the methods section
+  - Gaxiola2015.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: review
+   #   - standardization: lead #review
+  #    - curation: lead #review
+
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead
+   #   - standardization: lead #review
+  #    - curation: lead #review
+
+  - id: laylakalandjian #use the github name as an id
+    name:
+      given: Layla
+      family: Kalandjian
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: secondary
+   #   - standardization: lead #review
+  #    - curation: lead #review
+
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: SavaScott
+      start: 2025-01-31
+      #end: YYYY-MM-DD
+      duration: PT7H30M
+
+  - activity: 
+      description: Secondary Transcription
+      who: laylakalandjian
+      end: 2025-11-26
+      #start: YYYY-MM-DD THH:MM
+      duration: PT3H30M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Gaxiola2015_Methods.md"
+table1.file <- 'Gaxiola2015_Table1.csv'
+tableS1.file <- 'Gaxiola2015_TableS1.csv'
+figure1.file <- 'Gaxiola2015_Figure1.csv'
+figure2.file <- 'Gaxiola2015_Figure2.csv'
+figure3.file <- 'Gaxiola2015_Figure3.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Gaxiola2015.bib'
+methodsCitation.file <- 'Gaxiola2015_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../../R/readGaxiola2015.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+
+> Gaxiola, A., & Armesto, J. J. (2015). Understanding litter decomposition in semiarid ecosystems: linking leaf traits, UV exposure and rainfall variability. Frontiers in Plant Science, 6, 140. https://doi.org/10.3389/fpls.2015.00140
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/187.
+
+This paper looks at the scrublands of Fray Jorge Forest National Park in Chile, which experience extremely high levels of UV radiation. They focused on two different shrub species, *Porlieria chilensis* and *Proustia pungens*, with differing leaf habits, which result in differences in LMA, lignin content, and foliar nitrogen and carbon content. Different green leaf traits could lead to differences in the decay rates. While they noted that the high UV radiation reduced litter biomass, there was higher biomass loss in the *Proustia* litter.
+
+## Tables and figures
+
+
+- Table 
+  1) Table 1. Comparisons of leaf litter traits between *Proustia* and *Porlieria* following 5 months of photodecomposition in the field.
+  2) Table S1. Interspecific comparisons of leaf and litter traits between deciduous *Proustia* and evergreen *Porlieria*.
+
+- Figure 
+  1) Figure 1. Effects of UV exposure on litter biomass after a 5-months experiment in semiarid Chile.
+  2) Figure 2. Remaining litter biomass (%) at the end of a 6-month decomposition experiment, preceded by photodegradation in the field.
+  3) Figure 3. Graphic representation of carry-over effects of photodecomposition on litter biomass losses (%) as a function of water availability for two shrub species with contrasting leaf traits.
+
+## Fit for purpose: DeAD
+
+This data is identified as a data source for DeAD
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies.
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems. 
+
+- Location: This study was conducted in the scrublands of Fray Jorge forest National Park, Chile. The coordinates provided in the subsection "Study Site and Plant Species" are 30° S, 71° 40′ W.
+- Duration: This study was conducted over 5 months, from December to April, including the rainless summer period of the semiarid climate.
+- Mass loss: The effects of the UV exposure on the shrubs' litter biomass are in Table and Figure 1.
+- Solar Exposure: The study used UV-blocking and UV-passing sheets to test the effects of the UV radiation on the litter. The transmitting film allowed >95% of the UV-waveband through. More in-depth information is provided in the subsection "Photodecomposition Field Experiment".
+  
+## Files
+
+
+These files are in the @Gaxiola2015 data rescue.
+
+- [Readme](README_Gaxiola2015.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Gaxiola2015.bib](Gaxiola2015.bib)
+  + citation for article transcribed
+- [Gaxiola2015_Methods.bib](Gaxiola2015_Methods.bib)
+  + citations for the methods section of the article
+- [Gaxiola2015_Methods.md](Gaxiola2015_Methods.md)
+  + methods transcribed from primary article
+- [Gaxiola2015_Table1.csv](Gaxiola2015_Table1.csv)
+  + table 1 from primary article with compared the leaf litter traits between the two species of the study
+- [Gaxiola2015_TableS1.csv](Gaxiola2015_TableS1.csv)
+  + table S1 from primary article with the interspecific comparisons of leaf and litter traits between deciduous *Proustia* and evergreen *Porlieria*.
+- [Gaxiola2015_Figure1.csv](Gaxiola2015_Figure1.csv)
+  + figure 1 from primary article with the effects of UV exposure on the biomass after 5-months
+- [Gaxiola2015_Figure2.csv](Gaxiola2015_Figure2.csv)
+  + figure 2 from primary article with the remaining litter biomass percentage charted against the water addition equivalent to annaul rainfall
+- [Gaxiola2015_Figure3.csv](Gaxiola2015_Figure3.csv)
+  + figure 3 from primary article with the carry-over effects of photodecomposition as a function of water availability
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Gaxiola2015'
+  - [x] Create a copy of this template folder and rename it to Gaxiola2015
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1 and S1 and export it to csv
+  - [x] Extract points from Figure1-3 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions suggested in your pull request review
+  - [x] celebrate!
+
+## Table 1
+
+Table 1 was modified to include markdown formatting notation and combining subheaders together.
+
+```{r}
+#| label: table1Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Table1.csv temp/Gaxiola2015_Table1_LK.csv
+```
+
+
+## Table S1
+
+Table S1 was modified to include markdown formatting notation and combining subheaders together.
+
+```{r}
+#| label: tableS1Check
+#| code-fold: true
+#| message: false
+
+
+read_csv(file = tableS1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = tableS1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+```{bash}
+#| label: compareTableS1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_TableS1.csv temp/Gaxiola2015_TableS1_LK.csv
+```
+
+
+## Figure 1
+
+```{r}
+#| label: figure1Check
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr) 
+
+fig1Caption <- read_csv(file = figure1.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig1Data <- read_csv(file = figure1.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig1Data$`x value label` <- factor(fig1Data$`x value label`,
+                                  level = c("*Proustia*", "*Porlieria*"))
+fig1Data$`UV treatment` <- factor(fig1Data$`UV treatment`,
+                                  level = c("UV+", "UV-"))
+
+
+fig1Data$`y value upper SE` <- as.numeric(fig1Data$`y value upper SE`)
+fig1Data <- fig1Data %>%
+  mutate(error_var = `y value upper SE` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+
+ggplot(fig1Data, aes(x = `x value label`, y = `y value`, fill = `UV treatment`, group = `UV treatment`)) +
+  scale_y_continuous(breaks = c(0, 6, 12, 18, 24, 30)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+  geom_errorbar(aes(
+    ymin = ymin,
+    ymax = ymax), 
+    position = position_dodge(width = 0.9), 
+    width = 0.3, color = "black", 
+    linewidth = 0.5) +
+  labs(title = "Comparisons of leaf litter traits between Proustia and Porlieria",
+       x = NULL,
+       y = "Litter biomass loss (%)",
+       caption = fig1Caption)
+
+```
+
+
+```{bash}
+#| label: compareFigure1
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure1.csv temp/Gaxiola2015_Figure1_LK.csv
+```
+
+
+
+## Figure 2
+
+```{r}
+#| label: figure2Check
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+fig2Caption <- read_csv(file = figure2.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2Data <- read_csv(file = figure2.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig2Data$`y value` <- as.numeric(fig2Data$`y value`)
+fig2Data$`x value` <- as.numeric(fig2Data$`x value`)
+
+fig2Data$`y value upper SE` <- as.numeric(fig2Data$`y value upper SE`)
+fig2Data <- fig2Data %>%
+  mutate(error_var = `y value upper SE` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+
+fig2Data$`graph label` <- factor(fig2Data$`graph label`, 
+                                 levels = c("A Proustia", "B Porlieria"))
+
+ggplot(fig2Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill = `UV treatment`)) + geom_point(
+  size = 1.5,
+  stroke = 1,
+  color = "black") +
+  facet_wrap(~`graph label`, nrow = 1) +
+  scale_shape_manual(
+  values = c(
+    "UV+" = 16,
+    "UV-" = 21)) +
+  scale_fill_manual(
+    values = c(
+      "UV-" = "white",
+      "UV+" = "black"
+    )
+  ) +
+  scale_x_continuous(breaks = c(0,50,100,150,200,250)) +
+  scale_y_continuous(breaks = c(20,30,40,50,60,70,80,90,100)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax,group = `UV treatment`), position = position_dodge(width = 0.1), width = 20) +
+labs(
+  x = "Water equivalent to annual rainfall (mm)",
+  y = "Remaining biomass (%)",
+  caption = fig2Caption
+)
+
+
+
+```
+
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure2.csv temp/Gaxiola2015_Figure2_LK.csv
+```
+
+
+
+
+## Figure 3
+
+```{r}
+#| label: figure3Check
+#| code-fold: true
+#| message: false
+
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+fig3Caption <- read_csv(file = figure3.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig3Data <- read_csv(file = figure3.file,
+                   skip = 1,
+                   show_col_types = FALSE)
+
+fig3Data$`y value` <- as.numeric(fig3Data$`y value`)
+fig3Data$`x value` <- as.numeric(fig3Data$`x value`)
+
+fig3Data$`y upper SE value` <- as.numeric(fig3Data$`y upper SE value`)
+
+fig3Data <- fig3Data %>%
+  mutate(error_var = `y upper SE value` - `y value`,
+         ymin = `y value` - error_var,
+         ymax = `y value` + error_var)
+fig3Data$`graph label` <- factor(fig3Data$`graph label`, 
+                                 levels = c("A *Proustia*", "B *Porlieria*"))
+
+
+ggplot(fig3Data, aes(x = `x value`, y = `y value`, shape = `UV treatment`, fill = `UV treatment`)) + geom_point(
+  size = 2,
+  stroke = 1,
+  color = "black") +
+  facet_wrap(~`graph label`, nrow = 1) +
+  scale_shape_manual(
+  values = c(
+    "UV+" = 16,
+    "UV-" = 21)) +
+  scale_fill_manual(
+    values = c(
+      "UV-" = "white",
+      "UV+" = "black"
+    )
+  ) +
+  scale_x_continuous(breaks = c(0,50,100,150,200,250)) +
+  scale_y_continuous(breaks = c(20,40,60,80,100)) +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax,group = `UV treatment`), position = position_dodge(width = 0.1), width = 12) +
+labs(
+  x = "Water availability (mm)",
+  y = "Biomass loss (%)",
+  caption = fig3Caption
+)
+
+
+
+
+```
+
+
+```{bash}
+#| label: compareFigure3
+#| eval: false
+
+diff --strip-trailing-cr --suppress-common-lines -y Gaxiola2015_Figure3.csv temp/Gaxiola2015_Figure3_LK.csv
+```
+
+
+
+## Methods
+
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y temp/Gaxiola2015_Methods_LK.md Gaxiola2015_Methods.md
+```
+
+{{< include Gaxiola2015_Methods.md >}}
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+
+- [x] López-Cortés, F., and López, D. (2004). “Antecedentes bioclimáticos del Parque Nacional Bosque Fray Jorge,” in Historia natural del Parque Nacional Bosque Fray Jorge, eds F. A. Squeo, J. R. Gutiérrez, and I. R. Hernández (La Serena: Ediciones Universidad de La Serena), 45–50.
+  + copy from bib
+
+- [x] Gutiérrez, J. R., Meserve, P. L., Kelt, D. A., Engilis, A. Jr., Previtali, M. A., Milstead, W. B.,et al. (2010). Long-term research in Bosque Fray Jorge National Park: twenty years studying the role of biotic and abiotic factors in a Chilean semiarid scrubland. Rev. Chil. Hist. Nat. 83, 69–98. doi: 10.4067/s0716-078x2010000100005
+  + copy from bib
+
+- [x] Jiménez, M. A., Jaksic, F. M., Armesto, J. J., Gaxiola, A., Meserve, P. L., Kelt, D. A.,et al. (2011). Extreme climatic events change the dynamics and invasibility of semi-arid annual plant communities. Ecol. Lett. 14, 227–1235. doi: 10.1111/j.1461-0248.2011.01693.x
+  + copy from bib
+
+- [x] Gutiérrez, J. R., Meserve, P. L., Contreras, L. C., Vásquez, H., and Jaksic, F. M. (1993). Spatial distribution of soil nutrients and ephemeral plants underneath and outside the canopy of Porlieria chilensis shrubs (Zygophyllaceae) in arid coastal Chile. Oecologia 95, 347–352. doi: 10.1007/BF00320987
+  + copy from bib
+  
+- [x] Cornwell, W. K., Cornelissen, J. H. C., Amatangelo, K., Dorrepaal, E., Eviner, V. T., Godoy, O.,et al. (2008). Plant species traits are the predominant control on litter decomposition rates within biomes worldwide. Ecol. Lett. 11, 1065–1071. doi: 10.1111/j.1461-0248.2008.01219.x
+  + copy from bib
+
+- [x] Van Soest, P. J. (1963). Use of detergents in the analysis of fibrous feeds II. A rapid method for the determination of fiber and lignin. J. Assoc. Off. Anal. Chem. 49, 546–551.
+  + copy from bib
+
+- [x] Killingbeck, K. T. (1996). Nutrients in senesced leaves: keys to the search for potential resorption and resorption proficiency. Ecology 77, 1716–1727. doi: 10.2307/2265777
+  + copy from bib
+
+- [x] Moorhead, D. L., and Reynolds, J. F. (1991). A general model of litter decomposition in the northern Chihuahuan Desert. Ecol. Modell. 56, 197–219. doi: 10.1016/0304-3800(91)90200-K
+  + copy from bib
+
+- [x] Barnes, P. W., Throop, H. L., Hewins, D. B., Abbene, M. L., and Archer, S. R. (2012). Soil coverage reduces photodegradation and promotes the development of soil-microbial films on dryland leaf litter. Ecosystems 15, 311–321. doi: 10.1007/s10021-011-9511-1
+  + copy from bib
+
+- [x] Crawley, M. J. (2002). Statistical Computing—an Introduction to Data Analysis Using S-PLUS. Chichester: Wiley, 740.
+  + copy from bib
+
+- [x] R Development Core Team. (2011). R: A Language and Environment for Statistical Computing R Foundation for Statistical Computing ISBN: 3-900051-07-0. Available at: http://www.R-project.org/ [accessed September 6, 2011].
+  + copy from bib
+
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+     TableS1 = list(
+      caption = read_csv(file = tableS1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = tableS1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+    Figure1 = list(
+      caption = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+     Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     ),
+     Figure3 = list(
+      caption = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure3.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+     )
+    ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readGaxiola2015(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+

@@ -1,0 +1,582 @@
+---
+title: "Data Rescue: FIADB March 2026"
+format:
+  html:
+    toc: true
+    code-fold: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - FIA2024.bib  #contains the citations for contributed datasets by authors paper
+nocite: |
+  @* #add all citations
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: lead #secondary, review
+      - standardization: lead #review
+      - curation: lead #review
+  - id: vaasukimarupaka
+    name:
+      given: Vaasuki
+      family: Marupaka
+    orcid: 0000-0002-3854-1764
+    affiliation:
+      - ref: uf-ees
+    role:
+      - transcription: lead #secondary, review
+      - standardization: lead
+      - curation: lead #review
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Lead Transcription and ReadMe Update
+      who: Vaasuki Marupaka
+      end: 
+      start: 
+      duration:
+  - activity: 
+      description: Rewrite level 0 and debug tables
+      who: ktoddbrown
+      start: 2026-10-1
+      duration: PT2H
+  - activity: 
+      description: simplify level 0
+      who: ktoddbrown
+      start: 2026-10-13
+      duration: PT1H
+  - activity: 
+      description: Recode level 1 and check semantics
+      who: ktoddbrown
+      start: 2026-10-25
+      duration: PT3H
+---
+
+```{r}
+#| label: setup
+#| message: false
+
+# libraries
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# Download url for the entire FIA database
+downloadUrl <- "https://apps.fs.usda.gov/fia/datamart/CSV/CSV_FIADB_ENTIRE.zip"
+# name the zip file
+CSV_FIADB_ENTIRE_filename <- "CSV_FIADB_ENTIRE.zip"
+
+#Download data directory
+#Change this file to run locally for you
+dataDir  <- 'temp'
+
+# The below csv tables are used to construct annotations for FIADB
+metaTranscriptions_filename <- tribble( 
+  ~table_name, ~metadata_filename,
+  'ENTIRE_PLOT', 'FIA2024_TableEntirePLOT.csv',
+  'ENTIRE_SURVEY', 'FIA2024_TableSurvey.csv',
+  'ENTIRE_SUBPLOT', 'FIA2024_TableSubPlot.csv',
+  'ENTIRE_SUBP_SOIL_SAMPLE_LOC', 'FIA2024_TableSubPlot_Soil_Sample_Location.csv',
+  'ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 'FIA2024_TableSubplot_Soil_Sample_Layer.csv',
+  'ENTIRE_TREE',  'FIA2024_TableTREE.csv'
+)
+
+#Pulled from nested table in the manual
+controlVocabulary <- 'FIA2024_Entire_Control_Vocabulary.csv'
+
+# Bibliography files
+primaryCitation.file <- 'FIA2024.bib'
+
+# read function
+readsource.file <- '../../02_DataHarmonization/readFIA.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+verbose <- TRUE
+
+#semantic files for level 1
+proposedSemantic.file <- '../../03_DataCuration/ISCN2025/proposedSemantics.csv'
+```
+
+The purpose of this document is to summarize the portions of the Forest Inventory Analysis Database that are relevant to data collections in the SoilDRaH project and walk through the data ingestion.
+Here you will find links to documentation from the data provider, links to where you can access the data, a description of how the data was processed, and visuals for the collection relevant variables.
+
+FIA DataMart v2.1.0, US Forest Service. [https://research.fs.usda.gov/products/dataandtools/fia-datamart](https://research.fs.usda.gov/products/dataandtools/fia-datamart) (Accessed 09-April-2026)
+
+# What is the FIADB
+
+The version of the US Forest Service's Forest Inventory Analysis Database described here is the public facing version of the Forest Inventory and Analysis program.
+
+> **Forest Inventory and Analysis**
+For more than 80 years, the FIA program has been recognized as a world leader in conducting national-scale forest inventories. FIA information is widely used to address local and regional issues related to trends in forest extent, health and productivity; land cover and land use change; and the changing demographics of private forest landowners.
+
+> **Background**
+The Forest Inventory and Analysis (FIA) research program has been in existence since mandated by Congress in 1928. FIA reports on status and trends in forest area and location; in the species, size, and health of trees; in total tree growth, mortality, and removals by harvest; in wood production and utilization rates by various products; and in forest land ownership. Before 1999, all inventories were conducted on a periodic basis. The passage of the 1998 Farm Bill requires FIA to collect data annually on plots within each State. This kind of up-to-date information is essential to frame realistic forest policies and programs. USDA Forest Service regional research stations are responsible for conducting these inventories and publishing summary reports for individual States.
+In addition to published reports, the Forest Service provides data collected in each inventory to those interested in further analysis. This report describes a standard format in which data can be obtained. This standard format, referred to as the Forest Inventory and Analysis Database (FIADB) structure, was developed to provide users with as much data as possible in a consistent manner among States. A number of inventories conducted prior to the implementation of the annual inventory are available in the FIADB. However, various data attributes may be empty or the items may have been collected or computed differently. Annual inventories use a common plot design and common data collection procedures nationwide, resulting in greater consistency among FIA work units than earlier inventories. Data field definitions note inconsistencies caused by different sampling designs and processing methods.
+
+> **The FIA Database**
+The Forest Inventory and Analysis Database (FIADB) was developed to provide users with data in a consistent format, spanning all States and inventories. The first version of FIADB replaced two FIA regional databases; the Eastern States (Eastwide database) documented by Hansen and others (1992), and Western States (Westwide database) documented by Woudenberg and Farrenkopf (1995). A new national plot design provided the impetus for replacing these two databases, and FIA work units adopted the new design in all State inventories initiated after 1998. The FIADB table structure is currently derived from the National Information Management System (NIMS), which was designed to process and store annual inventory data. A number of changes in the FIADB structure have been made to accommodate the data processing and storage requirements of NIMS. As a result, data from periodic inventories are stored in a format consistent with annual inventory data.
+
+Documentation for FIA database is concentrated in the following documents below (The order being the version history of the user manual documentation):
+
+Currently documented in @burrill2024d, with past documentation in @burrill2024a, @burrill2024b, @burrill2024c, @burrill2023, @burrill2021, @woudenberg2010, @woudenberg1995westwide, @hansen1992eastwide.
+
+Annotations for analysis relevant tables were manually transcribed (@burrill2024d) and cross checked.
+
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume: database description (version 9.4), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1016 p. [Online]. Available at web address: https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Kralicek, Karin M.; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume: database description (version 9.3), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1026 p. [Online]. Available at web address: https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database, FIADB user guides, volume database description (version 9.2), nationwide forest inventory (NFI). U.S. Department of Agriculture, Forest Service. 1042 p. [Online]. Available at web address: https://www.fs.usda.gov/research/products/dataandtools/datasets/fia-datamart
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Christensen, Glenn; Perry, Carol J.; Lepine, Lucie C.; Walker, David M.; Williams, Mary A.; Conkling, Barbara L. 2024. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christensen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2023. The Forest Inventory and Analysis Database: database description and user guide version 9.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1066 p. [Online]. Available at web address: https://www.fia.fs.usda.gov/library/database-documentation/index.
+  + Burrill, Elizabeth A.; DiTommaso, Andrea M.; Turner, Jeffery A.; Pugh, Scott A.; Menlove, James; Christiansen, Glenn; Perry, Carol J.; Conkling, Barbara L. 2021. The Forest Inventory and Analysis Database: database description and user guide version 9.0.1 for Phase 2. U.S. Department of Agriculture, Forest Service. 1026 p. [Online]. Available at web address: http://www.fia.fs.fed.us/library/database-documentation/.
+  + Woudenberg, Sharon W.; Conkling, Barbara L.; O’Connell, Barbara M.; LaPoint, Elizabeth B.; Turner, Jeffery A.; Waddell, Karen L. 2010. The Forest Inventory and Analysis Database: Database description and users manual version 4.0 for Phase 2. Gen. Tech. Rep. RMRS-GTR-245. Fort Collins, CO: U.S. Department of Agriculture, Forest Service, Rocky Mountain Research Station. 339 p.
+  + Woudenberg, S.W.; Farrenkopf, T.O. 1995. The Westwide forest inventory data base: user's manual. Gen. Tech. Rep. INT-GTR-317. Ogden, UT: U.S. Department of Agriculture, Forest Service, Intermountain Research Station. 67 p.
+  + Hansen, M.H.; Frieswyk, T.; Glover, J.F.; Kelly, J.F. 1992. The Eastwide forest inventory data base: users manual. Gen. Tech. Rep. NC-151. St. Paul, MN: U.S. Department of Agriculture, Forest Service, North Central Forest Experiment Station. 48 p.
+
+The annotations table draws heavily on these above documents with augmentation from private communication with Forest Service scientist.
+
+## Files
+
+These files are in the FIADB 2024 data rescue.
+
+-   [Readme](README_FIA2024.qmd)
+    -   This is the primary file that documents the transcriptions and decision made during data rescue.
+-   [FIA2024.bib](FIA2024.bib)
+    -   citation for database transcribed from user manuals and other documentation
+-   Annotations
+    -   this includes the annotations constructed using user manual (version 9.4; https://research.fs.usda.gov/understory/forest-inventory-and-analysis-database-user-guide-nfi) pulled from fia data mart portal with individual tables documented in the manual (plot, subplot, subplot layer, subplot location, survey, tree tables)
+        + [FIA2024_TableEntirePLOT.csv](FIA2024_TableEntirePLOT.csv)
+        + [FIA2024_TableSurvey.csv](FIA2024_TableSurvey.csv)
+        + [FIA2024_TableSubPlot.csv](FIA2024_TableSubPlot.csv)
+        + [FIA2024_TableSubPlot_Soil_Sample_Location.csv](FIA2024_TableSubPlot_Soil_Sample_Location.csv)
+        + [FIA2024_TableSubplot_Soil_Sample_Layer.csv](FIA2024_TableSubplot_Soil_Sample_Layer.csv)
+        + [FIA2024_TableTREE.csv](FIA2024_TableTREE.csv)
+    - Note: the soil erosion and visit table is not exclusively annotated in the documented user manual; hence, we pulled annotations for these tables using column header search in the manual. 
+- [temp/](temp/)
+        + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+
+## Download FIA 2024
+
+```{r}
+#| label: downloadData
+
+if(!file.exists(file.path(dataDir, CSV_FIADB_ENTIRE_filename))){
+  if(verbose) message('Database not found, downloading...')
+  if(verbose) warning('This is a large file and may require a manual download https://www.fs.usda.gov/research/products/dataandtools/tools/fia-datamart, select the `Entire FIADB CSV Archive` download under `Additional Download Options`.' )
+  utils::download.file(url = downloadUrl, 
+                       destfile = file.path(dataDir, 
+                                            CSV_FIADB_ENTIRE_filename))
+}
+  
+  # Unzip zip file
+if(!file.exists(file.path(dataDir, 'CSV_FIADB_ENTIRE'))){
+  if(verbose) message('Unzipping file...')
+  if(verbose) warning('This large file may require a manual unzip. Navigate to the data directory and unzip the file to a folder called `CSV_FIADB_ENTIRE`.')
+  utils::unzip(file.path(dataDir, CSV_FIADB_ENTIRE_filename), exdir = dataDir, overwrite = FALSE)
+  if(verbose) message('Unzipping done.')
+}
+
+
+labMartTables <- list.files(path = file.path(dataDir, 'CSV_FIADB_ENTIRE'), 
+                               pattern = '.csv', full.names = TRUE)
+
+```
+
+## Meta data transcription
+
+```{r}
+#| label: compareMeta
+
+tableColumns <- plyr::ldply(labMartTables, 
+            function(filename){
+              tibble(column_name = names(read_csv(filename, n_max = 0,
+                                                   show_col_types = FALSE)),
+                     table_name = str_remove(string = basename(filename),
+                                             pattern = '.csv$'))
+})
+
+transcriptions.df <- metaTranscriptions_filename |>
+  reframe(meta = read_csv(file = metadata_filename,
+                          show_col_types = FALSE),
+          .by = everything()) |>
+  unnest(meta) |>
+  dplyr::rename(column_name = 'Column name (attribute)' ) |>
+  full_join(tableColumns |>
+              filter(table_name %in% metaTranscriptions_filename$table_name),
+            by = join_by(table_name, column_name))
+
+```
+
+The following miss-matches between the transcriptions and the file downloads, often this is a database version issue.
+We can ignore this as long as the variables of interest are not in this subset.
+
+```{r}
+#| label: checkMetadata
+
+transcriptions.df |> 
+  filter(is.na(metadata_filename) | is.na(`Descriptive name`)) |> 
+  kable()
+```
+
+### Control Number
+
+Each table has a column called CN that identifies unique records for that table.
+This is then cross references with other tables according to the following:
+  
+  1) ENTIRE_SURVEY: `SRV_CN`
+  2) ENTIRE_PLOT: `PLT_CN`
+  3) ENTIRE_SUBP_SOIL_SAMPLE_LOC: `SSSL_CN`
+
+## ISCN4 relevance
+
+This data is identified as a data source for ISCN4 data harmonization and curation project.
+There are two tables (`ENTIRE_SUBP_SOIL_SAMPLE_LAYER`, `ENTIRE_PLOT`) containing the variables below that are relevant for layer-resolved soil carbon stocks.
+
+  + soil carbon measurements: 
+    - bulk density `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$BULK_DENSITY`
+    - bulk density fine fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$BULK_DENSITY_FINES`
+    - organic carbon fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_ORG_PCT`
+    - total carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_TOTAL_PCT`
+    - inorganic carbon `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$C_INORG_PCT`
+    - coarse fraction `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$COARSE_FRACTION_PCT`
+  + depth of sample and layer information:
+    - layer thickness `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_THICKNESS`
+    - layer type `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_TYPE`
+  + sampling time: 
+    - inventory year `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`
+  + sample location: 
+    - latitude `ENTIRE_PLOT$LAT`
+    - longitude `ENTIRE_PLOT$LON`
+    - state name `ENTIRE_SURVEY$STATENM`
+
+Please note that there is quite a bit more data in the FIADB and we welcome interested parties extending these annotations.
+
+
+```{r}
+#| label: reportLabMart
+
+meta.df <- transcriptions.df |>
+  #commented out code below explores soil carbon variables across the tables
+  # mutate(soil_obs = str_detect(column_names, pattern = 'BULK') |
+  #          str_detect(column_names, pattern = '^C_.*_PCT$') |
+  #          str_detect(column_names, pattern = 'COARSE_FRACTION_PCT'),
+  #        depth = str_detect(column_names, pattern = '^LAYER_T(YPE)|(HICKNESS)') |
+  #          str_detect(column_names, pattern = '^CORE') | #sample details
+  #          str_detect(column_names, pattern = '^RESTRICTION_DEPTH_\\d'),
+  #        time_obs =  str_detect(column_names, pattern = 'INVYR') | #obs time
+  #          str_detect(column_names, pattern = 'MEAS'),
+  #        location_obs = str_detect(column_names, pattern = 'LON') |
+  #          str_detect(column_names, pattern = 'LAT') |
+  #          str_detect(column_names, pattern = 'STATE') |
+  #          str_detect(column_names, pattern = 'COUNTY'),
+  #        ids = str_detect(column_names, pattern = 'CN$') |
+  #          str_detect(column_names, pattern = 'NBR$') |
+  #          str_detect(column_names, pattern = '_ID$')) |>
+  # filter(soil_obs | depth | time_obs | location_obs | ids) |>
+  # arrange(desc(soil_obs)) |>
+  filter( table_name %in% c('ENTIRE_SUBP_SOIL_SAMPLE_LAYER', 
+                            'ENTIRE_PLOT',
+                            'ENTIRE_SURVEY'),
+          column_name %in% c('CN', 'PLT_CN', 'SRV_CN',
+                          'INVYR', 
+                          'LAT', 'LON', 'STATE_CD', 'STATENM',
+                          'LAYER_TYPE', 'LAYER_THICKNESS', 'LAYER_COLLECTED_CD',
+                          'BULK_DENSITY', 'BULK_DENSITY_FINES',
+                          'COARSE_FRACTION_PCT',
+                          'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))
+
+```
+
+# Read Level 0 data
+
+This is a large data set so we only read in the columns we are interested in defined above and saved in the `meta.df` data frame.
+
+```{r}
+#| label: readRescues
+
+readCheck <- Inf #big tables to read in so develop code with subset
+
+layer_data <- readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SUBP_SOIL_SAMPLE_LAYER.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ) |>
+  select(one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER'])) 
+
+plot_data <-  readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_PLOT.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ) |>
+  select(one_of(meta.df$column_name[meta.df$table_name == 'ENTIRE_PLOT'])) |>
+  rename(PLT_CN = CN) |> #2 023 534 obs
+  filter(PLT_CN %in% layer_data$PLT_CN) # 1 359 obs
+
+survey_data <- readr::read_csv(
+      file = file.path(dataDir, 'CSV_FIADB_ENTIRE/ENTIRE_SURVEY.csv'),
+      col_types = readr::cols(.default = readr::col_character()),
+      n_max = readCheck
+    ) |>
+  #need the RSCD to define the datum
+  select(SRV_CN = CN, RSCD, STATECD, STATENM) |>
+  filter(SRV_CN %in% plot_data$SRV_CN) |>
+  unique()
+
+cv.df <- readr::read_csv(
+    file = controlVocabulary,
+    col_types = readr::cols(.default = readr::col_character())
+  ) |>
+  rename(table_name = Table_ID, column_name = Name) |>
+  filter(column_name %in% meta.df$column_name)
+
+level0.ls <- list(
+  citation = read.bib(file = primaryCitation.file),
+  meta = meta.df,
+  Table = list(ENTIRE_SUBP_SOIL_SAMPLE_LAYER = layer_data,
+               ENTIRE_SURVEY = survey_data,
+               ENTIRE_PLOT = plot_data),
+  controlVocabulary = cv.df
+)
+
+```
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readFIA(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, level0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Level 1 data - ISCN2025
+
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data we will examine the assumption of steady state on field surveyed organic carbon.
+We have closed contributions for this project and are working on analysis.
+
+For this analysis we are interested in:
+
+  * **Location**: latitude/longitude, associated datum, geo-spatial method, precision
+  * **Soil organic carbon stocks**: organic carbon fraction, bulk density, coarse fraction, soil organic carbon by area, soil organic carbon by volume
+  * **Layer depth**: Depth of surveyed soil layer
+
+<!--- Include description of where the data is located in the source.--->
+- Location: 
+  + latitude and longitude in the ENTIRE_PLOT table
+  + datum and units are located in the latitude and longitude description in the meta.df
+  + state names are in the ENTIRE_SURVEY
+  + year of observation for the soil variables is in `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$INVYR`. There are other inventory years associated with different tables as well but since we are interested in soils, this is the one we are going with.
+- Layer depth: Are recorded as part of the `ENTIRE_SUBP_SOIL_SAMPLE_LAYER$LAYER_TYPE` names
+- Soil carbon stock: broken down to components (BULK_DENSITY, COARSE_FRACTION, BULK_DENSITY_FINES, C_ORG_PCT) in the `ENTIRE_SUBP_SOIL_SAMPLE_LAYER`
+
+The final format of the data frame here will include the following 
+
+  + grouping ids
+  + `of_variable`
+  + `is_type`
+  + `with_entry`
+  + `from_source`
+
+The `of_variable` being used here are:
+
+ + citation
+ 
+
+```{r}
+#| label: createLvl1
+
+meta.df <- level0.ls$meta |>
+  filter((table_name == 'ENTIRE_PLOT' & column_name %in% c('LAT', 'LON')) |
+           (table_name == 'ENTIRE_SUBP_SOIL_SAMPLE_LAYER' &
+              column_name %in% c('INVYR', 
+                                 'LAYER_TYPE', #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+                                 'BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                                 'COARSE_FRACTION_PCT', 'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT'))) |>
+  select(column_name, description = Description, long_name = `Descriptive name`) |>
+  mutate(
+    unit = case_when(
+      str_detect(column_name, 'BULK_DENSITY') ~ 'g cm-3',
+      str_detect(column_name, '_PCT$') ~ 'mass percent',
+      column_name %in% c('LAT', 'LON') ~ 'decimal degrees',
+      .default = NA_character_),
+    privacy_protcol = if_else(column_name %in% c('LAT', 'LON'),
+                           '1 mile with 20% swap within county', NA_character_),
+    from_source = 'FIADB User Guides Volume: Database Description (version 9.4)',
+    of_variable = case_when(
+      column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+      column_name == 'INVYR' ~ 'observation_year',
+      column_name == 'STATENM' ~ 'region',
+      column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'layer',
+      column_name == 'BULK_DENSITY' ~ 'bulk_density',
+      column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+      column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+      column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+      column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+      column_name == 'C_TOTAL_PCT' ~ 'carbon',
+      .default = NA_character_)) |>
+  pivot_longer(cols = c(description, long_name, unit, privacy_protcol),
+               names_to = 'is_type', values_to = 'with_entry',
+               values_drop_na = TRUE)
+
+location.df <- level0.ls$Table$ENTIRE_PLOT |>
+  left_join(level0.ls$Table$ENTIRE_SURVEY,
+            by = join_by(SRV_CN)) |>
+  mutate(DATUM = if_else(
+    STATECD %in% as.character(c(60, 64, 66, 68, 69, 70)) & RSCD %in% c('26'),
+    'WSG84', 'NAD83')) |>
+  #drop the RSCD and STATECD now that the state name and data are merged
+  select(PLT_CN, #INVYR,#use the inventory year from the layer informatino
+         LAT, LON, DATUM, STATENM) |>
+  unique() |>
+  pivot_longer(cols = c('LAT', 'LON', 'STATENM', 'DATUM'),
+               names_to = 'column_name', values_to = 'with_entry') |>
+  mutate(of_variable = case_when(column_name %in% c('LAT', 'LON', 'DATUM') ~ 'geolocation',
+                                 column_name == 'INVYR' ~ 'observation_year',
+                                 column_name == 'STATENM' ~ 'region',
+                                 .default = NA_character_),
+         is_type = case_when(column_name == 'LAT' ~ 'latitude',
+                             column_name == 'LON' ~ 'longitude',
+                             column_name == 'DATUM' ~ 'datum',
+                             column_name == 'INVYR' ~ 'YYYY',
+                             column_name == 'STATENM' ~ 'state',
+                             .default = NA_character_))
+
+layer.df <- level0.ls$Table$ENTIRE_SUBP_SOIL_SAMPLE_LAYER |>
+  select(CN, PLT_CN, 
+         INVYR, 
+         LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+         BULK_DENSITY, BULK_DENSITY_FINES, 
+         COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT) |>
+  mutate(Depth_upper_cm = str_extract(LAYER_TYPE, '\\d\\d?(?=-\\d{2,3}_CM)'),
+         Depth_lower_cm = str_extract(LAYER_TYPE, '\\d{2,3}(?=_CM)')) |>
+  pivot_longer(cols = c(INVYR, 
+         LAYER_TYPE, #LAYER_THICKNESS, LAYER_COLLECTED_CD, 
+         Depth_lower_cm, Depth_upper_cm,
+         BULK_DENSITY, BULK_DENSITY_FINES, 
+         COARSE_FRACTION_PCT, C_ORG_PCT, C_INORG_PCT, C_TOTAL_PCT),
+         names_to = 'column_name', values_to = 'with_entry',
+         values_drop_na = TRUE) |>
+  mutate(of_variable = case_when(
+    column_name %in% c('LAYER_TYPE', 'Depth_upper_cm', 'Depth_lower_cm') ~ 'depth_interval',
+    column_name == 'INVYR' ~ 'observation_year',
+    column_name == 'BULK_DENSITY' ~ 'bulk_density',
+    column_name == 'BULK_DENSITY_FINES' ~ 'bulk_density_fine_earth',
+    column_name == 'COARSE_FRACTION_PCT' ~ 'coarse_fraction',
+    column_name == 'C_ORG_PCT' ~ 'carbon_organic',
+    column_name == 'C_INORG_PCT' ~ 'carbon_inorganic',
+    column_name == 'C_TOTAL_PCT' ~ 'carbon',
+    .default = NA_character_),
+    is_type = case_when(
+      column_name %in% c('LAYER_TYPE') ~ 'type',
+      column_name %in% c('Depth_upper_cm') ~ 'upper',
+      column_name == 'Depth_lower_cm' ~ 'lower',
+      column_name %in% c('BULK_DENSITY', 'BULK_DENSITY_FINES', 
+                         'COARSE_FRACTION_PCT', 
+                         'C_ORG_PCT', 'C_INORG_PCT', 'C_TOTAL_PCT') ~ 'value',
+      column_name == 'INVYR' ~ 'YYYY',
+      .default = NA_character_))
+
+#### Create level 1 #####
+## Pull everything together into by stacking the meta and primary data tables
+data.lvl1.ls <- list(
+  meta = meta.df,
+  site = location.df,
+  layer = layer.df,
+  citation = level0.ls$citation
+  )
+
+```
+
+# Check the read function
+
+```{r}
+#| label: checkReadFunction_lvl1
+
+if(file.exists(readsource.file)){
+  datafunction.lvl1.ls <- readFIA(dataDir = '.',
+                                         dataLevel = 'level1')
+  
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+# Match the ISCN vocabulary
+
+```{r}
+#| label: checkVocab
+
+#Read in the curated semantics
+ISCN2025_semantics.df <- read_csv(proposedSemantic.file)
+
+#construct the FIA semantics table
+FIA2024_semantics.df <- data.lvl1.ls$meta |> 
+  select(of_variable, is_type)  |>
+  mutate(table = 'meta') |> 
+  unique() |>
+  bind_rows(data.lvl1.ls$site |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'site')) |> 
+  bind_rows(data.lvl1.ls$layer |>
+              select(of_variable, is_type)  |> 
+              unique() |>
+              mutate(table = 'layer')) |>
+  mutate(study_id = 'FIA2024')
+
+#check this dataframe to compare the semantics across all studies
+compare.df <- bind_rows(ISCN2025_semantics.df,
+                        FIA2024_semantics.df) |>
+  reframe(count = n(),
+          studies = paste(unique(study_id), collapse = ', '),
+          .by = c(of_variable, is_type)) |>
+  arrange(of_variable, is_type)
+
+#check this to look for the differences before this study is added
+difference.df <- FIA2024_semantics.df |>
+  anti_join(ISCN2025_semantics.df,
+            by = join_by(of_variable, is_type, table, study_id))
+
+if(nrow(difference.df) > 0 & FALSE){ 
+  print('new semantic suggestion found, please see codebase')
+  if(FALSE){ #don't run this without manually changing code here. Be careful about modifying the ISCN vocabulary
+    new_ISCN2025 <- ISCN2025_semantics.df |>
+      bind_rows(difference.df) |>
+      arrange(of_variable, is_type)
+    
+    write_csv(new_ISCN2025, file = proposedSemantic.file)
+  }
+}
+```

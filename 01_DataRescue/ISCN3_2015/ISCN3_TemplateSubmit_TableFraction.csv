@@ -1,0 +1,37 @@
+﻿Variable,Name,Units,Description
+site_name,Site Name,free text,"A unique name for a site that corresponds to a georeferenced point.
+Examples include: ""101"", ""DFTC"", ""Site 1"", ""99AK180003"""
+profile_name,Profile/Plot Name,free text,"A unique name for a single profile. This can be the same as the site name if there is only one profile at the site. For NRCS data it is the same as ""Pedon ID"".
+Examples include: ""BZBS4"", ""99P0544"", ""Profile 1"""
+layer_name,Layer Name,free text,"A unique name for a single sampled layer. This can be a name that denotes depth, sequence, etc.
+Examples include: ""0-10"", ""10-20"", ""40A04456"", ""BZBS 4.1"""
+fraction_name,Fraction Sample Name,free text,A unique name for a single fraction.
+fraction_number,Laboratory Fraction Number,free text,Laboratory fraction identifier if different than the Fraction Name (data contributor's own identifier).
+labeled_addition,Labeled Addition,,"Was this layer/gas/fraction/sample isotopically labeled? Answer yes or leave blank.
+Controlled vocabulary: yes_blank"
+fraction_scheme,Fractionation Scheme,free text,"The scheme used to isolate the fraction, e.g., density, size, aggregate, chemical."
+fraction_property,Fraction Property,free text,"The value of the chemical or physical property that defines the fraction as unique from the others in its scheme, e.g., for density fractions, ""<1.85"" to denote a light fraction."
+fraction_scheme_units,Fractionation Scheme Units,free text,"The units of measurement of the property that defines a fraction as unique, e.g. for density fractions, ""g cm-3"""
+fraction_type,Fraction Type,free text,"The contributor's name for the specific fraction, e.g., ""light fraction""."
+fraction_agent,Fractionation Agent,free text,"The laboratory or analytical device or chemical compound used to isolate the fraction, e.g., ""sodium polytungstate"" or ""sieve""."
+fraction_note,Fraction Notes,free text,The contributor's concise description of the fractionation process.
+c_method,Carbon Analysis Method,free text,"Provide reference or describe the sample preparation and analysis methods used to determine carbon concentrations, whether Total Carbon, organic C, or Loss on Ignition.
+Examples include: ""Determined total %C from CHN analysis of air dried <2mm fraction"""
+fraction_c_perc,Fraction proportion of sample carbon,percent,"The proportion of total sample (i.e., bulk layer) carbon contained in the fraction."
+fraction_mass_perc,Fraction proportion of sample mass,percent,"The proportion of the total sample (i.e., bulk layer) mass represented by the fraction."
+c_tot,Total Carbon,percent,"Percent by weight of carbon in the dried, milled soil sample. This measurement will typically correspond to analytical results from an elemental analyzer."
+oc,Organic Carbon,percent,"Percent by weight of carbon in a dried soil sample after acidification with HCl, OR organic carbon as estimated by Walkley-Black Modified Acid-Dichromate (e.g. 'Organic Carbon' in the NRCS database). Please document the method in the associated Carbon Analysis Methods."
+n_tot,Total Nitrogen,percent,Percent by weight of nitrogen (organic and inorganic) in an oven-dried sample (the laboratory analytical concentration).
+c_to_n,C:N,mass ratio,"Mass ratio of total carbon to total nitrogen, as calculated from the total carbon and total nitrogen concentrations of the bulk layer, fraction, or other sample type."
+loi,Loss on Ignition,percent,Percent by weight of the organic content of the <2mm fraction is the organic material lost after ignition. It is reported on a <2 mm base. Please document the method in the associated Carbon Analysis Method.
+15n,δ15N,‰,Per mille signature of δ15N relative to air (international standard).
+13c,δ13C,‰,Per mille signature of δ13C relative to Pee Dee Belemnite.
+rc_lab,Radiocarbon Laboratory ID,free text,Laboratory code for radiocarbon laboratory. Complete list of past and present laboratory codes can found published in Radiocarbon in November 2011 (http://www.radiocarbon.org/Info/labcodes.html).
+rc_lab_number,Radiocarbon Laboratory Sample Number,free text,Layer sample identifier as designated by the radiocarbon laboratory.
+rc_year,Radiocarbon Analysis Year,YYYY,Year in which radiocarbon analysis was performed on the sample.
+14c,Δ14C,‰,Per mille signature of Δ14C relative to NBS Oxalic Acid standard.
+14c_sigma,Δ14C Standard Deviation,‰,Error estimate for the fraction (eg. Standard deviation of analytical reps).
+14c_age,Uncalibrated Radiocarbon Age,BP,"Uncalibrated radiocarbon age of bulk soil in layer, as calculated from corrected fraction modern, using the Libby half-life value of 5568 years."
+14c_age_sigma,Uncalibrated Radiocarbon Age Standard Deviation,BP,Error estimate for the fraction (eg. Standard deviation of analytical reps).
+fraction_modern,Fraction Modern,free text,"Deviation of the bulk sample or fraction from modern. Modern is defined as 95% of the radiocarbon concentration (in AD 1950) of NBS Oxalic Acid standard, 13C-corrected."
+fraction_modern_sigma,Fraction Modern Standard Deviation,free text,Error estimate for an individual layer (eg. Standard deviation of analytical reps).

@@ -1,0 +1,62 @@
+﻿Subsection, Column name (attribute),Descriptive name, Oracle data type,Description
+8.2.1,CN,Sequence number,VARCHAR2(34),A unique sequence number used to identify a subplot soil sample layer record.
+8.2.2,SSSL_CN,Subplot soil sample location sequence number,VARCHAR2(34),Foreign key linking the subplot soil sample layer record to the subplot soil sample location record.
+8.2.3,PLT_CN,Plot sequence number,VARCHAR2(34),Foreign key linking the subplot soil sample layer record to the plot record.
+8.2.4,STATECD,State code,NUMBER(4),Bureau of the Census Federal Information Processing Standards (FIPS) 2-digit code for each State. Refer to appendix B.
+8.2.5,COUNTYCD,County code,NUMBER(3),"The identification number for a county, parish, watershed, borough, or similar governmental unit in a State. FIPS codes from the Bureau of the Census are used. Refer to appendix B for codes. Note: Summarizing data by county is not recommended for Alaska datasets. For assistance with analyses for Alaska, please consult the PNWRS analyst contact listed in table 1-1."
+8.2.6,PLOT,Plot number,NUMBER(6),"An identifier for a plot. Along with STATECD, INVYR, UNITCD, COUNTYCD and/or some other combinations of variables, PLOT may be used to uniquely identify a plot."
+8.2.7,INVYR,Inventory year,NUMBER(4),"The year that best represents when the inventory data were collected. Under the annual inventory system, a group of plots is selected each year for sampling. The selection is based on a panel system. INVYR is the year in which the majority of plots in that group were collected (plots in the group have the same panel and, if applicable, subpanel). Under periodic inventory, a reporting inventory year was selected, usually based on the year in which the majority of the plots were collected or the mid-point of the years over which the inventory spanned. For either annual or periodic inventory, INVYR is not necessarily the same as MEASYEAR. Exceptions: INVYR = 9999. INVYR is set to 9999 to distinguish Phase 3 plots taken by the western FIA work units that are ""off subpanel."" This is due to differences in measurement intervals between Phase 3 (measurement interval = 5 years) and Phase 2 (measurement interval = 10 years) plots. Only users interested in performing certain Phase 3 data analyses should access plots with this anomalous value in INVYR."
+8.2.8,INV_VST_NBR,Inventory visit number,NUMBER(2),"Visit number within a cycle. A plot is usually visited once per cycle, but may be visited again for quality assurance visits or other measurements."
+8.2.9,CYCLE,Inventory visit number ,NUMBER(2),"A number assigned to a set of plots, measured over a particular period of time from which a State estimate using all possible plots is obtained. A cycle number >1 does not necessarily mean that information for previous cycles resides in the database. A cycle is relevant for periodic and annual inventories."
+8.2.10,SUBCYCLE,Inventory subcycle number ,NUMBER(2),"For an annual inventory that takes n years to measure all plots, subcycle shows in which of the n years of the cycle the data were measured. Subcycle is 0 for a periodic inventory. Subcycle 99 may be used for plots that are not included in the estimation process."
+8.2.11,SUBP,Subplot number,NUMBER(1),The number assigned to the subplot adjacent to the soil sampling site. The national plot design (PLOT.DESIGNCD = 1) has subplot number values of 1 through 4. Soils protocols use only subplots 2-4.
+8.2.12,VSTNBR,Visit number ,NUMBER(1),The number of the soil sampling location at which the soil sample was collected. Values are 1-9.
+8.2.13,SAMPLER_TYPE,Sampler type,VARCHAR2(2),A code indicating the type of soil sampler used.
+8.2.14,SAMPLE_DIA,Sample diameter ,"NUMBER(7,3)",The diameter (inches) of the sample area.
+8.2.15,LAYER_TYPE,Layer type ,VARCHAR2(30),A code indicating the soil layer type of the sample. Code values differ depending on the value of SUBP_SOIL_SAMPLE_LOC.SOILS_SAMPLE_METHOD_CD.
+8.2.16,SOIL_SAMP_PER_AC,Soil sample area expansion factor ,"NUMBER(14,6)",The expansion factor from the layer sampling area to an acre.
+8.2.17,LAYER_THICKNESS,Layer thickness ,"NUMBER(5,3)",The layer thickness to the nearest 0.1 inch.
+8.2.18,LAYER_COLLECTED_CD,Layer collected code,NUMBER(1),A code indicating whether or not a soil layer was sampled.
+8.2.19,WT_FIELD_MOIST,Field-moist soil weight,"NUMBER(7,2)",The weight (g) of the soil sample as received from the field.
+8.2.20,WT_AIR_DRY,Air-dry soil weight,"NUMBER(7,2)",The weight (g) of the soil sample after air-drying at ambient temperature.
+8.2.21,WT_OVEN_DRY,Oven-dry soil weight ,"NUMBER(7,2)",The calculated weight (g) of the soil sample based on an oven-dried subsample.
+8.2.22,WT_ROCK,Rock particle weight ,"NUMBER(7,2)",The weight (g) of mineral soil >2 mm in size.
+8.2.23,WATER_CONTENT_PCT_FIELD_MOIST,Field-moist water content percent ,"NUMBER(6,2)",The field-moist to air-dry water content in percent.
+8.2.24,WATER_CONTENT_PCT_RESIDUAL,Residual water content percent ,"NUMBER(6,2)",The air-dry to oven-dry water content in percent.
+8.2.25,WATER_CONTENT_PCT_TOTAL,Total water content percent ,"NUMBER(6,2)",The field-moist to air-dry (WATER_CONTENT_PPCT_FIELD_MOIST) plus air-dry to oven-dry water (WATER_CONTENT_PCT_RESIDUAL) contents in percent.
+8.2.26,BULK_DENSITY,Bulk density,"NUMBER(10,6)","The soil bulk density calculated as weight per unit volume of soil, g/cm3."
+8.2.27,COARSE_FRACTION_PCT,Coarse fraction percent ,"NUMBER(7,3)",The percentage of mineral soil >2 mm in size.
+8.2.28,BULK_DENSITY_FINES,Bulk density of fine soil fraction ,"NUMBER(10,6)","The bulk density of mineral soil particles <2 mm calculated as weight per unit volume of soil, g/cm3."
+8.2.29,TEXTURE_CD,Texture code ,NUMBER(1),A code indicating the texture of the soil layer.
+8.2.30,PH_H20,pH in water ,"NUMBER(7,3)",Soil pH measured in a 1:1 soil/water suspension.
+8.2.31,PH_CACL2,pH in calcium chloride solution ,"NUMBER(7,3)",Soil pH measured in 0.01 M CaCl2 solution.
+8.2.32,ECEC,Effective cation exchange capacity,"NUMBER(7,3)",Exchangeable sodium (Na) + potassium (K) + magnesium (Mg) + calcium (Ca) + aluminum (Al) in cmolc/kg.
+8.2.33,EXCHNG_AL,Exchangeable aluminum,"NUMBER(7,3)",Exchangeable aluminum (Al) in mg/kg.
+8.2.34,EXCHNG_CA,Exchangeable calcium,"NUMBER(8,3)",Exchangeable calcium (Ca) in mg/kg.
+8.2.35,EXCHNG_CD,Exchangeable cadmium ,"NUMBER(7,3)",Exchangeable cadmium (Cd) in mg/kg.
+8.2.36,EXCHNG_CU,Exchangeable copper ,"NUMBER(7,3)",Exchangeable copper (Cu) in mg/kg.
+8.2.37,EXCHNG_FE,Exchangeable iron ,"NUMBER(7,3)",Exchangeable iron (Fe) in mg/kg.
+8.2.38,EXCHNG_K,Exchangeable potassium ,"NUMBER(7,3)",Exchangeable potassium (K) in mg/kg.
+8.2.39,EXCHNG_MG,Exchangeable magnesium ,"NUMBER(8,3)",Exchangeable magnesium (Mg) in mg/kg.
+8.2.40,EXCHNG_MN,Exchangeable manganese,"NUMBER(7,3)",Exchangeable manganese (Mn) in mg/kg.
+8.2.41,EXCHNG_NA,Exchangeable sodium ,"NUMBER(8,3)",Exchangeable sodium (Na) in mg/kg.
+8.2.42,EXCHNG_NI,Exchangeable nickel ,"NUMBER(7,3)",Exchangeable nickel (Ni) in mg/kg.
+8.2.43,EXCHNG_PB,Exchangeable lead ,"NUMBER(7,3)",Exchangeable lead (Pb) in mg/kg.
+8.2.44,EXCHNG_S,Exchangeable sulfur,"NUMBER(8,3)",Exchangeable sulfur (S) in mg/kg.
+8.2.45,EXCHNG_ZN,Exchangeable zinc ,"NUMBER(7,3)",Exchangeable zinc (Zn) in mg/kg.
+8.2.46,BRAY1_P,Bray 1 phosphorus ,"NUMBER(7,3)",Bray 1 extractable phosphorus in mg/kg.
+8.2.47,OLSEN_P,Olsen phosphorus ,"NUMBER(7,3)",Olsen extractable phosphorus in mg/kg.
+8.2.48,C_ORG_PCT,Organic carbon percent ,"NUMBER(7,3)",Organic carbon in percent.
+8.2.49,C_INORG_PCT,inorganic carbon percent ,"NUMBER(7,3)",Inorganic carbon (carbonates) in percent.
+8.2.50,C_TOTAL_PCT,Total carbon percent ,"NUMBER(7,3)",Total carbon (organic + inorganic) in percent.
+8.2.51,C_MG_AC,Carbon content per acre ,"NUMBER(10,6)",Carbon content (Mg) per acre.
+8.2.52,C_MIN3_MG_AC,Carbon content 3-inch depth per acre,"NUMBER(10,6)",Carbon content (Mg) per acre to a standard depth of three inches.
+8.2.53,N_TOTAL_PCT,Total nitrogen percent ,"NUMBER(7,3)",Total nitrogen (N) in percent.
+8.2.54,N_MG_AC,Nitrogen content per acre ,"NUMBER(10,6)",Nitrogen content (Mg) per acre.
+8.2.55,N_MIN3_MG_AC,Nitrogen content 3-inch depth per acre,"NUMBER(10,6)",Nitrogen content (Mg) per acre to a standard depth of three inches.
+8.2.56,CREATED_BY,Created by,VARCHAR2(30),The employee who created the record. This attribute is intentionally left blank (null) in download files.
+8.2.57,CREATED_DATE,Created date,DATE,The date the record was created.
+8.2.58,CREATED_IN_INSTANCE,Created in instance,VARCHAR2(6),The database instance in which the record was created. Each computer system has a unique database instance code and this attribute stores that information to determine on which computer the record was created.
+8.2.59,MODIFIED_BY,Modified by,VARCHAR2(30),The employee who modified the record. This field will be blank (null) if the data have not been modified since initial creation. This attribute is intentionally left blank in download files.
+8.2.60,MODIFIED_DATE,Modified date,DATE,The date the record was last modified. This field will be blank (null) if the data have not been modified since initial creation.
+8.2.61,MODIFIED_IN_INSTANCE,Modified in instance,VARCHAR2(6),The database instance in which the record was modified. This field will be blank (null) if the data have not been modified since initial creation.

@@ -1,0 +1,24 @@
+Figure 3. Soil C stock (Mg C haâˆ’1) within each incremental soil depth (a) or mass (b); values are mean Â± one standard error of the six plots for each pasture and eucalyptus pair. Significant Student's t-test results comparing the means between pairs for each depth or mass increment are shown; ** indicates p < 0.05 and * indicates p < 0.10; actual p-values are listed for significant differences.,,,,,,,
+x,y,standard error difference,x axis label,y axis label,location,p-values,graph label
+138.7,0Ð20,5.8,carbon stock (mg C ha^-1),Depth (cm),Pasture,-,a
+133.1,0Ð20,4.9,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,p = 0.003**,a
+83.6,20Ð40,4.3,carbon stock (mg C ha^-1),Depth (cm),Pasture,p = 0.071*,a
+117.5,20Ð40,4.1,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,-,a
+83.8,40Ð60,5.1,carbon stock (mg C ha^-1),Depth (cm),Pasture,-,a
+106,40Ð60,4.8,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,-,a
+80,60Ð80,4.8,carbon stock (mg C ha^-1),Depth (cm),Pasture,-,a
+95.3,60Ð80,4.1,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,-,a
+69.9,80Ð100,4.6,carbon stock (mg C ha^-1),Depth (cm),Pasture,-,a
+76.8,80Ð100,4.1,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,-,a
+59.9,100Ð120,4.1,carbon stock (mg C ha^-1),Depth (cm),Pasture,-,a
+64,100Ð120,5.9,carbon stock (mg C ha^-1),Depth (cm),Eucalyptus,-,a
+143.4,800,10.7,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Pasture,-,b
+128,800,6.3,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Eucalyptus,-,b
+116.2,1600,8.3,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Pasture,-,b
+115.4,1600,5.8,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Eucalyptus,-,b
+102.1,2400,5.7,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Pasture,-,b
+106.1,2400,7.2,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Eucalyptus,-,b
+88.2,3200,5.8,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Pasture,-,b
+96.6,3200,4.2,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Eucalyptus,-,b
+74.1,4000,5.3,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Pasture,p = 0.085*,b
+87.2,4000,4.2,carbon stock (mg C ha^-1),Cumulative soil mass (Mg ha^-1),Eucalyptus,-,b

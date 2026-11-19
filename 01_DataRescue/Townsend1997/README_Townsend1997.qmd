@@ -57,12 +57,10 @@ affiliations:
 timelog:
   - activity: 
       description: Lead Transcription and ReadMe Update
-      who: Savascott
+      who: SavaScott
       end: 2026-02-01
       start: 2025-12-11
       duration: PT4H45M
-
-      timelog:
   - activity: 
       description: Secondary Transcription
       who: laylakalandjian

@@ -1,0 +1,615 @@
+---
+title: "Data Rescue: Kavvadias2001"
+format:
+  html:
+    toc: true
+date: last-modified
+date-format: YYYY-MMMM
+bibliography:
+  - Kavvadias2001_Methods.bib #contains the citations in the methods section
+  - Kavvadias2001.bib #contains citation for the data source, generally a single citation of the primary paper
+authors: #author scheme from https://quarto.org/docs/journals/authors.html
+  - id: ktoddbrown #use the github name as an id
+    name:
+      given: Katherine
+      family: Todd-Brown
+    orcid: 0000-0002-3109-8130
+    affiliation:
+      - ref: uf-ees
+    role: #TODO define these roles and add reference
+      - transcription: review #secondary, review
+     # - standardization: lead #review
+     # - curation: lead #review
+
+  - id: SavaScott #use the github name as an id
+    name:
+      given: Savannah
+      family: Scott
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: lead
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+  - id: ChaseSaxour #use the github name as an id
+    name:
+      given: Chase
+      family: Saxour
+    affiliation:
+      - ref: uf-ees
+    role: 
+      - transcription: secondary
+   #   - standardization: lead #review
+    #  - curation: lead #review
+
+affiliations:
+  - id: uf-ees
+    name: University of Florida
+    department: Environmental Engineering Sciences
+    city: Gainesville
+    state: Florida
+    country: USA
+    address: "365 Weil Hall \nP.O. Box 116580"
+    postal-code: 32611
+    url: https://essie.ufl.edu/ees/
+    
+timelog:
+  - activity: 
+      description: Primary Transcription and PR prep
+      who: SavaScott 
+      start: 2026-02-13
+      end: 2026-04-13
+      duration: PT7H30M
+  - activity: 
+      description: Secondary Transcription
+      who: ChaseSaxour 
+      start: 2026-02-13
+      end: 2026-04-13
+      duration: PT4H5M
+---
+
+
+```{r}
+#| label: setup
+#| include: true
+#| warning: false
+#| message: false
+#| echo: false
+
+
+library(tidyverse) # data processing
+library(kableExtra) # pretty tables
+library(bibtex) # reading in BibTex files to R
+
+# data files for level 0
+methods.file <- "Kavvadias2001_Methods.md"
+table1.file <- 'Kavvadias2001_Table1.csv'
+table2.file <- 'Kavvadias2001_Table2.csv'
+table6.file <- 'Kavvadias2001_Table6.csv'
+table7.file <- 'Kavvadias2001_Table7.csv'
+figure2.file <- 'Kavvadias2001_Table7.csv' #need to split up the figure 2 for coding purposes, but it should be able to be read in for lev0 as a combined file
+figure2A.file <- 'Kavvadias2001_Figure2_A.csv'
+figure2B.file <- 'Kavvadias2001_Figure2_B.csv'
+
+# Bibliograph files
+primaryCitation.file <- 'Kavvadias2001.bib'
+methodsCitation.file <- 'Kavvadias2001_Methods.bib'
+
+# read function; you will need to create this function after you have your data
+#... rescue reviewed and before you finish your data harmonization.
+readsource.file <- '../../../R/readKavvadias2001.R'
+if(file.exists(readsource.file)){
+  source(readsource.file)
+}
+
+#semantic files for level 1
+of_variable.file <- '../../semantics/SoilDRaHVocabulary_of_variable.csv'
+is_type.file <- '../../semantics/SoilDRaHVocabulary_is_type.csv'
+
+```
+
+
+# Data Summary
+
+Kavvadias, V. A., Alifragis, D., Tsiontsis, A., Brofas, G., & Stamatelos, G. (2001). Litterfall, litter accumulation and litter decomposition rates in four forest ecosystems in northern Greece. Forest ecology and management, 144(1-3), 113-127. https://doi.org/10.1016/S0378-1127(00)00365-0
+
+For the discussion of this data rescue see the Github issue: https://github.com/ktoddbrown/SoilDRaH/issues/202.
+
+This paper looks at four natural forest sites of *Pinus pinaster* Aiton, *Pinus nigra* Arn., *Abies borisii* regis, Matf. and *Fagus silvatica* L., focusing on the difference in litterfall nutrients and element concentrations of the different species.
+They used this data to determine how the differences in ecosystem conditions needed to be accounted for when evaluating site residence times.
+Residence times of the litter mass in this study were found to be substantially greater compared to other studies in the Mediterranean environment.
+The paper also assessed the turnover rates of these forest ecosystems.
+
+## Tables and figures
+
+- Table 
+  1) The age, stocking, basal area, and mean height of maritime pine, black pine, fir, and beech sites.
+  2) Mean physical and chemical soil characteristics of maritime pine, black pine, fir, and beech sites
+  3) Analysis of variance of the nutrient concentration of the forest floor.
+  4)  Analysis of variance of the total mass, organic matter, and nutrient accumulation in the forest floor.
+  5) Mean element concentrations of the litterfall at the coniferous and deciduous species.
+  6) Mean organic matter, element concentrations, and C:N and C:P ratios of the forest floor.
+  7) Turnover time of forest floor mass and nutrients in maritime pine, black pine, fir, and beech sites.
+
+- Figure 
+  1) Map of Greece showing the sites under investigation
+  2) Total mass of litterfall and litter accumulation at the two site qualities.
+  3) The mass of nutrients accumulated on the forest floor horizons at the two site qualities.
+  4) The quantities of nutrients in the litterfall at the two site qualities.
+
+## Fit for purpose: DeAD & ISCN4
+
+
+This data is identified as a data source for DeAD.
+The Decomposition Across Drylands (DeAD) data collection is a new data effort targeting dryland decomposition studies.
+The purpose of this data collection is to develop better litter decay models for dryland ecosystems.
+
+This data is identified as a data source for ISCN4.
+The purpose ISCN 2025 (aka ISCN4) is to create a data product aggregating data on geo-located soil organic carbon profiles.
+With this data, we will examine the assumption of steady state on field surveyed organic carbon.
+
+  - Location:
+    - The paper was evaluating 4 different sites.
+    - The maritime pine site was found in Kilkis at 41°06′N, 22°53′E, around 70 km north of Thessaloniki. This site tended to have a semi-arid Mediterranean climate, with an average forest depth of 1-3 cm.
+    - The black pine site was located on the northwest slope of the Pieria mountains at 40°23′N, 22°32′E. This site's climate was identified as a sub-Mediterranean to temperate ecosystem. The average forest depth was 1.1 to 4.4 cm.
+    - The fir site was located in Pertouli at 39°30′N, 21°25′E on the Pindos mountain. The site's climate was sub-Mediterranean to temperate.
+    - The beech site was located at the northeast slope of mountain Ossa at 39°50′N, 22°30′E. This site's climate was sub-Mediterranean with rainy winter conditions. The soil depth was 1.5 to 5.4 cm thick.
+
+  - Duration:  The litter fall was collected from January 1994 to December 1995 at monthly intervals.
+  
+  - Mass loss: The turnover time of the forest mass and nutrients was found in Table 7. The time was estimated using Olson's formula with data from Figures 1-3.
+  
+  - Solar exposure: Sites were separated into two site qualities, high and low. These site quality rankings were determined from @Apatsidis1990 and @Panagiotidis1981. Could not determine if solar exposure was included in the site quality determination.
+
+  - Soil organic carbon stocks: The mean and S.D. of the organic matter can be found in Table 6. Within this table, there is also the N, P, K, and C:N ratio. 
+
+Other Relevant Variables:
+
+  - Litter species:  The litter species in this study are maritime pine (*Pinus pinaster* Aiton), black pine (*Pinus nigra* Arn.), Bulgarian fir (*Abies borissi* regis, Matf.), and beech (*Fagus silvatica*, L.).
+  
+  - Microsite data: The microsite data is found within the 2.1. Study Site subsection, as well as the stand characteristics, are found within Table 1.
+  
+  - Litter chemical composition ncluding lignin content and C:N ratio: The chemical soil characteristics are given within Table 2 for each of the litter species.
+  
+  - Litter bag materials and method, including litter bag area and mesh size: The twelve litter traps were 0.5 m$^2$, with 2 mm mesh nylon, which were suspended 40 cm above the ground.
+
+
+  
+## Files
+These files are in the @Kavvadias2001 data rescue.
+
+- [Readme](README_Kavvadias2001.qmd)
+  + This is the primary file that documents the transcriptions and decision made during data rescue.
+- [Kavvadias2001.bib](Kavvadias2001.bib)
+  + citation for article transcribed
+- [Kavvadias2001_Methods.bib](Kavvadias2001_Methods.bib)
+  + citations for the methods and sample collection section of the article
+- [Kavvadias2001_Methods.md](Kavvadias2001_Methods.md)
+  + methods and sample collection section transcribed from primary article
+- [Kavvadias2001_Table1.csv](Kavvadias2001_Table1.csv)
+  + table 1 from primary article with the site characteristics.
+- [Kavvadias2001_Table2.csv](Kavvadias2001_Table2.csv)
+  + table 2 from primary article with the mean physical and chemical soil characteristics
+- [Kavvadias2001_Table6.csv](Kavvadias2001_Table6.csv)
+  + table 6 from primary article with mean organic matter and element concentration
+- [Kavvadias2001_Table7.csv](Kavvadias2001_Table7.csv)
+  + table 7 from primary article with turnover times
+- [Kavvadias2001_Figure2.csv](Kavvadias2001_Figure2.csv)
+  + figure 2 from primary article with total mass of litterfall and litter accumulation
+- [temp/](temp/)
+    + scratch folder that will not be archived on GitHub, it should include local copies of the data resource (likely a PDF article) and any spreadsheets or other tools you used for the transcriptions.
+
+# Data Rescue working notes 
+
+## Data Rescue Plan
+
++ Lead
+  - [x] Read the article or data resource and the discription of the target project
+  - [x] Create a fresh fork of the primary repository https://github.com/ktoddbrown/SoilDRaH/tree/main, it might be useful to rename it 'SoilDRaH_Kavvadias2001'
+  - [x] Create a copy of this template folder and rename it to @Kavvadias2001
+  - [x] Fill out Data summary section (except for the Files), the Data Rescue Plan (here!), and update the author section of the yml to reflect who is working on the rescue
+  - [x] Create a GitHub issue from the Data Rescue template and get feedback from a reviewer on the project (Dr Todd-Brown or a grad student typically).
+  - [x] Add the reviewer to the author list in the yml
++ Do
+  - [x] Create a spreadsheet with Table1-2 and Table 6-7 and export it to csv
+  - [x] Extract points from Figure2 and export it to csv
+  - [x] Transcribe or copy the method section
+  - [x] Insert references to bib entries
+  - [x] reformat equations and mathematical symbols as [LaTex](https://en.wikibooks.org/wiki/LaTeX/Mathematics)
+  - [x] reformat text using [Markdown](https://www.markdownguide.org/cheat-sheet/)
+  - [x] Create a bib file with the citations from the methods section
+  - [x] Push to your local fork and get a second transcription pushed to your local fork by someone else on the project
++ Measure
+  - [x] cross check with second transcriber for tables and methods, and resolve any differences
+  - [x] compile ReadMe with all chunks up through the Level 0 data rescue section with `eval: true`
+  - [x] push to your local fork and create a pull request to the main branch of the primary repository
+  - [x] address any revisions suggested in your pull request review
+  - [x] celebrate!
+
+## Table 1
+
+Table 1 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption.
+
+
+```{r}
+#| label: table1Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table1.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table1.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable1
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table1.csv temp/Kavvadias2001_Table1_CS.csv
+```
+
+## Table 2
+
+Table 2 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption.
+
+```{r}
+#| label: table2Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table2.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table2.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table2.csv temp/Kavvadias2001_Table2_CS.csv
+```
+
+
+## Table 6
+
+Table 6 was modified to combine nested column headers and include markdown format in the table. It was also modified to include the footnotes in the caption and dashes where there was no data in the cell.
+
+```{r}
+#| label: table6Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table6.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table6.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable6
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table6.csv temp/Kavvadias2001_Table6_CS.csv
+```
+
+
+
+## Table 7
+
+Table 7 was modified include markdown format in the table. It was also modified to include the footnotes in the caption.
+
+```{r}
+#| label: table7Check
+#| code-fold: true
+#| message: false
+
+read_csv(file = table7.file, #read in the specific file
+         skip = 1, #skip the first line with the caption
+         #read everything as a character, don't worry about formatting yet
+         col_types = cols(.default = col_character())) |>
+  kable(caption = read_csv(file = table7.file, #read in that file again but...
+                           n_max = 1, #only read the first line
+                           col_names = 'caption', #call it the caption
+                           #read everything as a character
+                           col_types = cols(.default = col_character()),
+                           show_col_types = FALSE #do not return messages
+                           )$caption #and take it out of the table
+  )
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareTable7
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Table7.csv temp/Kavvadias2001_Table7_CS.csv
+```
+
+
+## Figure 2 - A and B
+
+Figure 2 was modified into two separate csv files as the figures needed different code to generate the image. Figure 2 A is the Litterfall figure and Figure 2 B is the Littermass figure.
+
+```{r}
+#| label: figure2ACheck
+#| code-fold: true
+#| message: false
+
+
+fig2ACaption <- read_csv(file = figure2A.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+
+fig2AData <- read_csv(file = figure2A.file,
+                   skip = 1)
+
+fig2AData$Species <- factor(fig2AData$`Species`,
+                 levels = c('Maritime pine', 'Black pine', 'Fir', 'Beech'))
+fig2AData$`Site Quality` <- factor(fig2AData$`Site Quality`,
+      levels = c("H", "L"))
+
+ggplot(fig2AData, aes(x = `Species`, y = `y value`, fill = `Site Quality`)) + geom_bar(stat = "identity", position = position_dodge(width = 0.9)) + scale_y_continuous(limits = c(0, 4500),
+    breaks = seq(0, 4500, by = 500)) +  scale_fill_manual(
+    values = c("H" = "burlywood4",
+               "L" = "grey45")) +
+labs(title = "Fig. 2. A. Total mass of Litterfall at the two site qualities by species",
+     caption = fig2ACaption,
+     y = "Litterfall (kg/(ha*yr))")
+
+```
+
+```{r}
+#| label: figure2BCheck
+#| code-fold: true
+#| message: false
+
+library(tidyverse)
+
+fig2BCaption <- read_csv(file = figure2B.file, 
+                                 n_max = 1, col_names = 'caption', 
+                                 show_col_types = FALSE)$caption
+fig2BData <- read_csv(file = figure2B.file,
+                   skip = 1,
+                   col_types = cols(.default = col_character())) |>
+ mutate(
+    species = factor(species,
+      levels = c("Maritime pine", "Black pine", "Fir", "Beech")),
+    `site quality` = factor(`site quality`,               
+      levels = c("H", "L")),
+    across(starts_with("y value"), as.numeric))
+
+ggplot(fig2BData, aes(x = species, y = `y value bottom_AO`, fill = "AO", group = interaction(species, `site quality`))) + 
+  geom_col(aes(y = `y value top_AOO`, fill = 'AOO', group = interaction(species, `site quality`)),
+  position = position_dodge(width = 0.9), width = 0.9) +
+  geom_col(position = position_dodge(width = 0.9)) +
+  scale_fill_manual(name = "",
+    values = c(
+      "AOO" = "burlywood4",
+      "AO"    = "ivory3")) +
+  scale_y_continuous(limits = c(0, 90),
+    breaks = seq(0, 90, by = 10)) +
+  labs(
+    title = "Fig. 2. B. Litter accumulation at the two site qualities by species",
+    y = 'Littermass (tn.ha^{-1})',
+    x = 'Species, H and L (left column and right column per group)')
+
+```
+
+And is crosschecked with the secondary transcription
+
+```{bash}
+#| label: compareFigure2
+#| eval: false
+
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_A.csv temp/Kavvadias2001_Figure2a_CS.csv
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2_B.csv temp/Kavvadias2001_Figure2b_CS.csv
+
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Figure2.csv temp/Kavvadias2001_Figure2_CS.csv
+```
+
+
+
+## Methods
+
+```{bash}
+#| label: compareTranscriptions
+#| eval: false
+# You will want to repeat the line below to cross check each csv and md file in the
+#... data rescue. Having no lines flagged by this command will ensure that each character matches exactly.
+diff --strip-trailing-cr --suppress-common-lines -y Kavvadias2001_Methods.md temp/Kavvadias2001_Methods_CS.md
+```
+
+{{< include Kavvadias2001_Methods.md >}}
+
+<!----
+## Citation notes from Methods
+
+Below are the citation notes from the methods section.
+This generally doesn't read well in the final report so commenting it out here but it is very useful for tracking citations when you are doing the transcriptions.
+Some citations are missing, those are noted here and how best guess were generated.
+Think of this as a lab notebook documenting how you found each citation.
+
+- [ ] short citation
+  + copy from bib
+  + manually entered or direct export
+  
+- [x] Apatsidis, L., 1990. Reallocation of ten-part volumetric systems, incremental indexes of fir, black pine and beech and their site quality systems. In: Forestry and Regional Development. Communication and Outcome. Conference of Greek Forest Society (in Greek).
+  + copy from bib
+
+- [x] Panagiotidis, N., 1981. A ten-part system of volumetric and incremental indexes for black pine stands in Greece. For. Res. II (2), 191–122 (in Greek with English abstract).
+  + copy from bib
+
+- [x] Klinka, K., Green, R.N., Trowbridge, R.L., Lowe, L.E., 1981. Taxonomic classification of humus forms in ecosystems of British Columbia. Land Management Report No. 8, BC Min. For., Vic., B.C., 54 pp.
+  + copy from bib
+
+- [x] Food and Agriculture Organization, 1988. FAO/UNESCO Soil Map of the World Revised Legend. FAO, Rome, 138 pp.
+  + copy from bib
+
+- [x] Papamichos, N., 1990. Forest Soils. Aristotle University of Thessaloniki, 414 pp (in Greek).
+  + copy from bib
+
+- [x] Bouyoucos, G. J. (1962). Hydrometer method improved for making particle size analyses of soils 1. Agronomy journal, 54(5), 464-465.
+  + copy from bib
+
+- [x] A. Walkley, I.A Black
+An examination of the Degtjiareff method for determining soil organic matter and a proposed modification of chromic acid titration method
+Soil Sci., 37 (1934), pp. 29-38
+  + copy from bib
+
+- [x] A. Walkley. A critical examination of a rapid method for determining organic carbon in soils. Effect of variations in digestion conditions and of organic soil constituents
+Soil Sci., 63 (1947), pp. 251-264
+  + copy from bib
+
+- [x] Allen, S.E., Grimshaw, H.M., Parkinson, J.A., Quarmby, C., 1974. Chemical Analysis of Ecological Material. Blackwell Scientific Publications, Oxford, 565 pp.
+  + copy from bib
+
+- [x] J.S Olson. Energy storage and balance of producers and decomposers in ecological systems
+Ecology, 44 (1963), pp. 322-331.
+  + copy from bib
+
+---->
+
+# Level 0 Data rescue
+
+This level 0 data read parses the transcribed files with minimal cleaning or transformations.
+
+```{r}
+#| label: readLevel0
+#| eval: true
+#This chunk has two purposes. 
+#...1) Check the formatting by reading in everything 
+#...2) Create a list of everything to process later in level 1
+
+data.lvl0.ls <- list(
+  #Read in a list of all the bib files
+  citation = list(
+    #Citation for the article transcriptions are pulled from
+    primary = read.bib(file = primaryCitation.file), 
+    #Citations for all referenced articles
+    methods = read.bib(file = methodsCitation.file)
+  ),
+  #Read in the text transcription of the article's methods section
+  method = read_lines(file = methods.file),
+  #Read in the results as tables or figure transcriptions. This includes
+  #...the caption as well as the tables themselves
+  data = list(
+    Table1 = list(
+      caption = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table1.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Table2 = list(
+      caption = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    Table6 = list(
+      caption = read_csv(file = table6.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table6.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ), 
+    Table7 = list(
+      caption = read_csv(file = table7.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = table7.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    ),
+    Figure2 = list(
+      caption = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         n_max = 1, col_names = FALSE)$X1[1],
+      primary = read_csv(file = figure2.file,
+                         col_types = cols(.default = col_character()),
+                         skip = 1)
+    )
+   ) #end 'data' element
+)
+
+```
+
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+#| eval: false
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readKavvadias2001(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
+
+# References
+
+<!---- This space will be filled with the citations when rendered. Leave this blank. ---->
+

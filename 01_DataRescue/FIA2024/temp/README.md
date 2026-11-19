@@ -1,0 +1,1 @@
+This is the temporary folder for FIA download data.

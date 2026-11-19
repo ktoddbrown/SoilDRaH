@@ -9,43 +9,46 @@ bibliography:
   - Idol2007_Methods.bib
   - Idol2007.bib
 author:
-  - name:
+  - id: ktoddbrown
+    name:
       given: Katherine
       family: Todd-Brown
-      orcid: 0000-0002-3109-8130
-      note: https://github.com/ktoddbrown
-      affiliations:
-        - id: ESS UF
-          name: University of Florida
-          department: Environmental Engineering Sciences
-          city: Gainesville
-          state: FL
-          country: USA
-      role: 
-        - "Transcription"
-        - "Review"
-  - name:
+    orcid: 0000-0002-3109-8130
+    note: https://github.com/ktoddbrown
+    affiliations:
+      - id: ESS UF
+        name: University of Florida
+        department: Environmental Engineering Sciences
+        city: Gainesville
+        state: FL
+        country: USA
+    role: 
+      - "Transcription"
+      - "Review"
+  - id: waldera
+    name:
       given: Ashlynn
       family: Walder
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/waldera
-  - name:
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/waldera
+  - id: SavaScott
+    name:
       given: Savannah
       family: Scott
-      affiliation:
-        - id: UF
-          name: University of Florida
-          city: Gainesville
-          state: FL
-          country: USA
-      role: "Transcription"
-      note: https://github.com/SavaScott
+    affiliation:
+      - id: UF
+        name: University of Florida
+        city: Gainesville
+        state: FL
+        country: USA
+    role: "Transcription"
+    note: https://github.com/SavaScott
 ---
 
 ```{r setup, include=TRUE, warning=FALSE, message=FALSE, echo=FALSE}

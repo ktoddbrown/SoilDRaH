@@ -50,10 +50,8 @@ po/*~
 rsconnect/
 docs
 
-# temp folder where we stash a lot of data
-temp/*
-*/temp/*
-temp*
+# Posit AI configuration files
+.positai
 
 #MacOS files
 *DS_Store
@@ -63,5 +61,19 @@ temp*
 */*/*_files/*
 */*/*/*_files/*
 *.html
+
+#Binary files
 *.pdf
-.positai
+*.xlsx
+*.xls
+
+#Big download files
+01_DataRescue/CPEAT2025/temp/CPEAT/*.txt
+01_DataRescue/CPEAT2025/temp/*
+01_DataRescue/ISCN3_2015/temp/*.csv
+01_DataRescue/FIA2024/temp/CSV_FIADB_ENTIRE.zip
+01_DataRescue/FIA2024/temp/CSV_FIADB_ENTIRE/
+01_DataRescue/NCSS/temp/ncss_labdata.sqlite
+
+#Ignore anything in the primary temp folder
+/temp/*
