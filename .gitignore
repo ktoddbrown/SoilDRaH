@@ -50,6 +50,9 @@ po/*~
 rsconnect/
 docs
 
+# Posit AI configuration files
+.positai
+
 #MacOS files
 *DS_Store
 

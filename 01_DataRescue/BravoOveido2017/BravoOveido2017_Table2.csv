@@ -1,0 +1,10 @@
+**Table 2** Estimates of Olsen's decay model (eq. for managed mixed Mediterranean oak-pine forest.,,,,,,
+Response variable,Parameter estimation Effect,Parameter estimation Estimate,Parameter estimation Standard error,Parameter estimation DF,Parameter estimation t value,Parameter estimation Pr > |t|
+Decay rate,Litter type (oak),-0.1533,0.01066,581,-14.38,<0.0001
+Decay rate,Litter type (pine),-0.1351,0.01066,581,-12.67,<0.0001
+Decay rate,Litter type (oak) $\times$ Treatment (CT),-0.0447,0.1492,581,-2.99,0.0029
+Decay rate,Litter type (oak) $\times$ Treatment (LT),-0.0165,0.1519,581,-1.09,0.2768
+Decay rate,Litter type (oak) $\times$ Treatment (HT),0.0000,-,-,-,-
+Decay rate,Litter type (pine) $\times$ Treatment (CT),-0.0084,0.01492,581,-0.56,0.5749
+Decay rate,Litter type (pine) $\times$ Treatment (LT),-0.0295,0.01519,281,-1.94,0.0525
+Decay rate,Litter type (pine) $\times$ Treatment (HT),0.0000,-,-,-,-
