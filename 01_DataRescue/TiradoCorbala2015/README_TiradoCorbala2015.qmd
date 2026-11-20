@@ -69,6 +69,11 @@ timelog:
         who: ktoddbrown
         start: 2026-11-06
         duration: PT3H
+    - activity:
+        description: Continue level 1 transformation
+        who: ktoddbrown
+        start: 2026-11-20
+        duration: PT1H
 ---
 
 ```{r}
@@ -228,123 +233,52 @@ Figure 2 was adapted to switch the yellow-black columns and the green-black colu
 #| code-fold: true
 #| message: false
 
+temp <- data.lvl0.ls$data$figure2$primary |>
+  mutate(stage_IC_str = str_remove(`color portion label`, ' - .*$')) |>
+  mutate(is_IC = str_detect(stage_IC_str, 'inorganic carbon'),
+         stage = paste0(str_remove(stage_IC_str, 'inorganic carbon'), 
+                           collapse = ''),
+         stage_color = str_remove(`bar color`, pattern = 'black-'),
+         .by = c(y, `site label`, `bar color`)) |>
+  mutate(xlabel = if_else(is_IC, 'Inorganic carbon (kg*m^-2)',
+                          'Total carbon (kg*m^-2)')) |>
+  select(xlabel, x, `soil depth (cm)` = y,
+         footnote, site = 'site label', stage, stage_color) |>
+  pivot_wider(names_from = xlabel, values_from = x)
+
+#write_csv(temp, 'TiradoCorbala2015_Figure2_REVISE.csv')
+
 # TODO this figure is broken now that the figure2 csv was fixed. Need to revise.
 
-caption_data2 <- read_csv(file = figure2.file, 
+
+
+caption_data2 <- read_csv(file = 'TiradoCorbala2015_Figure2_REVISE.csv', 
                                  n_max = 1, col_names = 'caption', 
                                  show_col_types = FALSE)$caption
 
  #Fixed caption format issues - SRS
 
-read_data <- read_csv(figure2.file, skip = 1) |> 
-  rename(total_C = x, 
-         depth_interval = y,
-         x_axis_label = `x axis label`,
-         y_axis_label = `y axis label`,
-         site_label = `site label`,
-         stage_color_ID = `color portion label`,
-         bar_color = `bar color`) |> 
-  mutate(stage = dplyr::case_when(
-    stringr::str_detect(stage_color_ID, "maturity - green") ~ "TC_maturity",
-    stringr::str_detect(stage_color_ID, "grand growth - yellow") ~ "TC_grand_growth",
-    stringr::str_detect(stage_color_ID, "tillering - blue") ~ "TC_tillering",
-    stringr::str_detect(stage_color_ID, "inorganic carbon - black") ~ "inorganic_C",
-    TRUE ~ NA_character_)) |> 
-  pivot_wider(names_from = stage,
-              values_from = total_C) |> 
-  group_by(depth_interval, site_label, bar_color) |> 
-  mutate(OC_stage_from_color = recode(bar_color,
-                                      "black-green" = "maturity",
-                                      "black-yellow" = "grand_growth",
-                                      "black-blue" = "tillering"),
-         TC = case_when(
-           stage_color_ID == "maturity - green" ~ TC_maturity,
-           stage_color_ID == "grand growth - yellow" ~ TC_grand_growth,
-           stage_color_ID == "tillering - blue" ~ TC_tillering,
-            TRUE ~ NA)) #|> 
-  # pivot_longer(cols = starts_with("TC"),
-  #           names_to = "total_C_calc",
-  #           values_to = 'C_value')
- # group_by(depth_interval, site_label, bar_color) |> 
-inorganic_C_subset <- read_data |> 
-  filter(!is.na(inorganic_C)) |> 
-  select(c(1:5,7:8, OC_stage_from_color),) # getting rid of all OC related cols
-TC_subset <- read_data |> 
-  filter(!is.na(TC)) |> 
-  select(c(1:5,7, OC_stage_from_color,TC),) # getting rid of all IC related cols
-# this outputs the data table with distinct cols for OC, IC & TC  
-full_dataset <- full_join(TC_subset, inorganic_C_subset) |> 
-  unique() |> 
-  mutate(OC = TC - inorganic_C) |> 
-  rename(growth_stage = OC_stage_from_color)
-factor(full_dataset$depth_interval, levels = c(10, 30, 60, 100))
-full_dataset$growth_stage <- factor(full_dataset$growth_stage,
-      levels = c("maturity", "grand_growth", "tillering"))
-#preparing data for plotting
-depth_levels <- c('10', '30', '60', '100')
-full_dataset <- full_dataset |> 
-  mutate(depth_interval = factor(depth_interval, depth_levels, ordered = T))
+figData <- read_csv('TiradoCorbala2015_Figure2_REVISE.csv', skip = 1) |>
+  mutate(across(c("Total carbon (kg*m^-2)", "Inorganic carbon (kg*m^-2)"),
+                as.numeric),
+         stage = factor(stage, 
+                        levels = c("tillering", 'grand growth', 'maturity')),
+         `soil depth (cm)` = factor(`soil depth (cm)`,
+                                    levels = c('10', '30', '60', '100')))
 
-long.df <- full_dataset |> 
- # select(site_label, depth_interval, growth_stage, inorganic_C, OC)
-  pivot_longer(cols = c(inorganic_C, OC),
-               names_to = "component",
-               values_to = "value")
-long.df <- full_dataset |>
-   pivot_longer(cols = c(inorganic_C, OC),
-               names_to = "component",
-               values_to = "value") |> 
-  mutate(grp = interaction(depth_interval, growth_stage, 
-                           drop = T, sep = "|"),
-          growth_stage_group = interaction(growth_stage, component,
-                           drop = T, sep = "|"))
-ggplot(long.df,
-       aes(x = as.numeric(grp), y = value, fill = growth_stage_group,
-           group = component,
-           colour = component)) +
-  geom_col(width = 0.45,
-           color = "black") +
-  geom_vline(xintercept = c(3.5 , 6.5, 9.5),
-             linetype = "dotted",
-             color = "red", linewidth = 0.5) +
+ggplot(figData) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Total carbon (kg*m^-2)`,
+               fill = stage), width = 0.15) +
+  geom_col(aes(x = -1*(as.numeric(`soil depth (cm)`) + (as.numeric(stage)-2)/3), 
+               y = `Inorganic carbon (kg*m^-2)`), 
+           color = 'black', width = 0.15) +
+  geom_vline(xintercept = -1*(1:3 +0.5), color = 'red', linetype = 2) +
   coord_flip() +
-  # scale_fill_manual(
-   #  values = c(inorganic_C = "black",
-  #              OC = "#77FFB7"),
-  #   labels = c(inorganic_C = "inorganic carbon (IC)",
-  #              OC = "organic carbon (OC)")) +
-  scale_fill_manual(
-    name = "growth_stage_group",
-    values = c("maturity|inorganic_C" = "black",
-               "maturity|OC" = "chartreuse4",
-               "grand_growth|inorganic_C" = "black",
-               "grand_growth|OC" = "darkgoldenrod2",
-               "tillering|inorganic_C" = "black",
-               "tillering|OC" = "cyan")) +
- # scale_x_discrete(labels = function(x) sub("\\|.*", "", x)) +
-   scale_x_continuous(
-    breaks = c(2.5, 5.5, 8.5, 11.5),
-    labels = c("10", "30", "60", "100"),
-  #  expand = expansion(mult = c(0.03, 0.12)),
-    trans = "reverse"
-  ) +
-  facet_wrap(~site_label) +
-  # geom_hline(yintercept = c(3.5 , 6.5, 9.5),
-  #            linetype = "dotted",
-  #            color = "red", linewidth = 0.3) +
-  labs(title = "Total organic (OC) and inorganic (IC) carbon for the four sugarcane cultivars
-grown in Pulehu soils.",
-     caption = str_wrap(caption_data2, width = 60),
-     y = expression("Total Carbon (kg "  *m^-2*")"),
-     x = "Soil depth (in cm)",
-  position = position_dodge(width = 0.9)) + geom_text(
-    data = subset(long.df, !grepl("inorganic_C", growth_stage_group)),
-    aes(x = as.numeric(grp), y = `TC`  + 0.13, label = footnote),
-  position = position_dodge(width = 0.9),
-  hjust = 0,
-  size = 2
-) +
-  theme_bw()
+  scale_x_continuous(breaks = -1*(1:4), 
+                     labels = c("10", "30", "60", "100")) +
+  facet_wrap(~site) +
+  labs(x='Soil depth (cm)')
 
 ```
 
@@ -634,7 +568,7 @@ Below are the citation notes from the methods section.
 # Level 0: raw data reads
 
 ```{r readLevel0}
-data.lvl0.df <- list(citation = 
+data.lvl0.ls <- list(citation = 
                     list(primary = 
                            read.bib(file = primaryCitation.file), 
                          methods = 
@@ -777,9 +711,9 @@ study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                      #methods for soil collection
                    'island', 'value', 'Maui', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
                    'land_use', 'description', 'commercial sugar cane plantation', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
-                   'geolocation', 'latitude', as.numeric(20 + 54/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
-                   'geolocation', 'longitude', as.numeric(156 + 1/26), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
-                   'geolocation', 'precision', as.numeric(1/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
+                   'geolocation', 'latitude', as.character(20 + 54/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'geolocation', 'longitude', as.character(156 + 1/26), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'geolocation', 'precision', as.character(1/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
 
 #units from figure legends
 ##methods for soil collection
