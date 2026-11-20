@@ -233,32 +233,14 @@ Figure 2 was adapted to switch the yellow-black columns and the green-black colu
 #| code-fold: true
 #| message: false
 
-temp <- data.lvl0.ls$data$figure2$primary |>
-  mutate(stage_IC_str = str_remove(`color portion label`, ' - .*$')) |>
-  mutate(is_IC = str_detect(stage_IC_str, 'inorganic carbon'),
-         stage = paste0(str_remove(stage_IC_str, 'inorganic carbon'), 
-                           collapse = ''),
-         stage_color = str_remove(`bar color`, pattern = 'black-'),
-         .by = c(y, `site label`, `bar color`)) |>
-  mutate(xlabel = if_else(is_IC, 'Inorganic carbon (kg*m^-2)',
-                          'Total carbon (kg*m^-2)')) |>
-  select(xlabel, x, `soil depth (cm)` = y,
-         footnote, site = 'site label', stage, stage_color) |>
-  pivot_wider(names_from = xlabel, values_from = x)
 
-#write_csv(temp, 'TiradoCorbala2015_Figure2_REVISE.csv')
-
-# TODO this figure is broken now that the figure2 csv was fixed. Need to revise.
-
-
-
-caption_data2 <- read_csv(file = 'TiradoCorbala2015_Figure2_REVISE.csv', 
-                                 n_max = 1, col_names = 'caption', 
-                                 show_col_types = FALSE)$caption
+captionFig <- read_csv(file = figure2.file, 
+                       n_max = 1, col_names = 'caption', 
+                       show_col_types = FALSE)$caption
 
  #Fixed caption format issues - SRS
 
-figData <- read_csv('TiradoCorbala2015_Figure2_REVISE.csv', skip = 1) |>
+figData <- read_csv(figure2.file, skip = 1) |>
   mutate(across(c("Total carbon (kg*m^-2)", "Inorganic carbon (kg*m^-2)"),
                 as.numeric),
          stage = factor(stage, 
@@ -278,7 +260,8 @@ ggplot(figData) +
   scale_x_continuous(breaks = -1*(1:4), 
                      labels = c("10", "30", "60", "100")) +
   facet_wrap(~site) +
-  labs(x='Soil depth (cm)')
+  labs(x='Soil depth (cm)',
+       caption = str_wrap(captionFig, width = 80))
 
 ```
 
