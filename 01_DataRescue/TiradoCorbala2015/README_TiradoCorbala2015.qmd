@@ -697,8 +697,12 @@ study.df <- tribble(~of_variable, ~is_type, ~with_entry, ~from_source,
                    'land_use', 'description', 'commercial sugar cane plantation', paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
                    'geolocation', 'latitude', as.character(20 + 54/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
                    'geolocation', 'longitude', as.character(156 + 1/26), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
-                   'geolocation', 'precision', as.character(1/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')))
-#TODO define growth_stage, bulk_density methods, and total carbon methods
+                   'geolocation', 'precision', as.character(1/60), paste('Method ln5:', paste(data.lvl0.ls$method[5], collapse = ' ')),
+                   'bulk_density_stock', 'method', 'inferred', paste('Method ln26,35:', paste(data.lvl0.ls$method[c(26,35)], collapse = ' ')),
+                   'carbon_total', 'method', 'dry combustion with CN analyzer', paste('Method ln31:', paste(data.lvl0.ls$method[31], collapse = ' ')),
+                   'carbon_inorganic', 'method', 'HCL acidification', paste('Method ln32:', paste(data.lvl0.ls$method[32], collapse = ' ')),
+                   'growth_stage', 'control_vocabulary', 'tillering;grand growth;maturnity', paste('Method ln30:', paste(data.lvl0.ls$method[30], collapse = ' '))
+)
 
 #units from figure legends
 ##methods for soil collection
@@ -772,13 +776,14 @@ layer.df <- data.lvl0.ls$data$Table2$primary |>
          of_variable = case_when(
            column_name == 'Soil Depth (cm)' ~ 'layer',
            column_name == 'TC (kg*m^-2)' ~ 'carbon_total',
-           column_name == 'BD a (g*cm^-3)' ~ 'bulk_density',
+           column_name == 'BD a (g*cm^-3)' ~ 'bulk_density_stock',
            .default = 'unknown')) |>
   select(soil_id, layer_id, of_variable, value, lower, upper, unit) |>
   pivot_longer(cols = c(value, lower, upper, unit),
                names_to = 'is_type', values_to = 'with_entry',
                values_drop_na = TRUE) |>
-  mutate(from_source = 'Table 2')
+  mutate(from_source = 'Table 2',
+         stage_id = 'baseline')
 
 #### Create level 1 #####
 ## Pull everything together into by stacking the meta and primary data tables
