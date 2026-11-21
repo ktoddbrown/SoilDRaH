@@ -98,6 +98,10 @@ figure9.file <- 'TiradoCorbala2015_Figure9.csv'
 figure10.file <- 'TiradoCorbala2015_Figure10.csv'
 primaryCitation.file <- 'TiradoCorbala2015.bib'
 methodsCitation.file <- 'TiradoCorbala2015_Methods.bib'
+
+readsource.file <- '../../02_DataHarmonization/readTiradoCorbala2015.R'
+
+source(readsource.file)
 ```
 
 This documents the data transcription for @TiradoCorbala2015.
@@ -580,6 +584,26 @@ data.lvl0.ls <- list(
 )
 ```
 
+The code is also in `readsource.file` and returned with the `dataLevel = 'level0'` argument.
+Below verifies that the data from the function matches what is coded above.
+
+```{r}
+#| label: checkReadFunction_lvl0
+
+if(file.exists(readsource.file)){
+  datafunction.lvl0.ls <- readTriadoCorbala2015(dataDir = '.',
+                                         dataLevel = 'level0')
+  
+  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+    print('Read function matches code here.')
+  }else{
+    print('There is a mismatch in the data objects between the code here and the read function.')
+  }
+}else{
+  print('The read function does not exist.')
+}
+```
+
 # Level 1 data - HiCSC
 
 This data is identified as a data source for the HiCSC.
@@ -733,10 +757,10 @@ Check for an exact match with the read function.
 #| label: checkReadFunction_lvl1
 
 if(file.exists(readsource.file)){
-  datafunction.lvl1.ls <- readAuthorYYYY(dataDir = '.',
+  datafunction.lvl1.ls <- readTriadoCorbala2015(dataDir = '.',
                                          dataLevel = 'level1')
   
-  if(isTRUE(all.equal(datafunction.lvl0.ls, data.lvl0.ls))){
+  if(isTRUE(all.equal(datafunction.lvl1.ls, data.lvl1.ls))){
     print('Read function output matches ReadMe code for level 1.')
   }else{
     print('There is a mismatch in the level 1 data objects between the code here and the read function.')
