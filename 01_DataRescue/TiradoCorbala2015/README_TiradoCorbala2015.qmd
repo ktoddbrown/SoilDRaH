@@ -102,6 +102,9 @@ methodsCitation.file <- 'TiradoCorbala2015_Methods.bib'
 readsource.file <- '../../02_DataHarmonization/readTiradoCorbala2015.R'
 
 source(readsource.file)
+
+#semantic files for level 1
+curation_canidate_semantics.file <- '../../03_DataCuration/HiCSC/vocabulary_draft.csv'
 ```
 
 This documents the data transcription for @TiradoCorbala2015.
@@ -771,6 +774,34 @@ if(file.exists(readsource.file)){
 
 ```
 
+## Check semantics
+
+```{r}
+
+datafunction.lvl1.ls <- readTriadoCorbala2015(dataDir = '.',
+                                         dataLevel = 'level1')
+
+#semantic files for level 1
+curation.semantics <- read_csv(curation_canidate_semantics.file,
+                            show_col_types = FALSE)
+
+data.semantics <- datafunction.lvl1.ls$study |>
+  select(of_variable, is_type) |>
+  bind_rows(datafunction.lvl1.ls$soil |>
+              select(of_variable, is_type)) |>
+  bind_rows(datafunction.lvl1.ls$layer |>
+              select(of_variable, is_type)) |>
+  unique() |>
+  mutate(study_id = 'TriadoCorbala2015')
+
+stacked.df <- curation.semantics |>
+  bind_rows(data.semantics) |>
+  unique()
+
+if(nrow(stacked.df) != nrow(data.semantics)){
+  stop('Deal with new vocabulary')
+}
+```
 
 # References
 
