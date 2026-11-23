@@ -1,0 +1,56 @@
+"Fig. 1. Remaining dry mass (%) after two years of decomposition of *Q. pyrenaica* leaves (solid lines) and *P. pinaster* needles (dashed lines) in an unthinned, lightly thinned and heavily thinned Mediterranean mixed forest.",,,,,
+Time since incubation (Days),Remaining dry mass (%),Type,Species,ymin,ymax
+0,100,Unthinned - CT,Q. pyrenaica,100,100
+87.34,92.05,Unthinned - CT,Q. pyrenaica,88.91,95.19
+178.93,92.05,Unthinned - CT,Q. pyrenaica,89.37,94.73
+266.272,86.41,Unthinned - CT,Q. pyrenaica,78.37,94.45
+357.87,80.04,Unthinned - CT,Q. pyrenaica,74.68,85.4
+447.34,77.63,Unthinned - CT,Q. pyrenaica,72.45,82.81
+536.804,75.14,Unthinned - CT,Q. pyrenaica,71.44,78.84
+626.27,69.69,Unthinned - CT,Q. pyrenaica,64.7,74.68
+717.87,69.04,Unthinned - CT,Q. pyrenaica,65.53,72.55
+0,100,Unthinned - CT,P. pinaster,100,100
+91.6,94.36,Unthinned - CT,P. pinaster,92.95,95.77
+181.07,93.62,Unthinned - CT,P. pinaster,92.59,94.65
+272.66,90.3,Unthinned - CT,P. pinaster,87.47,93.13
+362.13,85.67,Unthinned - CT,P. pinaster,82.86,88.48
+451.6,81.33,Unthinned - CT,P. pinaster,78.31,84.35
+543.2,82.62,Unthinned - CT,P. pinaster,80.68,84.56
+632.66,75.79,Unthinned - CT,P. pinaster,73.25,78.33
+722.13,76.06,Unthinned - CT,P. pinaster,73.19,78.93
+0,100,Light thinned - LT,Q. pyrenaica,100,100
+90.72,91.43,Light thinned - LT,Q. pyrenaica,89.32,93.54
+177.59,87.51,Light thinned - LT,Q. pyrenaica,84.2,90.82
+268.31,85.67,Light thinned - LT,Q. pyrenaica,81.64,89.7
+357.1,76.2,Light thinned - LT,Q. pyrenaica,71.69,80.71
+445.9,81.99,Light thinned - LT,Q. pyrenaica,77.75,86.23
+536.62,77.93,Light thinned - LT,Q. pyrenaica,72.46,83.4
+627.35,79.22,Light thinned - LT,Q. pyrenaica,69.98,88.46
+716.14,70.61,Light thinned - LT,Q. pyrenaica,60.24,80.98
+0,100,Light thinned - LT,P. pinaster,100,100
+92.65,94.47,Light thinned - LT,P. pinaster,91.53,97.41
+183.38,93.9,Light thinned - LT,P. pinaster,90.95,96.85
+272.17,90.16,Light thinned - LT,P. pinaster,86.3,94.02
+362.89,85.08,Light thinned - LT,P. pinaster,82.71,87.45
+453.62,80.21,Light thinned - LT,P. pinaster,77.1,83.32
+542.4,81.48,Light thinned - LT,P. pinaster,79.1,83.86
+633.14,74.75,Light thinned - LT,P. pinaster,71,78.5
+720,69.66,Light thinned - LT,P. pinaster,61.43,77.89
+0,100,Heavy thinned - HT,Q. pyrenaica,100,100
+87.06,92.07,Heavy thinned - HT,Q. pyrenaica,87.19,96.95
+178.06,89.31,Heavy thinned - HT,Q. pyrenaica,86.08,92.54
+267.1,88.34,Heavy thinned - HT,Q. pyrenaica,84.36,92.32
+358.06,84.34,Heavy thinned - HT,Q. pyrenaica,80.51,88.17
+447.1,78.13,Heavy thinned - HT,Q. pyrenaica,74.25,82.01
+538.06,80.79,Heavy thinned - HT,Q. pyrenaica,74.65,86.93
+627.1,74.63,Heavy thinned - HT,Q. pyrenaica,68.12,81.14
+718.06,75.65,Heavy thinned - HT,Q. pyrenaica,66.71,84.59
+0,100,Heavy thinned - HT,P. pinaster,100,100
+92.9,94.92,Heavy thinned - HT,P. pinaster,93.63,96.21
+181.94,93.98,Heavy thinned - HT,P. pinaster,92.9,95.06
+272.9,93.05,Heavy thinned - HT,P. pinaster,91.07,95.03
+361.94,86.79,Heavy thinned - HT,P. pinaster,85.09,88.49
+452.9,83.87,Heavy thinned - HT,P. pinaster,79.92,87.82
+541.94,82.94,Heavy thinned - HT,P. pinaster,81.31,84.57
+630.97,79,Heavy thinned - HT,P. pinaster,73.96,84.04
+720,75.14,Heavy thinned - HT,P. pinaster,66.45,83.83
