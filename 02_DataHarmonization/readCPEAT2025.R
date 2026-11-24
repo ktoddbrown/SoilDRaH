@@ -372,14 +372,14 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   
   ####Remove the replaced cores####
   #Find the dois of each core
-  doi_core <- datafunction.lvl0.ls$data$study |>
+  doi_core <- data.lvl0.ls$data$study |>
     #remove 112 dois that have been replaced
     filter(of_variable %in% 'citation') |>
     mutate(doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
   
   ### Remove replaced cores####
   ### Also check to make sure we have their replacements
-  replaced_core <- datafunction.lvl0.ls$data$study |>
+  replaced_core <- data.lvl0.ls$data$study |>
     #remove 112 dois that have been replaced
     filter(of_variable %in% 'replaced_by') |>
     mutate(replacement_doi = str_extract(with_entry, '(?<=https://doi.org/).*$'))
@@ -391,13 +391,13 @@ readCPEAT2025 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   }
   
   # Take the cores out of each of the data frames
-  study.df <- datafunction.lvl0.ls$data$study |>
+  study.df <- data.lvl0.ls$data$study |>
     filter(!('replaced_by' %in% of_variable), .by = bibKey)
   
-  column.df <- datafunction.lvl0.ls$data$columns |>
+  column.df <- data.lvl0.ls$data$columns |>
     filter(bibKey %in% study.df$bibKey)
   
-  primary.df <- datafunction.lvl0.ls$data$primary |>
+  primary.df <- data.lvl0.ls$data$primary |>
     filter(bibKey %in% study.df$bibKey)
   
   #### Move the PI info to the study data ####
