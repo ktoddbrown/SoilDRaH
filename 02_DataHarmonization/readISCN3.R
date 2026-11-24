@@ -561,30 +561,31 @@ readISCN3 <- function(dataDir, dataLevel = c('level0', 'level1')[1],
   
   #### Create bulk density method map####
   # Map the methods to column names and bulk density 
-  bulkDensity_methodMap <- tribble(~column_id, ~bd_method, ~bdNRCS_prep_code, ~what, ~how,
-                                   "bd_samp (g cm-3)","bd_samp values are means of multiple observations",NA, 'bulk_density-fine_earth', 'measured:mean',
-                                   "bd_other (g cm-3)","bd = dry weight/volume",NA, 'bulk_density-unspecified',NA,
-                                   #TODO likely NRCS prep codes, G. and M. seem to be leaders for air dried prep
-                                   "bd_tot (g cm-3)","G",NA, 'bulk_density-whole_soil', NA,
-                                   "bd_tot (g cm-3)","M",NA, 'bulk_density-whole_soil', NA,
-                                   "bd_other (g cm-3)","G",NA, 'bulk_density-unspecified', NA,
-                                   "bd_other (g cm-3)","M",NA, 'bulk_density-unspecified', NA,
-                                   "bd_samp (g cm-3)","measured as weight per unit volume",NA, 'bulk_density-fine_earth', NA,
-                                   "bd_other (g cm-3)","predicted from %C",NA, 'bulk_density-unspecified', 'formula:carbon_fraction',
-                                   "bd_other (g cm-3)","estimated from weight per unit area",NA, 'bulk_density-unspecified', 'estimated:weight per area',
-                                   "bd_other (g cm-3)","gap-filled with value from nearby sample",NA, 'bulk_density-unspecified', 'gap_filled:neighboring_samples',
-                                   "bd_samp (g cm-3)","calculated based on soil texture, rock fragment, and organic matter content",NA, 'bulk_density-fine_earth', 'formula:soil texture, rock fragment, organic matter',
-                                   "bd_tot (g cm-3)","gap-filled value from re-measurement of same plot in 2000",NA, 'bulk_density-whole_soil', 'gap_filled:resampled',
-                                   "bd_tot (g cm-3)","core volume/mass",NA, 'bulk_density-whole_soil', NA,
-                                   "bd_samp (g cm-3)","Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.",NA, 'bulk_density-stock', 'measured:fine dry mass over core volume',
-                                   "bd_other (g cm-3)","bd = (1.45*0.111)/((loi/100)*1.45+(1-(loi/100))*0.111)",NA, 'bulk_density-unspecified', 'formula:organic_matter_fraction',
-                                   "bd_other (g cm-3)","interpolated from adjacent horizons",NA, 'bulk_density-unspecified', 'gap_filled:neighboring horizons',
-                                   "bd_tot (g cm-3)",NA,NA, 'bulk_density-whole_soil', NA,
-                                   "bd_samp (g cm-3)",NA,NA, 'bulk_density-fine_earth', NA,
-                                   "bd_other (g cm-3)","g of <2mm fraction divided by total volume of material (often includes roots)",NA, 'bulk_density-stock', 'measured:fine dry mass over core volume',
-                                   "bd_other (g cm-3)","gap-filled from horizon type",NA, 'bulk_density-unspecified', 'gap_filled:neighboring_horizons',
-                                   "bd_other (g cm-3)","BD was estimated based on C % using a power-based regression model based on individual soil samples where both C % (x) and DBD (y) were available (n= 831, R2= 0.73): y= 1.2559x-0.6831. In samples with permafrsot, the regression-derived BD was corrected for volumetric ice-content",NA, 'bulk_density-unspecified', 'formula:carbon_fraction',
-                                   "bd_other (g cm-3)","took average of similar horizons types",NA, 'bulk_density-unspecified', 'gap_filled:similar horizons')
+  bulkDensity_methodMap <- tribble(
+    ~column_id, ~bd_method, ~bdNRCS_prep_code, ~what, ~how,
+    "bd_samp (g cm-3)","bd_samp values are means of multiple observations",NA, 'bulk_density_fine_earth', 'measured:mean',
+    "bd_other (g cm-3)","bd = dry weight/volume",NA, 'bulk_density','unspecified',
+    #TODO likely NRCS prep codes, G. and M. seem to be leaders for air dried prep
+    "bd_tot (g cm-3)","G",NA, 'bulk_density_whole_soil', NA,
+    "bd_tot (g cm-3)","M",NA, 'bulk_density_whole_soil', NA,
+    "bd_other (g cm-3)","G",NA, 'bulk_density', 'unspecified',
+    "bd_other (g cm-3)","M",NA, 'bulk_density', 'unspecified',
+    "bd_samp (g cm-3)","measured as weight per unit volume",NA, 'bulk_density_fine_earth', NA,
+    "bd_other (g cm-3)","predicted from %C",NA, 'bulk_density', 'unspecified:formula:carbon_fraction',
+    "bd_other (g cm-3)","estimated from weight per unit area",NA, 'bulk_density', 'unspecified:estimated:weight per area',
+    "bd_other (g cm-3)","gap-filled with value from nearby sample",NA, 'bulk_density', 'unspecified:gap_filled:neighboring_samples',
+    "bd_samp (g cm-3)","calculated based on soil texture, rock fragment, and organic matter content",NA, 'bulk_density_fine_earth', 'formula:soil texture, rock fragment, organic matter',
+    "bd_tot (g cm-3)","gap-filled value from re-measurement of same plot in 2000",NA, 'bulk_density_whole_soil', 'gap_filled:resampled',
+    "bd_tot (g cm-3)","core volume/mass",NA, 'bulk_density_whole_soil', NA,
+    "bd_samp (g cm-3)","Calculated as oven-dry mass of core, <2mm fraction, divided by core volume.",NA, 'bulk_density_stock', 'measured:fine dry mass over core volume',
+    "bd_other (g cm-3)","bd = (1.45*0.111)/((loi/100)*1.45+(1-(loi/100))*0.111)",NA, 'bulk_density', 'unspecified:formula:organic_matter_fraction',
+    "bd_other (g cm-3)","interpolated from adjacent horizons",NA, 'bulk_density', 'unspecified:gap_filled:neighboring horizons',
+    "bd_tot (g cm-3)",NA,NA, 'bulk_density_whole_soil', NA,
+    "bd_samp (g cm-3)",NA,NA, 'bulk_density_fine_earth', NA,
+    "bd_other (g cm-3)","g of <2mm fraction divided by total volume of material (often includes roots)",NA, 'bulk_density_stock', 'measured:fine dry mass over core volume',
+    "bd_other (g cm-3)","gap-filled from horizon type",NA, 'bulk_density', 'unspecified:gap_filled:neighboring_horizons',
+    "bd_other (g cm-3)","BD was estimated based on C % using a power-based regression model based on individual soil samples where both C % (x) and DBD (y) were available (n= 831, R2= 0.73): y= 1.2559x-0.6831. In samples with permafrsot, the regression-derived BD was corrected for volumetric ice-content",NA, 'bulk_density', 'unspecified:formula:carbon_fraction',
+    "bd_other (g cm-3)","took average of similar horizons types",NA, 'bulk_density', 'unspecified:gap_filled:similar horizons')
   
   #### Process bulk density ####
   # Process the data frame
