@@ -131,7 +131,7 @@ ISCN4_vocab <- read_csv('proposedSemantics.csv',
 #| label: readLevel1
 #| warning: false
 
-NCSS.ls <- readNCSS(dataDir = '../../01_DataRescue/NCSS2023',
+NCSS.ls <- readNCSS(dataDir = '../../01_DataRescue/NCSS',
                     dataLevel = 'level1')
 
 ISCN3.ls <- readISCN3(dataDir = '../../01_DataRescue/ISCN3_2015',
@@ -143,6 +143,33 @@ CPEAT.ls <- readCPEAT2025(dataDir = '../../01_DataRescue/CPEAT2025',
 
 FIA.ls <- readFIA(dataDir = '../../01_DataRescue/FIA2024/',
                   dataLevel = 'level1')
+```
+
+# Data Level 2
+
+```{r}
+# Construct soil carbon density for the layers
+# 
+temp <- NCSS.ls$layer |>
+  #filter(is_type %in% c('value', 'lower', 'upper')) |>
+  select(site_key, pedon_key, layer_key, of_variable, is_type, with_entry) |>
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '$',
+              values_from = with_entry) |>
+  mutate(across(ends_with('$value'), as.numeric),
+         source_id = 'NCSS') |> #299323 obs
+  filter(is.finite(`bulk_density_fine_earth$value`) | 
+           is.finite(`bulk_density_stock$value`)) # 82046 obs
+  
+temp2 <- ISCN3.ls$layer |>
+  filter(!is.na(dataset_name)) |>
+  select(dataset_name, site_name, profile_name, layer_name, layer_id, row_id,
+         column_id, of_variable, is_type, with_entry) |>
+  dplyr::filter(n() > 1L, .by = c(dataset_name, site_name, profile_name,
+  layer_name, layer_id, row_id, of_variable, is_type))
+
+
+  pivot_wider(names_from = c(of_variable, is_type), names_sep = '$',
+              values_from = with_entry)
 ```
 
 # Data Level 2
